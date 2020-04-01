@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+            name="description"
+            content="Web site created using create-react-app"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/dmn-js@7.3.0/dist/assets/dmn-js-drd.css">
+    <link rel="stylesheet" href="https://unpkg.com/dmn-js@7.3.0/dist/assets/dmn-js-decision-table.css">
+    <link rel="stylesheet" href="https://unpkg.com/dmn-js@7.3.0/dist/assets/dmn-js-literal-expression.css">
+    <link rel="stylesheet" href="https://unpkg.com/dmn-js@7.3.0/dist/assets/dmn-font/css/dmn.css">
+    <script src="https://unpkg.com/dmn-js@7.3.0/dist/dmn-viewer.development.js"></script>
+</head>
+<div>
+    <div class="column left">
+        <div class="panel panel-default" style="background-color:#3C6997">
+            <div class="panel panel-primary" id="result_panel" style="border-color: #3C6997" >
+                <div class="panel-heading" style="background-color:#3C6997"><h3 class="panel-title">Decisions</h3>
+                </div>
+                <div class="panel-body">
+                    <ul id="Decisions" class="list-group list-group-mine">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="column right">
+        <div class="tab-content" id="nav-tabContent">
+            <pre id="decisionJson"></pre>
+        </div>
+    </div>
+</div>
+
+<script>
+function create(htmlStr) {
+    var frag = document.createDocumentFragment(),
+        temp = document.createElement('div');
+    temp.innerHTML = htmlStr;
+    while (temp.firstChild) {
+        frag.appendChild(temp.firstChild);
+      }
+        return frag;
+    }
+
+$(document).on('click', '.list-group-item', function(e) {
+    var $this = $(this);
+    var $alias = $this.data('alias');
+    $('.active').removeClass('active');
+    $this.toggleClass('active');
+    update_body($this, $alias)
+})
+
+
+function update_body($this,  $alias) {
+	$.ajax({
+	    url: 'events/' + $this[0].id,
+	    success: function(data) {
+            var div = document.getElementById('decisionJson');
+            div.innerHTML = JSON.stringify(data, undefined, 2);
+	    }
+	});
+}
+
+(function worker() {
+  $.ajax({
+    url: 'events',
+    success: function(data) {
+        var names = data['data'].map(x => x['id']);
+        var existingChildren = document.getElementById("Decisions").getElementsByTagName('a');
+        var existingIds = [];
+        if(existingChildren.length > 0){
+            for(var idx in existingChildren){
+                    existingIds.push(existingChildren[idx].id);
+                }
+        }
+        console.log(names);
+        for(var idx in names){
+                var decisionName = names[idx];
+                if(existingIds.indexOf(decisionName) < 0){
+                    var fragment = create(`<a href="#" class="list-group-item" id=${decisionName}>${decisionName}</a>`);
+                    document.getElementById("Decisions").appendChild(fragment);
+                    }
+                }
+		},
+    complete: function() {
+      // Schedule the next request when the current one's complete
+      setTimeout(worker, 5000);
+    }
+  });
+})();
+    </script>
+</html>
