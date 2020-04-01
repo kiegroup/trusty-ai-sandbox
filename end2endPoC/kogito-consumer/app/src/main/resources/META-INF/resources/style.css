@@ -1,0 +1,27 @@
+/* Create two unequal columns that floats next to each other */
+html, body {margin: 0; height: 100%; overflow: hidden; position: relative}
+
+.column {
+  float: left;
+}
+
+.left {
+  width: 30%;
+}
+
+.right {
+  width: 70%;
+}
+
+.list-group{
+     height: 100vh;
+     overflow:scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.list-group-mine .list-group-item {
+  background-color: #f1f9fb;
+  border-top: 1px solid #0091b5;
+  border-left-color: #fff;
+  border-right-color: #fff;
+}
