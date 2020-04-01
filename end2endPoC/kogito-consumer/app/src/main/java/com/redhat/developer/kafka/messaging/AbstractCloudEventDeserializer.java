@@ -1,9 +1,9 @@
-package com.redhat.developer.decision.messaging;
+package com.redhat.developer.kafka.messaging;
 
 import java.io.IOException;
 import java.util.Map;
 
-import com.redhat.developer.decision.utils.JsonUtils;
+import com.redhat.developer.kafka.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.kafka.common.serialization.Deserializer;

@@ -2,13 +2,13 @@ package com.redhat.developer.database;
 
 import java.util.List;
 
-import com.redhat.developer.decision.dto.DMNEvent;
-import com.redhat.developer.decision.dto.DMNResult;
+import com.redhat.developer.decision.storage.model.DMNEventModel;
+import com.redhat.developer.decision.storage.model.DMNResultModel;
 
 public interface IEventStorage {
-    boolean storeEvent(String key, DMNEvent event);
+    boolean storeEvent(String key, DMNEventModel event);
 
-    DMNEvent getEvent(String key);
+    DMNEventModel getEvent(String key);
 
-    List<DMNResult> getDecisions();
+    List<DMNResultModel> getDecisions();
 }

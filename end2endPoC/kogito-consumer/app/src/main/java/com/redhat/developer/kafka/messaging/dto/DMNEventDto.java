@@ -1,11 +1,11 @@
-package com.redhat.developer.decision.dto;
+package com.redhat.developer.kafka.messaging.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DMNEvent {
+public class DMNEventDto {
 
     @JsonProperty("data")
-    public DMNData data;
+    public DMNDataDto data;
 
     @JsonProperty("id")
     public String id;

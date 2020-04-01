@@ -1,8 +1,8 @@
-package com.redhat.developer.decision.dto;
+package com.redhat.developer.decision.storage.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public enum DecisionEvaluationStatusDto {
+public enum DecisionEvaluationStatusModel {
     @JsonProperty("NOT_EVALUATED")
     NOT_EVALUATED,
     @JsonProperty("EVALUATING")

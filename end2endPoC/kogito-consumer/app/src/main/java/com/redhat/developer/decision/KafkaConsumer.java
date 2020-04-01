@@ -1,33 +1,33 @@
 package com.redhat.developer.decision;
 
-import java.util.concurrent.CompletableFuture;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import com.redhat.developer.decision.dto.DMNEvent;
 import com.redhat.developer.database.IEventStorage;
-import com.redhat.developer.database.elastic.utils.HttpHelper;
+import com.redhat.developer.decision.storage.ModelFactory;
+import com.redhat.developer.decision.storage.model.DMNEventModel;
+import com.redhat.developer.kafka.KafkaAbstractConsumer;
+import com.redhat.developer.kafka.messaging.dto.DMNEventDto;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
-public class KafkaConsumer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(HttpHelper.class);
+public class KafkaConsumer extends KafkaAbstractConsumer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumer.class);
 
     @Inject
     IEventStorage eventStorage;
 
+    @Override
     @Incoming("kogito-tracing")
-    public void onProcessInstanceEvent(DMNEvent event) {
-        LOGGER.info("Hey i've got this message: " + event.data.toString());
-        CompletableFuture.runAsync(() -> {
-            processEvent(event);
-        });
+    public void onProcessInstanceEvent(DMNEventDto event) {
+        super.onProcessInstanceEvent(event);
     }
 
-    private void processEvent(DMNEvent event){
-        eventStorage.storeEvent(event.id, event);
+    protected void processEvent(DMNEventDto event){
+        LOGGER.debug("Processing a new event");
+        DMNEventModel dmnEventModel = ModelFactory.fromKafkaCloudEvent(event);
+        eventStorage.storeEvent(dmnEventModel.id, dmnEventModel);
     }
 }

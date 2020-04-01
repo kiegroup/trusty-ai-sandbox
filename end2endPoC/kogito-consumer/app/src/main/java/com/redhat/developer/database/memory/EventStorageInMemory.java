@@ -7,20 +7,20 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import com.redhat.developer.database.IEventStorage;
-import com.redhat.developer.decision.dto.DMNEvent;
-import com.redhat.developer.decision.dto.DMNResult;
+import com.redhat.developer.decision.storage.model.DMNEventModel;
+import com.redhat.developer.decision.storage.model.DMNResultModel;
 
 //@ApplicationScoped
 public class EventStorageInMemory implements IEventStorage {
 
-    public ConcurrentHashMap<String, DMNEvent> database;
+    public ConcurrentHashMap<String, DMNEventModel> database;
 
     @PostConstruct
     void setUp(){
-        database = new ConcurrentHashMap<String, DMNEvent>();
+        database = new ConcurrentHashMap<String, DMNEventModel>();
     }
 
-    public boolean storeEvent(String key, DMNEvent event){
+    public boolean storeEvent(String key, DMNEventModel event){
         if (!database.containsKey(key)){
             database.put(key, event);
             return true;
@@ -28,14 +28,14 @@ public class EventStorageInMemory implements IEventStorage {
         return false;
     }
 
-    public DMNEvent getEvent(String key){
+    public DMNEventModel getEvent(String key){
         if (database.containsKey(key)){
             return database.get(key);
         }
         return null;
     }
 
-    public List<DMNResult> getDecisions(){
+    public List<DMNResultModel> getDecisions(){
         return database.values().stream().map(x -> x.data.result).collect(Collectors.toList());
     }
 }
