@@ -3,7 +3,6 @@ package com.redhat.developer.decision.responses;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.redhat.developer.decision.dto.DecisionResultDto;
 
 public class DecisionsResponse {
     @JsonProperty("availableRecords")

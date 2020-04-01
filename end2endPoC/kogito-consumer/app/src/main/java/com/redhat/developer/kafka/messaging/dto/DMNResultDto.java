@@ -1,12 +1,11 @@
-package com.redhat.developer.decision.dto;
+package com.redhat.developer.kafka.messaging.dto;
 
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DMNResult {
+public class DMNResultDto {
     @JsonProperty("evaluationId")
     public String evaluationId;
 

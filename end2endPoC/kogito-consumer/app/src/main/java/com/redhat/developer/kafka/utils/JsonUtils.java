@@ -1,4 +1,4 @@
-package com.redhat.developer.decision.utils;
+package com.redhat.developer.kafka.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

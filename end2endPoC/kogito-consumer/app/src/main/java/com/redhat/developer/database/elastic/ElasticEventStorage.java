@@ -9,9 +9,9 @@ import javax.enterprise.context.ApplicationScoped;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.developer.database.IEventStorage;
-import com.redhat.developer.decision.dto.DMNEvent;
+import com.redhat.developer.decision.storage.model.DMNEventModel;
 import com.redhat.developer.database.elastic.utils.HttpHelper;
-import com.redhat.developer.decision.dto.DMNResult;
+import com.redhat.developer.decision.storage.model.DMNResultModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +33,7 @@ public class ElasticEventStorage implements IEventStorage {
     }
 
     @Override
-    public boolean storeEvent(String key, DMNEvent event){
+    public boolean storeEvent(String key, DMNEventModel event){
         String request = null;
         try {
             request = objectMapper.writeValueAsString(event);
@@ -47,7 +47,7 @@ public class ElasticEventStorage implements IEventStorage {
     }
 
     @Override
-    public DMNEvent getEvent(String key) {
+    public DMNEventModel getEvent(String key) {
         System.out.println("requested: " + key);
         String request = "{ \n" +
                 "    \"query\": {\n" +
@@ -58,7 +58,7 @@ public class ElasticEventStorage implements IEventStorage {
         String response = httpHelper.doPost(INDEX + "/_search", request);
         LOGGER.debug("ES returned " + response);
         try {
-            return (DMNEvent) objectMapper.readValue(response, ElasticSearchResponse.class).hits.hits.get(0).source;
+            return objectMapper.readValue(response, ElasticSearchResponse.class).hits.hits.get(0).source;
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -66,7 +66,7 @@ public class ElasticEventStorage implements IEventStorage {
     }
 
     @Override
-    public List<DMNResult> getDecisions() {
+    public List<DMNResultModel> getDecisions() {
         String request = "{\n" + "\"size\": 100," +
                 "    \"query\": {\n" +
                 "        \"match_all\": {}\n" +
