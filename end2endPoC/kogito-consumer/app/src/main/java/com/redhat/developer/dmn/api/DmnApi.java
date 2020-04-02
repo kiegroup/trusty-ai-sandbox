@@ -9,6 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import com.redhat.developer.dmn.requests.EvaluationRequestBody;
 import com.redhat.developer.dmn.responses.AvailableModelsResponse;
 import com.redhat.developer.dmn.responses.EvaluationResponse;
 import com.redhat.developer.dmn.responses.ModelResponse;
@@ -34,7 +35,7 @@ public class DmnApi {
     @Path("/{id}/evaluate")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public EvaluationResponse evaluateDecision(@PathParam("id") String id, Object inputs) {
+    public EvaluationResponse evaluateDecision(@PathParam("id") String id, EvaluationRequestBody inputs) {
         return new EvaluationResponse();
     }
 }

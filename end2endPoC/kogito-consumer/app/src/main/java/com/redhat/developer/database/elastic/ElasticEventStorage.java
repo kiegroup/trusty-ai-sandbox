@@ -66,8 +66,8 @@ public class ElasticEventStorage implements IEventStorage {
     }
 
     @Override
-    public List<DMNResultModel> getDecisions(String from, String to, int limit, int offset) {
-        String request = "{\n" + "\"size\": 100," +
+    public List<DMNResultModel> getDecisions(String from, String to) {
+        String request = "{\n" + "\"size\": 10000," +
                 "    \"query\": {\n" +
                 "        \"match_all\": {}\n" +
                 "    }\n" +

@@ -10,5 +10,5 @@ public interface IEventStorage {
 
     DMNEventModel getEvent(String key);
 
-    List<DMNResultModel> getDecisions(String from, String to, int limit, int offset);
+    List<DMNResultModel> getDecisions(String from, String to);
 }
