@@ -25,8 +25,8 @@ public class ModelFactory {
         DMNResultModel resultModel = new DMNResultModel();
         resultModel.modelNamespace = resultDto.modelNamespace;
         resultModel.modelName = resultDto.modelName;
-        resultModel.evaluationDate = resultDto.evaluationDate;
-        resultModel.evaluationId = resultDto.evaluationId;
+        resultModel.executionDate = resultDto.evaluationDate;
+        resultModel.executionId = resultDto.evaluationId;
         resultModel.decisions = resultDto.decisions.stream().map(x -> fromDecisionDto(x)).collect(Collectors.toList());
 
         DMNEventModel eventModel = new DMNEventModel();

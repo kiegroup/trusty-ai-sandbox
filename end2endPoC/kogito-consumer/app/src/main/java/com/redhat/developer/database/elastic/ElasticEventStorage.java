@@ -51,12 +51,12 @@ public class ElasticEventStorage implements IEventStorage {
         System.out.println("requested: " + key);
         String request = "{ \n" +
                 "    \"query\": {\n" +
-                "        \"match\": { \"data.result.evaluationId\" : \"" + key + "\"}\n" +
+                "        \"match\": { \"data.result.executionId\" : \"" + key + "\"}\n" +
                 "    }\n" +
                 "}\n";
-        LOGGER.debug("Going to query ES with " + request);
+        LOGGER.info("Going to query ES with " + request);
         String response = httpHelper.doPost(INDEX + "/_search", request);
-        LOGGER.debug("ES returned " + response);
+        LOGGER.info("ES returned " + response);
         try {
             return objectMapper.readValue(response, ElasticSearchResponse.class).hits.hits.get(0).source;
         } catch (JsonProcessingException e) {
@@ -66,7 +66,7 @@ public class ElasticEventStorage implements IEventStorage {
     }
 
     @Override
-    public List<DMNResultModel> getDecisions() {
+    public List<DMNResultModel> getDecisions(String from, String to, int limit, int offset) {
         String request = "{\n" + "\"size\": 100," +
                 "    \"query\": {\n" +
                 "        \"match_all\": {}\n" +
