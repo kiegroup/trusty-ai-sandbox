@@ -6,11 +6,11 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DMNResultModel {
-    @JsonProperty("evaluationId")
-    public String evaluationId;
+    @JsonProperty("executionId")
+    public String executionId;
 
-    @JsonProperty("evaluationDate")
-    public String evaluationDate;
+    @JsonProperty("executionDate")
+    public String executionDate;
 
     @JsonProperty("decisions")
     public List<DecisionResultModel> decisions;

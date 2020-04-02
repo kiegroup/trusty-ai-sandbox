@@ -2,9 +2,10 @@ package com.redhat.developer.decision.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DecisionDetailResponse {
-    @JsonProperty("data")
-    public ExecutionHeaderResponse data;
+public class DecisionInputsResponse {
+
+    @JsonProperty("input")
+    public Object input;
 
     @JsonProperty("evaluationDate")
     public String evaluationDate;
@@ -12,9 +13,9 @@ public class DecisionDetailResponse {
     @JsonProperty("id")
     public String id;
 
-    public DecisionDetailResponse(String id, String evaluationDate, ExecutionHeaderResponse data){
+    public DecisionInputsResponse(String id, String evaluationDate, Object input) {
         this.id = id;
-        this.data = data;
+        this.input = input;
         this.evaluationDate = evaluationDate;
     }
 }
