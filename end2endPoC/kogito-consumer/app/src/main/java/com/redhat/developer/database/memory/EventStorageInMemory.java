@@ -36,7 +36,7 @@ public class EventStorageInMemory implements IEventStorage {
     }
 
     @Override
-    public List<DMNResultModel> getDecisions(String from, String to, int limit, int offset){
+    public List<DMNResultModel> getDecisions(String from, String to){
         return database.values().stream().map(x -> x.data.result).collect(Collectors.toList());
     }
 }

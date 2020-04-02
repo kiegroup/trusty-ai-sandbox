@@ -1,8 +1,10 @@
 package com.redhat.developer.decision.storage.model;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DMNResultModel {
@@ -10,7 +12,8 @@ public class DMNResultModel {
     public String executionId;
 
     @JsonProperty("executionDate")
-    public String executionDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    public Date executionDate;
 
     @JsonProperty("decisions")
     public List<DecisionResultModel> decisions;
@@ -23,5 +26,9 @@ public class DMNResultModel {
 
     @JsonProperty("modelName")
     public String modelName;
+
+    public Date getExecutionDate(){
+        return executionDate;
+    }
 }
 

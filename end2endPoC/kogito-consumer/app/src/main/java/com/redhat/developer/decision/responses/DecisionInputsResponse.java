@@ -1,5 +1,8 @@
 package com.redhat.developer.decision.responses;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DecisionInputsResponse {
@@ -8,12 +11,13 @@ public class DecisionInputsResponse {
     public Object input;
 
     @JsonProperty("evaluationDate")
-    public String evaluationDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    public Date evaluationDate;
 
     @JsonProperty("id")
     public String id;
 
-    public DecisionInputsResponse(String id, String evaluationDate, Object input) {
+    public DecisionInputsResponse(String id, Date evaluationDate, Object input) {
         this.id = id;
         this.input = input;
         this.evaluationDate = evaluationDate;
