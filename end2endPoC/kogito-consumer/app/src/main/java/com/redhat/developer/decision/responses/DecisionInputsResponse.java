@@ -10,16 +10,11 @@ public class DecisionInputsResponse {
     @JsonProperty("input")
     public Object input;
 
-    @JsonProperty("evaluationDate")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-    public Date evaluationDate;
+    @JsonProperty("header")
+    public ExecutionHeaderResponse executionHeaderResponse;
 
-    @JsonProperty("id")
-    public String id;
-
-    public DecisionInputsResponse(String id, Date evaluationDate, Object input) {
-        this.id = id;
+    public DecisionInputsResponse(ExecutionHeaderResponse executionHeaderResponse, Object input) {
+        this.executionHeaderResponse = executionHeaderResponse;
         this.input = input;
-        this.evaluationDate = evaluationDate;
     }
 }

@@ -11,16 +11,11 @@ public class DecisionOutputsResponse {
     @JsonProperty("decisions")
     public List<DecisionResultModel> decisions;
 
-    @JsonProperty("evaluationDate")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-    public Date evaluationDate;
+    @JsonProperty("header")
+    public ExecutionHeaderResponse executionHeaderResponse;
 
-    @JsonProperty("id")
-    public String id;
-
-    public DecisionOutputsResponse(String id, Date evaluationDate, List<DecisionResultModel> decisions) {
-        this.id = id;
+    public DecisionOutputsResponse(ExecutionHeaderResponse executionHeaderResponse, List<DecisionResultModel> decisions) {
         this.decisions = decisions;
-        this.evaluationDate = evaluationDate;
+        this.executionHeaderResponse = executionHeaderResponse;
     }
 }

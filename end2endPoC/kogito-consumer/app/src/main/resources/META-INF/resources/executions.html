@@ -71,7 +71,7 @@ function update_body($this,  $alias) {
   $.ajax({
     url: 'executions',
     success: function(data) {
-        var names = data['data'].map(x => x['executionId']);
+        var names = data['headers'].map(x => x['executionId']);
         var existingChildren = document.getElementById("Decisions").getElementsByTagName('a');
         var existingIds = [];
         if(existingChildren.length > 0){
