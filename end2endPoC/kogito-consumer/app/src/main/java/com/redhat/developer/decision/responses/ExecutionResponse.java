@@ -14,13 +14,13 @@ public class ExecutionResponse {
     @JsonProperty("offset")
     public int offset;
 
-    @JsonProperty("data")
-    public List<ExecutionHeaderResponse> data;
+    @JsonProperty("headers")
+    public List<ExecutionHeaderResponse> executionHeadersResponse;
 
-    public ExecutionResponse(int total, int returnedRecords, int offset, List<ExecutionHeaderResponse> executionResponse){
+    public ExecutionResponse(int total, int returnedRecords, int offset, List<ExecutionHeaderResponse> executionHeadersResponse){
         this.total = total;
         this.limit = returnedRecords;
         this.offset = offset;
-        this.data = executionResponse;
+        this.executionHeadersResponse = executionHeadersResponse;
     }
 }

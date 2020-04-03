@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.redhat.developer.decision.storage.model.ExecutionEnum;
 
 public class ExecutionHeaderResponse {
     @JsonProperty("executionId")
@@ -18,6 +19,9 @@ public class ExecutionHeaderResponse {
 
     @JsonProperty("executorName")
     public String executorName;
+
+    @JsonProperty("executionType")
+    public ExecutionEnum executionType = ExecutionEnum.DECISION;
 
     public ExecutionHeaderResponse(String executionId, Date executionDate, boolean executionSucceeded, String executorName){
         this.executionId = executionId;

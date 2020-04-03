@@ -50,7 +50,7 @@ public class DecisionsApi {
     @Produces(MediaType.APPLICATION_JSON)
     public DecisionDetailResponse getExecutionByKey(@PathParam("key") String key) {
         DMNResultModel result = storageService.getEvent(key).data.result;
-        return new DecisionDetailResponse(result.executionId, result.executionDate, buildHeaderResponse(result));
+        return new DecisionDetailResponse(buildHeaderResponse(result));
     }
 
     @GET
@@ -58,7 +58,7 @@ public class DecisionsApi {
     @Produces(MediaType.APPLICATION_JSON)
     public DecisionInputsResponse getExecutionInputs(@PathParam("key") String key) {
         DMNResultModel result = storageService.getEvent(key).data.result;
-        return new DecisionInputsResponse(result.executionId, result.executionDate, result.context);
+        return new DecisionInputsResponse(buildHeaderResponse(result), result.context);
     }
 
     @GET
@@ -66,7 +66,7 @@ public class DecisionsApi {
     @Produces(MediaType.APPLICATION_JSON)
     public DecisionOutputsResponse getExecutionOutcome(@PathParam("key") String key) {
         DMNResultModel result = storageService.getEvent(key).data.result;
-        return new DecisionOutputsResponse(result.executionId, result.executionDate, result.decisions);
+        return new DecisionOutputsResponse(buildHeaderResponse(result), result.decisions);
     }
 
     private ExecutionHeaderResponse buildHeaderResponse(DMNResultModel result) {
