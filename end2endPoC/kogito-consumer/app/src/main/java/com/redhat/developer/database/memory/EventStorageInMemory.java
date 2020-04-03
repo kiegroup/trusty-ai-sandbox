@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import com.redhat.developer.database.IEventStorage;
-import com.redhat.developer.decision.storage.model.DMNEventModel;
-import com.redhat.developer.decision.storage.model.DMNResultModel;
+import com.redhat.developer.execution.storage.model.DMNEventModel;
+import com.redhat.developer.execution.storage.model.DMNResultModel;
 
 //@ApplicationScoped
 public class EventStorageInMemory implements IEventStorage {

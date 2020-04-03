@@ -1,0 +1,292 @@
+---
+openapi: 3.0.1
+info:
+  title: Generated API
+  version: "1.0"
+paths:
+  /executions:
+    get:
+      parameters:
+      - name: from
+        in: query
+        schema:
+          default: yesterday
+          type: string
+      - name: limit
+        in: query
+        schema:
+          format: int32
+          default: 100
+          type: integer
+      - name: offset
+        in: query
+        schema:
+          format: int32
+          default: 0
+          type: integer
+      - name: to
+        in: query
+        schema:
+          default: now
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionResponse'
+  /executions/decisions/{key}:
+    get:
+      parameters:
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionDetailResponse'
+  /executions/decisions/{key}/inputs:
+    get:
+      parameters:
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DecisionInputsResponse'
+  /executions/decisions/{key}/outcomes:
+    get:
+      parameters:
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DecisionOutputsResponse'
+  /executions/processes/{key}:
+    get:
+      parameters:
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionDetailResponse'
+  /models:
+    get:
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailableModelsResponse'
+  /models/{id}:
+    get:
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelResponse'
+  /models/{id}/evaluate:
+    post:
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvaluationRequestBody'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationResponse'
+  /openapi:
+    get:
+      responses:
+        "200":
+          description: OK
+  /openapi.{type}:
+    get:
+      parameters:
+      - name: type
+        in: path
+        required: true
+        schema:
+          pattern: json|yaml
+          type: string
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    ExecutionHeaderResponse:
+      type: object
+      properties:
+        executionDate:
+          $ref: '#/components/schemas/Date'
+        executionId:
+          type: string
+        executionSucceeded:
+          type: boolean
+        executionType:
+          $ref: '#/components/schemas/ExecutionEnum'
+        executorName:
+          type: string
+    ListExecutionHeaderResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/ExecutionHeaderResponse'
+    Date:
+      format: date
+      type: string
+    ExecutionEnum:
+      enum:
+      - DECISION
+      - PROCESS
+      type: string
+    ExecutionResponse:
+      type: object
+      properties:
+        headers:
+          $ref: '#/components/schemas/ListExecutionHeaderResponse'
+        limit:
+          format: int32
+          type: integer
+        offset:
+          format: int32
+          type: integer
+        total:
+          format: int32
+          type: integer
+    ExecutionDetailResponse:
+      type: object
+      properties:
+        header:
+          $ref: '#/components/schemas/ExecutionHeaderResponse'
+    DecisionInputsResponse:
+      type: object
+      properties:
+        header:
+          $ref: '#/components/schemas/ExecutionHeaderResponse'
+        input:
+          type: object
+    DecisionResultModel:
+      type: object
+      properties:
+        decisionId:
+          type: string
+        decisionName:
+          type: string
+        evaluationStatus:
+          $ref: '#/components/schemas/DecisionEvaluationStatusModel'
+        hasErrors:
+          type: boolean
+        messages:
+          $ref: '#/components/schemas/ListString'
+        decisionResult:
+          type: string
+    ListDecisionResultModel:
+      type: array
+      items:
+        $ref: '#/components/schemas/DecisionResultModel'
+    DecisionEvaluationStatusModel:
+      enum:
+      - EVALUATING
+      - FAILED
+      - NOT_EVALUATED
+      - SKIPPED
+      - SUCCEEDED
+      type: string
+    ListString:
+      type: array
+      items:
+        type: string
+    DecisionOutputsResponse:
+      type: object
+      properties:
+        decisions:
+          $ref: '#/components/schemas/ListDecisionResultModel'
+        header:
+          $ref: '#/components/schemas/ExecutionHeaderResponse'
+    EvaluationRequestBody:
+      type: object
+      properties:
+        input:
+          type: object
+    ListObject:
+      type: array
+      items: {}
+    EvaluationResponse:
+      type: object
+      properties:
+        decisions:
+          $ref: '#/components/schemas/ListObject'
+    ModelDetail:
+      type: object
+      properties:
+        creationDate:
+          type: string
+        modelName:
+          type: string
+        modelNamespace:
+          type: string
+        modelVersion:
+          type: string
+    ModelResponse:
+      type: object
+      properties:
+        decisions:
+          $ref: '#/components/schemas/ListObject'
+        inputStructure:
+          type: object
+        metainformation:
+          $ref: '#/components/schemas/ModelDetail'
+    ListModelDetail:
+      type: array
+      items:
+        $ref: '#/components/schemas/ModelDetail'
+    AvailableModelsResponse:
+      type: object
+      properties:
+        availableModels:
+          $ref: '#/components/schemas/ListModelDetail'

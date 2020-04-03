@@ -1,4 +1,4 @@
-package com.redhat.developer.decision.responses;
+package com.redhat.developer.execution.responses.execution;
 
 import java.util.List;
 
