@@ -1,4 +1,4 @@
-package com.redhat.developer.decision.storage.model;
+package com.redhat.developer.execution.storage.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

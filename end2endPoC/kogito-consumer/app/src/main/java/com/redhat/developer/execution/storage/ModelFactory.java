@@ -1,22 +1,22 @@
-package com.redhat.developer.decision.storage;
+package com.redhat.developer.execution.storage;
 
 import java.util.stream.Collectors;
 
-import com.redhat.developer.decision.storage.model.DMNDataModel;
-import com.redhat.developer.decision.storage.model.DMNEventModel;
-import com.redhat.developer.decision.storage.model.DMNResultModel;
-import com.redhat.developer.decision.storage.model.DecisionEvaluationStatusModel;
-import com.redhat.developer.decision.storage.model.DecisionResultModel;
+import com.redhat.developer.execution.storage.model.DMNDataModel;
+import com.redhat.developer.execution.storage.model.DMNEventModel;
+import com.redhat.developer.execution.storage.model.DMNResultModel;
+import com.redhat.developer.execution.storage.model.DecisionEvaluationStatusModel;
+import com.redhat.developer.execution.storage.model.DecisionResultModel;
 import com.redhat.developer.kafka.messaging.dto.DMNEventDto;
 import com.redhat.developer.kafka.messaging.dto.DMNResultDto;
 import com.redhat.developer.kafka.messaging.dto.DecisionEvaluationStatusDto;
 import com.redhat.developer.kafka.messaging.dto.DecisionResultDto;
 
-import static com.redhat.developer.decision.storage.model.DecisionEvaluationStatusModel.EVALUATING;
-import static com.redhat.developer.decision.storage.model.DecisionEvaluationStatusModel.FAILED;
-import static com.redhat.developer.decision.storage.model.DecisionEvaluationStatusModel.NOT_EVALUATED;
-import static com.redhat.developer.decision.storage.model.DecisionEvaluationStatusModel.SKIPPED;
-import static com.redhat.developer.decision.storage.model.DecisionEvaluationStatusModel.SUCCEEDED;
+import static com.redhat.developer.execution.storage.model.DecisionEvaluationStatusModel.EVALUATING;
+import static com.redhat.developer.execution.storage.model.DecisionEvaluationStatusModel.FAILED;
+import static com.redhat.developer.execution.storage.model.DecisionEvaluationStatusModel.NOT_EVALUATED;
+import static com.redhat.developer.execution.storage.model.DecisionEvaluationStatusModel.SKIPPED;
+import static com.redhat.developer.execution.storage.model.DecisionEvaluationStatusModel.SUCCEEDED;
 
 public class ModelFactory {
 

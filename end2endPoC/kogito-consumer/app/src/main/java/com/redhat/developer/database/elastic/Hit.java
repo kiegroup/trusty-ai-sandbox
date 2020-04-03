@@ -2,7 +2,7 @@ package com.redhat.developer.database.elastic;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.redhat.developer.decision.storage.model.DMNEventModel;
+import com.redhat.developer.execution.storage.model.DMNEventModel;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Hit {

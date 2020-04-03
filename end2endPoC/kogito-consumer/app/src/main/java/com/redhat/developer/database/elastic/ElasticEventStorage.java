@@ -9,9 +9,9 @@ import javax.enterprise.context.ApplicationScoped;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.developer.database.IEventStorage;
-import com.redhat.developer.decision.storage.model.DMNEventModel;
+import com.redhat.developer.execution.storage.model.DMNEventModel;
 import com.redhat.developer.database.elastic.utils.HttpHelper;
-import com.redhat.developer.decision.storage.model.DMNResultModel;
+import com.redhat.developer.execution.storage.model.DMNResultModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,8 +78,6 @@ public class ElasticEventStorage implements IEventStorage {
                                 "}" +
                         "}" +
                     "}", from, to);
-
-        System.out.println(request);
 
         String response = httpHelper.doPost(INDEX + "/_search", request);
         try {

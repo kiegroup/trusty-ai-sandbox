@@ -1,10 +1,11 @@
-package com.redhat.developer.decision.responses;
+package com.redhat.developer.execution.responses.execution;
 
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.redhat.developer.decision.storage.model.ExecutionEnum;
+import com.redhat.developer.execution.storage.model.DMNResultModel;
+import com.redhat.developer.execution.storage.model.ExecutionEnum;
 
 public class ExecutionHeaderResponse {
     @JsonProperty("executionId")
@@ -28,5 +29,9 @@ public class ExecutionHeaderResponse {
         this.executionDate = executionDate;
         this.executionSucceeded = executionSucceeded;
         this.executorName = executorName;
+    }
+
+    public static ExecutionHeaderResponse fromDMNResultModel(DMNResultModel result){
+        return new ExecutionHeaderResponse(result.executionId, result.executionDate, result.decisions.stream().anyMatch(y -> y.hasErrors == true), "testUser");
     }
 }

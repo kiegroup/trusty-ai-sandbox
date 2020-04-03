@@ -1,9 +1,7 @@
-package com.redhat.developer.decision.responses;
+package com.redhat.developer.execution.responses.decisions;
 
-import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.redhat.developer.execution.responses.execution.ExecutionHeaderResponse;
 
 public class DecisionInputsResponse {
 
