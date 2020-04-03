@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -29,10 +30,15 @@ public class DecisionsApi {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public ExecutionResponse getExecutions(@QueryParam("from") String from,
-                                           @QueryParam("to") String to,
+    public ExecutionResponse getExecutions(@DefaultValue("yesterday") @QueryParam("from") String from,
+                                           @DefaultValue("now") @QueryParam("to") String to,
                                            @DefaultValue("100") @QueryParam("limit") int limit,
                                            @DefaultValue("0") @QueryParam("offset") int offset) {
+        // Testing hack
+        if (from.equals("yesterday")){
+            from = java.time.LocalDateTime.now().minusDays(1).toString();
+        }
+
         List<DMNResultModel> results = storageService.getDecisions(from, to);
         int totalResults = results.size();
         if (totalResults >= limit){
