@@ -67,11 +67,20 @@ public class ElasticEventStorage implements IEventStorage {
 
     @Override
     public List<DMNResultModel> getDecisions(String from, String to) {
-        String request = "{\n" + "\"size\": 10000," +
-                "    \"query\": {\n" +
-                "        \"match_all\": {}\n" +
-                "    }\n" +
-                "}\n";
+        String request = String.format(
+            "{" +
+                    "\"size\": 10000, " +
+                    "\"query\" : {" +
+                        "\"range\" : {" +
+                            "\"data.result.executionDate\" : {" +
+                                "\"gte\" : \"%s\", \"lte\": \"%s\" " +
+                                    "} " +
+                                "}" +
+                        "}" +
+                    "}", from, to);
+
+        System.out.println(request);
+
         String response = httpHelper.doPost(INDEX + "/_search", request);
         try {
             return objectMapper.readValue(response, ElasticSearchResponse.class).hits.hits.stream().map(x -> x.source.data.result).collect(Collectors.toList());
