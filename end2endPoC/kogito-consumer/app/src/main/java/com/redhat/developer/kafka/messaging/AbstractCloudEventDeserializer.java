@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.redhat.developer.kafka.utils.JsonUtils;
+import org.apache.kafka.common.serialization.Deserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.kafka.common.serialization.Deserializer;
 
 public abstract class AbstractCloudEventDeserializer<T> implements Deserializer<T> {
 

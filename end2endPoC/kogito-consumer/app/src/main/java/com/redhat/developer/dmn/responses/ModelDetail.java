@@ -3,6 +3,7 @@ package com.redhat.developer.dmn.responses;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ModelDetail {
+
     @JsonProperty("modelNamespace")
     public String modelNamespace;
 

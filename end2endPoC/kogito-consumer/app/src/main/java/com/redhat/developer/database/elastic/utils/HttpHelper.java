@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class HttpHelper {
+
     private static final CloseableHttpClient httpclient = HttpClients.createDefault();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpHelper.class);
@@ -27,7 +28,7 @@ public class HttpHelper {
 
     private String baseHost;
 
-    public HttpHelper(String baseHost){
+    public HttpHelper(String baseHost) {
         this.baseHost = baseHost;
     }
 

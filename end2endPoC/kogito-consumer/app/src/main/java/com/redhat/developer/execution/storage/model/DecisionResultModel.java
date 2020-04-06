@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DecisionResultModel {
+
     @JsonProperty("decisionId")
     public String decisionId;
 

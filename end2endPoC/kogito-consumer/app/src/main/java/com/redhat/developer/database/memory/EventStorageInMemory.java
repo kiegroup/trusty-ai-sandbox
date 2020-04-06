@@ -16,27 +16,27 @@ public class EventStorageInMemory implements IEventStorage {
     public ConcurrentHashMap<String, DMNEventModel> database;
 
     @PostConstruct
-    void setUp(){
+    void setUp() {
         database = new ConcurrentHashMap<String, DMNEventModel>();
     }
 
-    public boolean storeEvent(String key, DMNEventModel event){
-        if (!database.containsKey(key)){
+    public boolean storeEvent(String key, DMNEventModel event) {
+        if (!database.containsKey(key)) {
             database.put(key, event);
             return true;
         }
         return false;
     }
 
-    public DMNEventModel getEvent(String key){
-        if (database.containsKey(key)){
-            return database.get(key);
+    public List<DMNEventModel> getEventsByMatchingId(String key) {
+        if (database.containsKey(key)) {
+            return null;//database.get(key);
         }
         return null;
     }
 
     @Override
-    public List<DMNResultModel> getDecisions(String from, String to){
+    public List<DMNResultModel> getDecisions(String from, String to) {
         return database.values().stream().map(x -> x.data.result).collect(Collectors.toList());
     }
 }

@@ -4,7 +4,7 @@ import com.redhat.developer.kafka.messaging.dto.DMNEventDto;
 
 public class DMNCloudEventDeserializer extends AbstractCloudEventDeserializer<DMNEventDto> {
 
-    public DMNCloudEventDeserializer(){
+    public DMNCloudEventDeserializer() {
         super(DMNEventDto.class);
     }
 }

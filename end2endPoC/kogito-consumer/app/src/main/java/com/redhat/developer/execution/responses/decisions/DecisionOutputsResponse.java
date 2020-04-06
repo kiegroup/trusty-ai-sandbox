@@ -7,6 +7,7 @@ import com.redhat.developer.execution.responses.execution.ExecutionHeaderRespons
 import com.redhat.developer.execution.storage.model.DecisionResultModel;
 
 public class DecisionOutputsResponse {
+
     @JsonProperty("decisions")
     public List<DecisionResultModel> decisions;
 

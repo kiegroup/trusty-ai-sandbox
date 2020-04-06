@@ -6,81 +6,141 @@ info:
 paths:
   /executions:
     get:
+      summary: Gets the execution headers.
+      description: Gets the execution headers.
       parameters:
       - name: from
         in: query
+        description: Start datetime for the lookup. Date in the format "yyyy-MM-dd'T'HH:mm:ss.SSS"
+        required: false
         schema:
           default: yesterday
           type: string
       - name: limit
         in: query
+        description: Maximum number of results to return.
+        required: false
         schema:
           format: int32
           default: 100
           type: integer
       - name: offset
         in: query
+        description: Offset for the pagination.
+        required: false
         schema:
           format: int32
           default: 0
           type: integer
       - name: to
         in: query
+        description: End datetime for the lookup. Date in the format "yyyy-MM-dd'T'HH:mm:ss.SSS"
+        required: false
         schema:
           default: now
           type: string
       responses:
+        "400":
+          description: Bad Request
+          content:
+            text/plain: {}
         "200":
-          description: OK
+          description: Returns the execution headers.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ExecutionResponse'
+                type: object
+                properties:
+                  headers:
+                    $ref: '#/components/schemas/ListExecutionHeaderResponse'
+                  limit:
+                    format: int32
+                    type: integer
+                  offset:
+                    format: int32
+                    type: integer
+                  total:
+                    format: int32
+                    type: integer
   /executions/decisions/{key}:
     get:
+      summary: Gets The decision header with details.
+      description: Gets the decision detail header.
       parameters:
       - name: key
         in: path
+        description: ID of the decision that needs to be fetched
         required: true
         schema:
           type: string
       responses:
+        "400":
+          description: Bad Request
+          content:
+            text/plain: {}
         "200":
-          description: OK
+          description: Gets the decision detail header.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ExecutionDetailResponse'
+                type: object
+                properties:
+                  header:
+                    $ref: '#/components/schemas/ExecutionHeaderResponse'
   /executions/decisions/{key}/inputs:
     get:
+      summary: Gets the decision inputs.
+      description: Gets the decision inputs.
       parameters:
       - name: key
         in: path
+        description: ID of the decision that needs to be fetched
         required: true
         schema:
           type: string
       responses:
+        "400":
+          description: Bad Request
+          content:
+            text/plain: {}
         "200":
-          description: OK
+          description: Gets the decision inputs.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DecisionInputsResponse'
+                type: object
+                properties:
+                  header:
+                    $ref: '#/components/schemas/ExecutionHeaderResponse'
+                  input:
+                    type: object
   /executions/decisions/{key}/outcomes:
     get:
+      summary: Gets the decision outcomes.
+      description: Gets the decision outcomes.
       parameters:
       - name: key
         in: path
+        description: ID of the decision that needs to be fetched
         required: true
         schema:
           type: string
       responses:
+        "400":
+          description: Bad Request
+          content:
+            text/plain: {}
         "200":
-          description: OK
+          description: Gets the decision outcomes.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DecisionOutputsResponse'
+                type: object
+                properties:
+                  decisions:
+                    $ref: '#/components/schemas/ListDecisionResultModel'
+                  header:
+                    $ref: '#/components/schemas/ExecutionHeaderResponse'
   /executions/processes/{key}:
     get:
       parameters:
@@ -96,6 +156,129 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ExecutionDetailResponse'
+  /executions/search:
+    get:
+      summary: Gets  the execution headers filtered by ID partial match.
+      description: Gets the execution headers filtered by ID partial match.
+      parameters:
+      - name: id
+        in: query
+        description: ID substring to match
+        required: true
+        schema:
+          type: string
+          nullable: false
+      - name: limit
+        in: query
+        description: Maximum number of results to return.
+        required: false
+        schema:
+          format: int32
+          default: 100
+          type: integer
+      - name: offset
+        in: query
+        description: Offset for the pagination.
+        required: false
+        schema:
+          format: int32
+          default: 0
+          type: integer
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            text/plain: {}
+        "200":
+          description: Returns the execution headers filtered by ID partial match.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  headers:
+                    $ref: '#/components/schemas/ListExecutionHeaderResponse'
+                  limit:
+                    format: int32
+                    type: integer
+                  offset:
+                    format: int32
+                    type: integer
+                  total:
+                    format: int32
+                    type: integer
+  /explainability:
+    get:
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailableAlgorithmsClassResponse'
+  /explainability/global:
+    get:
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailableAlgorithmsResponse'
+  /explainability/global/{algorithmName}:
+    get:
+      parameters:
+      - name: algorithmName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelExplainationResponse'
+  /explainability/local:
+    get:
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailableAlgorithmsResponse'
+  /explainability/local/{algorithmName}:
+    get:
+      parameters:
+      - name: algorithmName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelExplainationResponse'
+  /explainability/local/{algorithmName}/explain:
+    post:
+      parameters:
+      - name: algorithmName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DecisionExplanationResponse'
   /models:
     get:
       responses:
@@ -157,8 +340,24 @@ paths:
       responses:
         "200":
           description: OK
+  /pmml:
+    get:
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailablePmmlModelsResponse'
 components:
   schemas:
+    AvailablePmmlModelsResponse:
+      type: object
+      properties:
+        availableModels:
+          type: array
+          items:
+            type: string
     ExecutionHeaderResponse:
       type: object
       properties:
@@ -184,32 +383,6 @@ components:
       - DECISION
       - PROCESS
       type: string
-    ExecutionResponse:
-      type: object
-      properties:
-        headers:
-          $ref: '#/components/schemas/ListExecutionHeaderResponse'
-        limit:
-          format: int32
-          type: integer
-        offset:
-          format: int32
-          type: integer
-        total:
-          format: int32
-          type: integer
-    ExecutionDetailResponse:
-      type: object
-      properties:
-        header:
-          $ref: '#/components/schemas/ExecutionHeaderResponse'
-    DecisionInputsResponse:
-      type: object
-      properties:
-        header:
-          $ref: '#/components/schemas/ExecutionHeaderResponse'
-        input:
-          type: object
     DecisionResultModel:
       type: object
       properties:
@@ -241,13 +414,37 @@ components:
       type: array
       items:
         type: string
-    DecisionOutputsResponse:
+    ExecutionDetailResponse:
       type: object
       properties:
-        decisions:
-          $ref: '#/components/schemas/ListDecisionResultModel'
         header:
           $ref: '#/components/schemas/ExecutionHeaderResponse'
+    ModelExplainationResponse:
+      type: object
+      properties:
+        test:
+          type: string
+    DecisionExplanationResponse:
+      type: object
+      properties:
+        explaination:
+          type: object
+    AlgorithmClassEnum:
+      type: object
+    AvailableAlgorithmsClassResponse:
+      type: object
+      properties:
+        types:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlgorithmClassEnum'
+    AvailableAlgorithmsResponse:
+      type: object
+      properties:
+        availableAlgorithms:
+          type: array
+          items:
+            type: string
     EvaluationRequestBody:
       type: object
       properties:
