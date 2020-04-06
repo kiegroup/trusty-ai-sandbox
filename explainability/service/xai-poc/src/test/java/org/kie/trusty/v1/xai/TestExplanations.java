@@ -1,4 +1,4 @@
-package org.kie.trusty.v1.xai.v1;
+package org.kie.trusty.v1.xai;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
