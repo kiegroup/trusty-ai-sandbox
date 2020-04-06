@@ -17,6 +17,5 @@ public class ElasticSearchResponse {
 
     @JsonProperty("hits")
     public ElasticHits hits;
-
 }
 

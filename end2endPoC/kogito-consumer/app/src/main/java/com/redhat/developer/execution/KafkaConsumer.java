@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
 public class KafkaConsumer extends KafkaAbstractConsumer {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumer.class);
 
     @Inject
@@ -25,7 +26,7 @@ public class KafkaConsumer extends KafkaAbstractConsumer {
         super.onProcessInstanceEvent(event);
     }
 
-    protected void processEvent(DMNEventDto event){
+    protected void processEvent(DMNEventDto event) {
         LOGGER.debug("Processing a new event");
         DMNEventModel dmnEventModel = ModelFactory.fromKafkaCloudEvent(event);
         eventStorage.storeEvent(dmnEventModel.id, dmnEventModel);

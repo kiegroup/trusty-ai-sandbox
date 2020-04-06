@@ -8,6 +8,7 @@ import com.redhat.developer.execution.storage.model.DMNResultModel;
 import com.redhat.developer.execution.storage.model.ExecutionEnum;
 
 public class ExecutionHeaderResponse {
+
     @JsonProperty("executionId")
     public String executionId;
 
@@ -24,14 +25,14 @@ public class ExecutionHeaderResponse {
     @JsonProperty("executionType")
     public ExecutionEnum executionType = ExecutionEnum.DECISION;
 
-    public ExecutionHeaderResponse(String executionId, Date executionDate, boolean executionSucceeded, String executorName){
+    public ExecutionHeaderResponse(String executionId, Date executionDate, boolean executionSucceeded, String executorName) {
         this.executionId = executionId;
         this.executionDate = executionDate;
         this.executionSucceeded = executionSucceeded;
         this.executorName = executorName;
     }
 
-    public static ExecutionHeaderResponse fromDMNResultModel(DMNResultModel result){
-        return new ExecutionHeaderResponse(result.executionId, result.executionDate, result.decisions.stream().anyMatch(y -> y.hasErrors == true), "testUser");
+    public static ExecutionHeaderResponse fromDMNResultModel(DMNResultModel result) {
+        return new ExecutionHeaderResponse(result.executionId, result.executionDate, !result.decisions.stream().anyMatch(y -> y.hasErrors), "testUser");
     }
 }

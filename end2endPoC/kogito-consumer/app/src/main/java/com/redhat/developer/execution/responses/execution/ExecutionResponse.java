@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ExecutionResponse {
+
     @JsonProperty("total")
     public int total;
 
@@ -17,7 +18,7 @@ public class ExecutionResponse {
     @JsonProperty("headers")
     public List<ExecutionHeaderResponse> executionHeadersResponse;
 
-    public ExecutionResponse(int total, int returnedRecords, int offset, List<ExecutionHeaderResponse> executionHeadersResponse){
+    public ExecutionResponse(int total, int returnedRecords, int offset, List<ExecutionHeaderResponse> executionHeadersResponse) {
         this.total = total;
         this.limit = returnedRecords;
         this.offset = offset;

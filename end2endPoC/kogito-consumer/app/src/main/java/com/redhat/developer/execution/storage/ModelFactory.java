@@ -20,7 +20,7 @@ import static com.redhat.developer.execution.storage.model.DecisionEvaluationSta
 
 public class ModelFactory {
 
-    public static DMNEventModel fromKafkaCloudEvent(DMNEventDto event){
+    public static DMNEventModel fromKafkaCloudEvent(DMNEventDto event) {
         DMNResultDto resultDto = event.data.result;
         DMNResultModel resultModel = new DMNResultModel();
         resultModel.modelNamespace = resultDto.modelNamespace;
@@ -38,7 +38,7 @@ public class ModelFactory {
         return eventModel;
     }
 
-    public static DecisionResultModel fromDecisionDto(DecisionResultDto decisionDto){
+    public static DecisionResultModel fromDecisionDto(DecisionResultDto decisionDto) {
         DecisionResultModel model = new DecisionResultModel();
         model.decisionId = decisionDto.decisionId;
         model.decisionName = decisionDto.decisionName;
@@ -49,8 +49,8 @@ public class ModelFactory {
         return model;
     }
 
-    public static DecisionEvaluationStatusModel fromEvaluationStatusDto(DecisionEvaluationStatusDto evaluation){
-        switch(evaluation){
+    public static DecisionEvaluationStatusModel fromEvaluationStatusDto(DecisionEvaluationStatusDto evaluation) {
+        switch (evaluation) {
             case FAILED:
                 return FAILED;
             case EVALUATING:

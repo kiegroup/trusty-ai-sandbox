@@ -9,5 +9,5 @@ npm install -g http-server
 ## Run 
 
 ```sh 
-npm start --port 8280
+npm start
 ```

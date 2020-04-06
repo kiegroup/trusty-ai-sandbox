@@ -107,25 +107,6 @@
 
     <plugins>
       <plugin>
-        <groupId>io.swagger.core.v3</groupId>
-        <artifactId>swagger-maven-plugin</artifactId>
-        <version>2.1.1</version>
-        <configuration>
-          <outputFileName>openapi</outputFileName>
-          <outputPath>${project.build.directory}/generatedtest</outputPath>
-          <configurationFilePath>${project.basedir}/src/main/resources/configurationFile.yaml</configurationFilePath>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>compile</phase>
-            <goals>
-              <goal>resolve</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
         <groupId>io.quarkus</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>
         <version>${quarkus-plugin.version}</version>

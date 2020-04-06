@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DMNResultModel {
+
     @JsonProperty("executionId")
     public String executionId;
 
@@ -27,7 +28,7 @@ public class DMNResultModel {
     @JsonProperty("modelName")
     public String modelName;
 
-    public Date getExecutionDate(){
+    public Date getExecutionDate() {
         return executionDate;
     }
 }

@@ -9,7 +9,7 @@ public class AvailableModelsResponse {
     @JsonProperty("availableModels")
     public List<ModelDetail> availableModels;
 
-    public AvailableModelsResponse(List<ModelDetail> availableModels){
+    public AvailableModelsResponse(List<ModelDetail> availableModels) {
         this.availableModels = availableModels;
     }
 }

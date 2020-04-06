@@ -7,9 +7,10 @@ public class DMNDataModel {
     @JsonProperty("result")
     public DMNResultModel result;
 
-    public DMNDataModel(){}
+    public DMNDataModel() {
+    }
 
-    public DMNDataModel(DMNResultModel resultModel){
+    public DMNDataModel(DMNResultModel resultModel) {
         this.result = resultModel;
     }
 }
