@@ -1,5 +1,6 @@
 package com.redhat.developer.execution.storage.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,4 +25,6 @@ public class DecisionResultModel {
 
     @JsonProperty("hasErrors")
     public boolean hasErrors;
+
+    public DecisionResultModel(){}
 }

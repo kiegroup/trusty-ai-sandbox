@@ -3,9 +3,7 @@ package com.redhat.developer.execution.api;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
@@ -19,7 +17,6 @@ import javax.ws.rs.core.Response;
 import com.redhat.developer.database.IEventStorage;
 import com.redhat.developer.execution.responses.execution.ExecutionHeaderResponse;
 import com.redhat.developer.execution.responses.execution.ExecutionResponse;
-import com.redhat.developer.execution.storage.model.DMNEventModel;
 import com.redhat.developer.execution.storage.model.DMNResultModel;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
@@ -42,7 +39,7 @@ public class ExecutionsApi {
             @APIResponse(description = "Bad Request", responseCode = "400", content = @Content(mediaType = MediaType.TEXT_PLAIN))
     }
     )
-    @Operation(summary = "Gets the execution headers.", description = "Gets the execution headers.")
+    @Operation(summary = "Gets the execution headers", description = "Gets the execution headers.")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getExecutions(
             @Parameter(
@@ -91,6 +88,83 @@ public class ExecutionsApi {
         results.forEach(x -> executionResponses.add(ExecutionHeaderResponse.fromDMNResultModel(x)));
         return Response.ok(new ExecutionResponse(totalResults, limit, offset, executionResponses)).build();
     }
+
+
+    @GET
+    @Path("/decisions")
+    @APIResponses(value = {
+            @APIResponse(description = "Returns the execution headers of decisions.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = ExecutionResponse.class))),
+            @APIResponse(description = "Bad Request", responseCode = "400", content = @Content(mediaType = MediaType.TEXT_PLAIN))
+    }
+    )
+    @Operation(summary = "Gets the execution headers of the decisions only. To be implemented", description = "Gets the execution headers of the decisions only.")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDecisions(
+            @Parameter(
+                    name = "from",
+                    description = "Start datetime for the lookup. Date in the format \"yyyy-MM-dd'T'HH:mm:ss.SSS\"",
+                    required = false,
+                    schema = @Schema(implementation = String.class)
+            ) @DefaultValue("yesterday") @QueryParam("from") String from,
+            @Parameter(
+                    name = "to",
+                    description = "End datetime for the lookup. Date in the format \"yyyy-MM-dd'T'HH:mm:ss.SSS\"",
+                    required = false,
+                    schema = @Schema(implementation = String.class)
+            ) @DefaultValue("now") @QueryParam("to") String to,
+            @Parameter(
+                    name = "limit",
+                    description = "Maximum number of results to return.",
+                    required = false,
+                    schema = @Schema(implementation = Integer.class)
+            ) @DefaultValue("100") @QueryParam("limit") int limit,
+            @Parameter(
+                    name = "offset",
+                    description = "Offset for the pagination.",
+                    required = false,
+                    schema = @Schema(implementation = Integer.class)
+            ) @DefaultValue("0") @QueryParam("offset") int offset) {
+        return Response.status(500, "NOT IMPLEMENTED").build();
+    }
+
+
+    @GET
+    @Path("/processes")
+    @APIResponses(value = {
+            @APIResponse(description = "Returns the execution headers of the processes only.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = ExecutionResponse.class))),
+            @APIResponse(description = "Bad Request", responseCode = "400", content = @Content(mediaType = MediaType.TEXT_PLAIN))
+    }
+    )
+    @Operation(summary = "Gets the execution headers of the processes only. To be implemented.", description = "Gets the execution headers of the processes only.")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProcesses(
+            @Parameter(
+                    name = "from",
+                    description = "Start datetime for the lookup. Date in the format \"yyyy-MM-dd'T'HH:mm:ss.SSS\"",
+                    required = false,
+                    schema = @Schema(implementation = String.class)
+            ) @DefaultValue("yesterday") @QueryParam("from") String from,
+            @Parameter(
+                    name = "to",
+                    description = "End datetime for the lookup. Date in the format \"yyyy-MM-dd'T'HH:mm:ss.SSS\"",
+                    required = false,
+                    schema = @Schema(implementation = String.class)
+            ) @DefaultValue("now") @QueryParam("to") String to,
+            @Parameter(
+                    name = "limit",
+                    description = "Maximum number of results to return.",
+                    required = false,
+                    schema = @Schema(implementation = Integer.class)
+            ) @DefaultValue("100") @QueryParam("limit") int limit,
+            @Parameter(
+                    name = "offset",
+                    description = "Offset for the pagination.",
+                    required = false,
+                    schema = @Schema(implementation = Integer.class)
+            ) @DefaultValue("0") @QueryParam("offset") int offset) {
+        return Response.status(500, "NOT IMPLEMENTED").build();
+    }
+
 
     @GET
     @Path("/search")

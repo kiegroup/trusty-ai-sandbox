@@ -49,7 +49,7 @@ public class ElasticEventStorage implements IEventStorage {
 
     @Override
     public List<DMNEventModel> getEventsByMatchingId(String key) {
-        System.out.println("requested: " + key);
+        LOGGER.info("requested: " + key);
         String request = "{ \n" +
                 "    \"query\": {\n" +
                 "        \"match\": { \"data.result.executionId\" : \"" + key + "*\"}\n" +
