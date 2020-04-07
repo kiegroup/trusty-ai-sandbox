@@ -12,6 +12,8 @@ import javax.ws.rs.core.Response;
 import com.redhat.developer.database.IEventStorage;
 import com.redhat.developer.execution.responses.decisions.DecisionInputsResponse;
 import com.redhat.developer.execution.responses.decisions.DecisionOutputsResponse;
+import com.redhat.developer.execution.responses.decisions.DecisionOutputsStructuredResponse;
+import com.redhat.developer.execution.responses.decisions.SingleDecisionOutputResponse;
 import com.redhat.developer.execution.responses.execution.ExecutionDetailResponse;
 import com.redhat.developer.execution.responses.execution.ExecutionHeaderResponse;
 import com.redhat.developer.execution.storage.model.DMNEventModel;
@@ -39,14 +41,14 @@ public class DecisionsApi {
     )
     @Operation(summary = "Gets The decision header with details.", description = "Gets the decision detail header.")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getExecutionByKey(
-            @Parameter(
-                    name = "key",
-                    description = "ID of the decision that needs to be fetched",
-                    required = true,
-                    schema = @Schema(implementation = String.class)
-            )
-            @PathParam("key") String key) {
+    @Parameter(
+            name = "key",
+            description = "ID of the decision that needs to be fetched",
+            required = true,
+            schema = @Schema(implementation = String.class)
+    )
+    @PathParam("key")
+    public Response getExecutionByKey(String key) {
         List<DMNEventModel> event = storageService.getEventsByMatchingId(key);
 
         if (event == null) {
@@ -119,5 +121,71 @@ public class DecisionsApi {
 
         return Response.ok(new DecisionOutputsResponse(ExecutionHeaderResponse.fromDMNResultModel(event.get(0).data.result), event.get(0).data.result.decisions)).build();
     }
-}
 
+    @GET
+    @Path("/{key}/structuredOutcomes")
+    @APIResponses(value = {
+            @APIResponse(description = "Gets the decision outcomes.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = DecisionOutputsStructuredResponse.class))),
+            @APIResponse(description = "Bad Request", responseCode = "400", content = @Content(mediaType = MediaType.TEXT_PLAIN))
+    }
+    )
+    @Operation(summary = "Gets the decision outcomes with model structure. To be implemented.", description = "Gets the decision outcomes in a structure that reflects the dmn model structure.")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getExecutionGraphOutcomes(
+            @Parameter(
+                    name = "key",
+                    description = "ID of the decision that needs to be fetched",
+                    required = true,
+                    schema = @Schema(implementation = String.class)
+            )
+            @PathParam("key") String key) {
+        List<DMNEventModel> event = storageService.getEventsByMatchingId(key);
+
+        if (event == null) {
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Event with id {} does not exist.", key)).build();
+        }
+
+        if(event.size() > 1){
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Multiple events have been retrieved with this ID.", key)).build();
+        }
+
+        return Response.ok(new DecisionOutputsStructuredResponse(ExecutionHeaderResponse.fromDMNResultModel(event.get(0).data.result), event.get(0).data.result.decisions)).build();
+    }
+
+    @GET
+    @Path("/{key}/outcomes/{outcomeId}")
+    @APIResponses(value = {
+            @APIResponse(description = "Gets the decision outcome detail.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = DecisionOutputsResponse.class))),
+            @APIResponse(description = "Bad Request", responseCode = "400", content = @Content(mediaType = MediaType.TEXT_PLAIN))
+    }
+    )
+    @Operation(summary = "Gets the decision outcomes with model structure.", description = "Gets the decision outcomes in a structure that reflects the dmn model structure.")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getExecutionOutcomeById(
+            @Parameter(
+                    name = "key",
+                    description = "ID of the decision that needs to be fetched",
+                    required = true,
+                    schema = @Schema(implementation = String.class)
+            )
+            @PathParam("key") String key,
+            @Parameter(
+                    name = "outcomeId",
+                    description = "ID of the decision that needs to be fetched",
+                    required = true,
+                    schema = @Schema(implementation = String.class)
+            )
+            @PathParam("outcomeId") String outcomeId) {
+        List<DMNEventModel> event = storageService.getEventsByMatchingId(key);
+
+        if (event == null) {
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Event with id {} does not exist.", key)).build();
+        }
+
+        if(event.size() > 1){
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Multiple events have been retrieved with this ID.", key)).build();
+        }
+
+        return Response.ok(new SingleDecisionOutputResponse(event.get(0).data.result.decisions.stream().filter(x -> x.decisionId.equals(outcomeId)).findFirst().get())).build();
+    }
+}

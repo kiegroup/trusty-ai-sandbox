@@ -6,7 +6,7 @@ info:
 paths:
   /executions:
     get:
-      summary: Gets the execution headers.
+      summary: Gets the execution headers
       description: Gets the execution headers.
       parameters:
       - name: from
@@ -62,17 +62,68 @@ paths:
                   total:
                     format: int32
                     type: integer
+  /executions/decisions:
+    get:
+      summary: Gets the execution headers of the decisions only. To be implemented
+      description: Gets the execution headers of the decisions only.
+      parameters:
+      - name: from
+        in: query
+        description: Start datetime for the lookup. Date in the format "yyyy-MM-dd'T'HH:mm:ss.SSS"
+        required: false
+        schema:
+          default: yesterday
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of results to return.
+        required: false
+        schema:
+          format: int32
+          default: 100
+          type: integer
+      - name: offset
+        in: query
+        description: Offset for the pagination.
+        required: false
+        schema:
+          format: int32
+          default: 0
+          type: integer
+      - name: to
+        in: query
+        description: End datetime for the lookup. Date in the format "yyyy-MM-dd'T'HH:mm:ss.SSS"
+        required: false
+        schema:
+          default: now
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            text/plain: {}
+        "200":
+          description: Returns the execution headers of decisions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  headers:
+                    $ref: '#/components/schemas/ListExecutionHeaderResponse'
+                  limit:
+                    format: int32
+                    type: integer
+                  offset:
+                    format: int32
+                    type: integer
+                  total:
+                    format: int32
+                    type: integer
   /executions/decisions/{key}:
     get:
       summary: Gets The decision header with details.
       description: Gets the decision detail header.
-      parameters:
-      - name: key
-        in: path
-        description: ID of the decision that needs to be fetched
-        required: true
-        schema:
-          type: string
       responses:
         "400":
           description: Bad Request
@@ -137,12 +188,134 @@ paths:
               schema:
                 type: object
                 properties:
-                  decisions:
-                    $ref: '#/components/schemas/ListDecisionResultModel'
                   header:
                     $ref: '#/components/schemas/ExecutionHeaderResponse'
+                  decisions:
+                    $ref: '#/components/schemas/ListDecisionResultModel'
+  /executions/decisions/{key}/outcomes/{outcomeId}:
+    get:
+      summary: Gets the decision outcomes with model structure.
+      description: Gets the decision outcomes in a structure that reflects the dmn
+        model structure.
+      parameters:
+      - name: key
+        in: path
+        description: ID of the decision that needs to be fetched
+        required: true
+        schema:
+          type: string
+      - name: outcomeId
+        in: path
+        description: ID of the decision that needs to be fetched
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            text/plain: {}
+        "200":
+          description: Gets the decision outcome detail.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  header:
+                    $ref: '#/components/schemas/ExecutionHeaderResponse'
+                  decisions:
+                    $ref: '#/components/schemas/ListDecisionResultModel'
+  /executions/decisions/{key}/structuredOutcomes:
+    get:
+      summary: Gets the decision outcomes with model structure. To be implemented.
+      description: Gets the decision outcomes in a structure that reflects the dmn
+        model structure.
+      parameters:
+      - name: key
+        in: path
+        description: ID of the decision that needs to be fetched
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            text/plain: {}
+        "200":
+          description: Gets the decision outcomes.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  header:
+                    $ref: '#/components/schemas/ExecutionHeaderResponse'
+                  decisions:
+                    $ref: '#/components/schemas/ListDecisionResultModelWithInputs'
+  /executions/processes:
+    get:
+      summary: Gets the execution headers of the processes only. To be implemented.
+      description: Gets the execution headers of the processes only.
+      parameters:
+      - name: from
+        in: query
+        description: Start datetime for the lookup. Date in the format "yyyy-MM-dd'T'HH:mm:ss.SSS"
+        required: false
+        schema:
+          default: yesterday
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of results to return.
+        required: false
+        schema:
+          format: int32
+          default: 100
+          type: integer
+      - name: offset
+        in: query
+        description: Offset for the pagination.
+        required: false
+        schema:
+          format: int32
+          default: 0
+          type: integer
+      - name: to
+        in: query
+        description: End datetime for the lookup. Date in the format "yyyy-MM-dd'T'HH:mm:ss.SSS"
+        required: false
+        schema:
+          default: now
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            text/plain: {}
+        "200":
+          description: Returns the execution headers of the processes only.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  headers:
+                    $ref: '#/components/schemas/ListExecutionHeaderResponse'
+                  limit:
+                    format: int32
+                    type: integer
+                  offset:
+                    format: int32
+                    type: integer
+                  total:
+                    format: int32
+                    type: integer
   /executions/processes/{key}:
     get:
+      summary: Gets the execution header of the process only. To be implemented.
+      description: Gets the execution header of the processe only.
       parameters:
       - name: key
         in: path
@@ -308,6 +481,7 @@ paths:
       parameters:
       - name: id
         in: path
+        description: ID of the DMN Model to evaluate.
         required: true
         schema:
           type: string
@@ -383,6 +557,41 @@ components:
       - DECISION
       - PROCESS
       type: string
+    DecisionResultModelWithInputs:
+      type: object
+      properties:
+        decisionId:
+          type: string
+        decisionName:
+          type: string
+        evaluationStatus:
+          $ref: '#/components/schemas/DecisionEvaluationStatusModel'
+        hasErrors:
+          type: boolean
+        messages:
+          $ref: '#/components/schemas/ListString'
+        decisionResult:
+          type: string
+        decisionInputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/DecisionResultModelWithInputs'
+    ListDecisionResultModelWithInputs:
+      type: array
+      items:
+        $ref: '#/components/schemas/DecisionResultModelWithInputs'
+    DecisionEvaluationStatusModel:
+      enum:
+      - EVALUATING
+      - FAILED
+      - NOT_EVALUATED
+      - SKIPPED
+      - SUCCEEDED
+      type: string
+    ListString:
+      type: array
+      items:
+        type: string
     DecisionResultModel:
       type: object
       properties:
@@ -402,18 +611,6 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/DecisionResultModel'
-    DecisionEvaluationStatusModel:
-      enum:
-      - EVALUATING
-      - FAILED
-      - NOT_EVALUATED
-      - SKIPPED
-      - SUCCEEDED
-      type: string
-    ListString:
-      type: array
-      items:
-        type: string
     ExecutionDetailResponse:
       type: object
       properties:
@@ -448,7 +645,7 @@ components:
     EvaluationRequestBody:
       type: object
       properties:
-        input:
+        inputs:
           type: object
     ListObject:
       type: array

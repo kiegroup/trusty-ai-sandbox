@@ -4,6 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class EvaluationRequestBody {
 
-    @JsonProperty("input")
-    public Object input;
+    @JsonProperty("inputs")
+    public Object inputs;
 }
