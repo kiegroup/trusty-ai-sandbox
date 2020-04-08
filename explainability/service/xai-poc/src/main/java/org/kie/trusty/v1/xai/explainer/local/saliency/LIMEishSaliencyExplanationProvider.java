@@ -5,19 +5,24 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import org.kie.trusty.v1.DummyModelRegistry;
 import org.kie.trusty.v1.Feature;
 import org.kie.trusty.v1.Model;
 import org.kie.trusty.v1.ModelInfo;
-import org.kie.trusty.v1.DummyModelRegistry;
 import org.kie.trusty.v1.Prediction;
+import org.kie.trusty.v1.xai.explainer.Saliency;
 import org.kie.trusty.v1.xai.explainer.local.saliency.utils.DataUtils;
 import org.kie.trusty.v1.xai.explainer.local.saliency.utils.LinearClassifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * LIME-ish explanation implementation.
  * Perturbations to data inputs are performed by randomly dropping features (setting them to 0).
  */
-public class LIMEishSaliencyExplanationProvider implements SaliencyExplanationProvider {
+public class LIMEishSaliencyExplanationProvider implements SaliencyLocalExplanationProvider {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * no. of samples to be generated for the local linear classifier model training
@@ -34,6 +39,7 @@ public class LIMEishSaliencyExplanationProvider implements SaliencyExplanationPr
 
     @Override
     public Saliency explain(Prediction prediction) {
+        long start = System.currentTimeMillis();
         double[] input = prediction.getInput().asDoubles();
         ModelInfo modelInfo = prediction.getModelInfo();
         Model model = DummyModelRegistry.getModel(modelInfo.getId());
@@ -49,9 +55,10 @@ public class LIMEishSaliencyExplanationProvider implements SaliencyExplanationPr
         double[] weights = linearClassifier.getWeights();
         Map<Feature, Double> saliencyMap = new HashMap<>();
         for (int i = 0; i < weights.length; i++) {
-            saliencyMap.put(prediction.getInput().asFeatureList().get(i),weights[i]);
+            saliencyMap.put(prediction.getInput().asFeatureList().get(i), weights[i]);
         }
+        long end = System.currentTimeMillis();
+        logger.info("explanation time: {}ms", (end - start));
         return new Saliency(saliencyMap);
     }
-
 }

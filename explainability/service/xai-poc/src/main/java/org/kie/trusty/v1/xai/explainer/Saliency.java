@@ -1,4 +1,4 @@
-package org.kie.trusty.v1.xai.explainer.local.saliency;
+package org.kie.trusty.v1.xai.explainer;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;

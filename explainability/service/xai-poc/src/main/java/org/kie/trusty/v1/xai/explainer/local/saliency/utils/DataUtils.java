@@ -4,7 +4,6 @@ import java.security.SecureRandom;
 import java.util.List;
 
 import org.kie.trusty.v1.Feature;
-import org.kie.trusty.v1.Prediction;
 import org.kie.trusty.v1.PredictionInput;
 import org.kie.trusty.v1.PredictionOutput;
 

@@ -6,8 +6,9 @@ import java.util.Map;
 
 import org.kie.trusty.v1.Feature;
 import org.kie.trusty.v1.Prediction;
+import org.kie.trusty.v1.xai.explainer.Saliency;
 
-public class RandomSaliencyExplainerProvider implements SaliencyExplanationProvider {
+public class RandomSaliencyExplainerProvider implements SaliencyLocalExplanationProvider {
 
     @Override
     public Saliency explain(Prediction prediction) {

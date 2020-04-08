@@ -1,8 +1,13 @@
 package org.kie.trusty.v1.xai.builder;
 
+import org.kie.trusty.v1.xai.explainer.global.saliency.PredictionFeatureImportanceProvider;
+import org.kie.trusty.v1.xai.explainer.global.saliency.SaliencyGlobalExplanationProvider;
+import org.kie.trusty.v1.xai.explainer.global.saliency.VariableFeatureImportanceProvider;
+import org.kie.trusty.v1.xai.explainer.global.viz.GlobalVizExplanationProvider;
+import org.kie.trusty.v1.xai.explainer.global.viz.PartialDependenceProvider;
 import org.kie.trusty.v1.xai.explainer.local.saliency.LIMEishSaliencyExplanationProvider;
-import org.kie.trusty.v1.xai.explainer.local.saliency.SaliencyExplanationProvider;
 import org.kie.trusty.v1.xai.explainer.local.saliency.RandomSaliencyExplainerProvider;
+import org.kie.trusty.v1.xai.explainer.local.saliency.SaliencyLocalExplanationProvider;
 
 public class ExplanationProviderBuilder {
 
@@ -19,6 +24,10 @@ public class ExplanationProviderBuilder {
         public LocalBuilder local() {
             return new LocalBuilder();
         }
+
+        public GlobalBuilder global() {
+            return new GlobalBuilder();
+        }
     }
 
     public static class LocalBuilder {
@@ -31,9 +40,9 @@ public class ExplanationProviderBuilder {
 
     public static class SaliencyBuilder {
 
-        private SaliencyExplanationProvider provider = null;
+        private SaliencyLocalExplanationProvider provider = null;
 
-        public SaliencyExplanationProvider build() {
+        public SaliencyLocalExplanationProvider build() {
             return provider;
         }
 
@@ -48,8 +57,50 @@ public class ExplanationProviderBuilder {
         }
 
         public SaliencyBuilder lime(int noOfSamples) {
-            provider = new LIMEishSaliencyExplanationProvider();
+            provider = new LIMEishSaliencyExplanationProvider(noOfSamples);
             return this;
+        }
+    }
+
+    public static class GlobalBuilder {
+
+        public VariableFeatureImportanceBuilder vfi() {
+            return new VariableFeatureImportanceBuilder();
+        }
+
+        public PredictionFeatureImportanceBuilder prediction() {
+            return null;
+        }
+
+        public PartialDependenceBuilder partialDependence(int featureIndex) {
+            return new PartialDependenceBuilder(featureIndex);
+        }
+    }
+
+    public static class VariableFeatureImportanceBuilder {
+
+        public SaliencyGlobalExplanationProvider build() {
+            return new VariableFeatureImportanceProvider();
+        }
+    }
+
+    public static class PredictionFeatureImportanceBuilder {
+
+        public SaliencyGlobalExplanationProvider build() {
+            return new PredictionFeatureImportanceProvider();
+        }
+    }
+
+    public static class PartialDependenceBuilder {
+
+        private final PartialDependenceProvider provider;
+
+        public PartialDependenceBuilder(int featureIndex) {
+            this.provider = new PartialDependenceProvider(featureIndex);
+        }
+
+        public GlobalVizExplanationProvider build() {
+            return provider;
         }
     }
 }

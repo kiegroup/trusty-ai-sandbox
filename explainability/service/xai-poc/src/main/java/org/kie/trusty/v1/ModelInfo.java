@@ -32,7 +32,13 @@ public interface ModelInfo {
      * The endpoint that can be used in order to access the service associated to the given model
      * @return the endpoint URI
      */
-    URI getEndpoint();
+    URI getPredictionEndpoint();
+
+    URI getTrainingEndpoint();
+
+    URI getTrainingDataURI();
+
+    DataDistribution getTrainingDataDistribution();
 
     /**
      * Get a sample input 'shape'
@@ -46,4 +52,12 @@ public interface ModelInfo {
      */
     PredictionOutput getOutputShape();
 
+    interface DataDistribution {
+
+        double getMean(int featureIndex);
+        double getStdDeviation(int featureIndex);
+        double getMin(int featureIndex);
+        double getMax(int featureIndex);
+
+    }
 }

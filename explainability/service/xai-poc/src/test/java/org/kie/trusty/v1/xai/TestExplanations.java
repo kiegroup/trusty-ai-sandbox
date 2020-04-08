@@ -8,37 +8,42 @@ import java.util.UUID;
 import java.util.stream.DoubleStream;
 
 import org.junit.Test;
+import org.kie.trusty.v1.DummyModelRegistry;
 import org.kie.trusty.v1.Feature;
 import org.kie.trusty.v1.FeatureValue;
 import org.kie.trusty.v1.Model;
 import org.kie.trusty.v1.ModelInfo;
-import org.kie.trusty.v1.DummyModelRegistry;
 import org.kie.trusty.v1.Prediction;
 import org.kie.trusty.v1.PredictionInput;
 import org.kie.trusty.v1.PredictionOutput;
 import org.kie.trusty.v1.xai.builder.ExplanationProviderBuilder;
-import org.kie.trusty.v1.xai.explainer.local.saliency.Saliency;
-import org.kie.trusty.v1.xai.explainer.local.saliency.SaliencyExplanationProvider;
+import org.kie.trusty.v1.xai.explainer.Saliency;
+import org.kie.trusty.v1.xai.explainer.global.viz.GlobalVizExplanationProvider;
+import org.kie.trusty.v1.xai.explainer.global.viz.TabularData;
+import org.kie.trusty.v1.xai.explainer.local.saliency.SaliencyLocalExplanationProvider;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class TestExplanations {
 
+    public static final SecureRandom SECURE_RANDOM = new SecureRandom();
+
     @Test
     public void testLocalSaliencyExplanation() {
         SecureRandom secureRandom = new SecureRandom();
         UUID uuid = UUID.randomUUID();
-        Model model = createModel(secureRandom);
+        Model model = createDummyTestModel();
         DummyModelRegistry.registerModel(uuid, model);
-        PredictionInput in = getInput(secureRandom);
+        PredictionInput in = getInput();
         PredictionOutput out = getOutput(model, in);
         ModelInfo info = getModelInfo(uuid);
         Prediction prediction = new Prediction(info, in, out);
-        SaliencyExplanationProvider explanationProvider = ExplanationProviderBuilder.newExplanationProviderBuilder()
+        SaliencyLocalExplanationProvider explanationProvider = ExplanationProviderBuilder.newExplanationProviderBuilder()
                 .local()
                 .saliency()
                 .lime()
@@ -55,9 +60,34 @@ public class TestExplanations {
         }
     }
 
+    @Test
+    public void testGlobalTabularExplanation() {
+        UUID uuid = UUID.randomUUID();
+        Model model = createDummyTestModel();
+        DummyModelRegistry.registerModel(uuid, model);
+        ModelInfo info = getModelInfo(uuid);
+        int featureIndex = SECURE_RANDOM.nextInt(info.getInputShape().asDoubles().length);
+        GlobalVizExplanationProvider explanationProvider = ExplanationProviderBuilder.newExplanationProviderBuilder()
+                .global()
+                .partialDependence(featureIndex)
+                .build();
+        TabularData tabularData = explanationProvider.explain(info);
+        assertNotNull(tabularData);
+    }
+
     private ModelInfo getModelInfo(UUID uuid) {
         ModelInfo info = mock(ModelInfo.class);
         when(info.getId()).thenReturn(uuid);
+        PredictionInput input = getInput();
+        when(info.getInputShape()).thenReturn(input);
+        ModelInfo.DataDistribution dataDistribution = mock(ModelInfo.DataDistribution.class);
+        for (int i = 0; i < 10; i++) {
+            when(dataDistribution.getMax(i)).thenReturn(SECURE_RANDOM.nextDouble());
+            when(dataDistribution.getMean(i)).thenReturn(SECURE_RANDOM.nextDouble());
+            when(dataDistribution.getStdDeviation(i)).thenReturn(SECURE_RANDOM.nextDouble());
+            when(dataDistribution.getMin(i)).thenReturn(SECURE_RANDOM.nextDouble());
+        }
+        when(info.getTrainingDataDistribution()).thenReturn(dataDistribution);
         return info;
     }
 
@@ -68,13 +98,13 @@ public class TestExplanations {
         return out;
     }
 
-    private PredictionInput getInput(SecureRandom secureRandom) {
+    private PredictionInput getInput() {
         PredictionInput in = mock(PredictionInput.class);
         List<Feature> features = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Feature f = mock(Feature.class);
             FeatureValue fv = mock(FeatureValue.class);
-            double t = secureRandom.nextDouble();
+            double t = SECURE_RANDOM.nextDouble();
             when(fv.asDouble()).thenReturn(t);
             when(f.getValue()).thenReturn(fv);
             features.add(f);
@@ -85,8 +115,8 @@ public class TestExplanations {
         return in;
     }
 
-    private Model createModel(SecureRandom secureRandom) {
-        double fixedPoint = secureRandom.nextDouble();
+    private Model createDummyTestModel() {
+        double fixedPoint = SECURE_RANDOM.nextDouble();
         return inputs -> {
             double[] out = new double[2];
             double p1 = Math.abs((DoubleStream.of(inputs).average().getAsDouble() - fixedPoint) / fixedPoint);
