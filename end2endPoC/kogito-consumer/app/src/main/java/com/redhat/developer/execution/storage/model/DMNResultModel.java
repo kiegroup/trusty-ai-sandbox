@@ -28,6 +28,9 @@ public class DMNResultModel {
     @JsonProperty("modelName")
     public String modelName;
 
+    @JsonProperty("modelId")
+    public String modelId;
+
     public Date getExecutionDate() {
         return executionDate;
     }

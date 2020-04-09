@@ -1,4 +1,4 @@
-package com.redhat.developer.database.elastic;
+package com.redhat.developer.database.elastic.decisions;
 
 import java.util.List;
 

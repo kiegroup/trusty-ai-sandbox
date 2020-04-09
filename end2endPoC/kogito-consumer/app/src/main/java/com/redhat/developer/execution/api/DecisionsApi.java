@@ -1,6 +1,8 @@
 package com.redhat.developer.execution.api;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -9,10 +11,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.redhat.developer.database.IEventStorage;
+import com.redhat.developer.database.IStorageManager;
 import com.redhat.developer.execution.responses.decisions.DecisionInputsResponse;
 import com.redhat.developer.execution.responses.decisions.DecisionOutputsResponse;
 import com.redhat.developer.execution.responses.decisions.DecisionOutputsStructuredResponse;
+import com.redhat.developer.execution.responses.decisions.SingleDecisionInputResponse;
 import com.redhat.developer.execution.responses.decisions.SingleDecisionOutputResponse;
 import com.redhat.developer.execution.responses.execution.ExecutionDetailResponse;
 import com.redhat.developer.execution.responses.execution.ExecutionHeaderResponse;
@@ -30,7 +33,7 @@ import org.jboss.resteasy.annotations.jaxrs.PathParam;
 public class DecisionsApi {
 
     @Inject
-    IEventStorage storageService;
+    IStorageManager storageService;
 
     @GET
     @Path("/{key}")
@@ -41,21 +44,20 @@ public class DecisionsApi {
     )
     @Operation(summary = "Gets The decision header with details.", description = "Gets the decision detail header.")
     @Produces(MediaType.APPLICATION_JSON)
-    @Parameter(
-            name = "key",
-            description = "ID of the decision that needs to be fetched",
-            required = true,
-            schema = @Schema(implementation = String.class)
-    )
-    @PathParam("key")
-    public Response getExecutionByKey(String key) {
+    public Response getExecutionByKey(
+            @Parameter(
+                name = "key",
+                description = "ID of the decision that needs to be fetched",
+                required = true,
+                schema = @Schema(implementation = String.class)
+            ) @PathParam("key") String key) {
         List<DMNEventModel> event = storageService.getEventsByMatchingId(key);
 
         if (event == null) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Event with id {} does not exist.", key)).build();
         }
 
-        if(event.size() > 1){
+        if (event.size() > 1) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Multiple events have been retrieved with this ID.", key)).build();
         }
 
@@ -85,11 +87,18 @@ public class DecisionsApi {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Event with id {} does not exist.", key)).build();
         }
 
-        if(event.size() > 1){
+        if (event.size() > 1) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Multiple events have been retrieved with this ID.", key)).build();
         }
 
-        return Response.ok(new DecisionInputsResponse(ExecutionHeaderResponse.fromDMNResultModel(event.get(0).data.result), event.get(0).data.result)).build();
+        Map<String, Object> context = event.get(0).data.result.context;
+        List<SingleDecisionInputResponse> inputs = new ArrayList<>();
+
+        System.out.println(context.keySet());
+        System.out.println(context.values());
+        context.entrySet().stream().forEach(x -> inputs.add(new SingleDecisionInputResponse(x.getKey(), x.getValue())));
+
+        return Response.ok(new DecisionInputsResponse(ExecutionHeaderResponse.fromDMNResultModel(event.get(0).data.result), inputs)).build();
     }
 
     @GET
@@ -115,7 +124,7 @@ public class DecisionsApi {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Event with id {} does not exist.", key)).build();
         }
 
-        if(event.size() > 1){
+        if (event.size() > 1) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Multiple events have been retrieved with this ID.", key)).build();
         }
 
@@ -145,7 +154,7 @@ public class DecisionsApi {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Event with id {} does not exist.", key)).build();
         }
 
-        if(event.size() > 1){
+        if (event.size() > 1) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Multiple events have been retrieved with this ID.", key)).build();
         }
 
@@ -182,7 +191,7 @@ public class DecisionsApi {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Event with id {} does not exist.", key)).build();
         }
 
-        if(event.size() > 1){
+        if (event.size() > 1) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Multiple events have been retrieved with this ID.", key)).build();
         }
 

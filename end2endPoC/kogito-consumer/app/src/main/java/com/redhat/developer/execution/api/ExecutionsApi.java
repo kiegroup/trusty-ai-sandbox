@@ -14,7 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.redhat.developer.database.IEventStorage;
+import com.redhat.developer.database.IStorageManager;
 import com.redhat.developer.execution.responses.execution.ExecutionHeaderResponse;
 import com.redhat.developer.execution.responses.execution.ExecutionResponse;
 import com.redhat.developer.execution.storage.model.DMNResultModel;
@@ -31,7 +31,7 @@ import org.jboss.resteasy.annotations.jaxrs.QueryParam;
 public class ExecutionsApi {
 
     @Inject
-    IEventStorage storageService;
+    IStorageManager storageService;
 
     @GET
     @APIResponses(value = {
@@ -65,7 +65,13 @@ public class ExecutionsApi {
                     description = "Offset for the pagination.",
                     required = false,
                     schema = @Schema(implementation = Integer.class)
-            ) @DefaultValue("0") @QueryParam("offset") int offset) {
+            ) @DefaultValue("0") @QueryParam("offset") int offset,
+            @Parameter(
+                    name = "search",
+                    description = "Execution ID prefix to be matched",
+                    required = false,
+                    schema = @Schema(implementation = String.class)
+            ) @DefaultValue("") @QueryParam("search") String prefix) {
 
         if (from.equals("yesterday")) {
             from = java.time.LocalDateTime.now().minusDays(1).toString();
@@ -73,8 +79,9 @@ public class ExecutionsApi {
         List<DMNResultModel> results;
 
         try {
-            results = storageService.getDecisions(from, to);
+            results = storageService.getDecisions(from, to, prefix);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return Response.status(400, String.format("Bad request: {}", e.getMessage())).build();
         }
 
@@ -88,7 +95,6 @@ public class ExecutionsApi {
         results.forEach(x -> executionResponses.add(ExecutionHeaderResponse.fromDMNResultModel(x)));
         return Response.ok(new ExecutionResponse(totalResults, limit, offset, executionResponses)).build();
     }
-
 
     @GET
     @Path("/decisions")
@@ -123,10 +129,15 @@ public class ExecutionsApi {
                     description = "Offset for the pagination.",
                     required = false,
                     schema = @Schema(implementation = Integer.class)
-            ) @DefaultValue("0") @QueryParam("offset") int offset) {
+            ) @DefaultValue("0") @QueryParam("offset") int offset,
+            @Parameter(
+                    name = "search",
+                    description = "Execution ID prefix to be matched",
+                    required = false,
+                    schema = @Schema(implementation = String.class)
+            ) @DefaultValue("") @QueryParam("search") String prefix) {
         return Response.status(500, "NOT IMPLEMENTED").build();
     }
-
 
     @GET
     @Path("/processes")
@@ -161,10 +172,15 @@ public class ExecutionsApi {
                     description = "Offset for the pagination.",
                     required = false,
                     schema = @Schema(implementation = Integer.class)
-            ) @DefaultValue("0") @QueryParam("offset") int offset) {
+            ) @DefaultValue("0") @QueryParam("offset") int offset,
+            @Parameter(
+                    name = "search",
+                    description = "Execution ID prefix to be matched",
+                    required = false,
+                    schema = @Schema(implementation = String.class)
+            ) @DefaultValue("") @QueryParam("search") String prefix) {
         return Response.status(500, "NOT IMPLEMENTED").build();
     }
-
 
     @GET
     @Path("/search")
@@ -177,23 +193,23 @@ public class ExecutionsApi {
     @Produces(MediaType.APPLICATION_JSON)
     public Response search(
             @Parameter(
-                name = "limit",
-                description = "Maximum number of results to return.",
-                required = false,
-                schema = @Schema(implementation = Integer.class)
+                    name = "limit",
+                    description = "Maximum number of results to return.",
+                    required = false,
+                    schema = @Schema(implementation = Integer.class)
             ) @DefaultValue("100") @QueryParam("limit") int limit,
-           @Parameter(
-                   name = "offset",
-                   description = "Offset for the pagination.",
-                   required = false,
-                   schema = @Schema(implementation = Integer.class)
-           ) @DefaultValue("0") @QueryParam("offset") int offset,
             @Parameter(
-                name = "id",
-                description = "ID substring to match",
-                required = true,
-                schema = @Schema(implementation = String.class)
-            ) @NotNull @QueryParam("id") String id){
+                    name = "offset",
+                    description = "Offset for the pagination.",
+                    required = false,
+                    schema = @Schema(implementation = Integer.class)
+            ) @DefaultValue("0") @QueryParam("offset") int offset,
+            @Parameter(
+                    name = "id",
+                    description = "ID substring to match",
+                    required = true,
+                    schema = @Schema(implementation = String.class)
+            ) @NotNull @QueryParam("id") String id) {
         List<DMNResultModel> results = storageService.getEventsByMatchingId(id).stream().map(x -> x.data.result).collect(Collectors.toList());
 
         int totalResults = results.size();
@@ -206,5 +222,4 @@ public class ExecutionsApi {
         results.forEach(x -> executionResponses.add(ExecutionHeaderResponse.fromDMNResultModel(x)));
         return Response.ok(new ExecutionResponse(totalResults, limit, offset, executionResponses)).build();
     }
-
 }

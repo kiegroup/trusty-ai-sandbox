@@ -2,6 +2,7 @@ package com.redhat.developer.execution.storage;
 
 import java.util.stream.Collectors;
 
+import com.redhat.developer.dmn.utils.MyMD5;
 import com.redhat.developer.execution.storage.model.DMNDataModel;
 import com.redhat.developer.execution.storage.model.DMNEventModel;
 import com.redhat.developer.execution.storage.model.DMNResultModel;
@@ -27,7 +28,9 @@ public class ModelFactory {
         resultModel.modelName = resultDto.modelName;
         resultModel.executionDate = resultDto.evaluationDate;
         resultModel.executionId = resultDto.evaluationId;
+        resultModel.context = resultDto.context;
         resultModel.decisions = resultDto.decisions.stream().map(x -> fromDecisionDto(x)).collect(Collectors.toList());
+        resultModel.modelId = MyMD5.getMd5(resultModel.modelNamespace + resultModel.modelName);
 
         DMNEventModel eventModel = new DMNEventModel();
         eventModel.id = event.id;

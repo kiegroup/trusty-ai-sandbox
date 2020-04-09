@@ -1,5 +1,7 @@
 package com.redhat.developer.dmn;
 
-public interface IDmnService {
+import java.util.Map;
 
+public interface IDmnService {
+    Object evaluateModel(String id, Map<String, Object> inputs);
 }
