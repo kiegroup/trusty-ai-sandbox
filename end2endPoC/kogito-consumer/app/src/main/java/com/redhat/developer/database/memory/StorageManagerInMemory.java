@@ -6,12 +6,13 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
-import com.redhat.developer.database.IEventStorage;
+import com.redhat.developer.database.IStorageManager;
+import com.redhat.developer.dmn.storage.dto.DmnModel;
 import com.redhat.developer.execution.storage.model.DMNEventModel;
 import com.redhat.developer.execution.storage.model.DMNResultModel;
 
 //@ApplicationScoped
-public class EventStorageInMemory implements IEventStorage {
+public class StorageManagerInMemory implements IStorageManager {
 
     public ConcurrentHashMap<String, DMNEventModel> database;
 
@@ -36,7 +37,22 @@ public class EventStorageInMemory implements IEventStorage {
     }
 
     @Override
-    public List<DMNResultModel> getDecisions(String from, String to) {
+    public List<DMNResultModel> getDecisions(String from, String to, String prefix) {
         return database.values().stream().map(x -> x.data.result).collect(Collectors.toList());
+    }
+
+    @Override
+    public DmnModel getModel(String nameSpace) {
+        return null;
+    }
+
+    @Override
+    public boolean storeModel(DmnModel model) {
+        return false;
+    }
+
+    @Override
+    public List<DmnModel> getModelIds() {
+        return null;
     }
 }

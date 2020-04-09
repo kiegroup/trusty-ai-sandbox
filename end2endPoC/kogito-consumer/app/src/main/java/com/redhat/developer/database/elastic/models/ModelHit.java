@@ -1,11 +1,12 @@
-package com.redhat.developer.database.elastic;
+package com.redhat.developer.database.elastic.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.redhat.developer.dmn.storage.dto.DmnModel;
 import com.redhat.developer.execution.storage.model.DMNEventModel;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Hit {
+public class ModelHit {
 
     @JsonProperty("_index")
     public String index;
@@ -20,5 +21,5 @@ public class Hit {
     public double score;
 
     @JsonProperty("_source")
-    public DMNEventModel source;
+    public DmnModel source;
 }

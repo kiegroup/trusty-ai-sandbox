@@ -3,7 +3,7 @@ package com.redhat.developer.kafka.messaging;
 import java.io.IOException;
 import java.util.Map;
 
-import com.redhat.developer.kafka.utils.JsonUtils;
+import com.redhat.developer.kafka.messaging.utils.JsonUtils;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

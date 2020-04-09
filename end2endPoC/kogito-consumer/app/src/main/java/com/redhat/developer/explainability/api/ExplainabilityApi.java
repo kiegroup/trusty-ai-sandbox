@@ -13,6 +13,7 @@ import com.redhat.developer.explainability.responses.AvailableAlgorithmsResponse
 import com.redhat.developer.explainability.responses.global.ModelExplainationResponse;
 import com.redhat.developer.explainability.responses.local.DecisionExplanationResponse;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
+import org.jboss.resteasy.annotations.jaxrs.QueryParam;
 
 @Path("/explainability")
 public class ExplainabilityApi {
@@ -38,23 +39,30 @@ public class ExplainabilityApi {
     }
 
     @GET
-    @Path("/global/{algorithmName}")
+    @Path("/global/{explanabilityType}")
     @Produces(MediaType.APPLICATION_JSON)
-    public ModelExplainationResponse evaluateModel(@PathParam("algorithmName") String algorithmName) {
+    public ModelExplainationResponse evaluateModel(@PathParam("explanabilityType") String explanabilityType) {
         return new ModelExplainationResponse();
     }
 
     @GET
-    @Path("/local/{algorithmName}")
+    @Path("/local/{explanabilityType}")
     @Produces(MediaType.APPLICATION_JSON)
-    public ModelExplainationResponse getExplainationDetails(@PathParam("algorithmName") String algorithmName) {
+    public ModelExplainationResponse getExplainationDetails(@PathParam("explanabilityType") String explanabilityType) {
         return new ModelExplainationResponse();
     }
 
     @POST
-    @Path("/local/{algorithmName}/explain")
+    @Path("/local/{explanabilityType}/featureInteraction")
     @Produces(MediaType.APPLICATION_JSON)
-    public DecisionExplanationResponse explainDecision(@PathParam("algorithmName") String algorithmName, Map<String, Object> input) {
+    public DecisionExplanationResponse explainDecision(@PathParam("explanabilityType") String explanabilityType, @QueryParam("modelId") String modelId, Map<String, Object> input) {
+        return new DecisionExplanationResponse();
+    }
+
+    @POST
+    @Path("/local/{explanabilityType}/score")
+    @Produces(MediaType.APPLICATION_JSON)
+    public DecisionExplanationResponse getDecisionScore(@PathParam("explanabilityType") String explanabilityType, @QueryParam("modelId") String modelId, Map<String, Object> input) {
         return new DecisionExplanationResponse();
     }
 }

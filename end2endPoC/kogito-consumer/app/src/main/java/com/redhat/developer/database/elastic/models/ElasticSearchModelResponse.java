@@ -1,10 +1,10 @@
-package com.redhat.developer.database.elastic;
+package com.redhat.developer.database.elastic.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ElasticSearchResponse {
+public class ElasticSearchModelResponse {
 
     @JsonProperty("took")
     public int took;
@@ -16,6 +16,6 @@ public class ElasticSearchResponse {
     public Object shards;
 
     @JsonProperty("hits")
-    public ElasticHits hits;
+    public ElasticModelHits hits;
 }
 

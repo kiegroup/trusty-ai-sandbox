@@ -32,6 +32,13 @@ paths:
           format: int32
           default: 0
           type: integer
+      - name: search
+        in: query
+        description: Execution ID prefix to be matched
+        required: false
+        schema:
+          default: ""
+          type: string
       - name: to
         in: query
         description: End datetime for the lookup. Date in the format "yyyy-MM-dd'T'HH:mm:ss.SSS"
@@ -90,6 +97,13 @@ paths:
           format: int32
           default: 0
           type: integer
+      - name: search
+        in: query
+        description: Execution ID prefix to be matched
+        required: false
+        schema:
+          default: ""
+          type: string
       - name: to
         in: query
         description: End datetime for the lookup. Date in the format "yyyy-MM-dd'T'HH:mm:ss.SSS"
@@ -124,6 +138,13 @@ paths:
     get:
       summary: Gets The decision header with details.
       description: Gets the decision detail header.
+      parameters:
+      - name: key
+        in: path
+        description: ID of the decision that needs to be fetched
+        required: true
+        schema:
+          type: string
       responses:
         "400":
           description: Bad Request
@@ -163,8 +184,8 @@ paths:
                 properties:
                   header:
                     $ref: '#/components/schemas/ExecutionHeaderResponse'
-                  input:
-                    type: object
+                  inputs:
+                    $ref: '#/components/schemas/ListSingleDecisionInputResponse'
   /executions/decisions/{key}/outcomes:
     get:
       summary: Gets the decision outcomes.
@@ -282,6 +303,13 @@ paths:
           format: int32
           default: 0
           type: integer
+      - name: search
+        in: query
+        description: Execution ID prefix to be matched
+        required: false
+        schema:
+          default: ""
+          type: string
       - name: to
         in: query
         description: End datetime for the lookup. Date in the format "yyyy-MM-dd'T'HH:mm:ss.SSS"
@@ -398,10 +426,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AvailableAlgorithmsResponse'
-  /explainability/global/{algorithmName}:
+  /explainability/global/{explanabilityType}:
     get:
       parameters:
-      - name: algorithmName
+      - name: explanabilityType
         in: path
         required: true
         schema:
@@ -422,10 +450,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AvailableAlgorithmsResponse'
-  /explainability/local/{algorithmName}:
+  /explainability/local/{explanabilityType}:
     get:
       parameters:
-      - name: algorithmName
+      - name: explanabilityType
         in: path
         required: true
         schema:
@@ -437,12 +465,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ModelExplainationResponse'
-  /explainability/local/{algorithmName}/explain:
+  /explainability/local/{explanabilityType}/featureInteraction:
     post:
       parameters:
-      - name: algorithmName
+      - name: explanabilityType
         in: path
         required: true
+        schema:
+          type: string
+      - name: modelId
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DecisionExplanationResponse'
+  /explainability/local/{explanabilityType}/score:
+    post:
+      parameters:
+      - name: explanabilityType
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: modelId
+        in: query
         schema:
           type: string
       responses:
@@ -461,6 +512,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AvailableModelsResponse'
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewDmnModelRequest'
+      responses:
+        "200":
+          description: OK
   /models/{id}:
     get:
       parameters:
@@ -475,7 +535,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ModelResponse'
+                $ref: '#/components/schemas/FullModelResponse'
   /models/{id}/evaluate:
     post:
       parameters:
@@ -497,6 +557,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EvaluationResponse'
+  /models/{id}/inputs:
+    get:
+      summary: Gets the structure of the dmn inputs.
+      description: Gets the structure of the dmn inputs.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            text/plain: {}
+        "200":
+          description: Returns the input structure of the dmn model.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  customTypes:
+                    $ref: '#/components/schemas/ListTypeDefinition'
+                  inputData:
+                    $ref: '#/components/schemas/ListInputData'
   /openapi:
     get:
       responses:
@@ -592,6 +678,28 @@ components:
       type: array
       items:
         type: string
+    SingleDecisionInputResponse:
+      type: object
+      properties:
+        inputName:
+          type: string
+        inputType:
+          $ref: '#/components/schemas/InputType'
+        inputValue:
+          type: object
+    ListSingleDecisionInputResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/SingleDecisionInputResponse'
+    InputType:
+      enum:
+      - BOOLEAN
+      - DATE
+      - LIST
+      - NUMBER
+      - STRING
+      - STRUCT
+      type: string
     DecisionResultModel:
       type: object
       properties:
@@ -642,23 +750,25 @@ components:
           type: array
           items:
             type: string
+    MapStringObject:
+      type: object
+      additionalProperties: {}
     EvaluationRequestBody:
       type: object
       properties:
         inputs:
-          type: object
-    ListObject:
-      type: array
-      items: {}
+          $ref: '#/components/schemas/MapStringObject'
     EvaluationResponse:
       type: object
       properties:
         decisions:
-          $ref: '#/components/schemas/ListObject'
-    ModelDetail:
+          type: object
+    FullModelResponse:
       type: object
       properties:
         creationDate:
+          type: string
+        modelId:
           type: string
         modelName:
           type: string
@@ -666,15 +776,75 @@ components:
           type: string
         modelVersion:
           type: string
-    ModelResponse:
+        model:
+          type: string
+    TypeDefinition:
       type: object
       properties:
-        decisions:
-          $ref: '#/components/schemas/ListObject'
-        inputStructure:
-          type: object
-        metainformation:
-          $ref: '#/components/schemas/ModelDetail'
+        components:
+          $ref: '#/components/schemas/ListTypeComponent'
+        isCollection:
+          type: boolean
+        typeName:
+          type: string
+    ListTypeDefinition:
+      type: array
+      items:
+        $ref: '#/components/schemas/TypeDefinition'
+    InputData:
+      type: object
+      properties:
+        name:
+          type: string
+        typeRef:
+          type: string
+    ListInputData:
+      type: array
+      items:
+        $ref: '#/components/schemas/InputData'
+    TypeComponent:
+      type: object
+      properties:
+        constraint:
+          $ref: '#/components/schemas/Constraint'
+        hasConstraint:
+          type: boolean
+        isCollection:
+          type: boolean
+        name:
+          type: string
+        typeRef:
+          type: string
+    ListTypeComponent:
+      type: array
+      items:
+        $ref: '#/components/schemas/TypeComponent'
+    Constraint:
+      type: object
+      properties:
+        text:
+          type: string
+        type:
+          $ref: '#/components/schemas/ConstraintEnum'
+    ConstraintEnum:
+      enum:
+      - ENUMERATION
+      - EXPRESSION
+      - RANGE
+      type: string
+    ModelDetail:
+      type: object
+      properties:
+        creationDate:
+          type: string
+        modelId:
+          type: string
+        modelName:
+          type: string
+        modelNamespace:
+          type: string
+        modelVersion:
+          type: string
     ListModelDetail:
       type: array
       items:
@@ -684,3 +854,16 @@ components:
       properties:
         availableModels:
           $ref: '#/components/schemas/ListModelDetail'
+    NewDmnModelRequest:
+      type: object
+      properties:
+        creationDate:
+          type: string
+        model:
+          type: string
+        name:
+          type: string
+        nameSpace:
+          type: string
+        version:
+          type: string
