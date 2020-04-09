@@ -32,7 +32,7 @@ public class LinearClassifier {
             double targetOutput = DoubleStream.of(output.asDoubles()).sum();
             double diff = targetOutput - predictedOutput;
             if (diff != 0) {
-                weights = DoubleStream.of(weights).map(d -> d + 1e-2 * diff).toArray();
+                weights = DoubleStream.of(weights).map(d -> d + 1e-2 * diff).map(d -> Double.isNaN(d) ? 0d : d).toArray();
             }
         }
     }
