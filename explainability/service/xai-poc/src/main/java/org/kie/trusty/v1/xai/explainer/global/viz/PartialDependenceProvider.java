@@ -6,6 +6,8 @@ import org.kie.trusty.v1.DummyModelRegistry;
 import org.kie.trusty.v1.Model;
 import org.kie.trusty.v1.ModelInfo;
 import org.kie.trusty.v1.xai.explainer.global.viz.utils.DataGenerationUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Generates the partial dependence tabular data for a given feature.
@@ -15,6 +17,8 @@ import org.kie.trusty.v1.xai.explainer.global.viz.utils.DataGenerationUtils;
  */
 public class PartialDependenceProvider implements GlobalVizExplanationProvider {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     private final int featureIndex;
 
     public PartialDependenceProvider(int featureIndex) {
@@ -23,6 +27,7 @@ public class PartialDependenceProvider implements GlobalVizExplanationProvider {
 
     @Override
     public TabularData explain(ModelInfo modelInfo) {
+        long start = System.currentTimeMillis();
         int size = 100;
         Model model = DummyModelRegistry.getModel(modelInfo.getId());
         ModelInfo.DataDistribution trainingDataDistributions = modelInfo.getTrainingDataDistribution();
@@ -52,7 +57,9 @@ public class PartialDependenceProvider implements GlobalVizExplanationProvider {
                 marginalImpacts[i] += DoubleStream.of(model.predict(inputs)).sum() / (double) size;
             }
         }
-
-        return new TabularData(featureXSvalues, marginalImpacts);
+        TabularData tabularData = new TabularData(featureXSvalues, marginalImpacts);
+        long end = System.currentTimeMillis();
+        logger.info("explanation time: {}ms", (end - start));
+        return tabularData;
     }
 }

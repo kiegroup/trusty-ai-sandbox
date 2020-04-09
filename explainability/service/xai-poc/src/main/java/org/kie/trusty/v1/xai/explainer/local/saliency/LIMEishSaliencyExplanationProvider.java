@@ -57,8 +57,9 @@ public class LIMEishSaliencyExplanationProvider implements SaliencyLocalExplanat
         for (int i = 0; i < weights.length; i++) {
             saliencyMap.put(prediction.getInput().asFeatureList().get(i), weights[i]);
         }
+        Saliency saliency = new Saliency(saliencyMap);
         long end = System.currentTimeMillis();
         logger.info("explanation time: {}ms", (end - start));
-        return new Saliency(saliencyMap);
+        return saliency;
     }
 }
