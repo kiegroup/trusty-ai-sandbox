@@ -55,7 +55,7 @@ public class TestExplanations {
         double score = Double.MAX_VALUE;
         for (Map.Entry<Feature, Double> entry : topFeatures.entrySet()) {
             Double currentScore = entry.getValue();
-            assertTrue(Math.abs(currentScore) < Math.abs(score));
+            assertTrue(Math.abs(currentScore) <= Math.abs(score));
             score = entry.getValue();
         }
     }
