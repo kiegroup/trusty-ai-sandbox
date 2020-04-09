@@ -7,7 +7,7 @@ public interface PredictionOutput {
 
     /**
      * Turn the output into an array of floating-point numbers
-     * @return the prediction output in the form of an array of double
+     * @return the prediction output in the form of an array of {@code double}
      */
     double[] asDoubles();
 }

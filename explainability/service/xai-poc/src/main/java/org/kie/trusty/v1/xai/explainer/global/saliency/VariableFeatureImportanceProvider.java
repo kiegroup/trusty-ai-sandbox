@@ -7,6 +7,6 @@ public class VariableFeatureImportanceProvider implements SaliencyGlobalExplanat
 
     @Override
     public Saliency explain(ModelInfo modelInfo) {
-        return null;
+        throw new RuntimeException("not yet implemented");
     }
 }

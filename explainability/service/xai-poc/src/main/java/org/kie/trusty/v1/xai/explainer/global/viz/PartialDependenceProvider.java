@@ -7,6 +7,12 @@ import org.kie.trusty.v1.Model;
 import org.kie.trusty.v1.ModelInfo;
 import org.kie.trusty.v1.xai.explainer.global.viz.utils.DataGenerationUtils;
 
+/**
+ * Generates the partial dependence tabular data for a given feature.
+ * While a strict PD implementation would need the whole training set used to train the model, this implementation seeks
+ * to reproduce an approximate version of the training data by means of data distribution information (min, max, mean,
+ * stdDev).
+ */
 public class PartialDependenceProvider implements GlobalVizExplanationProvider {
 
     private final int featureIndex;
@@ -20,7 +26,6 @@ public class PartialDependenceProvider implements GlobalVizExplanationProvider {
         int size = 100;
         Model model = DummyModelRegistry.getModel(modelInfo.getId());
         ModelInfo.DataDistribution trainingDataDistributions = modelInfo.getTrainingDataDistribution();
-        // get the min e max values for the feature under analysis
         double[] featureXSvalues = DataGenerationUtils.generateData(trainingDataDistributions.getMin(featureIndex),
                                                                     trainingDataDistributions.getMax(featureIndex), size);
 

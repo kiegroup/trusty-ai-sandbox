@@ -7,20 +7,18 @@ public class DataGenerationUtils {
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     /**
-     * We also know that if all numbers are multiplied by the same number,
-     * then the standard deviation also gets multiplied by the same number.
-     * So if D is the desired standard deviation multiply all numbers by D/d.
-     * The resultant set would have standard deviation D and mean m1=m*D/d.
-     * <p>
-     * We know that that if same number is added to all values the mean also changes by the same number.
-     * So if the desired mean is M, then add the difference M-m1 to all the numbers of the new set.
-     * We now have a set of numbers with mean = M. As variance or standard deviation is unaffected by such transformation,
-     * the new series has the same variance/standard deviation as the one obtained in the previous step.
+     * Generate a dataset of a certain size, given mean and standard deviation.
+     * Samples are generated randomly, actual mean {@code m} and standard deviation {@code d} are calculated.
+     * Then all numbers are multiplied by the same number so that the standard deviation also gets
+     * multiplied by the same number, hence we multiply each random number by {@code stdDeviation / d}.
+     * The resultant set has standard deviation {@code stdDeviation} and mean {@code m1=m*stdDeviation/d}.
+     * If a same number is added to all values the mean also changes by the same number so we add {@code mean - m1} to
+     * all numbers.
      *
-     * @param mean
-     * @param stdDeviation
-     * @param size
-     * @return
+     * @param mean desired mean
+     * @param stdDeviation desired standard deviation
+     * @param size size of the array
+     * @return the generated data
      */
     public static double[] generateData(double mean, double stdDeviation, int size) {
         double[] data = new double[size];
@@ -56,6 +54,13 @@ public class DataGenerationUtils {
         return data;
     }
 
+    /**
+     * Generate equally {@code size} sampled values between {@code min} and {@code max}.
+     * @param min minimum value
+     * @param max maximum value
+     * @param size dataset size
+     * @return the generated data
+     */
     public static double[] generatedSamples(double min, double max, int size) {
         double[] data = new double[size];
         double val = min;
