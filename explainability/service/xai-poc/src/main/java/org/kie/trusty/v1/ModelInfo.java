@@ -38,6 +38,10 @@ public interface ModelInfo {
 
     URI getTrainingDataURI();
 
+    /**
+     * Get data distribution information about the data used to train the model
+     * @return the data distribution
+     */
     DataDistribution getTrainingDataDistribution();
 
     /**
@@ -52,11 +56,37 @@ public interface ModelInfo {
      */
     PredictionOutput getOutputShape();
 
+    /**
+     * Information about distribution of data using for training a model
+     */
     interface DataDistribution {
 
+        /**
+         * get mean value for a feature at a certain index
+         * @param featureIndex the feature index
+         * @return the feature mean value
+         */
         double getMean(int featureIndex);
+
+        /**
+         * get the standard deviation for a feature at a certain index
+         * @param featureIndex the feature index
+         * @return the feature standard deviation
+         */
         double getStdDeviation(int featureIndex);
+
+        /**
+         * get the minimum value for a feature at a certain index
+         * @param featureIndex the feature index
+         * @return the feature minimum value
+         */
         double getMin(int featureIndex);
+
+        /**
+         * get the maximum value for a feature at a certain index
+         * @param featureIndex the feature index
+         * @return the feature maximum value
+         */
         double getMax(int featureIndex);
 
     }
