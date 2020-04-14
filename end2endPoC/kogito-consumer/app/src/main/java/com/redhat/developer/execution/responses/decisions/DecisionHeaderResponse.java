@@ -6,9 +6,9 @@ import com.redhat.developer.execution.responses.execution.ExecutionHeaderRespons
 public class DecisionHeaderResponse {
 
     @JsonProperty("header")
-    public ExecutionHeaderResponse executionHeaderResponse;
+    public ExecutionHeaderResponse header;
 
     public DecisionHeaderResponse(ExecutionHeaderResponse response) {
-        this.executionHeaderResponse = response;
+        this.header = response;
     }
 }

@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ExecutionDetailResponse {
 
     @JsonProperty("header")
-    public ExecutionHeaderResponse executionHeaderResponse;
+    public ExecutionHeaderResponse header;
 
     public ExecutionDetailResponse() {
     }
 
-    public ExecutionDetailResponse(ExecutionHeaderResponse executionHeaderResponse) {
-        this.executionHeaderResponse = executionHeaderResponse;
+    public ExecutionDetailResponse(ExecutionHeaderResponse header) {
+        this.header = header;
     }
 }
