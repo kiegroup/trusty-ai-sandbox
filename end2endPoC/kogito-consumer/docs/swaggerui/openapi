@@ -182,8 +182,10 @@ paths:
               schema:
                 type: object
                 properties:
+                  header:
+                    $ref: '#/components/schemas/ExecutionHeaderResponse'
                   inputs:
-                    $ref: '#/components/schemas/MapStringObject'
+                    $ref: '#/components/schemas/ListSingleDecisionInputResponse'
   /executions/decisions/{key}/outcomes:
     get:
       summary: Gets the decision outcomes.
@@ -245,31 +247,6 @@ paths:
                     $ref: '#/components/schemas/ExecutionHeaderResponse'
                   decisions:
                     $ref: '#/components/schemas/ListDecisionResultModel'
-  /executions/decisions/{key}/structuredInputs:
-    get:
-      summary: Gets the decision inputs with structure.
-      description: Gets the decision inputs with structure.
-      parameters:
-      - name: key
-        in: path
-        description: ID of the decision that needs to be fetched
-        required: true
-        schema:
-          type: string
-      responses:
-        "400":
-          description: Bad Request
-          content:
-            text/plain: {}
-        "200":
-          description: Gets the decision inputs with structure.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  inputs:
-                    $ref: '#/components/schemas/MapStringObject'
   /executions/decisions/{key}/structuredOutcomes:
     get:
       summary: Gets the decision outcomes with model structure. To be implemented.
@@ -559,32 +536,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FullModelResponse'
-  /models/{id}/decisions:
-    get:
-      summary: Gets the decision structures of the dmn model.
-      description: Gets the decision structures of the dmn model.
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "400":
-          description: Bad Request
-          content:
-            text/plain: {}
-        "200":
-          description: Returns the decision structures of the dmn model.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  customTypes:
-                    $ref: '#/components/schemas/ListTypeDefinition'
-                  inputData:
-                    $ref: '#/components/schemas/ListInputData'
   /models/{id}/evaluate:
     post:
       parameters:
@@ -667,6 +618,112 @@ components:
           type: array
           items:
             type: string
+    ExecutionHeaderResponse:
+      type: object
+      properties:
+        executionDate:
+          $ref: '#/components/schemas/Date'
+        executionId:
+          type: string
+        executionSucceeded:
+          type: boolean
+        executionType:
+          $ref: '#/components/schemas/ExecutionEnum'
+        executorName:
+          type: string
+    ListExecutionHeaderResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/ExecutionHeaderResponse'
+    Date:
+      format: date
+      type: string
+    ExecutionEnum:
+      enum:
+      - DECISION
+      - PROCESS
+      type: string
+    DecisionResultModelWithInputs:
+      type: object
+      properties:
+        decisionId:
+          type: string
+        decisionName:
+          type: string
+        evaluationStatus:
+          $ref: '#/components/schemas/DecisionEvaluationStatusModel'
+        hasErrors:
+          type: boolean
+        messages:
+          $ref: '#/components/schemas/ListString'
+        decisionResult:
+          type: string
+        decisionInputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/DecisionResultModelWithInputs'
+    ListDecisionResultModelWithInputs:
+      type: array
+      items:
+        $ref: '#/components/schemas/DecisionResultModelWithInputs'
+    DecisionEvaluationStatusModel:
+      enum:
+      - EVALUATING
+      - FAILED
+      - NOT_EVALUATED
+      - SKIPPED
+      - SUCCEEDED
+      type: string
+    ListString:
+      type: array
+      items:
+        type: string
+    SingleDecisionInputResponse:
+      type: object
+      properties:
+        inputName:
+          type: string
+        inputType:
+          $ref: '#/components/schemas/InputType'
+        inputValue:
+          type: object
+    ListSingleDecisionInputResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/SingleDecisionInputResponse'
+    InputType:
+      enum:
+      - BOOLEAN
+      - DATE
+      - LIST
+      - NUMBER
+      - STRING
+      - STRUCT
+      type: string
+    DecisionResultModel:
+      type: object
+      properties:
+        decisionId:
+          type: string
+        decisionName:
+          type: string
+        evaluationStatus:
+          $ref: '#/components/schemas/DecisionEvaluationStatusModel'
+        hasErrors:
+          type: boolean
+        messages:
+          $ref: '#/components/schemas/ListString'
+        decisionResult:
+          type: string
+    ListDecisionResultModel:
+      type: array
+      items:
+        $ref: '#/components/schemas/DecisionResultModel'
+    ExecutionDetailResponse:
+      type: object
+      properties:
+        header:
+          $ref: '#/components/schemas/ExecutionHeaderResponse'
     ModelExplainationResponse:
       type: object
       properties:
@@ -728,8 +785,6 @@ components:
           $ref: '#/components/schemas/ListTypeComponent'
         isCollection:
           type: boolean
-        isComposite:
-          type: boolean
         typeName:
           type: string
     ListTypeDefinition:
@@ -739,10 +794,6 @@ components:
     InputData:
       type: object
       properties:
-        isCollection:
-          type: boolean
-        isComposite:
-          type: boolean
         name:
           type: string
         typeRef:
@@ -759,8 +810,6 @@ components:
         hasConstraint:
           type: boolean
         isCollection:
-          type: boolean
-        isComposite:
           type: boolean
         name:
           type: string
@@ -818,87 +867,3 @@ components:
           type: string
         version:
           type: string
-    ExecutionHeaderResponse:
-      type: object
-      properties:
-        executionDate:
-          $ref: '#/components/schemas/Date'
-        executionId:
-          type: string
-        executionSucceeded:
-          type: boolean
-        executionType:
-          $ref: '#/components/schemas/ExecutionEnum'
-        executorName:
-          type: string
-    ListExecutionHeaderResponse:
-      type: array
-      items:
-        $ref: '#/components/schemas/ExecutionHeaderResponse'
-    Date:
-      format: date
-      type: string
-    ExecutionEnum:
-      enum:
-      - DECISION
-      - PROCESS
-      type: string
-    DecisionResultModelWithInputs:
-      type: object
-      properties:
-        decisionId:
-          type: string
-        decisionName:
-          type: string
-        evaluationStatus:
-          $ref: '#/components/schemas/DecisionEvaluationStatusModel'
-        hasErrors:
-          type: boolean
-        messages:
-          $ref: '#/components/schemas/ListString'
-        decisionResult:
-          type: string
-        decisionInputs:
-          type: array
-          items:
-            $ref: '#/components/schemas/DecisionResultModelWithInputs'
-    ListDecisionResultModelWithInputs:
-      type: array
-      items:
-        $ref: '#/components/schemas/DecisionResultModelWithInputs'
-    DecisionEvaluationStatusModel:
-      enum:
-      - EVALUATING
-      - FAILED
-      - NOT_EVALUATED
-      - SKIPPED
-      - SUCCEEDED
-      type: string
-    ListString:
-      type: array
-      items:
-        type: string
-    DecisionResultModel:
-      type: object
-      properties:
-        decisionId:
-          type: string
-        decisionName:
-          type: string
-        evaluationStatus:
-          $ref: '#/components/schemas/DecisionEvaluationStatusModel'
-        hasErrors:
-          type: boolean
-        messages:
-          $ref: '#/components/schemas/ListString'
-        decisionResult:
-          type: string
-    ListDecisionResultModel:
-      type: array
-      items:
-        $ref: '#/components/schemas/DecisionResultModel'
-    ExecutionDetailResponse:
-      type: object
-      properties:
-        header:
-          $ref: '#/components/schemas/ExecutionHeaderResponse'

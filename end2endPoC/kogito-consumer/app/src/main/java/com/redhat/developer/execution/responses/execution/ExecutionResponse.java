@@ -16,12 +16,15 @@ public class ExecutionResponse {
     public int offset;
 
     @JsonProperty("headers")
-    public List<ExecutionHeaderResponse> executionHeadersResponse;
+    public List<ExecutionHeaderResponse> headers;
 
-    public ExecutionResponse(int total, int returnedRecords, int offset, List<ExecutionHeaderResponse> executionHeadersResponse) {
+    public ExecutionResponse() {
+    }
+
+    public ExecutionResponse(int total, int returnedRecords, int offset, List<ExecutionHeaderResponse> headers) {
         this.total = total;
         this.limit = returnedRecords;
         this.offset = offset;
-        this.executionHeadersResponse = executionHeadersResponse;
+        this.headers = headers;
     }
 }
