@@ -34,7 +34,7 @@ public class PartialDependenceProvider implements GlobalVizExplanationProvider {
         double[] featureXSvalues = DataGenerationUtils.generatedSamples(trainingDataDistributions.getMin(featureIndex),
                                                                     trainingDataDistributions.getMax(featureIndex), size);
 
-        int noOfFeatures = modelInfo.getInputShape().asDoubles().length;
+        int noOfFeatures = modelInfo.getInputShape();
         double[][] trainingData = new double[noOfFeatures][size];
         for (int i = 0; i < noOfFeatures; i++) {
             double[] featureData = DataGenerationUtils.generateData(trainingDataDistributions.getMean(i),

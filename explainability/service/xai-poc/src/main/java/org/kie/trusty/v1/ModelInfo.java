@@ -48,13 +48,13 @@ public interface ModelInfo {
      * Get a sample input 'shape'
      * @return a synthetic prediction input
      */
-    PredictionInput getInputShape();
+    int getInputShape();
 
     /**
      * Get a sample output 'shape'
      * @return a synthetic prediction output
      */
-    PredictionOutput getOutputShape();
+    int getOutputShape();
 
     /**
      * Information about distribution of data using for training a model

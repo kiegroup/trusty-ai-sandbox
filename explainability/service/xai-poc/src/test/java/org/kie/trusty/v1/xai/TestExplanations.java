@@ -65,8 +65,8 @@ public class TestExplanations {
         Model model = createDummyTestModel();
         DummyModelRegistry.registerModel(uuid, model);
         ModelInfo info = getModelInfo(uuid, model);
-        int featureIndex = SECURE_RANDOM.nextInt(info.getInputShape().asDoubles().length);
-        int outputIndex = SECURE_RANDOM.nextInt(info.getOutputShape().asDoubles().length);
+        int featureIndex = SECURE_RANDOM.nextInt(info.getInputShape());
+        int outputIndex = SECURE_RANDOM.nextInt(info.getOutputShape());
         GlobalVizExplanationProvider explanationProvider = ExplanationProviderBuilder.newExplanationProviderBuilder()
                 .global()
                 .partialDependence()
@@ -81,9 +81,11 @@ public class TestExplanations {
         ModelInfo info = mock(ModelInfo.class);
         when(info.getId()).thenReturn(uuid);
         PredictionInput input = getInput();
-        when(info.getInputShape()).thenReturn(input);
+        double[] doubles = input.asDoubles();
+        when(info.getInputShape()).thenReturn(doubles.length);
         PredictionOutput output = getOutput(model, input);
-        when(info.getOutputShape()).thenReturn(output);
+        double[] doubles1 = output.asDoubles();
+        when(info.getOutputShape()).thenReturn(doubles1.length);
         ModelInfo.DataDistribution dataDistribution = mock(ModelInfo.DataDistribution.class);
         for (int i = 0; i < 10; i++) {
             when(dataDistribution.getMax(i)).thenReturn(SECURE_RANDOM.nextDouble());
