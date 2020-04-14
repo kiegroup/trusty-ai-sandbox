@@ -157,8 +157,16 @@ paths:
               schema:
                 type: object
                 properties:
-                  header:
-                    $ref: '#/components/schemas/ExecutionHeaderResponse'
+                  executionDate:
+                    $ref: '#/components/schemas/Date'
+                  executionId:
+                    type: string
+                  executionSucceeded:
+                    type: boolean
+                  executionType:
+                    $ref: '#/components/schemas/ExecutionEnum'
+                  executorName:
+                    type: string
   /executions/decisions/{key}/inputs:
     get:
       summary: Gets the decision inputs.
@@ -632,23 +640,6 @@ paths:
                     $ref: '#/components/schemas/ListTypeDefinition'
                   inputData:
                     $ref: '#/components/schemas/ListInputData'
-  /openapi:
-    get:
-      responses:
-        "200":
-          description: OK
-  /openapi.{type}:
-    get:
-      parameters:
-      - name: type
-        in: path
-        required: true
-        schema:
-          pattern: json|yaml
-          type: string
-      responses:
-        "200":
-          description: OK
   /pmml:
     get:
       responses:

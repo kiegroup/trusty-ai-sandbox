@@ -18,4 +18,7 @@ public class NewDmnModelRequest {
 
     @JsonProperty("version")
     public String version = "0.1";
+
+    public NewDmnModelRequest(){}
+
 }
