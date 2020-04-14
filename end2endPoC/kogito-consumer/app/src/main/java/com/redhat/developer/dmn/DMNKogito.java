@@ -26,12 +26,11 @@ public class DMNKogito {
 
     public static DMNRuntime createGenericDMNRuntime(Reader... readers) {
         List<Resource> resources = Stream.of(readers).map(ReaderResource::new).collect(Collectors.toList());
-        DMNRuntime dmnRuntime = DMNRuntimeBuilder.fromDefaults()
+        return DMNRuntimeBuilder.fromDefaults()
                 .setRootClassLoader(null)
                 .buildConfiguration()
                 .fromResources(resources)
                 .getOrElseThrow(e -> new RuntimeException("Error initalizing DMNRuntime", e));
-        return dmnRuntime;
     }
 
     public static DMNModel modelByName(DMNRuntime dmnRuntime, String modelName) {

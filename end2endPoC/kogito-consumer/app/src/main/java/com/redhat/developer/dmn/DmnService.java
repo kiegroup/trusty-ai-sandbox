@@ -65,8 +65,7 @@ public class DmnService implements IDmnService {
     private DMNRuntime getDmnRuntime(String id) {
         System.out.println(id);
         if (decisionModelCache.containsKey(id)) {
-            DMNRuntime runtime = decisionModelCache.get(id);
-            return runtime;
+            return decisionModelCache.get(id);
         }
 
         if (decisionModelCache.size() == cacheSize) {

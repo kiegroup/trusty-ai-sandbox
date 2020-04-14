@@ -12,6 +12,6 @@ public enum DecisionEvaluationStatusDto {
     @JsonProperty("SKIPPED")
     SKIPPED,
     @JsonProperty("FAILED")
-    FAILED;
+    FAILED
 }
 
