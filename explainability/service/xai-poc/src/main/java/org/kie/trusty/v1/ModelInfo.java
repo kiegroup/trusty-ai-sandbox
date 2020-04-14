@@ -90,4 +90,24 @@ public interface ModelInfo {
         double getMax(int featureIndex);
 
     }
+
+    /**
+     * Get the type of task associated to the given model
+     * @return a task type
+     */
+    TaskType getTaskType();
+
+    enum TaskType {
+
+        /**
+         * Classification tasks
+         */
+        CLASSIFICATION,
+
+        /**
+         * Regression tasks
+         */
+        REGRESSION
+
+    }
 }

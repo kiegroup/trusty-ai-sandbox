@@ -1,7 +1,5 @@
 package org.kie.trusty.v1.xai.explainer.global.viz;
 
-import java.util.stream.DoubleStream;
-
 import org.kie.trusty.v1.DummyModelRegistry;
 import org.kie.trusty.v1.Model;
 import org.kie.trusty.v1.ModelInfo;
@@ -20,9 +18,11 @@ public class PartialDependenceProvider implements GlobalVizExplanationProvider {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final int featureIndex;
+    private final int outputIndex;
 
-    public PartialDependenceProvider(int featureIndex) {
+    public PartialDependenceProvider(int featureIndex, int outputIndex) {
         this.featureIndex = featureIndex;
+        this.outputIndex = outputIndex;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class PartialDependenceProvider implements GlobalVizExplanationProvider {
         int size = 100;
         Model model = DummyModelRegistry.getModel(modelInfo.getId());
         ModelInfo.DataDistribution trainingDataDistributions = modelInfo.getTrainingDataDistribution();
-        double[] featureXSvalues = DataGenerationUtils.generateData(trainingDataDistributions.getMin(featureIndex),
+        double[] featureXSvalues = DataGenerationUtils.generatedSamples(trainingDataDistributions.getMin(featureIndex),
                                                                     trainingDataDistributions.getMax(featureIndex), size);
 
         int noOfFeatures = modelInfo.getInputShape().asDoubles().length;
@@ -53,8 +53,7 @@ public class PartialDependenceProvider implements GlobalVizExplanationProvider {
                         inputs[f] = trainingData[f][j];
                     }
                 }
-                // TODO: solve the problem of multiple to one double output in a more elegant way here (sum() is likely to be wrong in many cases)
-                marginalImpacts[i] += DoubleStream.of(model.predict(inputs)).sum() / (double) size;
+                marginalImpacts[i] += model.predict(inputs)[outputIndex] / (double) size;
             }
         }
         TabularData tabularData = new TabularData(featureXSvalues, marginalImpacts);

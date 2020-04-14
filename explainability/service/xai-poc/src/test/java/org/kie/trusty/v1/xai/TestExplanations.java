@@ -35,13 +35,12 @@ public class TestExplanations {
 
     @Test
     public void testLocalSaliencyExplanation() {
-        SecureRandom secureRandom = new SecureRandom();
         UUID uuid = UUID.randomUUID();
         Model model = createDummyTestModel();
         DummyModelRegistry.registerModel(uuid, model);
         PredictionInput in = getInput();
         PredictionOutput out = getOutput(model, in);
-        ModelInfo info = getModelInfo(uuid);
+        ModelInfo info = getModelInfo(uuid, model);
         Prediction prediction = new Prediction(info, in, out);
         SaliencyLocalExplanationProvider explanationProvider = ExplanationProviderBuilder.newExplanationProviderBuilder()
                 .local()
@@ -65,21 +64,26 @@ public class TestExplanations {
         UUID uuid = UUID.randomUUID();
         Model model = createDummyTestModel();
         DummyModelRegistry.registerModel(uuid, model);
-        ModelInfo info = getModelInfo(uuid);
+        ModelInfo info = getModelInfo(uuid, model);
         int featureIndex = SECURE_RANDOM.nextInt(info.getInputShape().asDoubles().length);
+        int outputIndex = SECURE_RANDOM.nextInt(info.getOutputShape().asDoubles().length);
         GlobalVizExplanationProvider explanationProvider = ExplanationProviderBuilder.newExplanationProviderBuilder()
                 .global()
-                .partialDependence(featureIndex)
+                .partialDependence()
+                .onFeature(featureIndex)
+                .onOutput(outputIndex)
                 .build();
         TabularData tabularData = explanationProvider.explain(info);
         assertNotNull(tabularData);
     }
 
-    private ModelInfo getModelInfo(UUID uuid) {
+    private ModelInfo getModelInfo(UUID uuid, Model model) {
         ModelInfo info = mock(ModelInfo.class);
         when(info.getId()).thenReturn(uuid);
         PredictionInput input = getInput();
         when(info.getInputShape()).thenReturn(input);
+        PredictionOutput output = getOutput(model, input);
+        when(info.getOutputShape()).thenReturn(output);
         ModelInfo.DataDistribution dataDistribution = mock(ModelInfo.DataDistribution.class);
         for (int i = 0; i < 10; i++) {
             when(dataDistribution.getMax(i)).thenReturn(SECURE_RANDOM.nextDouble());

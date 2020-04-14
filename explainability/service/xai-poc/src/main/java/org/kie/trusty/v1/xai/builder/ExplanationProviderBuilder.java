@@ -1,14 +1,19 @@
 package org.kie.trusty.v1.xai.builder;
 
+import org.kie.trusty.v1.xai.builder.pdp.PartialDependenceBuilder;
 import org.kie.trusty.v1.xai.explainer.global.saliency.PredictionFeatureImportanceProvider;
 import org.kie.trusty.v1.xai.explainer.global.saliency.SaliencyGlobalExplanationProvider;
 import org.kie.trusty.v1.xai.explainer.global.saliency.VariableFeatureImportanceProvider;
-import org.kie.trusty.v1.xai.explainer.global.viz.GlobalVizExplanationProvider;
-import org.kie.trusty.v1.xai.explainer.global.viz.PartialDependenceProvider;
 import org.kie.trusty.v1.xai.explainer.local.saliency.LIMEishSaliencyExplanationProvider;
 import org.kie.trusty.v1.xai.explainer.local.saliency.RandomSaliencyExplainerProvider;
 import org.kie.trusty.v1.xai.explainer.local.saliency.SaliencyLocalExplanationProvider;
 
+/**
+ * Builder class for different kinds of explanation.
+ *
+ * Current implementation is temporarily keeping all different builder types as internal classes, but they will have to
+ * be "exploded" to finite state machine builders in separate classes.
+ */
 public class ExplanationProviderBuilder {
 
     public static GlobalVSLocalBuilder newExplanationProviderBuilder() {
@@ -69,11 +74,11 @@ public class ExplanationProviderBuilder {
         }
 
         public PredictionFeatureImportanceBuilder prediction() {
-            return null;
+            return new PredictionFeatureImportanceBuilder();
         }
 
-        public PartialDependenceBuilder partialDependence(int featureIndex) {
-            return new PartialDependenceBuilder(featureIndex);
+        public PartialDependenceBuilder.FeaturePartialDependenceBuilder partialDependence() {
+            return PartialDependenceBuilder.newPDPBuilder();
         }
     }
 
@@ -88,19 +93,6 @@ public class ExplanationProviderBuilder {
 
         public SaliencyGlobalExplanationProvider build() {
             return new PredictionFeatureImportanceProvider();
-        }
-    }
-
-    public static class PartialDependenceBuilder {
-
-        private final PartialDependenceProvider provider;
-
-        public PartialDependenceBuilder(int featureIndex) {
-            this.provider = new PartialDependenceProvider(featureIndex);
-        }
-
-        public GlobalVizExplanationProvider build() {
-            return provider;
         }
     }
 }
