@@ -4,8 +4,8 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.redhat.developer.execution.storage.model.DMNResultModel;
-import com.redhat.developer.execution.storage.model.ExecutionEnum;
+import com.redhat.developer.execution.models.DMNResultModel;
+import com.redhat.developer.execution.models.ExecutionEnum;
 
 public class ExecutionHeaderResponse {
 

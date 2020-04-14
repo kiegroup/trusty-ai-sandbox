@@ -1,9 +1,9 @@
 package com.redhat.developer.dmn.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.redhat.developer.dmn.storage.dto.DmnModel;
+import com.redhat.developer.dmn.models.DmnModel;
 
-public class FullModelResponse extends ModelDetail{
+public class FullModelResponse extends ModelDetail {
 
     @JsonProperty("model")
     public String model;
@@ -13,7 +13,7 @@ public class FullModelResponse extends ModelDetail{
         this.model = model;
     }
 
-    public static FullModelResponse fromStorageModel(DmnModel model){
+    public static FullModelResponse fromStorageModel(DmnModel model) {
         return new FullModelResponse(model.nameSpace, model.name, model.version, model.creationDate, model.modelId, model.model);
     }
 }

@@ -3,9 +3,9 @@ package com.redhat.developer.execution;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import com.redhat.developer.database.IStorageManager;
-import com.redhat.developer.execution.storage.ModelFactory;
-import com.redhat.developer.execution.storage.model.DMNEventModel;
+import com.redhat.developer.execution.models.DMNEventModel;
+import com.redhat.developer.execution.models.ModelFactory;
+import com.redhat.developer.execution.storage.IExecutionsStorageExtension;
 import com.redhat.developer.kafka.KafkaAbstractConsumer;
 import com.redhat.developer.kafka.messaging.dto.DMNEventDto;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
@@ -18,7 +18,7 @@ public class KafkaConsumer extends KafkaAbstractConsumer {
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumer.class);
 
     @Inject
-    IStorageManager eventStorage;
+    IExecutionsStorageExtension storageExtension;
 
     @Override
     @Incoming("kogito-tracing")
@@ -29,6 +29,6 @@ public class KafkaConsumer extends KafkaAbstractConsumer {
     protected void processEvent(DMNEventDto event) {
         LOGGER.debug("Processing a new event");
         DMNEventModel dmnEventModel = ModelFactory.fromKafkaCloudEvent(event);
-        eventStorage.storeEvent(dmnEventModel.id, dmnEventModel);
+        storageExtension.storeEvent(dmnEventModel.id, dmnEventModel.data.result);
     }
 }

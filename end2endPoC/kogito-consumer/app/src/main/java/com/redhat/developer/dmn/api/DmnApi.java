@@ -13,16 +13,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.redhat.developer.database.IStorageManager;
 import com.redhat.developer.dmn.IDmnService;
+import com.redhat.developer.dmn.models.DmnModel;
+import com.redhat.developer.dmn.models.input.ModelInputStructure;
 import com.redhat.developer.dmn.requests.EvaluationRequestBody;
 import com.redhat.developer.dmn.requests.NewDmnModelRequest;
 import com.redhat.developer.dmn.responses.AvailableModelsResponse;
 import com.redhat.developer.dmn.responses.EvaluationResponse;
 import com.redhat.developer.dmn.responses.FullModelResponse;
 import com.redhat.developer.dmn.responses.ModelDetail;
-import com.redhat.developer.dmn.responses.inputs.ModelInputResponse;
-import com.redhat.developer.dmn.storage.dto.DmnModel;
+import com.redhat.developer.dmn.storage.IDmnStorageExtension;
 import com.redhat.developer.dmn.utils.MyMD5;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
@@ -38,7 +38,7 @@ import org.jboss.resteasy.annotations.jaxrs.PathParam;
 public class DmnApi {
 
     @Inject
-    IStorageManager storageManager;
+    IDmnStorageExtension storageExtension;
 
     @Inject
     IDmnService dmnService;
@@ -46,7 +46,7 @@ public class DmnApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public AvailableModelsResponse getModels() {
-        List<DmnModel> ids = storageManager.getModelIds();
+        List<DmnModel> ids = storageExtension.getModelIds();
         return new AvailableModelsResponse(ids.stream().map(x -> ModelDetail.fromStorageModel(x)).collect(Collectors.toList()));
     }
 
@@ -55,30 +55,61 @@ public class DmnApi {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response setModel(NewDmnModelRequest request) {
         DmnModel model = DmnModel.fromNewDmnModelRequest(request, MyMD5.getMd5(request.nameSpace + request.name));
-        storageManager.storeModel(model);
+        storageExtension.storeModel(model);
         return Response.ok(model.modelId).build();
     }
-
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public FullModelResponse getModelById(@PathParam("id") String id) {
-        DmnModel model = storageManager.getModel(id);
+        DmnModel model = storageExtension.getModel(id);
         return FullModelResponse.fromStorageModel(model);
     }
 
     @GET
     @Path("/{id}/inputs")
     @APIResponses(value = {
-            @APIResponse(description = "Returns the input structure of the dmn model.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = ModelInputResponse.class))),
+            @APIResponse(description = "Returns the input structure of the dmn model.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = ModelInputStructure.class))),
             @APIResponse(description = "Bad Request", responseCode = "400", content = @Content(mediaType = MediaType.TEXT_PLAIN))
     }
     )
     @Operation(summary = "Gets the structure of the dmn inputs.", description = "Gets the structure of the dmn inputs.")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getModelInputs(@PathParam("id") String id) {
-        return Response.ok(new ModelInputResponse()).build();
+        ModelInputStructure dmnInputStructure = dmnService.getDmnInputStructure(id);
+        return Response.ok(dmnInputStructure).build();
+    }
+
+    @GET
+    @Path("/{id}/decisions")
+    @APIResponses(value = {
+            @APIResponse(description = "Returns the decision structures of the dmn model.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = ModelInputStructure.class))),
+            @APIResponse(description = "Bad Request", responseCode = "400", content = @Content(mediaType = MediaType.TEXT_PLAIN))
+    }
+    )
+    @Operation(summary = "Gets the decision structures of the dmn model.", description = "Gets the decision structures of the dmn model.")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getModelDecisions(@PathParam("id") String id) {
+//        DMNModel model = dmnService.getDmnModel(id);
+//        Set<DecisionNode> decisions = model.getDecisions();
+//        for (DecisionNode decision : decisions){
+//            model.
+//        }
+//        ModelInputResponse response = new ModelInputResponse();
+//        response.inputData = inputs.stream().map(x -> new InputData(x.getName(), x.getType().getName(), x.getType().isComposite())).collect(Collectors.toList());
+//        response.customTypes = new ArrayList<>();
+//
+//        for(InputDataNode input : inputs){
+//            if (input.getType().isComposite()){
+//                List<TypeComponent> components = input.getType().getFields().values().stream().map(x -> new TypeComponent(
+//                        x.getName(), x.getBaseType().getName(), x.isCollection(), false, null)).collect(Collectors.toList());
+//                response.customTypes.add(new TypeDefinition(input.getType().getName(), input.getType().isCollection(), input.getType().isComposite(), components));
+//            }
+//        }
+//
+//        return Response.ok(response).build();
+        return null;
     }
 
     @POST
