@@ -34,8 +34,7 @@ public class ElasticSearchStorageManager implements IStorageManager {
     }
 
     public String create(String key, String request, String index) {
-        String response = httpHelper.doPost(index + "/_doc/" + key, request);
-        return response;
+        return httpHelper.doPost(index + "/_doc/" + key, request);
     }
 
     public <T> List<T> search(String request, String index, Class<T> type) {

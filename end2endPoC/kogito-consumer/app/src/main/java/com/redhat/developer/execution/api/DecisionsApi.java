@@ -110,7 +110,7 @@ public class DecisionsApi {
 
         List<String> decisionsOutput = context.keySet().stream().filter(x -> !dmnInputStructure.inputData.stream().anyMatch(y -> y.name.equals(x))).collect(Collectors.toList());
 
-        decisionsOutput.stream().forEach(x -> context.remove(x));
+        decisionsOutput.forEach(x -> context.remove(x));
 
         return Response.ok(new DecisionInputsResponse(context)).build();
     }
@@ -118,7 +118,7 @@ public class DecisionsApi {
     @GET
     @Path("/{key}/structuredInputs")
     @APIResponses(value = {
-            @APIResponse(description = "Gets the decision inputs with structure.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = DecisionInputsResponse.class))),
+            @APIResponse(description = "Gets the decision inputs with structure.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = DecisionStructuredInputsResponse.class))),
             @APIResponse(description = "Bad Request", responseCode = "400", content = @Content(mediaType = MediaType.TEXT_PLAIN))
     }
     )

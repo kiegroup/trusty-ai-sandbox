@@ -269,7 +269,7 @@ paths:
                 type: object
                 properties:
                   inputs:
-                    $ref: '#/components/schemas/MapStringObject'
+                    $ref: '#/components/schemas/ListSingleDecisionInputResponse'
   /executions/decisions/{key}/structuredOutcomes:
     get:
       summary: Gets the decision outcomes with model structure. To be implemented.
@@ -897,6 +897,29 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/DecisionResultModel'
+    SingleDecisionInputResponse:
+      type: object
+      properties:
+        components:
+          $ref: '#/components/schemas/ListList'
+        name:
+          type: string
+        isCollection:
+          type: boolean
+        isComposite:
+          type: boolean
+        typeRef:
+          type: string
+        value:
+          type: object
+    ListSingleDecisionInputResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/SingleDecisionInputResponse'
+    ListList:
+      type: array
+      items:
+        $ref: '#/components/schemas/ListSingleDecisionInputResponse'
     ExecutionDetailResponse:
       type: object
       properties:
