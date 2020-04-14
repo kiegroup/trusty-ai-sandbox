@@ -51,7 +51,7 @@ public class DecisionsApi {
     @GET
     @Path("/{key}")
     @APIResponses(value = {
-            @APIResponse(description = "Gets the decision detail header.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = ExecutionDetailResponse.class))),
+            @APIResponse(description = "Gets the decision detail header.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = ExecutionHeaderResponse.class))),
             @APIResponse(description = "Bad Request", responseCode = "400", content = @Content(mediaType = MediaType.TEXT_PLAIN))
     }
     )
@@ -74,7 +74,8 @@ public class DecisionsApi {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Multiple events have been retrieved with this ID.", key)).build();
         }
 
-        return Response.ok(new ExecutionDetailResponse(ExecutionHeaderResponse.fromDMNResultModel(event.get(0)))).build();
+        System.out.println(event.get(0).executionDate);
+        return Response.ok(ExecutionHeaderResponse.fromDMNResultModel(event.get(0))).build();
     }
 
     @GET
