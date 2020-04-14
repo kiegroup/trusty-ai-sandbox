@@ -57,5 +57,4 @@ public class DMNKogito {
                                                                                               null);
         return evaluationResult.result;
     }
-
 }

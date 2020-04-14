@@ -6,8 +6,8 @@ import java.security.NoSuchAlgorithmException;
 
 // Java program to calculate MD5 hash value
 public class MyMD5 {
-    public static String getMd5(String input)
-    {
+
+    public static String getMd5(String input) {
         try {
 
             // Static getInstance method is called with hashing MD5
@@ -26,8 +26,7 @@ public class MyMD5 {
                 hashtext = "0" + hashtext;
             }
             return hashtext;
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }

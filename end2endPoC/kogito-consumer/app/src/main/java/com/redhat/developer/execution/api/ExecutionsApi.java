@@ -14,10 +14,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.redhat.developer.database.IStorageManager;
+import com.redhat.developer.execution.models.DMNResultModel;
 import com.redhat.developer.execution.responses.execution.ExecutionHeaderResponse;
 import com.redhat.developer.execution.responses.execution.ExecutionResponse;
-import com.redhat.developer.execution.storage.model.DMNResultModel;
+import com.redhat.developer.execution.storage.IExecutionsStorageExtension;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -31,7 +31,7 @@ import org.jboss.resteasy.annotations.jaxrs.QueryParam;
 public class ExecutionsApi {
 
     @Inject
-    IStorageManager storageService;
+    IExecutionsStorageExtension storageExtension;
 
     @GET
     @APIResponses(value = {
@@ -76,10 +76,13 @@ public class ExecutionsApi {
         if (from.equals("yesterday")) {
             from = java.time.LocalDateTime.now().minusDays(1).toString();
         }
+        if (to.equals("now")) {
+            to = java.time.LocalDateTime.now().plusDays(1).toString();
+        }
         List<DMNResultModel> results;
 
         try {
-            results = storageService.getDecisions(from, to, prefix);
+            results = storageExtension.getDecisions(from, to, prefix);
         } catch (RuntimeException e) {
             e.printStackTrace();
             return Response.status(400, String.format("Bad request: {}", e.getMessage())).build();
@@ -210,7 +213,7 @@ public class ExecutionsApi {
                     required = true,
                     schema = @Schema(implementation = String.class)
             ) @NotNull @QueryParam("id") String id) {
-        List<DMNResultModel> results = storageService.getEventsByMatchingId(id).stream().map(x -> x.data.result).collect(Collectors.toList());
+        List<DMNResultModel> results = storageExtension.getEventsByMatchingId(id);
 
         int totalResults = results.size();
         if (totalResults >= limit) {
