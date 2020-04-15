@@ -32,7 +32,7 @@ public interface ModelInfo {
      * The endpoint that can be used in order to access the service associated to the given model
      * @return the endpoint URI
      */
-    URI getPredictionEndpoint();
+    EndpointInfo getPredictionEndpointInfo();
 
     URI getTrainingEndpoint();
 
@@ -109,5 +109,16 @@ public interface ModelInfo {
          */
         REGRESSION
 
+    }
+
+    interface EndpointInfo {
+        URI getURI();
+
+        Method getMethod();
+
+        enum Method {
+            GET,
+            POST
+        }
     }
 }

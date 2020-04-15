@@ -1,5 +1,8 @@
 package org.kie.trusty.v1.xai;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +63,7 @@ public class TestExplanations {
     }
 
     @Test
-    public void testGlobalTabularExplanation() {
+    public void testGlobalTabularExplanation() throws FileNotFoundException {
         UUID uuid = UUID.randomUUID();
         Model model = createDummyTestModel();
         DummyModelRegistry.registerModel(uuid, model);
@@ -75,6 +78,32 @@ public class TestExplanations {
                 .build();
         TabularData tabularData = explanationProvider.explain(info);
         assertNotNull(tabularData);
+        writeAsciiGraph(tabularData, new PrintWriter(new File("target/pdp.txt")));
+    }
+
+    private void writeAsciiGraph(TabularData tabularData, PrintWriter out) {
+        double curMax = 1 + DoubleStream.of(tabularData.getY()).max().getAsDouble();
+        int tempIdx = -1;
+        for (int k = 0; k < tabularData.getX().length; k++) {
+            double tempMax = -Integer.MAX_VALUE;
+            for (int j = 0; j < tabularData.getY().length; j++) {
+                double v = tabularData.getY()[j];
+                if (v < curMax && v > tempMax && tempIdx != j) {
+                    tempMax = v;
+                    tempIdx = j;
+                }
+            }
+            writeDot(tabularData, tempIdx, out);
+            curMax = tempMax;
+        }
+        out.flush();
+        out.close();
+    }
+    private void writeDot(TabularData data, int i, PrintWriter out) {
+        for (int j = 0; j < data.getX()[i]; j++) {
+            out.print(" ");
+        }
+        out.println("*");
     }
 
     private ModelInfo getModelInfo(UUID uuid, Model model) {
