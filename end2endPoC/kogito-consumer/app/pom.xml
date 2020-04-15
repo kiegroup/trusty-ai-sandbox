@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.redhat.developer</groupId>
   <artifactId>kogito-consumer</artifactId>
@@ -82,63 +82,48 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-resteasy-jackson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-openapi</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.swagger.core.v3</groupId>
-      <artifactId>swagger-jaxrs2</artifactId>
-      <version>2.1.1</version>
+      <groupId>org.kie</groupId>
+      <artifactId>kie-dmn-api</artifactId>
+      <version>${version.org.kie7}</version>
     </dependency>
     <dependency>
-        <groupId>javax.ws.rs</groupId>
-        <artifactId>javax.ws.rs-api</artifactId>
-        <version>2.1.1</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>javax.servlet-api</artifactId>
-        <version>3.1.0</version>
-      </dependency>
-
+      <groupId>org.kie</groupId>
+      <artifactId>kie-dmn-core</artifactId>
+      <version>${version.org.kie7}</version>
+    </dependency>
     <dependency>
-    <groupId>org.kie</groupId>
-    <artifactId>kie-dmn-api</artifactId>
-    <version>${version.org.kie7}</version>
-  </dependency>
-  <dependency>
-    <groupId>org.drools</groupId>
-    <artifactId>drools-decisiontables</artifactId>
-    <version>${version.org.kie7}</version>
-  </dependency>
-  <dependency>
-    <groupId>org.drools</groupId>
-    <artifactId>drools-model-compiler</artifactId>
-    <version>${version.org.kie7}</version>
-  </dependency>
-
-  <dependency>
-    <groupId>org.drools</groupId>
-    <artifactId>drools-scenario-simulation-api</artifactId>
-    <version>${version.org.kie7}</version>
-  </dependency>
-  <dependency>
-    <groupId>org.drools</groupId>
-    <artifactId>drools-scenario-simulation-backend</artifactId>
-    <version>${version.org.kie7}</version>
-  </dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-decisiontables</artifactId>
+      <version>${version.org.kie7}</version>
+    </dependency>
     <dependency>
-    <groupId>org.kie</groupId>
-    <artifactId>kie-dmn-core</artifactId>
-    <version>${version.org.kie7}</version>
-  </dependency>
-
-    <!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-json-binding-provider -->
-    <dependency>
-      <groupId>org.jboss.resteasy</groupId>
-      <artifactId>resteasy-json-binding-provider</artifactId>
-      <version>4.5.3.Final</version>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-model-compiler</artifactId>
+      <version>${version.org.kie7}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-scenario-simulation-api</artifactId>
+      <version>${version.org.kie7}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-scenario-simulation-backend</artifactId>
+      <version>${version.org.kie7}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>kie-dmn-core</artifactId>
+      <version>${version.org.kie7}</version>
+    </dependency>
   </dependencies>
   <build>
 
