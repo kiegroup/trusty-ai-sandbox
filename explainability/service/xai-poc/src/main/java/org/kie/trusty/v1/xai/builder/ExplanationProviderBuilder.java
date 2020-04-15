@@ -1,6 +1,6 @@
 package org.kie.trusty.v1.xai.builder;
 
-import org.kie.trusty.v1.xai.builder.pdp.PartialDependenceBuilder;
+import org.kie.trusty.v1.xai.builder.pdp.PartialDependencePlotBuilder;
 import org.kie.trusty.v1.xai.explainer.global.saliency.PredictionFeatureImportanceProvider;
 import org.kie.trusty.v1.xai.explainer.global.saliency.SaliencyGlobalExplanationProvider;
 import org.kie.trusty.v1.xai.explainer.global.saliency.VariableFeatureImportanceProvider;
@@ -77,8 +77,8 @@ public class ExplanationProviderBuilder {
             return new PredictionFeatureImportanceBuilder();
         }
 
-        public PartialDependenceBuilder.FeaturePartialDependenceBuilder partialDependence() {
-            return PartialDependenceBuilder.newPDPBuilder();
+        public PartialDependencePlotBuilder.FeaturePartialDependencePlotBuilder partialDependence() {
+            return PartialDependencePlotBuilder.newPDPBuilder();
         }
     }
 

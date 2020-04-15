@@ -13,14 +13,14 @@ import org.slf4j.LoggerFactory;
  * to reproduce an approximate version of the training data by means of data distribution information (min, max, mean,
  * stdDev).
  */
-public class PartialDependenceProvider implements GlobalVizExplanationProvider {
+public class PartialDependencePlotProvider implements GlobalVizExplanationProvider {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final int featureIndex;
     private final int outputIndex;
 
-    public PartialDependenceProvider(int featureIndex, int outputIndex) {
+    public PartialDependencePlotProvider(int featureIndex, int outputIndex) {
         this.featureIndex = featureIndex;
         this.outputIndex = outputIndex;
     }
