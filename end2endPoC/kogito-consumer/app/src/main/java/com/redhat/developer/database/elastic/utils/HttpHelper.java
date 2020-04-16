@@ -1,4 +1,4 @@
-package com.redhat.developer.database.utils;
+package com.redhat.developer.database.elastic.utils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

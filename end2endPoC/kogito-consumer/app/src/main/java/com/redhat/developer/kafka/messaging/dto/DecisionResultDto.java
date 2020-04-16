@@ -16,7 +16,7 @@ public class DecisionResultDto {
     public DecisionEvaluationStatusDto evaluationStatus;
 
     @JsonProperty("decisionResult")
-    public String result;
+    public Object result;
 
     // TODO: create dto properly
     @JsonProperty("messages")

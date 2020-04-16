@@ -8,11 +8,11 @@ import com.redhat.developer.kafka.messaging.dto.DMNResultDto;
 import com.redhat.developer.kafka.messaging.dto.DecisionEvaluationStatusDto;
 import com.redhat.developer.kafka.messaging.dto.DecisionResultDto;
 
-import static com.redhat.developer.execution.models.DecisionEvaluationStatusModel.EVALUATING;
-import static com.redhat.developer.execution.models.DecisionEvaluationStatusModel.FAILED;
-import static com.redhat.developer.execution.models.DecisionEvaluationStatusModel.NOT_EVALUATED;
-import static com.redhat.developer.execution.models.DecisionEvaluationStatusModel.SKIPPED;
-import static com.redhat.developer.execution.models.DecisionEvaluationStatusModel.SUCCEEDED;
+import static com.redhat.developer.execution.models.OutcomeEvaluationStatusModel.EVALUATING;
+import static com.redhat.developer.execution.models.OutcomeEvaluationStatusModel.FAILED;
+import static com.redhat.developer.execution.models.OutcomeEvaluationStatusModel.NOT_EVALUATED;
+import static com.redhat.developer.execution.models.OutcomeEvaluationStatusModel.SKIPPED;
+import static com.redhat.developer.execution.models.OutcomeEvaluationStatusModel.SUCCEEDED;
 
 public class ModelFactory {
 
@@ -37,10 +37,10 @@ public class ModelFactory {
         return eventModel;
     }
 
-    public static DecisionResultModel fromDecisionDto(DecisionResultDto decisionDto) {
-        DecisionResultModel model = new DecisionResultModel();
-        model.decisionId = decisionDto.decisionId;
-        model.decisionName = decisionDto.decisionName;
+    public static OutcomeModel fromDecisionDto(DecisionResultDto decisionDto) {
+        OutcomeModel model = new OutcomeModel();
+        model.outcomeId = decisionDto.decisionId;
+        model.outcomeName = decisionDto.decisionName;
         model.hasErrors = decisionDto.hasErrors;
         model.result = decisionDto.result;
         model.messages = decisionDto.messages;
@@ -48,7 +48,7 @@ public class ModelFactory {
         return model;
     }
 
-    public static DecisionEvaluationStatusModel fromEvaluationStatusDto(DecisionEvaluationStatusDto evaluation) {
+    public static OutcomeEvaluationStatusModel fromEvaluationStatusDto(DecisionEvaluationStatusDto evaluation) {
         switch (evaluation) {
             case FAILED:
                 return FAILED;

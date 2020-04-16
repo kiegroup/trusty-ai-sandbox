@@ -217,8 +217,8 @@ paths:
                 properties:
                   header:
                     $ref: '#/components/schemas/ExecutionHeaderResponse'
-                  decisions:
-                    $ref: '#/components/schemas/ListDecisionResultModel'
+                  outcomes:
+                    $ref: '#/components/schemas/ListOutcomeModel'
   /executions/decisions/{key}/outcomes/{outcomeId}:
     get:
       summary: Gets the decision outcomes with model structure.
@@ -249,10 +249,8 @@ paths:
               schema:
                 type: object
                 properties:
-                  header:
-                    $ref: '#/components/schemas/ExecutionHeaderResponse'
-                  decisions:
-                    $ref: '#/components/schemas/ListDecisionResultModel'
+                  outcome:
+                    $ref: '#/components/schemas/OutcomeModelWithInputs'
   /executions/decisions/{key}/structuredInputs:
     get:
       summary: Gets the decision inputs with structure.
@@ -304,8 +302,8 @@ paths:
                 properties:
                   header:
                     $ref: '#/components/schemas/ExecutionHeaderResponse'
-                  decisions:
-                    $ref: '#/components/schemas/ListDecisionResultModelWithInputs'
+                  outcomes:
+                    $ref: '#/components/schemas/ListOutcomeModelWithInputs'
   /executions/processes:
     get:
       summary: Gets the execution headers of the processes only. To be implemented.
@@ -651,42 +649,116 @@ paths:
                 $ref: '#/components/schemas/AvailablePmmlModelsResponse'
 components:
   schemas:
-    AvailablePmmlModelsResponse:
+    ExecutionHeaderResponse:
       type: object
       properties:
-        availableModels:
-          type: array
-          items:
-            type: string
-    ModelExplainationResponse:
-      type: object
-      properties:
-        test:
+        executionDate:
+          $ref: '#/components/schemas/Date'
+        executionId:
           type: string
-    DecisionExplanationResponse:
+        executionSucceeded:
+          type: boolean
+        executionType:
+          $ref: '#/components/schemas/ExecutionEnum'
+        executorName:
+          type: string
+    ListExecutionHeaderResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/ExecutionHeaderResponse'
+    Date:
+      format: date
+      type: string
+    ExecutionEnum:
+      enum:
+      - DECISION
+      - PROCESS
+      type: string
+    OutcomeModelWithInputs:
       type: object
       properties:
-        explaination:
+        evaluationStatus:
+          $ref: '#/components/schemas/OutcomeEvaluationStatusModel'
+        hasErrors:
+          type: boolean
+        messages:
+          $ref: '#/components/schemas/ListString'
+        outcomeId:
+          type: string
+        outcomeName:
+          type: string
+        outcomeResult:
           type: object
-    AlgorithmClassEnum:
-      type: object
-    AvailableAlgorithmsClassResponse:
-      type: object
-      properties:
-        types:
+        outcomeInputs:
           type: array
           items:
-            $ref: '#/components/schemas/AlgorithmClassEnum'
-    AvailableAlgorithmsResponse:
-      type: object
-      properties:
-        availableAlgorithms:
-          type: array
-          items:
-            type: string
+            $ref: '#/components/schemas/OutcomeModelWithInputs'
+    ListOutcomeModelWithInputs:
+      type: array
+      items:
+        $ref: '#/components/schemas/OutcomeModelWithInputs'
+    OutcomeEvaluationStatusModel:
+      enum:
+      - EVALUATING
+      - FAILED
+      - NOT_EVALUATED
+      - SKIPPED
+      - SUCCEEDED
+      type: string
+    ListString:
+      type: array
+      items:
+        type: string
     MapStringObject:
       type: object
       additionalProperties: {}
+    OutcomeModel:
+      type: object
+      properties:
+        evaluationStatus:
+          $ref: '#/components/schemas/OutcomeEvaluationStatusModel'
+        hasErrors:
+          type: boolean
+        messages:
+          $ref: '#/components/schemas/ListString'
+        outcomeId:
+          type: string
+        outcomeName:
+          type: string
+        outcomeResult:
+          type: object
+    ListOutcomeModel:
+      type: array
+      items:
+        $ref: '#/components/schemas/OutcomeModel'
+    SingleDecisionInputResponse:
+      type: object
+      properties:
+        components:
+          $ref: '#/components/schemas/ListList'
+        name:
+          type: string
+        isCollection:
+          type: boolean
+        isComposite:
+          type: boolean
+        typeRef:
+          type: string
+        value:
+          type: object
+    ListSingleDecisionInputResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/SingleDecisionInputResponse'
+    ListList:
+      type: array
+      items:
+        $ref: '#/components/schemas/ListSingleDecisionInputResponse'
+    ExecutionDetailResponse:
+      type: object
+      properties:
+        header:
+          $ref: '#/components/schemas/ExecutionHeaderResponse'
     EvaluationRequestBody:
       type: object
       properties:
@@ -809,110 +881,36 @@ components:
           type: string
         version:
           type: string
-    ExecutionHeaderResponse:
+    AvailablePmmlModelsResponse:
       type: object
       properties:
-        executionDate:
-          $ref: '#/components/schemas/Date'
-        executionId:
-          type: string
-        executionSucceeded:
-          type: boolean
-        executionType:
-          $ref: '#/components/schemas/ExecutionEnum'
-        executorName:
-          type: string
-    ListExecutionHeaderResponse:
-      type: array
-      items:
-        $ref: '#/components/schemas/ExecutionHeaderResponse'
-    Date:
-      format: date
-      type: string
-    ExecutionEnum:
-      enum:
-      - DECISION
-      - PROCESS
-      type: string
-    DecisionResultModelWithInputs:
-      type: object
-      properties:
-        decisionId:
-          type: string
-        decisionName:
-          type: string
-        evaluationStatus:
-          $ref: '#/components/schemas/DecisionEvaluationStatusModel'
-        hasErrors:
-          type: boolean
-        messages:
-          $ref: '#/components/schemas/ListString'
-        decisionResult:
-          type: string
-        decisionInputs:
+        availableModels:
           type: array
           items:
-            $ref: '#/components/schemas/DecisionResultModelWithInputs'
-    ListDecisionResultModelWithInputs:
-      type: array
-      items:
-        $ref: '#/components/schemas/DecisionResultModelWithInputs'
-    DecisionEvaluationStatusModel:
-      enum:
-      - EVALUATING
-      - FAILED
-      - NOT_EVALUATED
-      - SKIPPED
-      - SUCCEEDED
-      type: string
-    ListString:
-      type: array
-      items:
-        type: string
-    DecisionResultModel:
+            type: string
+    ModelExplainationResponse:
       type: object
       properties:
-        decisionId:
+        test:
           type: string
-        decisionName:
-          type: string
-        evaluationStatus:
-          $ref: '#/components/schemas/DecisionEvaluationStatusModel'
-        hasErrors:
-          type: boolean
-        messages:
-          $ref: '#/components/schemas/ListString'
-        decisionResult:
-          type: string
-    ListDecisionResultModel:
-      type: array
-      items:
-        $ref: '#/components/schemas/DecisionResultModel'
-    SingleDecisionInputResponse:
+    DecisionExplanationResponse:
       type: object
       properties:
-        components:
-          $ref: '#/components/schemas/ListList'
-        name:
-          type: string
-        isCollection:
-          type: boolean
-        isComposite:
-          type: boolean
-        typeRef:
-          type: string
-        value:
+        explaination:
           type: object
-    ListSingleDecisionInputResponse:
-      type: array
-      items:
-        $ref: '#/components/schemas/SingleDecisionInputResponse'
-    ListList:
-      type: array
-      items:
-        $ref: '#/components/schemas/ListSingleDecisionInputResponse'
-    ExecutionDetailResponse:
+    AlgorithmClassEnum:
+      type: object
+    AvailableAlgorithmsClassResponse:
       type: object
       properties:
-        header:
-          $ref: '#/components/schemas/ExecutionHeaderResponse'
+        types:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlgorithmClassEnum'
+    AvailableAlgorithmsResponse:
+      type: object
+      properties:
+        availableAlgorithms:
+          type: array
+          items:
+            type: string

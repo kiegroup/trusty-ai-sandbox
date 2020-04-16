@@ -17,7 +17,7 @@ public class DMNResultModel {
     public Date executionDate;
 
     @JsonProperty("decisions")
-    public List<DecisionResultModel> decisions;
+    public List<OutcomeModel> decisions;
 
     @JsonProperty("context")
     public Map<String, Object> context;
