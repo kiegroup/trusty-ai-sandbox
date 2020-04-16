@@ -1,4 +1,4 @@
-package com.redhat.developer.database.model;
+package com.redhat.developer.database.elastic.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

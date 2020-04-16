@@ -25,7 +25,8 @@ public class ExecutionHeaderResponse {
     @JsonProperty("executionType")
     public ExecutionEnum executionType = ExecutionEnum.DECISION;
 
-    public ExecutionHeaderResponse(){}
+    public ExecutionHeaderResponse() {
+    }
 
     public ExecutionHeaderResponse(String executionId, Date executionDate, boolean executionSucceeded, String executorName) {
         this.executionId = executionId;

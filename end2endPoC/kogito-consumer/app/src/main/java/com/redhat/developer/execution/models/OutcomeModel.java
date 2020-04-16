@@ -4,19 +4,19 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DecisionResultModel {
+public class OutcomeModel {
 
-    @JsonProperty("decisionId")
-    public String decisionId;
+    @JsonProperty("outcomeId")
+    public String outcomeId;
 
-    @JsonProperty("decisionName")
-    public String decisionName;
+    @JsonProperty("outcomeName")
+    public String outcomeName;
 
     @JsonProperty("evaluationStatus")
-    public DecisionEvaluationStatusModel evaluationStatus;
+    public OutcomeEvaluationStatusModel evaluationStatus;
 
-    @JsonProperty("decisionResult")
-    public String result;
+    @JsonProperty("outcomeResult")
+    public Object result;
 
     // TODO: create dto properly
     @JsonProperty("messages")
@@ -25,6 +25,6 @@ public class DecisionResultModel {
     @JsonProperty("hasErrors")
     public boolean hasErrors;
 
-    public DecisionResultModel() {
+    public OutcomeModel() {
     }
 }

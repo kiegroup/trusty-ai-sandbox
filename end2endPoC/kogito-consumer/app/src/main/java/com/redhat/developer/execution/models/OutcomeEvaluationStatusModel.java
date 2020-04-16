@@ -2,7 +2,7 @@ package com.redhat.developer.execution.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public enum DecisionEvaluationStatusModel {
+public enum OutcomeEvaluationStatusModel {
     @JsonProperty("NOT_EVALUATED")
     NOT_EVALUATED,
     @JsonProperty("EVALUATING")
