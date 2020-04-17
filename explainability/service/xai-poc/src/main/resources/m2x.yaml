@@ -18,7 +18,7 @@ tags:
     description: "Find out more"
     url: "http://kie.org"
 - name: "global"
-  description: "Needed for lobal explanations"
+  description: "Needed for global explanations"
   externalDocs:
     description: "Find out more"
     url: "http://kie.org"
