@@ -1,8 +1,8 @@
 swagger: "2.0"
 info:
-  description: "Trusty XAI service description."
+  description: "Model to Explainability communication protocol"
   version: "1.0.0"
-  title: "TrustyXAI"
+  title: "Model to Explainability communication"
   termsOfService: "http://kie.org/trusty/"
   contact:
     email: "tteofili@redhat.com"
@@ -10,15 +10,15 @@ info:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 host: "kie.org"
-basePath: "/xai"
+basePath: "/m2x"
 tags:
 - name: "local"
-  description: "Local explanations"
+  description: "Needed for local explanations"
   externalDocs:
     description: "Find out more"
     url: "http://kie.org"
 - name: "global"
-  description: "Global explanations"
+  description: "Needed for lobal explanations"
   externalDocs:
     description: "Find out more"
     url: "http://kie.org"
@@ -26,13 +26,14 @@ schemes:
 - "https"
 - "http"
 paths:
-  /local/saliency/lime:
+  /model/predict:
     post:
       tags:
       - "local"
-      summary: "Execute LIME explanation method on a prediction"
+      - "global"
+      summary: "Execute model prediction function"
       description: ""
-      operationId: "lime"
+      operationId: "predict"
       consumes:
       - "application/json"
       - "application/xml"
@@ -42,44 +43,59 @@ paths:
       parameters:
       - in: "body"
         name: "body"
-        description: "Prediction that needs to be explained"
+        description: "Prediction input"
         required: true
         schema:
-          $ref: "#/definitions/Prediction"
+          $ref: "#/definitions/PredictionInput"
       responses:
         200:
-          description: "successful explanation"
+          description: "Prediction Output"
           schema:
-            $ref: "#/definitions/Saliency"
+            $ref: "#/definitions/PredictionOutput"
       security:
       - trusty_auth:
         - "write:exp"
         - "read:exp"
-  /global/tabular/pdp:
-    post:
+  /model/data/distribution:
+    get:
       tags:
       - "global"
-      summary: "Generate PDP explanation method on a model"
+      summary: "Get the distribution of the data used to train the model"
       description: ""
-      operationId: "pdp"
+      operationId: "dataDistribution"
       consumes:
       - "application/json"
       - "application/xml"
       produces:
       - "application/xml"
       - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Model that needs to be explained"
-        required: true
-        schema:
-          $ref: "#/definitions/ModelInfo"
+      responses:
+        200:
+          description: "The data distribution"
+          schema:
+            $ref: "#/definitions/DataDistribution"
+      security:
+      - trusty_auth:
+        - "write:exp"
+        - "read:exp"
+  /model/info:
+    get:
+      tags:
+      - "global"
+      summary: "Get general information about the model"
+      description: ""
+      operationId: "info"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/xml"
+      - "application/json"
       responses:
         200:
           description: "successful explanation"
           schema:
-            $ref: "#/definitions/TabularData"
+            $ref: "#/definitions/ModelInfo"
       security:
       - trusty_auth:
         - "write:exp"
@@ -97,31 +113,6 @@ securityDefinitions:
     name: "api_key"
     in: "header"
 definitions:
-  TabularData:
-    type: "object"
-    properties:
-      x-axis:
-        type: "array"
-        items:
-          type: "number"
-      y-axis:
-        type: "array"
-        items:
-          type: "number"
-  Saliency:
-   type: "object"
-   properties:
-    featureImportances:
-      type: "array"
-      items:
-        $ref: "#/definitions/FeatureImportance"
-  FeatureImportance:
-    type: "object"
-    properties:
-      feature:
-        $ref: "#/definitions/Feature"
-      score:
-        type : "number"
   Feature:
     type: "object"
     properties:
@@ -138,10 +129,6 @@ definitions:
   PredictionInput:
     type: "object"
     properties:
-      doubles:
-        type: "array"
-        items:
-          type: "number"
       features:
         type: "array"
         xml:
@@ -201,15 +188,6 @@ definitions:
           - "regression"
       dataDistribution:
         $ref: "#/definitions/DataDistribution"
-  Prediction:
-    type: "object"
-    properties:
-      predictionInput:
-        $ref: "#/definitions/PredictionInput"
-      predictionOutput:
-        $ref: "#/definitions/PredictionOutput"
-      modelInfo:
-        $ref: "#/definitions/ModelInfo"
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"
