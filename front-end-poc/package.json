@@ -1,0 +1,61 @@
+{
+  "name": "poc",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://kelvah.github.io/xai-poc",
+  "dependencies": {
+    "@patternfly/react-charts": "^5.2.21",
+    "@patternfly/react-core": "3.134.2",
+    "@patternfly/react-table": "^2.25.6",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/jest": "^24.0.0",
+    "@types/lodash": "^4.14.149",
+    "@types/lodash.debounce": "^4.0.6",
+    "@types/node": "^12.0.0",
+    "@types/react": "^16.9.0",
+    "@types/react-dom": "^16.9.0",
+    "@types/react-router-dom": "^5.1.3",
+    "@types/react-sticky": "^6.0.3",
+    "axios": "^0.19.2",
+    "lodash": "^4.17.15",
+    "node-sass": "^4.13.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-router-breadcrumbs-hoc": "^3.2.6",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.3.1",
+    "react-sticky": "^6.0.3",
+    "typescript": "~3.8.3",
+    "victory": "^34.1.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "deploy": "gh-pages -d build",
+    "mock-api": "json-server --watch api-mock/db.js --routes api-mock/routes.json --port 4000 --delay 1500"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "faker": "^4.1.0",
+    "gh-pages": "^2.2.0",
+    "json-server": "^0.16.1"
+  }
+}

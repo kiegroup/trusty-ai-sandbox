@@ -1,0 +1,30 @@
+.input-browser {
+  &__section-list {
+    margin: 20px 0 20px 0;
+    Button {
+      margin: 0 6px;
+    }
+    &__label {
+      margin: 0 10px 0 10px;
+      font-weight: 700;
+    }
+  }
+  &__header {
+    background-color: #f2f2f2;
+  }
+  &__browser {
+    background-color: #c6c6c6;
+  }
+  &__distribution {
+    .input-data__wrap {
+      padding-top: var(--pf-c-data-list__cell-cell--PaddingTop);
+      &__desc {
+        bottom: 10px;
+      }
+    }
+    &__chart {
+      // the only way I found to use the negative value of a css variable was to multiply it :(
+      margin-top: calc(var(--pf-c-data-list__cell-cell--PaddingTop) * -1);
+    }
+  }
+}
