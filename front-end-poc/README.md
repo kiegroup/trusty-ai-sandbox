@@ -2,6 +2,11 @@
 
 This project is a PoC for the Audit section of a XAI service
 
+### Build local dependencies
+
+First build the local dependencies for this project.
+- Run `yarn clean:build` in the `./front-end-poc-pmml-linear-model-viewer` folder
+
 ### Install dependencies
 
 To install dependencies you need to have npm (or yarn) installed globally and run in the terminal:
