@@ -28,7 +28,8 @@
     "react-scripts": "3.3.1",
     "react-sticky": "^6.0.3",
     "typescript": "~3.8.3",
-    "victory": "^34.1.1"
+    "victory": "^34.1.1",
+    "@manstis/pmml-linear-model-viewer": "file:../front-end-poc-pmml-linear-model-viewer"
   },
   "scripts": {
     "start": "react-scripts start",
