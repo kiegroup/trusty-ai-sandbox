@@ -33,8 +33,8 @@ public class InfinispanStorageManager implements IStorageManager {
     @Override
     public <T> String create(String key, T request, String index) {
         if (!indexes.containsKey(index)) {
-            Cache<String, T> ciao = cacheManager.getCache("local");
-            indexes.put(index, ciao);
+            Cache<String, T> localCache = cacheManager.getCache("local");
+            indexes.put(index, localCache);
         }
 
         Cache cache = indexes.get(index);
