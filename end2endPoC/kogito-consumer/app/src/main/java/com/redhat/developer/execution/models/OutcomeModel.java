@@ -27,4 +27,14 @@ public class OutcomeModel {
 
     public OutcomeModel() {
     }
+
+    public OutcomeModel(String outcomeId, String outcomeName, OutcomeEvaluationStatusModel evaluationStatus, Object result, List<String> messages, boolean hasErrors) {
+        this.outcomeId = outcomeId;
+        this.outcomeName = outcomeName;
+        this.evaluationStatus = evaluationStatus;
+        this.result = result;
+        this.messages = messages;
+        this.hasErrors = hasErrors;
+    }
 }
+

@@ -1,5 +1,5 @@
 {
-   "scripts" : {
+  "scripts": {
     "start": "http-server -a localhost -p 8280",
     "devDependencies": {
       "http-server": "^0.12.1"

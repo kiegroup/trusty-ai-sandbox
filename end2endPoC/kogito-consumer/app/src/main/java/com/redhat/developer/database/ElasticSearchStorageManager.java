@@ -19,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 //@ApplicationScoped
+
+// TODO: ES does not work anymore becuase outcomeResult is a dynamic object -> the index must be configured properly!!!
 public class ElasticSearchStorageManager implements IStorageManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ElasticSearchStorageManager.class);
@@ -51,7 +53,7 @@ public class ElasticSearchStorageManager implements IStorageManager {
         LOGGER.info("ES query " + esQuery);
         String response = httpHelper.doPost(index + "/_search", esQuery);
         JavaType javaType = TypeFactory.defaultInstance()
-                .constructParametricType(ElasticSearchResponse.class, type);
+                .constructParametricType(ElasticSearchResponse.class, String.class);
         LOGGER.info("ES returned " + response);
         try {
             // TODO: check performance issue with generics

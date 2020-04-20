@@ -46,6 +46,7 @@ services:
       - '9090:9090'
     depends_on:
       - consumer
+
   grafana:
     image: grafana/grafana:6.6.1
     depends_on:

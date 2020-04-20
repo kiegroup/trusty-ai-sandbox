@@ -249,8 +249,20 @@ paths:
               schema:
                 type: object
                 properties:
-                  outcome:
-                    $ref: '#/components/schemas/OutcomeModelWithInputs'
+                  evaluationStatus:
+                    $ref: '#/components/schemas/OutcomeEvaluationStatusModel'
+                  hasErrors:
+                    type: boolean
+                  messages:
+                    $ref: '#/components/schemas/ListString'
+                  outcomeId:
+                    type: string
+                  outcomeName:
+                    type: string
+                  outcomeResult:
+                    type: object
+                  outcomeInputs:
+                    $ref: '#/components/schemas/ListDecisionInputStructured'
   /executions/decisions/{key}/structuredInputs:
     get:
       summary: Gets the decision inputs with structure.
@@ -690,9 +702,7 @@ components:
         outcomeResult:
           type: object
         outcomeInputs:
-          type: array
-          items:
-            $ref: '#/components/schemas/OutcomeModelWithInputs'
+          $ref: '#/components/schemas/ListDecisionInputStructured'
     ListOutcomeModelWithInputs:
       type: array
       items:
@@ -709,6 +719,34 @@ components:
       type: array
       items:
         type: string
+    DecisionInputStructured:
+      type: object
+      properties:
+        components:
+          $ref: '#/components/schemas/ListList'
+        name:
+          type: string
+        typeRef:
+          type: string
+        value:
+          type: object
+        category:
+          type: string
+        id:
+          type: string
+    ListDecisionInputStructured:
+      type: array
+      items:
+        $ref: '#/components/schemas/DecisionInputStructured'
+    ListSingleDecisionInputResponse:
+      type: object
+      properties:
+        empty:
+          type: boolean
+    ListList:
+      type: array
+      items:
+        $ref: '#/components/schemas/ListSingleDecisionInputResponse'
     MapStringObject:
       type: object
       additionalProperties: {}
@@ -738,22 +776,10 @@ components:
           $ref: '#/components/schemas/ListList'
         name:
           type: string
-        isCollection:
-          type: boolean
-        isComposite:
-          type: boolean
         typeRef:
           type: string
         value:
           type: object
-    ListSingleDecisionInputResponse:
-      type: array
-      items:
-        $ref: '#/components/schemas/SingleDecisionInputResponse'
-    ListList:
-      type: array
-      items:
-        $ref: '#/components/schemas/ListSingleDecisionInputResponse'
     ExecutionDetailResponse:
       type: object
       properties:

@@ -1,10 +1,8 @@
 package com.redhat.developer.execution.api;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -15,14 +13,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.redhat.developer.dmn.IDmnService;
-import com.redhat.developer.dmn.models.input.InputData;
 import com.redhat.developer.dmn.models.input.ModelInputStructure;
-import com.redhat.developer.dmn.models.input.TypeComponent;
-import com.redhat.developer.dmn.models.input.TypeDefinition;
+import com.redhat.developer.execution.IExecutionService;
 import com.redhat.developer.execution.models.DMNResultModel;
+import com.redhat.developer.execution.models.OutcomeModelWithInputs;
 import com.redhat.developer.execution.responses.decisions.OutcomesResponse;
 import com.redhat.developer.execution.responses.decisions.OutcomesStructuredResponse;
-import com.redhat.developer.execution.responses.decisions.SingleOutcomeResponse;
 import com.redhat.developer.execution.responses.decisions.inputs.DecisionInputsResponse;
 import com.redhat.developer.execution.responses.decisions.inputs.DecisionStructuredInputsResponse;
 import com.redhat.developer.execution.responses.decisions.inputs.SingleDecisionInputResponse;
@@ -36,15 +32,22 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Path("/executions/decisions")
 public class DecisionsApi {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DecisionsApi.class);
 
     @Inject
     IExecutionsStorageExtension storageExtension;
 
     @Inject
     IDmnService dmnService;
+
+    @Inject
+    IExecutionService executionService;
 
     @GET
     @Path("/{key}")
@@ -132,41 +135,11 @@ public class DecisionsApi {
             )
             @PathParam("key") String key) {
         DMNResultModel event = storageExtension.getEventsByMatchingId(key).get(0);
-        String modelId = event.modelId;
-        Map<String, Object> context = event.context;
 
-        ModelInputStructure dmnInputStructure = dmnService.getDmnInputStructure(modelId);
-
-        DecisionStructuredInputsResponse response = new DecisionStructuredInputsResponse();
-
-        response.input = new ArrayList<>();
-
-        for (String inputName : context.keySet()) {
-            Optional<InputData> modelInputDataOpt = dmnInputStructure.inputData.stream().filter(x -> x.name.equals(inputName)).findFirst();
-
-            if (!modelInputDataOpt.isPresent()) { // It's a decision
-                continue;
-            }
-
-            InputData modelInputData = modelInputDataOpt.get();
-
-            if (!modelInputData.isComposite) {
-                response.input.add(new SingleDecisionInputResponse(inputName, modelInputData.typeRef, modelInputData.isComposite, modelInputData.isCollection, null, context.get(inputName)));
-            } else {
-                response.input.add(new SingleDecisionInputResponse(inputName,
-                                                                   modelInputData.typeRef,
-                                                                   modelInputData.isComposite,
-                                                                   modelInputData.isCollection,
-                                                                   analyzeComponents(context.get(inputName), modelInputData.typeRef, dmnInputStructure.customTypes),
-                                                                   null
-                                   )
-                );
-            }
-        }
+        DecisionStructuredInputsResponse response = executionService.getStructuredInputs(event);
 
         return Response.ok(response).build();
     }
-
 
     @GET
     @Path("/{key}/outcomes")
@@ -194,6 +167,12 @@ public class DecisionsApi {
         if (event.size() > 1) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Multiple events have been retrieved with this ID.", key)).build();
         }
+
+        List<SingleDecisionInputResponse> structuredOutcomesValues = executionService.getStructuredOutcomesValues(event.get(0));
+        Map<String, SingleDecisionInputResponse> mmap = new HashMap<>();
+        structuredOutcomesValues.forEach(x -> mmap.put(x.inputName, x));
+
+        event.get(0).decisions.forEach(x -> x.result = mmap.get(x.outcomeName));
 
         return Response.ok(new OutcomesResponse(ExecutionHeaderResponse.fromDMNResultModel(event.get(0)), event.get(0).decisions)).build();
     }
@@ -231,7 +210,7 @@ public class DecisionsApi {
     @GET
     @Path("/{key}/outcomes/{outcomeId}")
     @APIResponses(value = {
-            @APIResponse(description = "Gets the decision outcome detail.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = SingleOutcomeResponse.class))),
+            @APIResponse(description = "Gets the decision outcome detail.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = OutcomeModelWithInputs.class))),
             @APIResponse(description = "Bad Request", responseCode = "400", content = @Content(mediaType = MediaType.TEXT_PLAIN))
     }
     )
@@ -252,6 +231,7 @@ public class DecisionsApi {
                     schema = @Schema(implementation = String.class)
             )
             @PathParam("outcomeId") String outcomeId) {
+        // TODO HUGE REFACTORING
         List<DMNResultModel> event = storageExtension.getEventsByMatchingId(key);
 
         if (event == null) {
@@ -262,41 +242,8 @@ public class DecisionsApi {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Multiple events have been retrieved with this ID.", key)).build();
         }
 
-        return Response.ok(new SingleOutcomeResponse(event.get(0).decisions.stream().filter(x -> x.outcomeId.equals(outcomeId)).findFirst().get())).build();
-    }
+        OutcomeModelWithInputs response = executionService.getStructuredOutcome(outcomeId, event.get(0));
 
-
-    private List<List<SingleDecisionInputResponse>> analyzeComponents(Object value, String typeRef, List<TypeDefinition> definitions) {
-        TypeDefinition typeDefinition = definitions.stream().filter(x -> x.typeName.equals(typeRef)).findFirst().orElseThrow(() -> new NoSuchElementException());
-        List<List<SingleDecisionInputResponse>> components = new ArrayList<>();
-
-        if (typeDefinition.isCollection) {
-            List<Map<String, Object>> ss = (List) value;
-            for (Map<String, Object> aa : ss) {
-                List<SingleDecisionInputResponse> component = buildComponent(aa, typeDefinition, definitions);
-                components.add(component);
-            }
-        } else {
-            Map<String, Object> aa = (Map) value;
-            List<SingleDecisionInputResponse> component = buildComponent(aa, typeDefinition, definitions);
-            components.add(component);
-        }
-        return components;
-    }
-
-    private List<SingleDecisionInputResponse> buildComponent(Map<String, Object> aa, TypeDefinition typeDefinition, List<TypeDefinition> definitions) {
-        List<SingleDecisionInputResponse> component = new ArrayList<>();
-        for (Map.Entry<String, Object> entry : aa.entrySet()) {
-            String componentInputName = entry.getKey();
-            Object componentValue = entry.getValue();
-            TypeComponent componentType = typeDefinition.components.stream().filter(x -> x.name.equals(componentInputName)).findFirst().orElseThrow(() -> new NoSuchElementException());
-            if (!componentType.isComposite) {
-                component.add(new SingleDecisionInputResponse(componentInputName, componentType.typeRef, componentType.isComposite, componentType.isCollection, null, componentValue));
-            } else {
-                List<List<SingleDecisionInputResponse>> myComponent = analyzeComponents(componentValue, componentType.typeRef, definitions);
-                component.add(new SingleDecisionInputResponse(componentInputName, componentType.typeRef, componentType.isComposite, componentType.isCollection, myComponent, null));
-            }
-        }
-        return component;
+        return Response.ok(response).build();
     }
 }
