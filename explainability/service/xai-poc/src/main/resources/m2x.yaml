@@ -12,91 +12,87 @@ info:
 host: "kie.org"
 basePath: "/m2x"
 tags:
-- name: "local"
-  description: "Needed for local explanations"
-  externalDocs:
-    description: "Find out more"
-    url: "http://kie.org"
-- name: "global"
-  description: "Needed for global explanations"
-  externalDocs:
-    description: "Find out more"
-    url: "http://kie.org"
+  - name: "local"
+    description: "Needed for local explanations"
+    externalDocs:
+      description: "Find out more"
+      url: "http://kie.org"
+  - name: "global"
+    description: "Needed for global explanations"
+    externalDocs:
+      description: "Find out more"
+      url: "http://kie.org"
 schemes:
-- "https"
-- "http"
+  - "https"
+  - "http"
 paths:
   /model/predict:
     post:
       tags:
-      - "local"
-      - "global"
+        - "local"
+        - "global"
       summary: "Execute model prediction function"
       description: ""
       operationId: "predict"
       consumes:
-      - "application/json"
-      - "application/xml"
+        - "application/json"
+        - "application/xml"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "Prediction input"
-        required: true
-        schema:
-          $ref: "#/definitions/PredictionInput"
+        - in: "body"
+          name: "body"
+          description: "Prediction input"
+          required: true
+          schema:
+            $ref: "#/definitions/PredictionInput"
       responses:
         200:
           description: "Prediction Output"
           schema:
             $ref: "#/definitions/PredictionOutput"
       security:
-      - trusty_auth:
-        - "write:pred"
+        - trusty_auth:
+            - "write:pred"
   /model/data/distribution:
     get:
       tags:
-      - "global"
+        - "global"
       summary: "Get the distribution of the data used to train the model"
       description: ""
       operationId: "dataDistribution"
       consumes:
-      - "application/json"
-      - "application/xml"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "The data distribution"
           schema:
             $ref: "#/definitions/DataDistribution"
       security:
-      - trusty_auth:
-        - "read:info"
+        - trusty_auth:
+            - "read:info"
   /model/info:
     get:
       tags:
-      - "global"
+        - "global"
       summary: "Get general information about the model"
       description: ""
       operationId: "info"
       consumes:
-      - "application/json"
-      - "application/xml"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/json"
       responses:
         200:
           description: "Information about the model"
           schema:
             $ref: "#/definitions/ModelInfo"
       security:
-      - trusty_auth:
-        - "read:info"
+        - trusty_auth:
+            - "read:info"
 securityDefinitions:
   trusty_auth:
     type: "oauth2"
@@ -118,9 +114,13 @@ definitions:
       type:
         type: "string"
         enum:
-          - "quantitative"
-          - "categorical"
-          - "ordinal"
+          - "string"
+          - "number"
+          - "boolean"
+          - "date"
+          - "time"
+          - "duration"
+          - "currency"
       value:
         type: "string"
   PredictionInput:
@@ -128,9 +128,6 @@ definitions:
     properties:
       features:
         type: "array"
-        xml:
-          name: "feature"
-          wrapped: true
         items:
           $ref: "#/definitions/Feature"
   PredictionOutput:

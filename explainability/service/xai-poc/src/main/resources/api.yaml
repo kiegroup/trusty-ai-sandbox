@@ -64,9 +64,7 @@ paths:
       operationId: "pdp"
       consumes:
       - "application/json"
-      - "application/xml"
       produces:
-      - "application/xml"
       - "application/json"
       parameters:
       - in: "body"
@@ -138,15 +136,8 @@ definitions:
   PredictionInput:
     type: "object"
     properties:
-      doubles:
-        type: "array"
-        items:
-          type: "number"
       features:
         type: "array"
-        xml:
-          name: "feature"
-          wrapped: true
         items:
           $ref: "#/definitions/Feature"
   PredictionOutput:
