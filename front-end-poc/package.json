@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://kelvah.github.io/xai-poc",
   "dependencies": {
+    "@manstis/pmml-linear-model-viewer": "file:../front-end-poc-pmml-linear-model-viewer",
     "@patternfly/react-charts": "^5.2.21",
     "@patternfly/react-core": "3.134.2",
     "@patternfly/react-table": "^2.25.6",
