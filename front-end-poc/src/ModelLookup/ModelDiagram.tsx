@@ -1,6 +1,6 @@
 import React from 'react';
 import { IModelVersion } from "./types"
-import { LinearRegressionViewer, example1 } from "@manstis/pmml-linear-model-viewer"
+import { LinearRegressionViewer, example3 } from "@manstis/pmml-linear-model-viewer"
 
 const ModelDiagram = (props: { selectedVersion: IModelVersion }) => {
   const { selectedVersion } = props;
@@ -14,7 +14,7 @@ const ModelDiagram = (props: { selectedVersion: IModelVersion }) => {
   return (
     <div className="model-diagram">
       <div className="model-diagram__iframe" dangerouslySetInnerHTML={kogitoIframe()} />
-      <LinearRegressionViewer xml={example1} />
+      <LinearRegressionViewer xml={example3} />
     </div>
   );
 };

@@ -53,8 +53,12 @@ const example2: string = "<PMML xmlns='http://www.dmg.org/PMML-4_4' version='4.4
 const example3: string = "<PMML xmlns='http://www.dmg.org/PMML-4_4' version='4.4'> " +
   "<Header copyright='DMG.org'/>" +
   "<DataDictionary numberOfFields='2'>" +
-  "  <DataField name='age' optype='continuous' dataType='double'/>" +
-  "  <DataField name='weight' optype='continuous' dataType='double'/>" +
+  "  <DataField name='age' optype='continuous' dataType='double'>" +
+  "    <Interval closure='closedClosed' leftMargin='0' rightMargin='100'/>" +
+  "  </DataField>" +
+  "  <DataField name='weight' optype='continuous' dataType='double'>" +
+  "    <Interval closure='closedClosed' leftMargin='0' rightMargin='200'/>" +
+  "  </DataField>" +
   "</DataDictionary>" +
   "<RegressionModel modelName='You get fatter as you get older' functionName='regression' algorithmName='linearRegression' targetFieldName='height_of_tide'>" +
   "  <MiningSchema>" +
