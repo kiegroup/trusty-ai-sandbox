@@ -3,9 +3,26 @@ import { Chart, ChartLabel, ChartAxis, ChartGroup, ChartLine, ChartVoronoiContai
 
 class Line {
     //y=mx+c
-    m: number = 0;
-    c: number = 0;
-    title: string = "";
+    readonly m: number;
+    readonly c: number;
+    readonly title: string;
+
+    constructor(m: number, c: number, title: string) {
+        this.m = m;
+        this.c = c;
+        this.title = title;
+    }
+}
+
+class Range {
+    readonly min: number;
+    readonly max: number;
+
+    constructor(min: number, max: number) {
+        this.min = min;
+        this.max = max;
+    }
+
 }
 
 type Props = {
@@ -14,7 +31,9 @@ type Props = {
     dependentAxisTitle: string
     width?: number
     height?: number
-    lines: Line[]
+    lines: Line[],
+    rangeX: Range,
+    rangeY: Range
 }
 
 type State = {
@@ -30,12 +49,9 @@ class LinearRegressionView extends React.Component<Props, State> {
         return (Math.round(_float * rounded) / rounded).toFixed(_digits);
     }
 
-    private roundedTo50(_float: number): number {
-        return _float;
-        //        return Math.round(_float / 50) * 50;
-    }
-
-    private getTicks(start: number, end: number, count: number): number[] {
+    private getTicks(range: Range, count: number): number[] {
+        const start: number = range.min;
+        const end: number = range.max;
         const step: number = (end - start) / count;
         const ticks: number[] = new Array<number>();
         var v: number = start;
@@ -59,13 +75,10 @@ class LinearRegressionView extends React.Component<Props, State> {
             legendData.push({ name: line.title });
         });
 
-        const maxIntersect: number = Math.max(...this.props.lines.map(line => line.c));
-        const maxDomainY: number = this.roundedTo50(maxIntersect * 2);
-        const minDomainY: number = -maxDomainY;
-
-        const minGradient: number = Math.min(...this.props.lines.map(line => line.m));
-        const maxDomainX: number = this.roundedTo50((maxDomainY - maxIntersect) / minGradient);
-        const minDomainX: number = -maxDomainX;
+        const minDomainX: number = this.props.rangeX.min;
+        const maxDomainX: number = this.props.rangeX.max;
+        const minDomainY: number = this.props.rangeY.min;
+        const maxDomainY: number = this.props.rangeY.max;
 
         return (
             <div style={{ height: height, width: width }}>
@@ -91,19 +104,28 @@ class LinearRegressionView extends React.Component<Props, State> {
                     <ChartLabel text={modelName} x={width / 2} y={30} textAnchor="middle" />
                     <ChartAxis
                         label={this.props.independentAxisTitle} showGrid
-                        tickValues={this.getTicks(minDomainX, maxDomainX, 8)}
+                        tickValues={this.getTicks(this.props.rangeX, 8)}
                         tickFormat={(x) => this.roundedToFixed(x, 2)}
                     />
                     <ChartAxis
                         label={this.props.dependentAxisTitle} dependentAxis showGrid
-                        tickValues={this.getTicks(minDomainY, maxDomainY, 8)}
+                        tickValues={this.getTicks(this.props.rangeY, 8)}
                         tickFormat={(x) => this.roundedToFixed(x, 2)}
                     />
                     <ChartGroup>
                         {this.props.lines.map((line) => {
                             return <ChartLine
                                 samples={100}
-                                domain={{ x: [minDomainX, maxDomainX], y: [minDomainY, maxDomainY] }}
+                                domain={{
+                                    x: [
+                                        this.props.rangeX.min,
+                                        this.props.rangeX.max
+                                    ],
+                                    y: [
+                                        this.props.rangeY.min,
+                                        this.props.rangeY.max
+                                    ]
+                                }}
                                 y={(datum: any) => line.m * datum.x + line.c}
                             />
                         })}
@@ -115,4 +137,4 @@ class LinearRegressionView extends React.Component<Props, State> {
 
 }
 
-export { LinearRegressionView, Line }
+export { LinearRegressionView, Line, Range }

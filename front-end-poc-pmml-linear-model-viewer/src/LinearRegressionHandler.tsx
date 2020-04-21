@@ -1,9 +1,10 @@
 import React from 'react';
-import { LinearRegressionView, Line } from './LinearRegressionView'
+import { LinearRegressionView, Line, Range } from './LinearRegressionView'
 import * as PMML from "./generated/www.dmg.org/PMML-4_4";
 
 type Props = {
-  model: PMML.RegressionModelType;
+  dictionary: PMML.DataDictionaryType
+  model: PMML.RegressionModelType[]
 }
 
 type State = {
@@ -15,15 +16,28 @@ class LinearRegressionHandler extends React.Component<Props, State> {
   }
 
   render() {
-    const modelName: string = this.props.model.modelName;
-    const regressionTable: PMML.RegressionTableType = this.getRegressionTable();
-    const c: number = regressionTable.intercept;
+    const model: PMML.RegressionModelType | undefined = this.getRegressionModel();
+    if (model === undefined) {
+      return (
+        <div>Unsupported</div>
+      );
+    }
 
-    const miningSchema: PMML.MiningSchemaType = this.props.model.MiningSchema;
+    const table: PMML.RegressionTableType | undefined = this.getRegressionTable(model);
+    if (table === undefined) {
+      return (
+        <div>Unsupported</div>
+      );
+    }
+
+    const modelName: string = model.modelName;
+    const c: number = table.intercept;
+
+    const miningSchema: PMML.MiningSchemaType = model.MiningSchema;
     const dependentAxisTitle = miningSchema.MiningField.filter(mf => mf.usageType === "target")[0].name;
 
     //We can only handle one NumericPredictor
-    const numbericPredictors: PMML.NumericPredictorType[] | undefined = regressionTable.NumericPredictor;
+    const numbericPredictors: PMML.NumericPredictorType[] | undefined = table.NumericPredictor;
     if (numbericPredictors === undefined) {
       return (
         <div>No NumericPredictorType</div>
@@ -40,7 +54,7 @@ class LinearRegressionHandler extends React.Component<Props, State> {
     const lines: Line[] = new Array<Line>(line);
 
     //We need to duplicate the line for each CategoricalPredictor
-    const categoricalPredictors: PMML.CategoricalPredictorType[] | undefined = regressionTable.CategoricalPredictor;
+    const categoricalPredictors: PMML.CategoricalPredictorType[] | undefined = table.CategoricalPredictor;
     if (categoricalPredictors !== undefined) {
       categoricalPredictors.forEach(cp => {
         //cxml returns an array of CategoricalPredictorType with one element even if none are defined in the XML.
@@ -51,20 +65,46 @@ class LinearRegressionHandler extends React.Component<Props, State> {
       });
     }
 
+    const legendData: any = [];
+    lines.forEach(line => {
+      legendData.push({ name: line.title });
+    });
+
+    const maxIntersect: number = Math.max(...lines.map(line => line.c));
+    const maxDomainY: number = maxIntersect * 2;
+    const minDomainY: number = -maxDomainY;
+
+    const minGradient: number = Math.min(...lines.map(line => line.m));
+    const maxDomainX: number = (maxDomainY - maxIntersect) / minGradient;
+    const minDomainX: number = -maxDomainX;
+
     return (
       <div>
         <LinearRegressionView modelName={modelName}
           independentAxisTitle={numbericPredictor.name}
           dependentAxisTitle={dependentAxisTitle}
-          lines={lines} />
+          lines={lines}
+          rangeX={{ min: minDomainX, max: maxDomainX }}
+          rangeY={{ min: minDomainY, max: maxDomainY }}
+        />
       </div>
     );
   }
 
-  private getRegressionTable() {
-    const tables: PMML.RegressionTableType[] = this.props.model.RegressionTable;
-    const table: PMML.RegressionTableType = tables[0];
-    return table;
+  private getRegressionModel(): PMML.RegressionModelType | undefined {
+    const models: PMML.RegressionModelType[] = this.props.model;
+    if (models === undefined || models.length > 1) {
+      return undefined;
+    }
+    return models[0];
+  }
+
+  private getRegressionTable(model: PMML.RegressionModelType): PMML.RegressionTableType | undefined {
+    const tables: PMML.RegressionTableType[] = model.RegressionTable;
+    if (tables === undefined || tables.length > 1) {
+      return undefined;
+    }
+    return tables[0];
   }
 
 }
