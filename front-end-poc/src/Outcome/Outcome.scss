@@ -1,3 +1,19 @@
+.outcomes-preview {
+  & > .outcome-property,
+  & > .outcome-list {
+    font-size: 1.125rem;
+    padding: (10/18)+em 0;
+    border-bottom: 1px solid lightgray;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+.outcome-property {
+  &__name {
+    color: var(--pf-global--Color--200);
+  }
+}
 .outcome-list {
   &__title {
     margin-bottom: var(--pf-global--spacer--md);
@@ -6,7 +22,7 @@
     list-style: none;
   }
   &__item {
-    margin-bottom: var(--pf-global--spacer--lg);
+    margin-bottom: var(--pf-global--spacer--md);
     background-color: #f2f2f2;
     border-radius: 3px;
     padding: var(--pf-global--spacer--md);
