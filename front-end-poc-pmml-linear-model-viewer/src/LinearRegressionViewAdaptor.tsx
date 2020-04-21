@@ -1,6 +1,6 @@
 import React from 'react';
-import { LinearRegressionView, Line, Range } from './LinearRegressionView'
 import * as PMML from "./generated/www.dmg.org/PMML-4_4";
+import { Line, LinearRegressionView } from './LinearRegressionView';
 
 type Props = {
   dictionary: PMML.DataDictionaryType
@@ -10,7 +10,7 @@ type Props = {
 type State = {
 }
 
-class LinearRegressionHandler extends React.Component<Props, State> {
+class LinearRegressionViewAdaptor extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
   }
@@ -109,4 +109,4 @@ class LinearRegressionHandler extends React.Component<Props, State> {
 
 }
 
-export { LinearRegressionHandler };
+export { LinearRegressionViewAdaptor };
