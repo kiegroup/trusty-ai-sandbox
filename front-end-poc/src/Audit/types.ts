@@ -1,4 +1,4 @@
-import {ExecutionType} from "../Shared/api/audit.api";
+import { ExecutionType } from "../Shared/api/audit.api";
 
 export interface IExecution {
     executionId: string,
@@ -16,6 +16,6 @@ export interface IExecutionList {
 }
 
 export interface IExecutionRouteParams {
-    executionType: ExecutionType,
-    id: string
+    executionId: string,
+    executionType: ExecutionType
 }

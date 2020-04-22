@@ -1,51 +1,51 @@
 const modelData = [
     {
-        id: 1000,
+        executionId: 1000,
         modelType: "DMN",
         xml: ""
     },
     {
-        id: 1001,
+        executionId: 1001,
         modelType: "DMN",
         xml: ""
     },
     {
-        id: 1002,
+        executionId: 1002,
         modelType: "DMN",
         xml: ""
     },
     {
-        id: 1003,
+        executionId: 1003,
         modelType: "DMN",
         xml: ""
     },
     {
-        id: 1004,
+        executionId: 1004,
         modelType: "DMN",
         xml: ""
     },
     {
-        id: 1005,
+        executionId: 1005,
         modelType: "PMML",
         xml: ""
     },
     {
-        id: 1006,
+        executionId: 1006,
         modelType: "PMML",
         xml: ""
     },
     {
-        id: 1007,
+        executionId: 1007,
         modelType: "PMML",
         xml: ""
     },
     {
-        id: 1008,
+        executionId: 1008,
         modelType: "PMML",
         xml: ""
     },
     {
-        id: 1009,
+        executionId: 1009,
         modelType: "PMML",
         xml: ""
     }

@@ -1,37 +1,33 @@
-import React, { useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import React, { useEffect, useState } from 'react';
 import { LinearRegressionViewer, example3 } from "@manstis/pmml-linear-model-viewer"
 import { getModelDetail } from "../Shared/api/audit.api";
+import { Spinner } from '@patternfly/react-core';
 
 interface Props {
-  id: string;
+  executionId: string;
 }
 
 const ModelDiagram = (props: Props) => {
 
-  function embedDMNEditor(xml: string) {
+  function makeDMNEditor(xml: string): JSX.Element {
     const editorUrl = "https://kiegroup.github.io/kogito-online/?file=https://raw.githubusercontent.com/kiegroup/kogito-tooling/master/packages/online-editor/static/samples/sample.dmn#/editor/dmn";
     const kogitoIframe = () => {
-      return { __html: `<iframe src=${editorUrl} data-key="${id}"></iframe>` };
+      return { __html: `<iframe src=${editorUrl} data-key="${executionId}"></iframe>` };
     };
-    ReactDOM.render(
-      <div className="model-diagram__iframe" dangerouslySetInnerHTML={kogitoIframe()} />,
-      document.getElementById("model-holder")
-    );
+    return <><div className="model-diagram__iframe" dangerouslySetInnerHTML={kogitoIframe()} /></>;
   }
 
-  function embedPMMLEditor(xml: string) {
-    ReactDOM.render(
-      <LinearRegressionViewer xml={example3} />,
-      document.getElementById("model-holder")
-    );
+  function makePMMLEditor(xml: string): JSX.Element {
+    return <><LinearRegressionViewer xml={example3} /></>;
   }
 
-  const { id } = props;
+  const { executionId } = props;
+
+  const [viewer, setViewer] = useState(<><Spinner size="xl" /></>);
 
   useEffect(() => {
     let didMount = true;
-    getModelDetail(id)
+    getModelDetail(executionId)
       .then(response => {
         if (didMount) {
           const modelType: string = response.data[0].modelType;
@@ -39,10 +35,10 @@ const ModelDiagram = (props: Props) => {
 
           switch (modelType) {
             case "DMN":
-              embedDMNEditor(xml);
+              setViewer(makeDMNEditor(xml));
               break;
             case "PMML":
-              embedPMMLEditor(xml);
+              setViewer(makePMMLEditor(xml));
               break;
           }
         }
@@ -51,11 +47,9 @@ const ModelDiagram = (props: Props) => {
     return () => {
       didMount = false;
     };
-  }, [id]);
+  }, [executionId]);
 
-  return (
-    <div id="model-holder" className="model-diagram" />
-  );
+  return viewer;
 };
 
 export default ModelDiagram;

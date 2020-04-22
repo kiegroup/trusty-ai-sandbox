@@ -37,7 +37,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "gh-pages -d build",
-    "mock-api": "json-server --watch api-mock/db.js --routes api-mock/routes.json --port 4000 --delay 1500"
+    "mock-api": "json-server --watch api-mock/db.js --routes api-mock/routes.json --port 4000 --delay 1500 --id executionId"
   },
   "eslintConfig": {
     "extends": "react-app"

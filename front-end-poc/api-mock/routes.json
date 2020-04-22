@@ -1,6 +1,6 @@
 {
-  "/executions/:executionType/:id": "/decisions?id=:id",
-  "/executions/:executionType/:id/structuredInputs": "/inputs?id=:id",
-  "/executions/:executionType/:id/outcomes": "/outcomes?id=:id",
-  "/models/:id": "/models?id=:id"
+  "/executions/:executionType/:executionId": "/decisions?executionId=:executionId",
+  "/executions/:executionType/:executionId/structuredInputs": "/inputs?executionId=:executionId",
+  "/executions/:executionType/:executionId/outcomes": "/outcomes?executionId=:executionId",
+  "/models/:executionId": "/models?executionId=:executionId"
 }

@@ -2,13 +2,11 @@ import { Divider, PageSection, PageSectionVariants } from "@patternfly/react-cor
 import React from 'react';
 import { useParams } from "react-router-dom";
 import { IExecutionRouteParams } from "../Audit/types";
-import { ExecutionType } from "../Shared/api/audit.api";
 import ModelDiagram from "./ModelDiagram";
 import "./ModelLookup.scss";
-import ModelLookupToolbar from "./ModelLookupToolbar";
 
 const ModelLookup = () => {
-    const { id, executionType } = useParams<IExecutionRouteParams>();
+    const { executionId } = useParams<IExecutionRouteParams>();
 
     return (
         <>
@@ -18,8 +16,7 @@ const ModelLookup = () => {
                 <Divider />
             </PageSection>
             <PageSection variant={"light"}>
-                <ModelLookupToolbar id={id} executionType={executionType as ExecutionType} />
-                <ModelDiagram id={id} />
+                <ModelDiagram executionId={executionId} />
             </PageSection>
         </>
     );
