@@ -8,7 +8,7 @@ const OutcomeSubListItem = (props: { subListItem: IOutcomeResult[]}) => {
     const [otherProperties, setOtherProperties] = useState<IOutcomeResult[]>();
 
     useEffect(() => {
-        // assuming that first item in the array is the name of the recommendation...
+        // assuming that the first item in the array is the name of the recommendation...
         setTitle(subListItem[0]);
         setOtherProperties(subListItem.slice(1, 3));
     }, [subListItem]);
@@ -53,11 +53,32 @@ const OutcomeSubList = (props: { subList: IOutcomeResult}) => {
     )
 }
 
+const OutcomeComposed = (props: { outcome: IOutcomeResult }) => {
+    const { outcome } = props;
+    let renderItems:JSX.Element[] = [];
+
+    renderItems.push(<Title
+        headingLevel="h4"
+        size="xl"
+        className={"outcome__title"}
+        key={outcome.name}>
+            {outcome.name}
+    </Title>);
+    for (let subItem of outcome.components as IOutcomeResult[]) {
+        renderItems.push(<div className="outcome-item" key={subItem.name}>{renderOutcome(subItem)}</div>)
+    }
+    return (
+        <div className="outcome" key={outcome.name}>
+            {renderItems.map(item => item)}
+        </div>
+    )
+}
+
 const OutcomeProperty = (props: { property: IOutcomeResult }) => {
     const { property } = props;
 
     return (
-        <Grid key={Math.floor(Math.random() * 10000)} className="outcome-property">
+        <Grid key={Math.floor(Math.random() * 10000)} className="outcome__property">
             <GridItem span={6} key={`item-label`} className="outcome-property__name">{property.name}</GridItem>
             <GridItem span={6} key={`item-value`}>{property.value}</GridItem>
         </Grid>
@@ -74,9 +95,8 @@ const renderOutcome = (outcomeData: IOutcomeResult) => {
     }
     if (outcomeData.components.length) {
         if (isIOutcomeResultArray(outcomeData.components)) {
-            for (let subItem of outcomeData.components) {
-                renderItems.push(renderOutcome(subItem))
-            }
+            renderItems.push(<OutcomeComposed outcome={outcomeData} key={outcomeData.name}/>)
+
         } else if (isOutcomeResultMultiArray(outcomeData.components)) {
             renderItems.push(<OutcomeSubList subList={outcomeData} key={outcomeData.name}/>)
         }
@@ -94,7 +114,6 @@ const OutcomePreview = (props: {outcomeData: IOutcome[] | null}) => {
 
     return (
         <div className="outcomes-preview">
-            {/* topDecision && <OutcomeRecommendations topDecision={topDecision} /> */}
             {outcomeData && outcomeData.map(item => renderOutcome(item.outcomeResults))}
         </div>
     );

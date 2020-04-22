@@ -9,6 +9,78 @@ const outcome = {
     outcomes: [
         {
             outcomeId: "432343443",
+            outcomeName: "Client Ratings",
+            evaluationStatus: "EVALUATED",
+            hasErrors: false,
+            messages: [],
+            outcomeResults: {
+                name: "Client Ratings",
+                type: "tProducts",
+                value: null,
+                components: [
+                    {
+                        name: "Rating Type A",
+                        value: null,
+                        typeRef: "string",
+                        components: [
+                            {
+                                name: "Loan Amount",
+                                value: 540000,
+                                typeRef: "number",
+                                components: null
+                            },
+                            {
+                                name: "Repayment Rate",
+                                value: 900,
+                                typeRef: "number",
+                                components: null
+                            }
+                        ]
+                    },
+                    {
+                        name: "Rating Type B",
+                        value: null,
+                        typeRef: "number",
+                        components: [
+                            {
+                                name: "Loan amount",
+                                value: 340000,
+                                typeRef: "number",
+                                components: null
+                            },
+                            {
+                                name: "Repayment rate",
+                                value: 2000,
+                                typeRef: "number",
+                                components: null
+                            },
+                            {
+                                name: "Sub-Rating Type C",
+                                value: null,
+                                typeRef: "number",
+                                components: [
+                                    {
+                                        name: "Loan amount",
+                                        value: 340000,
+                                        typeRef: "number",
+                                        components: null
+                                    },
+                                    {
+                                        name: "Repayment rate",
+                                        value: 2000,
+                                        typeRef: "number",
+                                        components: null
+                                    }
+                                ]
+                            }
+
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            outcomeId: "432343443",
             outcomeName: "Recommended Loan Products",
             evaluationStatus: "EVALUATED",
             hasErrors: false,

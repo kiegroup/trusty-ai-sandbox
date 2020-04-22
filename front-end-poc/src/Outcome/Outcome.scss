@@ -1,5 +1,21 @@
 .outcomes-preview {
-  & > .outcome-property,
+  .outcome {
+    margin-bottom: var(--pf-global--spacer--md);
+    &__title {
+      margin-bottom: var(--pf-global--spacer--md);
+    }
+    &__property {
+      margin-bottom: var(--pf-global--spacer--sm);
+    }
+  }
+  .outcome .outcome {
+    padding-left: var(--pf-global--spacer--md);
+    border-left: 3px solid lightblue;
+    .outcome {
+      margin-top: var(--pf-global--spacer--md);
+    }
+
+  }
   & > .outcome-list {
     font-size: 1.125rem;
     padding: (10/18)+em 0;
