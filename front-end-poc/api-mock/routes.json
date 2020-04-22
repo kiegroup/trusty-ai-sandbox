@@ -1,5 +1,6 @@
 {
   "/executions/:executionType/:id": "/decisions?id=:id",
-  "/executions/:executionType/:id/structuredInputs": "/inputs?id=id",
-  "/executions/:executionType/:id/outcomes": "/outcomes?id=id"
+  "/executions/:executionType/:id/structuredInputs": "/inputs?id=:id",
+  "/executions/:executionType/:id/outcomes": "/outcomes?id=:id",
+  "/models/:id": "/models?id=:id"
 }

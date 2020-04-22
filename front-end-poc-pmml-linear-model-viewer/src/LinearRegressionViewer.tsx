@@ -8,34 +8,24 @@ type Props = {
   xml: string
 }
 
-type State = {
-}
+const LinearRegressionViewer = (props: Props) => {
 
-class LinearRegressionViewer extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-  }
+  unmarshal(props.xml).then((doc: PMMLDocument) => {
+    if (doc.PMML.RegressionModel !== undefined) {
+      if (doc.PMML.RegressionModel[0] !== undefined) {
+        ReactDOM.render(
+          <React.StrictMode>
+            <LinearRegressionViewAdaptor dictionary={doc.PMML.DataDictionary} model={doc.PMML.RegressionModel} />
+          </React.StrictMode>,
+          document.getElementById("holder")
+        );
+      }
+    };
+  });
 
-  render() {
-    unmarshal(this.props.xml).then((doc: PMMLDocument) => {
-      if (doc.PMML.RegressionModel !== undefined) {
-        if (doc.PMML.RegressionModel[0] !== undefined) {
-          ReactDOM.render(
-            <React.StrictMode>
-              <LinearRegressionViewAdaptor dictionary={doc.PMML.DataDictionary} model={doc.PMML.RegressionModel} />
-            </React.StrictMode>,
-            document.getElementById("holder")
-          );
-        }
-      };
-    });
-
-
-    return (
-      <div id="holder" />
-    );
-  }
-
+  return (
+    <div id="holder" />
+  );
 }
 
 export { LinearRegressionViewer };

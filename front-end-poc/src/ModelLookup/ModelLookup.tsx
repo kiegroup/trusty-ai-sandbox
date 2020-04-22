@@ -1,45 +1,15 @@
-import React, { useState, } from 'react';
 import { Divider, PageSection, PageSectionVariants } from "@patternfly/react-core";
-import "./ModelLookup.scss";
+import React from 'react';
+import { useParams } from "react-router-dom";
+import { IExecutionRouteParams } from "../Audit/types";
+import { ExecutionType } from "../Shared/api/audit.api";
 import ModelDiagram from "./ModelDiagram";
-import ModelVersionsBrowser from "./ModelVersionsBrowser";
+import "./ModelLookup.scss";
+import ModelLookupToolbar from "./ModelLookupToolbar";
 
-const modelInfo = {
-    version: {
-        version: "v5.0",
-        releaseDate: "10/02/2020",
-        authoredBy: "Edward Blake"
-    },
-    history: [
-        {
-            version: "v5.0",
-            releaseDate: "10/02/2020",
-            authoredBy: "Edward Blake"
-        },
-        {
-            version: "v4.0",
-            releaseDate: "12/01/2020",
-            authoredBy: "Edward Blake"
-        },
-        {
-            version: "v3.0",
-            releaseDate: "11/11/2019",
-            authoredBy: "Edward Blake"
-        },
-        {
-            version: "v2.0",
-            releaseDate: "06/10/2019",
-            authoredBy: "Edward Blake"
-        },
-        {
-            version: "v1.0",
-            releaseDate: "09/09/2019",
-            authoredBy: "Edward Blake"
-        }
-    ]
-};
 const ModelLookup = () => {
-    const [selectedVersion, setSelectedVersion] = useState(modelInfo.version);
+    const { id, executionType } = useParams<IExecutionRouteParams>();
+
     return (
         <>
             <PageSection
@@ -48,13 +18,8 @@ const ModelLookup = () => {
                 <Divider />
             </PageSection>
             <PageSection variant={"light"}>
-                <ModelVersionsBrowser
-                    version={modelInfo.version}
-                    history={modelInfo.history}
-                    selectedVersion={selectedVersion}
-                    onVersionChange={setSelectedVersion}
-                />
-                <ModelDiagram selectedVersion={selectedVersion} />
+                <ModelLookupToolbar id={id} executionType={executionType as ExecutionType} />
+                <ModelDiagram id={id} />
             </PageSection>
         </>
     );

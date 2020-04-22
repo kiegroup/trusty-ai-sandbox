@@ -36,20 +36,14 @@ type Props = {
     rangeY: Range
 }
 
-type State = {
-}
+const LinearRegressionView = (props: Props) => {
 
-class LinearRegressionView extends React.Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-    }
-
-    private roundedToFixed(_float: number, _digits: number): string {
+    function roundedToFixed(_float: number, _digits: number): string {
         var rounded = Math.pow(10, _digits);
         return (Math.round(_float * rounded) / rounded).toFixed(_digits);
     }
 
-    private getTicks(range: Range, count: number): number[] {
+    function getTicks(range: Range, count: number): number[] {
         const start: number = range.min;
         const end: number = range.max;
         const step: number = (end - start) / count;
@@ -65,72 +59,69 @@ class LinearRegressionView extends React.Component<Props, State> {
         return ticks;
     }
 
-    render() {
-        const modelName: string = this.props.modelName;
-        const width: number = this.props.width === undefined ? 500 : this.props.width;
-        const height: number = this.props.height === undefined ? 500 : this.props.height;
+    const modelName: string = props.modelName;
+    const width: number = props.width === undefined ? 500 : props.width;
+    const height: number = props.height === undefined ? 500 : props.height;
 
-        const legendData: any = [];
-        this.props.lines.forEach(line => {
-            legendData.push({ name: line.title });
-        });
+    const legendData: any = [];
+    props.lines.forEach(line => {
+        legendData.push({ name: line.title });
+    });
 
-        return (
-            <div style={{ height: height, width: width }}>
-                <Chart
-                    ariaTitle={modelName}
-                    containerComponent={
-                        <ChartVoronoiContainer
-                            labels={({ datum }) => `${this.roundedToFixed(datum._x, 2)}, ${this.roundedToFixed(datum._y, 2)}`}
-                            constrainToVisibleArea
-                        />}
-                    legendData={legendData}
-                    legendOrientation="horizontal"
-                    legendPosition="bottom"
-                    padding={{
-                        bottom: 100,
-                        left: 50,
-                        right: 50,
-                        top: 50
-                    }}
-                    height={height}
-                    width={width}
-                >
-                    <ChartLabel text={modelName} x={width / 2} y={30} textAnchor="middle" />
-                    <ChartAxis
-                        label={this.props.independentAxisTitle} showGrid
-                        tickValues={this.getTicks(this.props.rangeX, 8)}
-                        tickFormat={(x) => this.roundedToFixed(x, 2)}
-                    />
-                    <ChartAxis
-                        label={this.props.dependentAxisTitle} dependentAxis showGrid
-                        tickValues={this.getTicks(this.props.rangeY, 8)}
-                        tickFormat={(x) => this.roundedToFixed(x, 2)}
-                    />
-                    <ChartGroup>
-                        {this.props.lines.map((line) => {
-                            return <ChartLine
-                                key={line.title}
-                                samples={100}
-                                domain={{
-                                    x: [
-                                        this.props.rangeX.min,
-                                        this.props.rangeX.max
-                                    ],
-                                    y: [
-                                        this.props.rangeY.min,
-                                        this.props.rangeY.max
-                                    ]
-                                }}
-                                y={(datum: any) => line.m * datum.x + line.c}
-                            />
-                        })}
-                    </ChartGroup>
-                </Chart>
-            </div>
-        )
-    }
-
+    return (
+        <div style={{ height: height, width: width }}>
+            <Chart
+                ariaTitle={modelName}
+                containerComponent={
+                    <ChartVoronoiContainer
+                        labels={({ datum }) => `${roundedToFixed(datum._x, 2)}, ${roundedToFixed(datum._y, 2)}`}
+                        constrainToVisibleArea
+                    />}
+                legendData={legendData}
+                legendOrientation="horizontal"
+                legendPosition="bottom"
+                padding={{
+                    bottom: 100,
+                    left: 50,
+                    right: 50,
+                    top: 50
+                }}
+                height={height}
+                width={width}
+            >
+                <ChartLabel text={modelName} x={width / 2} y={30} textAnchor="middle" />
+                <ChartAxis
+                    label={props.independentAxisTitle} showGrid
+                    tickValues={getTicks(props.rangeX, 8)}
+                    tickFormat={(x) => roundedToFixed(x, 2)}
+                />
+                <ChartAxis
+                    label={props.dependentAxisTitle} dependentAxis showGrid
+                    tickValues={getTicks(props.rangeY, 8)}
+                    tickFormat={(x) => roundedToFixed(x, 2)}
+                />
+                <ChartGroup>
+                    {props.lines.map((line) => {
+                        return <ChartLine
+                            key={line.title}
+                            samples={100}
+                            domain={{
+                                x: [
+                                    props.rangeX.min,
+                                    props.rangeX.max
+                                ],
+                                y: [
+                                    props.rangeY.min,
+                                    props.rangeY.max
+                                ]
+                            }}
+                            y={(datum: any) => line.m * datum.x + line.c}
+                        />
+                    })}
+                </ChartGroup>
+            </Chart>
+        </div>
+    )
 }
 
 export { LinearRegressionView, Line, Range }

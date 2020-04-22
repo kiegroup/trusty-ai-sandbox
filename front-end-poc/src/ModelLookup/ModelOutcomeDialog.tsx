@@ -1,25 +1,19 @@
 import React, { useState } from 'react';
 import { Button, Divider, Modal, Stack, StackItem, Title } from "@patternfly/react-core";
 import OutcomeList from "../Outcome/OutcomeList/OutcomeList";
-import { IModelVersion } from "./types"
+import { IExecutionRouteParams } from "../Audit/types"
 
-type MODProps = {
-    isOriginalVersion: boolean,
-    selectedVersion: IModelVersion
-}
-
-const ModelOutcomeDialog = (props: MODProps) => {
-    const { isOriginalVersion, selectedVersion } = props;
+const ModelOutcomeDialog = (props: IExecutionRouteParams) => {
+    const { id, executionType } = props;
     const [isModalOpen, setIsModalOpen] = useState(false);
     const handleModalToggle = () => {
         setIsModalOpen(!isModalOpen);
     };
-    let decisionTitle = `produced by model version `;
-    let decisionType = (isOriginalVersion) ? "Original decision" : "Simulated decision";
+    let executionTitle = `Produced by execution `;
 
     return (
         <>
-            <Button variant="secondary" onClick={handleModalToggle}>{isOriginalVersion ? "View Decision Outcome" : "Simulate Decision"}</Button>
+            <Button variant="secondary" onClick={handleModalToggle}>View {executionType} Outcome</Button>
             <Modal
                 width={'50%'}
                 title="Decision Outcome"
@@ -34,7 +28,7 @@ const ModelOutcomeDialog = (props: MODProps) => {
             >
                 <Stack gutter="md">
                     <StackItem>
-                        <Title size="xl" headingLevel="h4"><strong>{decisionType}</strong> {decisionTitle} <strong>{selectedVersion.version}</strong></Title>
+                        <Title size="xl" headingLevel="h4"><strong>{executionType}</strong> {executionTitle} <strong>{id}</strong></Title>
                     </StackItem>
                     <StackItem isFilled>
                         <Divider component="div" />
