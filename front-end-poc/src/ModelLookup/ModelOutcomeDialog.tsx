@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Divider, Modal, Stack, StackItem, Title } from "@patternfly/react-core";
-import OutcomeList from "../Outcome/OutcomeList";
-import { IModelVersion } from "../ModelLookup/types"
+import OutcomeList from "../Outcome/OutcomeList/OutcomeList";
+import { IModelVersion } from "./types"
 
 type MODProps = {
     isOriginalVersion: boolean,

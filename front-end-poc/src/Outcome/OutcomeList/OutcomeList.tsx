@@ -1,7 +1,7 @@
 import React from 'react';
 import {Grid, GridItem, Title} from "@patternfly/react-core";
-import './Outcome.scss';
-import outcomeList from "../Mocks/outcome-list-mock";
+import '../Outcome.scss';
+import outcomeList from "../../Mocks/outcome-list-mock";
 
 type itemObject = {
     label: string,

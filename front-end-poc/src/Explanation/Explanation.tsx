@@ -11,7 +11,7 @@ import {
     StackItem,
     Title
 } from "@patternfly/react-core";
-import OutcomeList from "../Outcome/OutcomeList";
+import OutcomeList from "../Outcome/OutcomeList/OutcomeList";
 import FeaturesTornadoChart from "./FeaturesTornadoChart";
 import NestedInputDataList from "../InputData/NestedInputDataList";
 
