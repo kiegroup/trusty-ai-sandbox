@@ -35,8 +35,8 @@
             <configuration>
               <inputSpec>${project.basedir}/src/main/resources/m2x.yaml</inputSpec>
               <language>java</language>
-              <modelPackage>org.kie.trusty.m2x.model</modelPackage>
-              <invokerPackage>org.kie.trusty.m2x.handler</invokerPackage>
+              <modelPackage>org.kie.trusty.xai.model</modelPackage>
+              <invokerPackage>org.kie.trusty.xai.handler</invokerPackage>
             </configuration>
           </execution>
         </executions>

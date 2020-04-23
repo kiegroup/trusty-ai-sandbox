@@ -167,6 +167,9 @@ definitions:
     properties:
       uuid:
         type: "string"
+      endpoint:
+        type: "string"
+        format: "uri"
       inputShape:
         type: "integer"
       outputShape:
