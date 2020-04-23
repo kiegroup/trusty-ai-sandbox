@@ -111,15 +111,36 @@
     </dependency>
 
     <dependency>
-      <groupId>org.infinispan</groupId>
-      <artifactId>infinispan-core</artifactId>
-      <version>10.1.6.Final</version>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-infinispan-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.infinispan</groupId>
-      <artifactId>infinispan-query</artifactId>
+      <artifactId>infinispan-client-hotrod</artifactId>
       <version>10.1.6.Final</version>
     </dependency>
+        <dependency>
+          <groupId>org.infinispan</groupId>
+          <artifactId>infinispan-query</artifactId>
+          <version>10.1.6.Final</version>
+        </dependency>
+
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-mongodb-panache</artifactId>
+    </dependency>
+
+<!--      <dependency>-->
+<!--        <groupId>io.quarkus</groupId>-->
+<!--        <artifactId>quarkus-mongodb-client</artifactId>-->
+<!--      </dependency>-->
+
+<!--    <dependency>-->
+<!--      <groupId>org.infinispan</groupId>-->
+<!--      <artifactId>infinispan-core</artifactId>-->
+<!--      <version>10.1.6.Final</version>-->
+<!--    </dependency>-->
+
 
     <dependency>
       <groupId>org.drools</groupId>
