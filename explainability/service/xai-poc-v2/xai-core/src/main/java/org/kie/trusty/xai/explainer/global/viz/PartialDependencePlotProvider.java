@@ -81,11 +81,11 @@ public class PartialDependencePlotProvider implements GlobalVizExplanationProvid
             }
             tabularData.setXAxis(DataUtils.doublesToFeatures(featureXSvalues));
             tabularData.setYAxis(DataUtils.doublesToFeatures(marginalImpacts));
-            long end = System.currentTimeMillis();
-            logger.info("explanation time: {}ms", (end - start));
         } catch (ApiException e) {
             throw new RuntimeException(e);
         }
+        long end = System.currentTimeMillis();
+        logger.info("explanation time: {}ms", (end - start));
         return tabularData;
     }
 }

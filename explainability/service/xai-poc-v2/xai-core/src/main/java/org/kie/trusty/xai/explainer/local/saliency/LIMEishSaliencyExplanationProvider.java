@@ -76,8 +76,7 @@ public class LIMEishSaliencyExplanationProvider implements SaliencyLocalExplanat
 
             saliency.setFeatureImportances(saliencyMap);
         } catch (ApiException e) {
-            System.err.println("Exception when calling GlobalApi#dataDistribution");
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         long end = System.currentTimeMillis();
         logger.info("explanation time: {}ms", (end - start));
