@@ -1,0 +1,184 @@
+swagger: "2.0"
+info:
+  description: "Model to Explainability communication protocol"
+  version: "1.0.0"
+  title: "Model to Explainability communication"
+  termsOfService: "http://kie.org/trusty/"
+  contact:
+    email: "tteofili@redhat.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "kie.org"
+basePath: "/m2x"
+tags:
+  - name: "local"
+    description: "Needed for local explanations"
+    externalDocs:
+      description: "Find out more"
+      url: "http://kie.org"
+  - name: "global"
+    description: "Needed for global explanations"
+    externalDocs:
+      description: "Find out more"
+      url: "http://kie.org"
+schemes:
+  - "https"
+  - "http"
+paths:
+  /model/predict:
+    post:
+      tags:
+        - "local"
+        - "global"
+      summary: "Execute model prediction function"
+      description: ""
+      operationId: "predict"
+      consumes:
+        - "application/json"
+        - "application/xml"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Prediction input"
+          required: true
+          schema:
+            $ref: "#/definitions/PredictionInput"
+      responses:
+        200:
+          description: "Prediction Output"
+          schema:
+            $ref: "#/definitions/PredictionOutput"
+      security:
+        - trusty_auth:
+            - "write:pred"
+  /model/data/distribution:
+    get:
+      tags:
+        - "global"
+      summary: "Get the distribution of the data used to train the model"
+      description: ""
+      operationId: "dataDistribution"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "The data distribution"
+          schema:
+            $ref: "#/definitions/DataDistribution"
+      security:
+        - trusty_auth:
+            - "read:info"
+  /model/info:
+    get:
+      tags:
+        - "global"
+      summary: "Get general information about the model"
+      description: ""
+      operationId: "info"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Information about the model"
+          schema:
+            $ref: "#/definitions/ModelInfo"
+      security:
+        - trusty_auth:
+            - "read:info"
+securityDefinitions:
+  trusty_auth:
+    type: "oauth2"
+    authorizationUrl: "http://kie.org/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:pred: "execute model predictions"
+      read:info: "read info about the model"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  Feature:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      type:
+        type: "string"
+        enum:
+          - "string"
+          - "number"
+          - "boolean"
+          - "date"
+          - "time"
+          - "duration"
+          - "currency"
+      value:
+        type: "string"
+  PredictionInput:
+    type: "object"
+    properties:
+      features:
+        type: "array"
+        items:
+          $ref: "#/definitions/Feature"
+  PredictionOutput:
+    type: "object"
+    properties:
+      outputs:
+        type: "array"
+        items:
+          $ref: "#/definitions/Output"
+  Output:
+    type: "object"
+    properties:
+      label:
+        type: "string"
+      score:
+        type: "number"
+  FeatureDistribution:
+    type: "object"
+    properties:
+      min:
+        type: "number"
+      max:
+        type: "number"
+      mean:
+        type: "number"
+      stdDev:
+        type: "number"
+  DataDistribution:
+    type: "object"
+    properties:
+      featureDistributions:
+        type: "array"
+        items:
+          $ref: "#/definitions/FeatureDistribution"
+  ModelInfo:
+    type: "object"
+    properties:
+      uuid:
+        type: "string"
+      inputShape:
+        type: "integer"
+      outputShape:
+        type: "integer"
+      name:
+        type: "string"
+      version:
+        type: "string"
+      taskType:
+        type: "string"
+        enum:
+          - "classification"
+          - "regression"
+      dataDistribution:
+        $ref: "#/definitions/DataDistribution"
