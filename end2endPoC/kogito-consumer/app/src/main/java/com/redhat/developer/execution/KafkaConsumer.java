@@ -28,7 +28,12 @@ public class KafkaConsumer extends KafkaAbstractConsumer {
 
     protected void processEvent(DMNEventDto event) {
         LOGGER.debug("Processing a new event");
-        DMNEventModel dmnEventModel = ModelFactory.fromKafkaCloudEvent(event);
-        storageExtension.storeEvent(dmnEventModel.id, dmnEventModel.data.result);
+        try{
+            DMNEventModel dmnEventModel = ModelFactory.fromKafkaCloudEvent(event);
+            storageExtension.storeEvent(dmnEventModel.id, dmnEventModel.data.result);
+        }
+        catch (Exception e){
+            LOGGER.warn("error", e);
+        }
     }
 }

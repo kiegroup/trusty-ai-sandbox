@@ -1,5 +1,5 @@
 cd kogito-consumer/app
-# mvn clean package
+mvn clean package -DskipTests
 
 cd ../../
 cd loanEligibilityApp/app

@@ -22,6 +22,7 @@ public class ExecutionsStorageExtension implements IExecutionsStorageExtension {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExecutionsStorageExtension.class);
     private static final String INDEX = "dmneventdata";
 
+
     private static ObjectMapper objectMapper;
 
     @Inject

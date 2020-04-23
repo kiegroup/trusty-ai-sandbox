@@ -1,0 +1,120 @@
+swagger: "2.0"
+info:
+  description: "Trusty XAI service description."
+  version: "1.0.0"
+  title: "TrustyXAI"
+  termsOfService: "http://kie.org/trusty/"
+  contact:
+    email: "tteofili@redhat.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "kie.org"
+basePath: "/xai"
+tags:
+- name: "local"
+  description: "Local explanations"
+  externalDocs:
+    description: "Find out more"
+    url: "http://kie.org"
+- name: "global"
+  description: "Global explanations"
+  externalDocs:
+    description: "Find out more"
+    url: "http://kie.org"
+schemes:
+- "https"
+- "http"
+paths:
+  /local/saliency/lime:
+    post:
+      tags:
+      - "local"
+      summary: "Execute LIME explanation method on a prediction"
+      description: ""
+      operationId: "lime"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Prediction that needs to be explained"
+        required: true
+        schema:
+          $ref: "m2x.yaml#/definitions/Prediction"
+      responses:
+        200:
+          description: "successful explanation"
+          schema:
+            $ref: "#/definitions/Saliency"
+      security:
+      - trusty_auth:
+        - "write:exp"
+        - "read:exp"
+  /global/tabular/pdp:
+    post:
+      tags:
+      - "global"
+      summary: "Generate PDP explanation method on a model"
+      description: ""
+      operationId: "pdp"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Model that needs to be explained"
+        required: true
+        schema:
+          $ref: "m2x.yaml#/definitions/ModelInfo"
+      responses:
+        200:
+          description: "successful explanation"
+          schema:
+            $ref: "#/definitions/TabularData"
+      security:
+      - trusty_auth:
+        - "write:exp"
+        - "read:exp"
+securityDefinitions:
+  trusty_auth:
+    type: "oauth2"
+    authorizationUrl: "http://kie.org/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:exp: "execute explanations"
+      read:exp: "read explanations"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  TabularData:
+    type: "object"
+    properties:
+      x-axis:
+        type: "array"
+        items:
+          type: "number"
+      y-axis:
+        type: "array"
+        items:
+          type: "number"
+  Saliency:
+   type: "object"
+   properties:
+    featureImportances:
+      type: "array"
+      items:
+        $ref: "#/definitions/FeatureImportance"
+  FeatureImportance:
+    type: "object"
+    properties:
+      feature:
+        $ref: "m2x.yaml#/definitions/Feature"
+      score:
+        type : "number"

@@ -58,18 +58,36 @@ services:
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini
   
   
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0
-    environment:
-      - discovery.type=single-node
-    ports:
-      - 9200:9200
-      - 9201:9201
-  kibana:
-    image: docker.elastic.co/kibana/kibana:7.0.0
-    ports:
-      - 5601:5601
+  # elasticsearch:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.0.0
+  #   environment:
+  #     - discovery.type=single-node
+  #   ports:
+  #     - 9200:9200
+  #     - 9201:9201
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:7.0.0
+  #   ports:
+  #     - 5601:5601
   
+  # infinispan:
+  #   image: infinispan/server:10.0.0.Final-1
+  #   ports:
+  #     - 11222:11222
+  #   command: "/opt/infinispan/bin/server.sh -c infinispan-demo.xml"
+  #   volumes:
+  #     - ./infinispan/infinispan.xml:/opt/infinispan/server/conf/infinispan-demo.xml:z
+    
+  mongo:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
+
   producer:
     build: loanEligibilityApp/
     ports:
@@ -84,3 +102,6 @@ services:
       - 8180:8180
     depends_on:
       - kafka
+
+volumes:
+  mongodb_data_container:
