@@ -1,5 +1,5 @@
 export interface IItemObject {
-    inputName: string,
+    name: string,
     typeRef: string,
     value: string | number | null,
     components: (IItemObject | IItemObject[])[],

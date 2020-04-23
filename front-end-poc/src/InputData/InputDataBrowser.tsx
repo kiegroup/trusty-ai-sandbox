@@ -16,7 +16,7 @@ import SkeletonDataList from "../Shared/skeletons/SkeletonDataList";
 import {IInputRow, IItemObject} from "./types";
 
 function instanceOfItemObjectArray(object: any): object is IItemObject[] {
-    return typeof object[0].inputName == 'string';
+    return typeof object[0].name == 'string';
 }
 function instanceOfItemObjectMultiArray(object: any): object is IItemObject[][] {
     return Array.isArray(object[0]);
@@ -30,11 +30,11 @@ const ItemsSubList = (props: { itemsList: IItemObject[] }) => {
             <DataList aria-label="" className={"category__sublist__item"}>
                 {itemsList.map(item => (
                         <InputValue
-                            inputLabel={item.inputName}
+                            inputLabel={item.name}
                             inputValue={item.value}
                             hasEffect={item.impact}
                             score={item.score}
-                            key={item.inputName}
+                            key={item.name}
                             category={itemCategory}
                         />
                     ))
@@ -133,22 +133,22 @@ const renderItem = (item: IItemObject, category?: string): JSX.Element => {
 
     if (item.value) {
         return <InputValue
-                    inputLabel={item.inputName}
+                    inputLabel={item.name}
                     inputValue={item.value}
                     hasEffect={item.impact}
                     score={item.score}
                     category={itemCategory}
-                    key={item.inputName} />
+                    key={item.name} />
     }
 
     if (item.components.length) {
-        itemCategory = (category) ? `${itemCategory} / ${category}` : item.inputName;
-        let categoryLabel = (itemCategory.length > 0) ? `${itemCategory}` : item.inputName;
+        itemCategory = (category) ? `${itemCategory} / ${category}` : item.name;
+        let categoryLabel = (itemCategory.length > 0) ? `${itemCategory}` : item.name;
 
         if (item.components) {
             if (instanceOfItemObjectArray(item.components)) {
                 for (let subItem of item.components) {
-                    renderItems.push(renderItem(subItem, subItem.inputName));
+                    renderItems.push(renderItem(subItem, subItem.name));
                 }
             } else if (instanceOfItemObjectMultiArray(item.components)) {
                 for (let subItem of item.components) {
@@ -186,7 +186,7 @@ const InputDataBrowser = (props: {inputData: IItemObject[] | null}) => {
             const items: IItemObject[] = [];
             const categories = [];
             const rootSection: IItemObject = {
-                inputName: "Root",
+                name: "Root",
                 typeRef: "root",
                 value: null,
                 components: []
@@ -197,7 +197,7 @@ const InputDataBrowser = (props: {inputData: IItemObject[] | null}) => {
                     rootSection.components!.push(item);
                 } else {
                     items.push(item);
-                    categories.push(item.inputName);
+                    categories.push(item.name);
                 }
             }
             if (rootSection.components!.length) {

@@ -1,76 +1,76 @@
 const inputData = [
     {
-        "inputName": "Credit Score",
+        "name": "Credit Score",
         "typeRef": "number",
         "value": 738,
         "components": []
     },
     {
-        "inputName": "Down Payment",
+        "name": "Down Payment",
         "typeRef": "number",
         "value": 70000,
         "components": []
     },
     {
-        "inputName": "Property",
+        "name": "Property",
         "typeRef": "tProperty",
         "value": null,
         "components": [
             {
-                "inputName": "Purchase Price",
+                "name": "Purchase Price",
                 "typeRef": "number",
                 "value": 34000,
                 "components": []
             },
             {
-                "inputName": "Monthly Tax Payment",
+                "name": "Monthly Tax Payment",
                 "typeRef": "number",
                 "value": 0.2,
                 "components": []
             },
             {
-                "inputName": "Monthly Insurance Payment",
+                "name": "Monthly Insurance Payment",
                 "typeRef": "number",
                 "value": 0.15,
                 "components": []
             },
             {
-                "inputName": "Monthly HOA Payment",
+                "name": "Monthly HOA Payment",
                 "typeRef": "number",
                 "value": 0.12,
                 "components": []
             },
             {
-                "inputName": "Address",
+                "name": "Address",
                 "typeRef": "tAddress",
                 "value": null,
                 "components": [
                     {
-                        "inputName": "Street",
+                        "name": "Street",
                         "typeRef": "string",
                         "value": "272 10th St.",
                         "components": []
                     },
                     {
-                        "inputName": "Unit",
+                        "name": "Unit",
                         "typeRef": "string",
                         "value": "A",
                         "components": []
                     },
                     {
-                        "inputName": "City",
+                        "name": "City",
                         "typeRef": "string",
                         "value": "Malibu",
                         "components": []
                     },
                     {
-                        "inputName": "State",
+                        "name": "State",
                         "typeRef": "string",
                         "value": "CA",
                         "components": []
                     },
                     {
-                        "inputName": "ZIP",
+                        "name": "ZIP",
                         "typeRef": "string",
                         "value": "90903",
                         "components": []
@@ -80,54 +80,54 @@ const inputData = [
         ],
     },
     {
-        "inputName": "Borrower",
+        "name": "Borrower",
         "typeRef": "tBorrower",
         "value": null,
         "components": [
             {
-                "inputName": "Full Name",
+                "name": "Full Name",
                 "typeRef": "string",
                 "value": "Jim Osterberg",
                 "components": []
             },
             {
-                "inputName": "Tax ID",
+                "name": "Tax ID",
                 "typeRef": "string",
                 "value": "11123322323",
                 "components": []
             },
             {
-                "inputName": "Employment Income",
+                "name": "Employment Income",
                 "typeRef": "number",
                 "value": 99000,
                 "components": []
             },
             {
-                "inputName": "Other Income",
+                "name": "Other Income",
                 "typeRef": "number",
                 "value": 0,
                 "components": []
             },
             {
-                "inputName": "Assets",
+                "name": "Assets",
                 "typeRef": "tAssets",
                 "value": null,
                 "components": [
                     [
                         {
-                            inputName: "Type",
+                            name: "Type",
                             typeRef: "string",
                             value: "C",
                             components: []
                         },
                         {
-                            inputName: "Institution Account or Description",
+                            name: "Institution Account or Description",
                             typeRef: "string",
                             value: "Chase",
                             components: []
                         },
                         {
-                            inputName: "Value",
+                            name: "Value",
                             typeRef: "number",
                             value: 45000,
                             components: []
@@ -135,19 +135,19 @@ const inputData = [
                     ],
                     [
                         {
-                            inputName: "Type",
+                            name: "Type",
                             typeRef: "string",
                             value: "Other Non-Liquid",
                             components: []
                         },
                         {
-                            inputName: "Institution Account or Description",
+                            name: "Institution Account or Description",
                             typeRef: "string",
                             value: "Vanguard",
                             components: []
                         },
                         {
-                            inputName: "Value",
+                            name: "Value",
                             typeRef: "number",
                             value: 33000,
                             components: []
@@ -158,37 +158,37 @@ const inputData = [
         ],
     },
     {
-        "inputName": "Liabilities",
+        "name": "Liabilities",
         "typeRef": "tLiabilities",
         "value": null,
         "components": [
             [
                 {
-                    inputName: "Type",
+                    name: "Type",
                     value: "Credit Card",
                     typeRef: "string",
                     components: []
                 },
                 {
-                    inputName: "Payee",
+                    name: "Payee",
                     value: "Chase",
                     typeRef: "string",
                     components: []
                 },
                 {
-                    inputName: "Monthly Payment",
+                    name: "Monthly Payment",
                     value: 300,
                     typeRef: "number",
                     components: []
                 },
                 {
-                    inputName: "Balance",
+                    name: "Balance",
                     value: 0,
                     typeRef: "number",
                     components: []
                 },
                 {
-                    inputName: "To be paid off",
+                    name: "To be paid off",
                     value: "Yes",
                     typeRef: "string",
                     components: []
@@ -196,31 +196,31 @@ const inputData = [
             ],
             [
                 {
-                    inputName: "Type",
+                    name: "Type",
                     value: "Lease",
                     typeRef: "string",
                     components: []
                 },
                 {
-                    inputName: "Payee",
+                    name: "Payee",
                     value: "BMW Finance",
                     typeRef: "string",
                     components: []
                 },
                 {
-                    inputName: "Monthly Payment",
+                    name: "Monthly Payment",
                     value: 450,
                     typeRef: "number",
                     components: []
                 },
                 {
-                    inputName: "Balance",
+                    name: "Balance",
                     value: 0,
                     typeRef: "number",
                     components: []
                 },
                 {
-                    inputName: "To be paid off",
+                    name: "To be paid off",
                     value: "No",
                     typeRef: "string",
                     components: []
@@ -229,19 +229,19 @@ const inputData = [
         ]
     },
     {
-        "inputName": "Lender Ratings",
+        "name": "Lender Ratings",
         "typeRef": "tLenderRatings",
         "value": null,
         "components": [
             [
                 {
-                    inputName: "Lender Name",
+                    name: "Lender Name",
                     value: "Gordon Cole",
                     typeRef: "string",
                     components: []
                 },
                 {
-                    inputName: "Customer Rating",
+                    name: "Customer Rating",
                     value: 4.2,
                     typeRef: "number",
                     components: []
@@ -249,13 +249,13 @@ const inputData = [
             ],
             [
                 {
-                    inputName: "Lender Name",
+                    name: "Lender Name",
                     value: "Dale Cooper",
                     typeRef: "string",
                     components: []
                 },
                 {
-                    inputName: "Customer Rating",
+                    name: "Customer Rating",
                     value: 3.6,
                     typeRef: "number",
                     components: []
@@ -263,13 +263,13 @@ const inputData = [
             ],
             [
                 {
-                    inputName: "Lender Name",
+                    name: "Lender Name",
                     value: "Chester Desmond",
                     typeRef: "string",
                     components: []
                 },
                 {
-                    inputName: "Customer Rating",
+                    name: "Customer Rating",
                     value: 4.6,
                     typeRef: "number",
                     components: []
