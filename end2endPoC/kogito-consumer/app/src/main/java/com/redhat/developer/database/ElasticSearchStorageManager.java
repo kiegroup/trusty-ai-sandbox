@@ -38,13 +38,14 @@ public class ElasticSearchStorageManager implements IStorageManager {
     }
 
     @Override
-    public <T> String create(String key, T request, String index) {
+    public <T> boolean create(String key, T request, String index) {
         try {
-            return httpHelper.doPost(index + "/_doc/" + key, objectMapper.writeValueAsString(request));
+            httpHelper.doPost(index + "/_doc/" + key, objectMapper.writeValueAsString(request));
+            return true;
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        return null;
+        return false;
     }
 
     @Override
@@ -53,7 +54,7 @@ public class ElasticSearchStorageManager implements IStorageManager {
         LOGGER.info("ES query " + esQuery);
         String response = httpHelper.doPost(index + "/_search", esQuery);
         JavaType javaType = TypeFactory.defaultInstance()
-                .constructParametricType(ElasticSearchResponse.class, String.class);
+                .constructParametricType(ElasticSearchResponse.class, type);
         LOGGER.info("ES returned " + response);
         try {
             // TODO: check performance issue with generics
@@ -66,5 +67,10 @@ public class ElasticSearchStorageManager implements IStorageManager {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public boolean deleteIndex(String index) {
+        return false;
     }
 }

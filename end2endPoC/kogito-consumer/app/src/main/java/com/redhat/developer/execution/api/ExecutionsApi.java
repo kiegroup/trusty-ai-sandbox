@@ -13,6 +13,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.developer.execution.models.DMNResultModel;
 import com.redhat.developer.execution.responses.execution.ExecutionHeaderResponse;
 import com.redhat.developer.execution.responses.execution.ExecutionResponse;
@@ -92,6 +94,14 @@ public class ExecutionsApi {
             results.sort(Comparator.comparing(DMNResultModel::getExecutionDate));
             results = results.subList(offset, Math.min(results.size(), offset + limit));
         }
+
+        results.forEach(x -> {
+            try {
+                System.out.println(new ObjectMapper().writeValueAsString(x));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        });
 
         List<ExecutionHeaderResponse> executionResponses = new ArrayList<>();
         results.forEach(x -> executionResponses.add(ExecutionHeaderResponse.fromDMNResultModel(x)));

@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.redhat.developer.database.InfinispanStorageManager;
 import com.redhat.developer.database.TrustyStorageQuery;
 import com.redhat.developer.database.operators.DateOperator;
 import com.redhat.developer.database.operators.IntegerOperator;

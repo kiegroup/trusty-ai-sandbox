@@ -17,10 +17,10 @@ import org.infinispan.query.dsl.QueryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@ApplicationScoped
-public class InfinispanStorageManager implements IStorageManager {
+//@ApplicationScoped
+public class InfinispanLocalStorageManager implements IStorageManager {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(InfinispanStorageManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(InfinispanLocalStorageManager.class);
     private DefaultCacheManager cacheManager;
     private Map<String, Cache> indexes = new HashMap<>();
 
@@ -31,7 +31,7 @@ public class InfinispanStorageManager implements IStorageManager {
     }
 
     @Override
-    public <T> String create(String key, T request, String index) {
+    public <T> boolean create(String key, T request, String index) {
         if (!indexes.containsKey(index)) {
             Cache<String, T> localCache = cacheManager.getCache("local");
             indexes.put(index, localCache);
@@ -40,7 +40,7 @@ public class InfinispanStorageManager implements IStorageManager {
         Cache cache = indexes.get(index);
         cache.put(key, request);
 
-        return null;
+        return true;
     }
 
     @Override
@@ -55,5 +55,10 @@ public class InfinispanStorageManager implements IStorageManager {
         Query q = queryFactory.create(qq);
 
         return q.list();
+    }
+
+    @Override
+    public boolean deleteIndex(String index) {
+        return false;
     }
 }
