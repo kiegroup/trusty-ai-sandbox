@@ -7,39 +7,14 @@ import org.kie.trusty.xai.explainer.global.viz.PartialDependencePlotProvider;
  */
 public class PartialDependencePlotBuilder {
 
-    private final int featureIndex;
-    private final int outputIndex;
-
-    private PartialDependencePlotBuilder(int featureIndex, int outputIndex) {
-        this.featureIndex = featureIndex;
-        this.outputIndex = outputIndex;
+    private PartialDependencePlotBuilder() {
     }
 
     public PartialDependencePlotProvider build() {
-        return new PartialDependencePlotProvider(featureIndex, outputIndex);
+        return new PartialDependencePlotProvider();
     }
 
-    public static FeaturePartialDependencePlotBuilder newPDPBuilder() {
-        return new FeaturePartialDependencePlotBuilder();
-    }
-
-    public static class FeaturePartialDependencePlotBuilder {
-
-        public OutputPartialDependencePlotBuilder onFeature(int index) {
-            return new OutputPartialDependencePlotBuilder(index);
-        }
-    }
-
-    public static class OutputPartialDependencePlotBuilder {
-
-        private final int featureIndex;
-
-        public OutputPartialDependencePlotBuilder(int featureIndex) {
-            this.featureIndex = featureIndex;
-        }
-
-        public PartialDependencePlotBuilder onOutput(int index) {
-            return new PartialDependencePlotBuilder(featureIndex, index);
-        }
+    public static PartialDependencePlotBuilder newPDPBuilder() {
+        return new PartialDependencePlotBuilder();
     }
 }

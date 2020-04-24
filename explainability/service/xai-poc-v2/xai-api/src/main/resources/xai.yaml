@@ -33,6 +33,10 @@ definitions:
   TabularData:
     type: "object"
     properties:
+      feature:
+        $ref: "https://raw.githubusercontent.com/kiegroup/trusty-ai-sandbox/master/explainability/service/xai-poc-v2/m2x-api/src/main/resources/m2x.yaml#/definitions/Feature"
+      output:
+        $ref: "https://raw.githubusercontent.com/kiegroup/trusty-ai-sandbox/master/explainability/service/xai-poc-v2/m2x-api/src/main/resources/m2x.yaml#/definitions/Output"
       x-axis:
         type: "array"
         items:

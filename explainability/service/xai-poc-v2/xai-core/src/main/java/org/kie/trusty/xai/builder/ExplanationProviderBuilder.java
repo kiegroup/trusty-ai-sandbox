@@ -77,7 +77,7 @@ public class ExplanationProviderBuilder {
             return new PredictionFeatureImportanceBuilder();
         }
 
-        public PartialDependencePlotBuilder.FeaturePartialDependencePlotBuilder partialDependence() {
+        public PartialDependencePlotBuilder partialDependence() {
             return PartialDependencePlotBuilder.newPDPBuilder();
         }
     }
