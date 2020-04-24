@@ -33,7 +33,7 @@
               <goal>generate</goal>
             </goals>
             <configuration>
-              <inputSpec>${project.basedir}/src/main/resources/m2x.yaml</inputSpec>
+              <inputSpec>https://raw.githubusercontent.com/kiegroup/trusty-ai-sandbox/master/explainability/service/xai-poc-v2/m2x-api/src/main/resources/m2x.yaml</inputSpec>
               <language>jaxrs-resteasy</language>
               <modelPackage>org.kie.trusty.m2x.model</modelPackage>
               <invokerPackage>org.kie.trusty.m2x.handler</invokerPackage>
