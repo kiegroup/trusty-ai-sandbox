@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { LinearRegressionViewer, example3 } from "@manstis/pmml-linear-model-viewer"
+import { LinearRegressionViewer } from "./pmml/LinearRegressionViewer"
 import { getModelDetail } from "../Shared/api/audit.api";
 import { Spinner } from '@patternfly/react-core';
 
@@ -16,7 +16,7 @@ function makeDMNEditor(executionId: string): JSX.Element {
 }
 
 function makePMMLEditor(xml: string): JSX.Element {
-  return <><LinearRegressionViewer xml={example3} /></>;
+  return <><LinearRegressionViewer xml={xml} /></>;
 }
 
 const ModelDiagram = (props: Props) => {
