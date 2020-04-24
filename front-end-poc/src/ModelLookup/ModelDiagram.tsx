@@ -7,22 +7,21 @@ interface Props {
   executionId: string;
 }
 
+function makeDMNEditor(executionId: string): JSX.Element {
+  const editorUrl = "https://kiegroup.github.io/kogito-online/?file=https://raw.githubusercontent.com/kiegroup/kogito-tooling/master/packages/online-editor/static/samples/sample.dmn#/editor/dmn";
+  const kogitoIframe = () => {
+    return { __html: `<iframe src=${editorUrl} data-key="${executionId}"></iframe>` };
+  };
+  return <><div className="model-diagram__iframe" dangerouslySetInnerHTML={kogitoIframe()} /></>;
+}
+
+function makePMMLEditor(xml: string): JSX.Element {
+  return <><LinearRegressionViewer xml={example3} /></>;
+}
+
 const ModelDiagram = (props: Props) => {
 
-  function makeDMNEditor(xml: string): JSX.Element {
-    const editorUrl = "https://kiegroup.github.io/kogito-online/?file=https://raw.githubusercontent.com/kiegroup/kogito-tooling/master/packages/online-editor/static/samples/sample.dmn#/editor/dmn";
-    const kogitoIframe = () => {
-      return { __html: `<iframe src=${editorUrl} data-key="${executionId}"></iframe>` };
-    };
-    return <><div className="model-diagram__iframe" dangerouslySetInnerHTML={kogitoIframe()} /></>;
-  }
-
-  function makePMMLEditor(xml: string): JSX.Element {
-    return <><LinearRegressionViewer xml={example3} /></>;
-  }
-
   const { executionId } = props;
-
   const [viewer, setViewer] = useState(<><Spinner size="xl" /></>);
 
   useEffect(() => {
@@ -35,7 +34,7 @@ const ModelDiagram = (props: Props) => {
 
           switch (modelType) {
             case "DMN":
-              setViewer(makeDMNEditor(xml));
+              setViewer(makeDMNEditor(executionId));
               break;
             case "PMML":
               setViewer(makePMMLEditor(xml));

@@ -1,5 +1,5 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import { Spinner } from '@patternfly/react-core';
+import React, { useEffect, useState } from "react";
 import { document as PMMLDocument } from "./generated/www.dmg.org/PMML-4_4";
 import { LinearRegressionViewAdaptor } from "./LinearRegressionViewAdaptor";
 import { withCXML as unmarshal } from "./unmarshall/unmarshaller";
@@ -10,22 +10,28 @@ type Props = {
 
 const LinearRegressionViewer = (props: Props) => {
 
-  unmarshal(props.xml).then((doc: PMMLDocument) => {
-    if (doc.PMML.RegressionModel !== undefined) {
-      if (doc.PMML.RegressionModel[0] !== undefined) {
-        ReactDOM.render(
-          <React.StrictMode>
-            <LinearRegressionViewAdaptor dictionary={doc.PMML.DataDictionary} model={doc.PMML.RegressionModel} />
-          </React.StrictMode>,
-          document.getElementById("holder")
-        );
-      }
-    };
-  });
+  const { xml } = props;
+  const [viewer, setViewer] = useState(<><Spinner size="xl" /></>);
 
-  return (
-    <div id="holder" />
-  );
+  useEffect(() => {
+    let didMount = true;
+    unmarshal(xml)
+      .then((doc: PMMLDocument) => {
+        if (didMount) {
+          if (doc.PMML.RegressionModel !== undefined) {
+            if (doc.PMML.RegressionModel[0] !== undefined) {
+              setViewer(<LinearRegressionViewAdaptor dictionary={doc.PMML.DataDictionary} model={doc.PMML.RegressionModel} />);
+            }
+          }
+        }
+      })
+      .catch(() => { });
+    return () => {
+      didMount = false;
+    };
+  }, [xml]);
+
+  return viewer;
 }
 
 export { LinearRegressionViewer };
