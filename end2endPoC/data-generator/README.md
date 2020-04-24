@@ -8,6 +8,12 @@ This flask application mocks the current trusty service, generating random data 
 - `virtualenv` installed
 - `pip` installed
 
+If you are using rhel probably you just need to (if you don't have `virtualenv` installed)
+
+```bash
+pip-2 install virtualenv
+```
+
 ## Install 
 
 Create a new virtual enviroment (in the current folder for example)
