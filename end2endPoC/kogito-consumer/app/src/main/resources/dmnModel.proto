@@ -1,0 +1,19 @@
+package com.redhat.developer.dmn.models;
+
+option indexed_by_default = true;
+
+/* @Indexed */
+message DmnModel {
+    /* @Field(store = Store.YES) */
+    optional string modelId = 1;
+    /* @Field(store = Store.YES) */
+    optional string model = 2;
+    /* @Field(store = Store.YES) */
+    optional string creationDate = 3;
+    /* @Field(store = Store.YES) */
+    optional string name = 4;
+    /* @Field(store = Store.YES) */
+    optional string nameSpace = 5;
+    /* @Field(store = Store.YES) */
+    optional string version = 6;
+}
