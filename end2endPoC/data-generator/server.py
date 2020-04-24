@@ -72,7 +72,7 @@ def generate_value(hook):
     return hook()
 
 def generateOutcomeResult(prefix, max_depth):
-    isComposed = random.choice([True, False]) or max_depth == 0 # stop at max depth
+    isComposed = random.choice([True, False]) and max_depth != 0 # stop at max depth
     currentPrefix = prefix + "Struct " if isComposed else prefix + "Simple "
     if not isComposed:
         obj = random.choice(BUILT_IN_TYPES)
