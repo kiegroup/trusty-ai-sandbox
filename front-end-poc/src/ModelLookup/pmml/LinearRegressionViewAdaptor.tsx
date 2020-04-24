@@ -98,7 +98,7 @@ function getLines(table: PMML.RegressionTableType, numbericPredictor: PMML.Numer
   }
   //cxml returns an array of CategoricalPredictorType with one element even if none are defined in the XML.
   //This is a hack to check the array does not contain the rogue element.
-  if (categoricalPredictors.length == 1 && categoricalPredictors[0]._exists === false) {
+  if (categoricalPredictors.length === 1 && categoricalPredictors[0]._exists === false) {
     return lines;
   }
   categoricalPredictors.forEach(cp => {
@@ -119,7 +119,7 @@ function getYRange(props: Props, model: PMML.RegressionModelType): Range | undef
 
 function getTargetMiningField(model: PMML.RegressionModelType): PMML.MiningFieldType | undefined {
   const targetFields: PMML.MiningFieldType[] = model.MiningSchema.MiningField.filter(mf => mf.usageType === "target");
-  if (targetFields === undefined || targetFields.length != 1) {
+  if (targetFields === undefined || targetFields.length !== 1) {
     return undefined;
   }
   return targetFields[0];
@@ -132,7 +132,7 @@ function getXRange(props: Props, numbericPredictor: PMML.NumericPredictorType): 
 
 function getMiningFieldIntervals(props: Props, fieldName: string): PMML.IntervalType[] | undefined {
   const dataFields: PMML.DataFieldType[] = props.dictionary.DataField.filter(df => df.name === fieldName && df.optype === "continuous");
-  if (dataFields === undefined || dataFields.length != 1) {
+  if (dataFields === undefined || dataFields.length !== 1) {
     return undefined;
   }
   const intervals: PMML.IntervalType[] | undefined = dataFields[0].Interval;
