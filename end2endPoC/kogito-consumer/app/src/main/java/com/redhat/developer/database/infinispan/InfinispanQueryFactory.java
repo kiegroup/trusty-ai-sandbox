@@ -43,19 +43,34 @@ public class InfinispanQueryFactory {
 
         conditions = new ArrayList<>();
         SimpleDateFormat formatterIn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        SimpleDateFormat formatterOut = new SimpleDateFormat("yyyyMMddHHmmssSSS"); // infinispan specific, look here https://github.com/infinispan/infinispan/blob/0cbb18f426c803a3b769047da10d520b8e8b5fea/object-filter/src/main/java/org/infinispan/objectfilter/impl/util/DateHelper.java#L13
 
         for (TrustyStorageQuery.InternalWhereDecision<DateOperator, String> condition : query.dateOperations) {
+            Long dd = null;
             try {
-                condition.value = formatterOut.format(formatterIn.parse(condition.value));
+                dd = formatterIn.parse(condition.value).toInstant().toEpochMilli();
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            conditions.add("b." + condition.property + InfinispanOperatorFactory.convert(condition.operator) +
-                                   "\"" + condition.value + "\"");
+            conditions.add("b." + condition.property + InfinispanOperatorFactory.convert(condition.operator) + dd );
         }
         qq += String.join(" and ", conditions);
 
         return qq;
     }
 }
+
+
+//        conditions = new ArrayList<>();
+//        SimpleDateFormat formatterIn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+//        SimpleDateFormat formatterOut = new SimpleDateFormat("yyyyMMddHHmmssSSS"); // infinispan specific, look here https://github.com/infinispan/infinispan/blob/0cbb18f426c803a3b769047da10d520b8e8b5fea/object-filter/src/main/java/org/infinispan/objectfilter/impl/util/DateHelper.java#L13
+//
+//        for (TrustyStorageQuery.InternalWhereDecision<DateOperator, String> condition : query.dateOperations) {
+//        try {
+//        condition.value = formatterOut.format(formatterIn.parse(condition.value));
+//        } catch (ParseException e) {
+//        e.printStackTrace();
+//        }
+//        conditions.add("b." + condition.property + InfinispanOperatorFactory.convert(condition.operator) +
+//        "\"" + condition.value + "\"");
+//        }
+//        qq += String.join(" and ", conditions);

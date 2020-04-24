@@ -1,0 +1,43 @@
+package com.redhat.developer.execution.models;
+
+option indexed_by_default = true;
+
+/* @Indexed */
+message DMNResultModel {
+    /* @Field(store = Store.YES) */
+    optional string executionId = 1;
+
+    /* @Field(store = Store.YES) */
+    optional int64 executionDate = 2;
+
+    /* @Field(store = Store.YES) */
+    repeated com.redhat.developer.execution.models.OutcomeModel decisions = 3;
+
+    /* @Field(store = Store.YES) */
+    optional string context = 4;
+
+    /* @Field(store = Store.YES) */
+    optional string modelNamespace = 5;
+
+    /* @Field(store = Store.YES) */
+    optional string modelName = 6;
+
+    /* @Field(store = Store.YES) */
+    optional string modelId = 7;
+}
+
+/* @Indexed */
+message OutcomeModel {
+    /* @Field(store = Store.YES) */
+    optional string outcomeId = 1;
+    /* @Field(store = Store.YES) */
+    optional string outcomeName = 2;
+    /* @Field(store = Store.YES) */
+    optional string evaluationStatus = 3;
+    /* @Field(store = Store.YES) */
+    repeated string messages = 4;
+    /* @Field(store = Store.YES) */
+    optional bool hasErrors = 5;
+    /* @Field(store = Store.YES) */
+    optional string outcomeResult = 6;
+}

@@ -25,8 +25,8 @@ public class ElasticSearchStorageManager implements IStorageManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ElasticSearchStorageManager.class);
 
-    private static final String HOST = "http://elasticsearch:9200/";
-//    private static final String HOST = "http://localhost:9200/";
+//    private static final String HOST = "http://elasticsearch:9200/";
+    private static final String HOST = "http://localhost:9200/";
 
     private static ObjectMapper objectMapper;
     private HttpHelper httpHelper;
