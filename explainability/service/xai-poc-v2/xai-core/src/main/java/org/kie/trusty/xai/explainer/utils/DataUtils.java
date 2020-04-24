@@ -24,9 +24,9 @@ public class DataUtils {
      * If a same number is added to all values the mean also changes by the same number so we add {@code mean - m1} to
      * all numbers.
      *
-     * @param mean desired mean
+     * @param mean         desired mean
      * @param stdDeviation desired standard deviation
-     * @param size size of the array
+     * @param size         size of the array
      * @return the generated data
      */
     public static double[] generateData(double mean, double stdDeviation, int size) {
@@ -65,12 +65,13 @@ public class DataUtils {
 
     /**
      * Generate equally {@code size} sampled values between {@code min} and {@code max}.
-     * @param min minimum value
-     * @param max maximum value
+     *
+     * @param min  minimum value
+     * @param max  maximum value
      * @param size dataset size
      * @return the generated data
      */
-    public static double[] generatedSamples(double min, double max, int size) {
+    public static double[] generateSamples(double min, double max, int size) {
         double[] data = new double[size];
         double val = min;
         double sum = max / min;
@@ -120,7 +121,11 @@ public class DataUtils {
         return new double[0];
     }
 
-    public static List<BigDecimal> doublesToFeatures(double... doubles) {
+    public static List<Feature> doublesToFeatures(double[] inputs) {
+        return DoubleStream.of(inputs).mapToObj(DataUtils::doubleToFeature).collect(Collectors.toList());
+    }
+
+    public static List<BigDecimal> doublesToBigDecimals(double... doubles) {
         return DoubleStream.of(doubles).mapToObj(BigDecimal::new).collect(Collectors.toList());
     }
 

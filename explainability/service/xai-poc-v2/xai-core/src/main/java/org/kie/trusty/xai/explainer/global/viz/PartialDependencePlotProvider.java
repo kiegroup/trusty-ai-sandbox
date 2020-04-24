@@ -1,8 +1,5 @@
 package org.kie.trusty.xai.explainer.global.viz;
 
-import java.util.stream.Collectors;
-import java.util.stream.DoubleStream;
-
 import io.swagger.client.api.GlobalApi;
 import org.kie.trusty.xai.explainer.utils.DataUtils;
 import org.kie.trusty.xai.handler.ApiClient;
@@ -50,8 +47,8 @@ public class PartialDependencePlotProvider implements GlobalVizExplanationProvid
         try {
             DataDistribution dataDistribution = apiInstance.dataDistribution();
 
-            double[] featureXSvalues = DataUtils.generatedSamples(dataDistribution.getFeatureDistributions().get(featureIndex).getMin().doubleValue(),
-                                                                  dataDistribution.getFeatureDistributions().get(featureIndex).getMax().doubleValue(), TABLE_SIZE);
+            double[] featureXSvalues = DataUtils.generateSamples(dataDistribution.getFeatureDistributions().get(featureIndex).getMin().doubleValue(),
+                                                                 dataDistribution.getFeatureDistributions().get(featureIndex).getMax().doubleValue(), TABLE_SIZE);
 
             int noOfFeatures = modelInfo.getInputShape();
             double[][] trainingData = new double[noOfFeatures][TABLE_SIZE];
@@ -73,14 +70,14 @@ public class PartialDependencePlotProvider implements GlobalVizExplanationProvid
                             inputs[f] = trainingData[f][j];
                         }
                     }
-                    input.setFeatures(DoubleStream.of(inputs).mapToObj(DataUtils::doubleToFeature).collect(Collectors.toList()));
+                    input.setFeatures(DataUtils.doublesToFeatures(inputs));
                     PredictionOutput predictionOutput = apiInstance.predict(input);
                     Output output = predictionOutput.getOutputs().get(outputIndex);
                     marginalImpacts[i] += output.getScore().doubleValue() / (double) TABLE_SIZE;
                 }
             }
-            tabularData.setXAxis(DataUtils.doublesToFeatures(featureXSvalues));
-            tabularData.setYAxis(DataUtils.doublesToFeatures(marginalImpacts));
+            tabularData.setXAxis(DataUtils.doublesToBigDecimals(featureXSvalues));
+            tabularData.setYAxis(DataUtils.doublesToBigDecimals(marginalImpacts));
         } catch (ApiException e) {
             throw new RuntimeException(e);
         }

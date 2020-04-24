@@ -9,8 +9,8 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>Trusty :: Explainability PoC</name>
-  <description>The TrustyAI PoC for Explainability module.</description>
+  <name>Trusty :: Explainability Core capabilities</name>
+  <description>The TrustyAI Core capabilities for Explainability.</description>
 
   <build>
     <plugins>
