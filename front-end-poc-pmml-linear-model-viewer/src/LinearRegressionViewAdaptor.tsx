@@ -1,7 +1,6 @@
 import React from 'react';
 import * as PMML from "./generated/www.dmg.org/PMML-4_4";
-import { Line, Range, LinearRegressionView } from './LinearRegressionView';
-import { monitorEventLoopDelay } from 'perf_hooks';
+import { Line, LinearRegressionView, Range } from './LinearRegressionView';
 
 type Props = {
   dictionary: PMML.DataDictionaryType
@@ -182,3 +181,4 @@ class LinearRegressionViewAdaptor extends React.Component<Props, State> {
 }
 
 export { LinearRegressionViewAdaptor };
+
