@@ -1,9 +1,0 @@
-resourcePackages:
-  - com.redhat.developer
-prettyPrint: true
-cacheTTL: 0
-openAPI:
-  info:
-    version: '1.0'
-    title: TrustyAI service
-    description: 'This is the PoC of the trustyAI feature.'

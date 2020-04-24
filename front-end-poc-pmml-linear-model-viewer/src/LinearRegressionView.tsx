@@ -75,11 +75,6 @@ class LinearRegressionView extends React.Component<Props, State> {
             legendData.push({ name: line.title });
         });
 
-        const minDomainX: number = this.props.rangeX.min;
-        const maxDomainX: number = this.props.rangeX.max;
-        const minDomainY: number = this.props.rangeY.min;
-        const maxDomainY: number = this.props.rangeY.max;
-
         return (
             <div style={{ height: height, width: width }}>
                 <Chart
@@ -115,6 +110,7 @@ class LinearRegressionView extends React.Component<Props, State> {
                     <ChartGroup>
                         {this.props.lines.map((line) => {
                             return <ChartLine
+                                key={line.title}
                                 samples={100}
                                 domain={{
                                     x: [
