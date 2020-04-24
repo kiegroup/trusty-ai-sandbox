@@ -11,6 +11,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 MAX_DEPTH = 5
 MAX_LIST_SIZE = 10
+MAX_COMPONENTS_IN_STRUCT = 5
 
 class Number():
     def __init__(self):
@@ -84,7 +85,7 @@ def generateOutcomeResult(prefix, max_depth):
         "name" : generateRandomString(currentPrefix, 10),
         "typeRef" : ttype,
         "value" : None if isComposed else generate_value(tocall),
-        "components" : None if not isComposed else [tocall() for i in range(1,3)]
+        "components" : None if not isComposed else [tocall() for i in range(random.randint(1,MAX_COMPONENTS_IN_STRUCT))]
     }
 
 def generateOutcomes():
