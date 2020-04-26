@@ -34,6 +34,12 @@ const outcome = {
                                 value: 900,
                                 typeRef: "number",
                                 components: null
+                            },
+                            {
+                                name: "Loan Eligibility",
+                                value: true,
+                                typeRef: "boolean",
+                                components: null
                             }
                         ]
                     },

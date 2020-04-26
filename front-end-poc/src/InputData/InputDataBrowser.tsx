@@ -14,6 +14,7 @@ import FeatureDistributionStackedChart from "./FeatureDistributionStackedChart";
 import SkeletonStripes from "../Shared/skeletons/SkeletonStripes";
 import SkeletonDataList from "../Shared/skeletons/SkeletonDataList";
 import {IInputRow, IItemObject} from "./types";
+import FormattedValue from "../Shared/components/FormattedValue";
 
 function instanceOfItemObjectArray(object: any): object is IItemObject[] {
     return typeof object[0].name == 'string';
@@ -66,7 +67,7 @@ const InputValue = (props: IInputRow) => {
     dataListCells.push(<DataListCell width={3} key="primary content" className="input-data__wrap">
         <span>{inputLabel}</span><span className="input-data__wrap__desc">{category}</span>
     </DataListCell>);
-    dataListCells.push(<DataListCell width={2} key="secondary content"><span>{inputValue}</span></DataListCell>);
+    dataListCells.push(<DataListCell width={2} key="secondary content"><span><FormattedValue value={inputValue}/></span></DataListCell>);
     dataListCells.push((
         <DataListCell width={1} key="score content" className="input-data__score">
             {score || "N/A"}
@@ -131,7 +132,7 @@ let itemCategory = "";
 const renderItem = (item: IItemObject, category?: string): JSX.Element => {
     let renderItems: JSX.Element[] = [];
 
-    if (item.value) {
+    if (item.value !== null) {
         return <InputValue
                     inputLabel={item.name}
                     inputValue={item.value}

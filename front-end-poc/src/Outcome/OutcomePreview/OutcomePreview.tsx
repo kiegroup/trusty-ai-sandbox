@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {IOutcome, IOutcomeResult, isIOutcomeResultArray, isOutcomeResultMultiArray} from "../types";
 import {Grid, GridItem, Title} from "@patternfly/react-core";
+import FormattedValue from "../../Shared/components/FormattedValue";
 
 const OutcomeSubListItem = (props: { subListItem: IOutcomeResult[]}) => {
     const { subListItem } = props;
@@ -25,7 +26,9 @@ const OutcomeSubListItem = (props: { subListItem: IOutcomeResult[]}) => {
                     {otherProperties.map((item, index) => (
                             <React.Fragment key={`fragment-${index}`}>
                                 <GridItem span={6} key={`item-label-${index}`}>{item.name}</GridItem>
-                                <GridItem span={6} key={`item-value-${index}`}>{item.value}</GridItem>
+                                <GridItem span={6} key={`item-value-${index}`}>
+                                    <FormattedValue value={item.value} />
+                                </GridItem>
                             </React.Fragment>
                         )
                     )}
@@ -80,7 +83,7 @@ const OutcomeProperty = (props: { property: IOutcomeResult }) => {
     return (
         <Grid key={Math.floor(Math.random() * 10000)} className="outcome__property">
             <GridItem span={6} key={`item-label`} className="outcome-property__name">{property.name}</GridItem>
-            <GridItem span={6} key={`item-value`}>{property.value}</GridItem>
+            <GridItem span={6} key={`item-value`}><FormattedValue value={property.value} /></GridItem>
         </Grid>
     )
 }
@@ -88,7 +91,7 @@ const OutcomeProperty = (props: { property: IOutcomeResult }) => {
 const renderOutcome = (outcomeData: IOutcomeResult) => {
     let renderItems: JSX.Element[] = [];
 
-    if (outcomeData.value) {
+    if (outcomeData.value !== null) {
         return (
             <OutcomeProperty property={outcomeData} key={outcomeData.name} />
         )
