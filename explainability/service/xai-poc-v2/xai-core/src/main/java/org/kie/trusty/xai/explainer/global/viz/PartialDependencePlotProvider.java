@@ -29,18 +29,23 @@ public class PartialDependencePlotProvider implements GlobalVizExplanationProvid
     private static final int TABLE_SIZE = 100;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final GlobalApi apiInstance;
+
+    PartialDependencePlotProvider(GlobalApi apiInstance) {
+        this.apiInstance = apiInstance;
+    }
+
+    public PartialDependencePlotProvider() {
+        apiInstance = new GlobalApi(Configuration.getDefaultApiClient());
+    }
 
     @Override
     public Collection<TabularData> explain(ModelInfo modelInfo) {
         long start = System.currentTimeMillis();
 
+        apiInstance.getApiClient().setBasePath(modelInfo.getEndpoint());
+
         Collection<TabularData> pdps = new LinkedList<>();
-
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-        defaultClient.setBasePath(modelInfo.getEndpoint());
-        GlobalApi apiInstance = new GlobalApi();
-        apiInstance.setApiClient(defaultClient);
-
         try {
             DataDistribution dataDistribution = apiInstance.dataDistribution();
             int noOfFeatures = modelInfo.getInputShape();

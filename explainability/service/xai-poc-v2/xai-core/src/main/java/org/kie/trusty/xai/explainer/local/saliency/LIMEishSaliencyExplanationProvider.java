@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.google.gson.JsonArray;
 import io.swagger.client.api.LocalApi;
 import org.kie.trusty.xai.explainer.utils.DataUtils;
 import org.kie.trusty.xai.explainer.utils.LinearClassifier;
@@ -33,13 +32,19 @@ public class LIMEishSaliencyExplanationProvider implements SaliencyLocalExplanat
      * no. of samples to be generated for the local linear classifier model training
      */
     private final int noOfSamples;
+    private final LocalApi apiInstance;
+
+    LIMEishSaliencyExplanationProvider(LocalApi apiInstance, int noOfSamples) {
+        this.apiInstance = apiInstance;
+        this.noOfSamples = noOfSamples;
+    }
 
     public LIMEishSaliencyExplanationProvider() {
-        this.noOfSamples = 100;
+        this(100);
     }
 
     public LIMEishSaliencyExplanationProvider(int noOfSamples) {
-        this.noOfSamples = noOfSamples;
+        this(new LocalApi(Configuration.getDefaultApiClient()), noOfSamples);
     }
 
     @Override
@@ -47,12 +52,8 @@ public class LIMEishSaliencyExplanationProvider implements SaliencyLocalExplanat
         long start = System.currentTimeMillis();
         Saliency saliency = new Saliency();
         ModelInfo info = prediction.getInfo();
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-        defaultClient.setBasePath(info.getEndpoint());
-        LocalApi apiInstance = new LocalApi();
-        apiInstance.setApiClient(defaultClient);
         try {
-
+            apiInstance.getApiClient().setBasePath(info.getEndpoint());
             double[] input = DataUtils.toNumbers(prediction.getInput());
             Collection<Prediction> training = new LinkedList<>();
             List<PredictionInput> perturbedInputs = new LinkedList<>();
