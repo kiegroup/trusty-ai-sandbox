@@ -42,14 +42,14 @@ public class PartialDependencePlotProvider implements GlobalVizExplanationProvid
 
         try {
             DataDistribution dataDistribution = apiInstance.dataDistribution();
+            int noOfFeatures = modelInfo.getInputShape();
 
-            for (int featureIndex = 0; featureIndex < modelInfo.getInputShape(); featureIndex++) {
+            for (int featureIndex = 0; featureIndex < noOfFeatures; featureIndex++) {
                 for (int outputIndex = 0; outputIndex < modelInfo.getOutputShape(); outputIndex++) {
                     double[] featureXSvalues = DataUtils.generateSamples(dataDistribution.getFeatureDistributions().get(featureIndex).getMin().doubleValue(),
                                                                          dataDistribution.getFeatureDistributions().get(featureIndex).getMax().doubleValue(), TABLE_SIZE);
 
                     TabularData tabularData = new TabularData();
-                    int noOfFeatures = modelInfo.getInputShape();
                     double[][] trainingData = new double[noOfFeatures][TABLE_SIZE];
                     for (int i = 0; i < noOfFeatures; i++) {
                         double[] featureData = DataUtils.generateData(dataDistribution.getFeatureDistributions().get(i).getMean().doubleValue(),
