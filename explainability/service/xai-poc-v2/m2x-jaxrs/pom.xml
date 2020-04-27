@@ -9,7 +9,7 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>Trusty :: Explainability Model API</name>
+  <name>Trusty :: Model to Explainability HTTP Service</name>
   <description>The TrustyAI PoC for Explainability module.</description>
 
   <build>
