@@ -4,7 +4,7 @@ export interface IOutcome {
     evaluationStatus: string,
     hasErrors: boolean,
     messages: string[],
-    outcomeResults: IOutcomeResult
+    outcomeResult: IOutcomeResult
 }
 
 export interface IOutcomeResult {

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {IOutcome, IOutcomeResult, isIOutcomeResultArray, isOutcomeResultMultiArray} from "../types";
 import {Grid, GridItem, Title} from "@patternfly/react-core";
-import FormattedValue from "../../Shared/components/FormattedValue";
+import FormattedValue from "../../Shared/components/FormattedValue/FormattedValue";
 
 const OutcomeSubListItem = (props: { subListItem: IOutcomeResult[]}) => {
     const { subListItem } = props;
@@ -42,7 +42,7 @@ const OutcomeSubList = (props: { subList: IOutcomeResult}) => {
     const { subList } = props;
     return (
         <div className={"outcome-list"} key={subList.name}>
-            <Title headingLevel="h4" size="xl" className={"outcome-list__title"}>
+            <Title headingLevel="h5" size="lg" className={"outcome-list__title"}>
                 {<>{subList.components.length} {subList.name}</>}
             </Title>
             <ul className={"outcome-list__items"}>
@@ -117,7 +117,11 @@ const OutcomePreview = (props: {outcomeData: IOutcome[] | null}) => {
 
     return (
         <div className="outcomes-preview">
-            {outcomeData && outcomeData.map(item => renderOutcome(item.outcomeResults))}
+            {outcomeData && outcomeData.map(item => (
+                <div className="outcome">
+                    {renderOutcome(item.outcomeResult)}
+                </div>
+            ))}
         </div>
     );
 };
