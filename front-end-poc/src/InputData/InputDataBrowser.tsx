@@ -14,7 +14,7 @@ import FeatureDistributionStackedChart from "./FeatureDistributionStackedChart";
 import SkeletonStripes from "../Shared/skeletons/SkeletonStripes";
 import SkeletonDataList from "../Shared/skeletons/SkeletonDataList";
 import {IInputRow, IItemObject} from "./types";
-import FormattedValue from "../Shared/components/FormattedValue";
+import FormattedValue from "../Shared/components/FormattedValue/FormattedValue";
 
 function instanceOfItemObjectArray(object: any): object is IItemObject[] {
     return typeof object[0].name == 'string';

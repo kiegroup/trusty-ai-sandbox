@@ -13,7 +13,7 @@ const outcome = {
             evaluationStatus: "EVALUATED",
             hasErrors: false,
             messages: [],
-            outcomeResults: {
+            outcomeResult: {
                 name: "Client Ratings",
                 type: "tProducts",
                 value: null,
@@ -91,7 +91,7 @@ const outcome = {
             evaluationStatus: "EVALUATED",
             hasErrors: false,
             messages: [],
-            outcomeResults: {
+            outcomeResult: {
                 name: "Recommended Loan Products",
                 type: "tProducts",
                 value: null,
