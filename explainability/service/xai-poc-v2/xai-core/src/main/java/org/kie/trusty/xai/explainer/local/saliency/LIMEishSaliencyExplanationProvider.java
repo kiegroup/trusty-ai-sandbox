@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.google.gson.JsonArray;
 import io.swagger.client.api.LocalApi;
 import org.kie.trusty.xai.explainer.utils.DataUtils;
 import org.kie.trusty.xai.explainer.utils.LinearClassifier;
@@ -15,6 +16,7 @@ import org.kie.trusty.xai.model.FeatureImportance;
 import org.kie.trusty.xai.model.ModelInfo;
 import org.kie.trusty.xai.model.Prediction;
 import org.kie.trusty.xai.model.PredictionInput;
+import org.kie.trusty.xai.model.PredictionOutput;
 import org.kie.trusty.xai.model.Saliency;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,15 +55,22 @@ public class LIMEishSaliencyExplanationProvider implements SaliencyLocalExplanat
 
             double[] input = DataUtils.toNumbers(prediction.getInput());
             Collection<Prediction> training = new LinkedList<>();
+            List<PredictionInput> perturbedInputs = new LinkedList<>();
             for (int i = 0; i < noOfSamples; i++) {
                 double[] perturbed = DataUtils.perturbDrop(input);
                 PredictionInput perturbedInput = DataUtils.inputFrom(perturbed);
+                perturbedInputs.add(perturbedInput);
+            }
+            List<PredictionOutput> predictionOutputs = apiInstance.predict(perturbedInputs);
+
+            for (int i = 0; i < perturbedInputs.size(); i++) {
                 Prediction perturbedDataPrediction = new Prediction();
                 perturbedDataPrediction.setInfo(info);
-                perturbedDataPrediction.setInput(perturbedInput);
-                perturbedDataPrediction.setOutput(apiInstance.predict(perturbedInput));
+                perturbedDataPrediction.setInput(perturbedInputs.get(i));
+                perturbedDataPrediction.setOutput(predictionOutputs.get(i));
                 training.add(perturbedDataPrediction);
             }
+
             LinearClassifier linearClassifier = new LinearClassifier(input.length);
             linearClassifier.fit(training);
             double[] weights = linearClassifier.getWeights();

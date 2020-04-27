@@ -2,6 +2,7 @@ package org.kie.trusty.xai.explainer.global.viz;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import io.swagger.client.api.GlobalApi;
 import org.kie.trusty.xai.explainer.utils.DataUtils;
@@ -59,6 +60,7 @@ public class PartialDependencePlotProvider implements GlobalVizExplanationProvid
 
                     double[] marginalImpacts = new double[featureXSvalues.length];
                     for (int i = 0; i < featureXSvalues.length; i++) {
+                        List<PredictionInput> predictionInputs = new LinkedList<>();
                         double xs = featureXSvalues[i];
                         double[] inputs = new double[noOfFeatures];
                         inputs[featureIndex] = xs;
@@ -70,7 +72,10 @@ public class PartialDependencePlotProvider implements GlobalVizExplanationProvid
                                 }
                             }
                             input.setFeatures(DataUtils.doublesToFeatures(inputs));
-                            PredictionOutput predictionOutput = apiInstance.predict(input);
+                            predictionInputs.add(input);
+                        }
+                        // prediction requests are batched per value of feature 'Xs' under analysis
+                        for (PredictionOutput predictionOutput : apiInstance.predict(predictionInputs)) {
                             Output output = predictionOutput.getOutputs().get(outputIndex);
                             marginalImpacts[i] += output.getScore().doubleValue() / (double) TABLE_SIZE;
                         }
