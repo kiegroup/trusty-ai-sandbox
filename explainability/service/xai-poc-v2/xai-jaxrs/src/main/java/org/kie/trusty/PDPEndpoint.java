@@ -29,14 +29,14 @@ public class PDPEndpoint {
     @Path("/tabular/pdp")
     @Consumes({"application/json"})
     @Produces({"application/json"})
-    @ApiOperation(value = "Generate PDP explanation method on a model", notes = "", response = TabularData.class, authorizations = {
+    @ApiOperation(value = "Generate PDP explanation method on a model", notes = "", response = TabularData.class, responseContainer = "List", authorizations = {
             @Authorization(value = "trusty_auth", scopes = {
                     @AuthorizationScope(scope = "write:exp", description = "execute explanations"),
                     @AuthorizationScope(scope = "read:exp", description = "read explanations")
             })
     }, tags = {"global"})
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "successful explanation", response = TabularData.class)})
+            @ApiResponse(code = 200, message = "successful explanation", response = TabularData.class, responseContainer = "List")})
     public Response pdp(@Valid ModelInfo modelInfo) {
         PartialDependencePlotProvider partialDependencePlotProvider = ExplanationProviderBuilder.newExplanationProviderBuilder()
                 .global()

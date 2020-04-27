@@ -74,7 +74,7 @@ public class DataUtils {
     public static double[] generateSamples(double min, double max, int size) {
         double[] data = new double[size];
         double val = min;
-        double sum = max / min;
+        double sum = max / (1 + 1e-5);
         for (int i = 0; i < size; i++) {
             data[i] = val;
             val += sum;
@@ -114,11 +114,23 @@ public class DataUtils {
     }
 
     public static double[] toNumbers(PredictionInput input) {
-        return new double[0];
+        double[] doubles = new double[input.getFeatures().size()];
+        int i = 0;
+        for (Feature f : input.getFeatures()) {
+            doubles[i] = Double.parseDouble(f.getValue());
+            i++;
+        }
+        return doubles;
     }
 
     public static double[] toNumbers(PredictionOutput output) {
-        return new double[0];
+        double[] doubles = new double[output.getOutputs().size()];
+        int i = 0;
+        for (Output o : output.getOutputs()) {
+            doubles[i] = o.getScore().doubleValue();
+            i++;
+        }
+        return doubles;
     }
 
     public static List<Feature> doublesToFeatures(double[] inputs) {

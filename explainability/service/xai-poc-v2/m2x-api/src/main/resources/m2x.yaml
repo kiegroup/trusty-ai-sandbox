@@ -43,15 +43,19 @@ paths:
       parameters:
         - in: "body"
           name: "body"
-          description: "Prediction input"
+          description: "Prediction inputs"
           required: true
           schema:
-            $ref: "#/definitions/PredictionInput"
+            type: "array"
+            items:
+              $ref: "#/definitions/PredictionInput"
       responses:
         200:
-          description: "Prediction Output"
+          description: "Prediction Outputs"
           schema:
-            $ref: "#/definitions/PredictionOutput"
+            type: "array"
+            items:
+              $ref: "#/definitions/PredictionOutput"
       security:
         - trusty_auth:
             - "write:pred"
