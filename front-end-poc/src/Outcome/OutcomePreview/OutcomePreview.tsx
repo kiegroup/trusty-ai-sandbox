@@ -61,8 +61,8 @@ const OutcomeComposed = (props: { outcome: IOutcomeResult }) => {
     let renderItems:JSX.Element[] = [];
 
     renderItems.push(<Title
-        headingLevel="h4"
-        size="xl"
+        headingLevel="h5"
+        size="lg"
         className={"outcome__title"}
         key={outcome.name}>
             {outcome.name}
@@ -106,7 +106,7 @@ const renderOutcome = (outcomeData: IOutcomeResult) => {
     }
 
     return (
-        <React.Fragment key={Math.floor(Math.random() * 10000)}>
+        <React.Fragment key={Math.floor(Math.random() * 10000000)}>
             {renderItems.map((item: JSX.Element) => item)}
         </React.Fragment>
     );
@@ -118,7 +118,7 @@ const OutcomePreview = (props: {outcomeData: IOutcome[] | null}) => {
     return (
         <div className="outcomes-preview">
             {outcomeData && outcomeData.map(item => (
-                <div className="outcome">
+                <div className="outcome" key={item.outcomeName}>
                     {renderOutcome(item.outcomeResult)}
                 </div>
             ))}

@@ -10,10 +10,10 @@ const FormattedList = (props: { valueList: any[] }) => {
     return (
         <span className="formatted-list">
             {valueList.map((item, index) => (
-                <>
-                    <FormattedValue value={item} />
-                    {(index < valueList.length - 1) && <span>, </span>}
-                </>
+                <React.Fragment key={Math.floor(Math.random() * 10000)}>
+                    <FormattedValue value={item} key={Math.floor(Math.random() * 10000)} />
+                    {(index < valueList.length - 1) && <span key={Math.floor(Math.random() * 10000)}>, </span>}
+                </React.Fragment>
             ))}
         </span>
     );
