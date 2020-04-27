@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 public class LIMEishSaliencyExplanationProviderTest {
 
     @Test
-    public void testSaliency() throws Exception {
+    public void testSaliency() {
         LocalApi api = new TestLocalApi();
         LIMEishSaliencyExplanationProvider limEishSaliencyExplanationProvider =
                 new LIMEishSaliencyExplanationProvider(api, 10);
@@ -42,7 +42,6 @@ public class LIMEishSaliencyExplanationProviderTest {
         when(input.getFeatures()).thenReturn(features);
         when(prediction.getInput()).thenReturn(input);
         Saliency saliency = limEishSaliencyExplanationProvider.explain(prediction);
-
         assertNotNull(saliency);
     }
 
