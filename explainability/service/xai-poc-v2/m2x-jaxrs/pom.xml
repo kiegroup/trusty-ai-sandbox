@@ -35,8 +35,8 @@
             <configuration>
               <inputSpec>https://raw.githubusercontent.com/kiegroup/trusty-ai-sandbox/master/explainability/service/xai-poc-v2/m2x-api/src/main/resources/m2x.yaml</inputSpec>
               <language>jaxrs-resteasy</language>
-              <modelPackage>org.kie.trusty.m2x.model</modelPackage>
-              <invokerPackage>org.kie.trusty.m2x.handler</invokerPackage>
+              <modelPackage>org.kie.trusty.xai.model</modelPackage>
+              <invokerPackage>org.kie.trusty.xai.handler</invokerPackage>
             </configuration>
           </execution>
         </executions>
