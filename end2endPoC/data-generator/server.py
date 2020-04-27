@@ -85,7 +85,7 @@ def generateOutcomeResult(prefix, max_depth):
         "name" : generateRandomString(currentPrefix, 10),
         "typeRef" : ttype,
         "value" : None if isComposed else generate_value(tocall),
-        "components" : None if not isComposed else [tocall() for i in range(random.randint(1,MAX_COMPONENTS_IN_STRUCT))]
+        "components" : None if not isComposed else sorted([tocall() for i in range(random.randint(1,MAX_COMPONENTS_IN_STRUCT))], key = lambda x: x["value"] == None)
     }
 
 def generateOutcomes():
