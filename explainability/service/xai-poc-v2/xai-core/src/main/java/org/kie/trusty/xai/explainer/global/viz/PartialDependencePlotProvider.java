@@ -6,10 +6,10 @@ import java.util.List;
 
 import io.swagger.client.api.GlobalApi;
 import org.kie.trusty.xai.explainer.utils.DataUtils;
-import org.kie.trusty.xai.handler.ApiClient;
 import org.kie.trusty.xai.handler.ApiException;
 import org.kie.trusty.xai.handler.Configuration;
 import org.kie.trusty.xai.model.DataDistribution;
+import org.kie.trusty.xai.model.Feature;
 import org.kie.trusty.xai.model.ModelInfo;
 import org.kie.trusty.xai.model.Output;
 import org.kie.trusty.xai.model.PredictionInput;
@@ -87,6 +87,9 @@ public class PartialDependencePlotProvider implements GlobalVizExplanationProvid
                     }
                     tabularData.setXAxis(DataUtils.doublesToBigDecimals(featureXSvalues));
                     tabularData.setYAxis(DataUtils.doublesToBigDecimals(marginalImpacts));
+                    Feature feature = new Feature();
+                    feature.setName("f" + featureIndex + "_o" + outputIndex);
+                    tabularData.setFeature(feature);
                     pdps.add(tabularData);
                 }
             }

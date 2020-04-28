@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
+import org.kie.trusty.xai.model.DataDistribution;
 import org.kie.trusty.xai.model.Feature;
+import org.kie.trusty.xai.model.FeatureDistribution;
 import org.kie.trusty.xai.model.Output;
 import org.kie.trusty.xai.model.PredictionInput;
 import org.kie.trusty.xai.model.PredictionOutput;
@@ -31,22 +33,17 @@ public class DataUtils {
      */
     public static double[] generateData(double mean, double stdDeviation, int size) {
         double[] data = new double[size];
-        // generate random data and get the mean
-        double m = 0;
+        // generate random data
         for (int i = 0; i < size; i++) {
             double g = random.nextDouble();
             data[i] = g;
-            m += g;
         }
-        m /= size;
+
+        // get the mean
+        double m = getMean(data);
 
         // get the standard deviation
-        double d = 0;
-        for (int i = 0; i < size; i++) {
-            d += Math.pow(data[i] - m, 2);
-        }
-        d /= size;
-        d = Math.sqrt(d);
+        double d = getStdDev(data, m);
 
         // force desired standard deviation
         double d1 = stdDeviation / d;
@@ -54,13 +51,32 @@ public class DataUtils {
             data[i] *= d1;
         }
         // get the new mean
-        double m1 = m * d1 / d;
+        double m1 = m * stdDeviation / d;
 
         // force desired mean
         for (int i = 0; i < size; i++) {
             data[i] += mean - m1;
         }
         return data;
+    }
+
+    private static double getMean(double[] data) {
+        double m = 0;
+        for (double datum : data) {
+            m += datum;
+        }
+        m = m / (double) data.length;
+        return m;
+    }
+
+    private static double getStdDev(double[] data, double mean) {
+        double d = 0;
+        for (int i = 0; i < data.length; i++) {
+            d += Math.pow(data[i] - mean, 2);
+        }
+        d /= data.length;
+        d = Math.sqrt(d);
+        return d;
     }
 
     /**
@@ -74,12 +90,26 @@ public class DataUtils {
     public static double[] generateSamples(double min, double max, int size) {
         double[] data = new double[size];
         double val = min;
-        double sum = max / (1 + 1e-5);
+        double sum = max / size;
         for (int i = 0; i < size; i++) {
             data[i] = val;
             val += sum;
         }
         return data;
+    }
+
+    public static DataDistribution generateDistribution(int noOfFeatures) {
+        DataDistribution dataDistribution = new DataDistribution();
+        for (int i = 0; i < noOfFeatures; i++) {
+            FeatureDistribution featureDistribution = new FeatureDistribution();
+            featureDistribution.setMin(new BigDecimal(random.nextInt(10)));
+            featureDistribution.setMax(new BigDecimal(10 + random.nextInt(1000)));
+            featureDistribution.setMean(new BigDecimal(featureDistribution.getMin().intValue() + random.nextInt(
+                    (int) (featureDistribution.getMax().doubleValue() * 0.75))));
+            featureDistribution.setStdDev(new BigDecimal(random.nextInt(featureDistribution.getMean().intValue())));
+            dataDistribution.addFeatureDistributionsItem(featureDistribution);
+        }
+        return dataDistribution;
     }
 
     public static double[] perturbDrop(double[] data) {
