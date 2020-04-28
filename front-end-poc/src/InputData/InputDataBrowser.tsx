@@ -5,7 +5,7 @@ import {
     DataListCell,
     DataListItem,
     DataListItemCells,
-    DataListItemRow, Grid, GridItem
+    DataListItemRow, Grid, GridItem, Split, SplitItem
 } from "@patternfly/react-core";
 
 import "./inputDataBrowser.scss";
@@ -74,7 +74,7 @@ const InputValue = (props: IInputRow) => {
         </DataListCell>
     ));
 
-    if (typeof inputValue === "number") {
+    if (typeof inputValue === "number" || typeof inputValue === "object" || typeof inputValue === "object") {
         dataListCells.push((
             <DataListCell width={5} key="dist 5" style={{paddingTop: 0}}>
                 <Grid className="input-browser__distribution">
@@ -220,19 +220,23 @@ const InputDataBrowser = (props: {inputData: IItemObject[] | null}) => {
                     <SkeletonStripes stripesNumber={6} stripesWidth={100} stripesHeight={2} />
                 )}
                 {inputData && (
-                    <>
-                        <span className="input-browser__section-list__label">Browse Section</span>
-                        {categories.map((item, index) => (
-                            <Button
-                                type={"button"}
-                                variant={(index === viewSection) ? "primary" : "control"}
-                                isActive={(index === viewSection)}
-                                key={`section-${index}`}
-                                onClick={() => handleSectionSwitch(index)}>
-                                {item}
-                            </Button>
-                        ))}
-                    </>
+                    <Split>
+                        <SplitItem>
+                            <span className="input-browser__section-list__label">Browse Sections</span>
+                        </SplitItem>
+                        <SplitItem>
+                            {categories.map((item, index) => (
+                                <Button
+                                    type={"button"}
+                                    variant={(index === viewSection) ? "primary" : "control"}
+                                    isActive={(index === viewSection)}
+                                    key={`section-${index}`}
+                                    onClick={() => handleSectionSwitch(index)}>
+                                    {item}
+                                </Button>
+                            ))}
+                        </SplitItem>
+                    </Split>
                 )}
             </div>
             {!inputData && <SkeletonDataList rowsNumber={4} colsNumber={6} hasHeader={true} />}

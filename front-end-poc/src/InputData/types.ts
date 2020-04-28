@@ -9,7 +9,7 @@ export interface IItemObject {
 
 export interface IInputRow {
     inputLabel: string,
-    inputValue?: string | number | null,
+    inputValue?: string | number | boolean | object | null,
     hasEffect?: boolean | number,
     score?: number,
     key: string,
