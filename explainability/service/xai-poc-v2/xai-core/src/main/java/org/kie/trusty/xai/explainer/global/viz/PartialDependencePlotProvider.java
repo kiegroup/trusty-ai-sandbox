@@ -79,6 +79,7 @@ public class PartialDependencePlotProvider implements GlobalVizExplanationProvid
                             input.setFeatures(DataUtils.doublesToFeatures(inputs));
                             predictionInputs.add(input);
                         }
+
                         // prediction requests are batched per value of feature 'Xs' under analysis
                         for (PredictionOutput predictionOutput : apiInstance.predict(predictionInputs)) {
                             Output output = predictionOutput.getOutputs().get(outputIndex);
