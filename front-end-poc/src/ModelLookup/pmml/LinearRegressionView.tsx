@@ -39,7 +39,7 @@ type Props = {
 const LinearRegressionView = (props: Props) => {
 
     function roundedToFixed(_float: number, _digits: number): string {
-        var rounded = Math.pow(10, _digits);
+        let rounded = Math.pow(10, _digits);
         return (Math.round(_float * rounded) / rounded).toFixed(_digits);
     }
 
@@ -48,7 +48,7 @@ const LinearRegressionView = (props: Props) => {
         const end: number = range.max;
         const step: number = (end - start) / count;
         const ticks: number[] = new Array<number>();
-        var v: number = start;
+        let v: number = start;
         while (v <= end) {
             ticks.push(v);
             v = v + step;
@@ -59,14 +59,13 @@ const LinearRegressionView = (props: Props) => {
         return ticks;
     }
 
-    const modelName: string = props.modelName;
-    const width: number = props.width === undefined ? 500 : props.width;
-    const height: number = props.height === undefined ? 500 : props.height;
 
     const legendData: any = [];
     props.lines.forEach(line => {
         legendData.push({ name: line.title });
     });
+
+    const { modelName = "undefined", width = 500, height = 500 } = props;
 
     return (
         <div style={{ height: height, width: width }}>

@@ -4,12 +4,12 @@ import { Line, LinearRegressionView, Range } from './LinearRegressionView';
 
 type Props = {
   dictionary: PMML.DataDictionaryType
-  model: PMML.RegressionModelType[]
+  models: PMML.RegressionModelType[]
 }
 
 const LinearRegressionViewAdaptor = (props: Props) => {
 
-  const model: PMML.RegressionModelType | undefined = getLinearRegressionModel(props);
+  const model: PMML.RegressionModelType | undefined = getLinearRegressionModel(props.models);
   if (model === undefined) {
     return (
       <div>Unsupported</div>
@@ -58,8 +58,7 @@ const LinearRegressionViewAdaptor = (props: Props) => {
   );
 }
 
-function getLinearRegressionModel(props: Props): PMML.RegressionModelType | undefined {
-  const models: PMML.RegressionModelType[] = props.model;
+function getLinearRegressionModel(models: PMML.RegressionModelType[]): PMML.RegressionModelType | undefined {
   if (models === undefined || models.length > 1) {
     return undefined;
   }

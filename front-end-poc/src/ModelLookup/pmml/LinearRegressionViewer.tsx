@@ -11,7 +11,7 @@ type Props = {
 const LinearRegressionViewer = (props: Props) => {
 
   const { xml } = props;
-  const [viewer, setViewer] = useState(<><Spinner size="xl" /></>);
+  const [viewer, setViewer] = useState(<Spinner size="xl" />);
 
   useEffect(() => {
     let didMount = true;
@@ -20,7 +20,7 @@ const LinearRegressionViewer = (props: Props) => {
         if (didMount) {
           if (doc.PMML.RegressionModel !== undefined) {
             if (doc.PMML.RegressionModel[0] !== undefined) {
-              setViewer(<LinearRegressionViewAdaptor dictionary={doc.PMML.DataDictionary} model={doc.PMML.RegressionModel} />);
+              setViewer(<LinearRegressionViewAdaptor dictionary={doc.PMML.DataDictionary} models={doc.PMML.RegressionModel} />);
             }
           }
         }

@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { LinearRegressionViewer } from "./pmml/LinearRegressionViewer"
-import { getModelDetail } from "../Shared/api/audit.api";
-import { Spinner } from '@patternfly/react-core';
+import React from 'react';
+import { LinearRegressionViewer } from "./pmml/LinearRegressionViewer";
 
 interface Props {
-  executionId: string;
+  executionId?: string;
+  modelType?: string;
+  xml?: string;
+}
+
+function makeUnknownModel(): JSX.Element {
+  return <div>Unknown model type</div>
 }
 
 function makeDMNEditor(executionId: string): JSX.Element {
@@ -12,43 +16,33 @@ function makeDMNEditor(executionId: string): JSX.Element {
   const kogitoIframe = () => {
     return { __html: `<iframe src=${editorUrl} data-key="${executionId}"></iframe>` };
   };
-  return <><div className="model-diagram__iframe" dangerouslySetInnerHTML={kogitoIframe()} /></>;
+  return <div className="model-diagram__iframe" dangerouslySetInnerHTML={kogitoIframe()} />;
 }
 
 function makePMMLEditor(xml: string): JSX.Element {
-  return <><LinearRegressionViewer xml={xml} /></>;
+  return <LinearRegressionViewer xml={xml} />;
 }
+
+const DEFAULT: JSX.Element = makeUnknownModel();
 
 const ModelDiagram = (props: Props) => {
 
-  const { executionId } = props;
-  const [viewer, setViewer] = useState(<><Spinner size="xl" /></>);
+  const { executionId = undefined, modelType = undefined, xml = undefined } = props;
 
-  useEffect(() => {
-    let didMount = true;
-    getModelDetail(executionId)
-      .then(response => {
-        if (didMount) {
-          const modelType: string = response.data[0].modelType;
-          const xml: string = response.data[0].xml;
+  switch (modelType) {
+    case "DMN":
+      if (executionId !== undefined) {
+        return makeDMNEditor(executionId as string);
+      }
+      break;
+    case "PMML":
+      if (xml !== undefined) {
+        return makePMMLEditor(xml as string);
+      }
+      break;
+  }
 
-          switch (modelType) {
-            case "DMN":
-              setViewer(makeDMNEditor(executionId));
-              break;
-            case "PMML":
-              setViewer(makePMMLEditor(xml));
-              break;
-          }
-        }
-      })
-      .catch(() => { });
-    return () => {
-      didMount = false;
-    };
-  }, [executionId]);
-
-  return viewer;
+  return DEFAULT;
 };
 
 export default ModelDiagram;
