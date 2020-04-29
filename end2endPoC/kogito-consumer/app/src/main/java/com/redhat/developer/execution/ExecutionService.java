@@ -42,6 +42,7 @@ public class ExecutionService implements IExecutionService {
         List<SingleDecisionInputResponse> response = new ArrayList<>();
 
         for (OutcomeModel outcome : event.decisions){
+            System.out.println(outcome.outcomeName);
             DMNBaseNode baseNode = dependencyGraph.keySet().stream().filter(x -> x.getId().equals(outcome.outcomeId)).findFirst().get();
 
             response.add(buildStructuredForValue(
@@ -141,7 +142,6 @@ public class ExecutionService implements IExecutionService {
     private SingleDecisionInputResponse buildStructuredForValue(String modelId, String name, String typeRef, boolean isComposite, Object value) {
         ModelInputStructure dmnInputStructure = dmnService.getDmnInputStructure(modelId);
         List<TypeDefinition> customTypes = dmnInputStructure.customTypes;
-        LOGGER.info("type : " + typeRef);
         if (isComposite){
             return new SingleDecisionInputResponse(name, typeRef, analyzeComponents(value, typeRef, customTypes), null);
         }
@@ -149,6 +149,9 @@ public class ExecutionService implements IExecutionService {
     }
 
     private List<List<SingleDecisionInputResponse>> analyzeComponents(Object value, String typeRef, List<TypeDefinition> definitions) {
+        LOGGER.info("Type ref name " + value);
+        LOGGER.info("Type ref input " + typeRef);
+        definitions.forEach(x -> LOGGER.info(x.typeName));
         TypeDefinition typeDefinition = definitions.stream().filter(x -> x.typeName.equals(typeRef)).findFirst().orElseThrow(() -> new NoSuchElementException());
         List<List<SingleDecisionInputResponse>> components = new ArrayList<>();
 
