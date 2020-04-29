@@ -78,15 +78,15 @@ services:
     volumes:
       - ./infinispan/infinispan.xml:/opt/infinispan/server/conf/infinispan-demo.xml:z
     
-  # mongo:
-  #   image: mongo:latest
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: root
-  #     MONGO_INITDB_ROOT_PASSWORD: password
-  #   ports:
-  #     - 27017:27017
-  #   volumes:
-  #     - mongodb_data_container:/data/db
+  mongo:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
 
   producer:
     build: loanEligibilityApp/
@@ -103,5 +103,5 @@ services:
   #   depends_on:
   #     - kafka
 
-# volumes:
-#   mongodb_data_container:
+volumes:
+  mongodb_data_container:

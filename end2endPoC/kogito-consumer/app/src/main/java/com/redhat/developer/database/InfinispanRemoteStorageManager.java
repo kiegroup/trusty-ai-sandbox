@@ -17,13 +17,10 @@ import org.infinispan.query.dsl.QueryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@ApplicationScoped
-// does not work at all
+//@ApplicationScoped
 public class InfinispanRemoteStorageManager implements IStorageManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(InfinispanRemoteStorageManager.class);
-    // private Map<String, RemoteCache> indexes = new HashMap<>();
-
 
     @Inject
     RemoteCacheManager manager;
