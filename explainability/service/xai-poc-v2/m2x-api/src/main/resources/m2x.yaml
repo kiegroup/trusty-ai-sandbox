@@ -127,21 +127,6 @@ definitions:
           - "currency"
       value:
         type: "string"
-      encoder:
-        $ref: "#/definitions/FeatureEncoder"
-  FeatureEncoder:
-    type: "object"
-    properties:
-      input:
-        type: "string"
-      output:
-        type: "number"
-      type:
-        enum:
-          - "minmax"
-          - "standard"
-          - "maxabs"
-          - "ordinal"
   PredictionInput:
     type: "object"
     properties:

@@ -2,6 +2,11 @@ package org.kie.trusty.xai.explainer.utils;
 
 import java.math.BigDecimal;
 import java.security.SecureRandom;
+import java.sql.Date;
+import java.time.Duration;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
@@ -176,5 +181,67 @@ public class DataUtils {
         f.setValue(String.valueOf(d));
         f.setType(Feature.TypeEnum.NUMBER);
         return f;
+    }
+
+    public static PredictionInput perturbDrop(PredictionInput input) {
+        PredictionInput perturbedInput = new PredictionInput();
+        perturbedInput.setFeatures(input.getFeatures());
+        int droppedFeatures = 1 + Math.min(random.nextInt(3), perturbedInput.getFeatures().size() / 2);
+        random.ints(0, droppedFeatures).mapToObj(i -> perturbedInput.getFeatures().get(i)).map(DataUtils::featureDrop).close();
+        return perturbedInput;
+    }
+
+    private static Feature featureDrop(Feature feature) {
+        Feature.TypeEnum type = feature.getType();
+        switch (type) {
+            case STRING:
+                // randomly drop entire string or parts of it
+                if (random.nextBoolean()) {
+                    String stringValue = feature.getValue();
+                    if (stringValue.indexOf(' ') != -1) {
+                        List<String> words = Arrays.asList(stringValue.split(" "));
+                        for (int i = 0; i < 1 + random.nextInt(Math.min(2, words.size() / 2)); i++) {
+                            int dropIdx = random.nextInt(words.size());
+                            words.remove(dropIdx);
+                        }
+                        String newStringValue = String.join(" ", words);
+                        feature.setValue(newStringValue);
+                    } else {
+                        feature.setValue("");
+                    }
+                } else {
+                    feature.setValue("");
+                }
+                break;
+            case NUMBER:
+                // set the number to 0
+                if (!"0".equals(feature.getValue())) {
+                    feature.setValue("0");
+                } else { // or subtract one to the current value
+                    feature.setValue(new BigDecimal(feature.getValue()).subtract(new BigDecimal(1)).toPlainString());
+                }
+                break;
+            case BOOLEAN:
+                // flip the boolean value
+                feature.setValue(String.valueOf(!Boolean.getBoolean(feature.getValue())));
+                break;
+            case DATE:
+                // set to initial value of Java date in the current TZ
+                feature.setValue(new Date(0).toLocalDate().toString());
+                break;
+            case TIME:
+                // set to midnight
+                feature.setValue(LocalTime.MIDNIGHT.toString());
+                break;
+            case DURATION:
+                // set the duration to 0
+                feature.setValue(Duration.of(0, ChronoUnit.SECONDS).toString());
+                break;
+            case CURRENCY:
+                // set the currency to 0
+                feature.setValue("0.0");
+                break;
+        }
+        return feature;
     }
 }

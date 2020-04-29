@@ -11,6 +11,7 @@ import org.kie.trusty.xai.explainer.utils.LinearClassifier;
 import org.kie.trusty.xai.handler.ApiClient;
 import org.kie.trusty.xai.handler.ApiException;
 import org.kie.trusty.xai.handler.Configuration;
+import org.kie.trusty.xai.model.Feature;
 import org.kie.trusty.xai.model.FeatureImportance;
 import org.kie.trusty.xai.model.ModelInfo;
 import org.kie.trusty.xai.model.Prediction;
@@ -54,13 +55,10 @@ public class LIMEishSaliencyExplanationProvider implements SaliencyLocalExplanat
         ModelInfo info = prediction.getInfo();
         try {
             apiInstance.getApiClient().setBasePath(info.getEndpoint());
-            double[] input = DataUtils.toNumbers(prediction.getInput());
             Collection<Prediction> training = new LinkedList<>();
             List<PredictionInput> perturbedInputs = new LinkedList<>();
             for (int i = 0; i < noOfSamples; i++) {
-                double[] perturbed = DataUtils.perturbDrop(input);
-                PredictionInput perturbedInput = DataUtils.inputFrom(perturbed);
-                perturbedInputs.add(perturbedInput);
+                perturbedInputs.add(DataUtils.perturbDrop(prediction.getInput()));
             }
             List<PredictionOutput> predictionOutputs = apiInstance.predict(perturbedInputs);
 
@@ -72,13 +70,14 @@ public class LIMEishSaliencyExplanationProvider implements SaliencyLocalExplanat
                 training.add(perturbedDataPrediction);
             }
 
-            LinearClassifier linearClassifier = new LinearClassifier(input.length);
+            List<Feature> features = prediction.getInput().getFeatures();
+            LinearClassifier linearClassifier = new LinearClassifier(features.size());
             linearClassifier.fit(training);
             double[] weights = linearClassifier.getWeights();
             List<FeatureImportance> saliencyMap = new LinkedList<>();
             for (int i = 0; i < weights.length; i++) {
                 FeatureImportance featureImportance = new FeatureImportance();
-                featureImportance.setFeature(prediction.getInput().getFeatures().get(i));
+                featureImportance.setFeature(features.get(i));
                 featureImportance.setScore(BigDecimal.valueOf(weights[i]));
                 saliencyMap.add(featureImportance);
             }
