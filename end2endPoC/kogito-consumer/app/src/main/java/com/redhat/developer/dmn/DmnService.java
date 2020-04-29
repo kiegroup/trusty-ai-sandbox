@@ -54,11 +54,11 @@ public class DmnService implements IDmnService {
         modelInputStructure.customTypes = new ArrayList<>();
 
         for (InputDataNode input : inputs) {
-            if (input.getType().isComposite()) {
-                List<TypeComponent> components = input.getType().getFields().values().stream().map(x -> new TypeComponent(
-                        x.getName(), x.getBaseType().getName(), x.isCollection(), x.isComposite(), false, null)).collect(Collectors.toList());
-                modelInputStructure.customTypes.add(new TypeDefinition(input.getType().getName(), input.getType().isCollection(), input.getType().isComposite(), components));
-            }
+                if (input.getType().isComposite()) { // it's a bkm node or something
+                    List<TypeComponent> components = input.getType().getFields().values().stream().map(x -> new TypeComponent(
+                            x.getName(), x.getBaseType().getName(), x.isCollection(), x.isComposite(), false, null)).collect(Collectors.toList());
+                    modelInputStructure.customTypes.add(new TypeDefinition(input.getType().getName(), input.getType().isCollection(), input.getType().isComposite(), components));
+                }
         }
 
         return modelInputStructure;

@@ -15,7 +15,7 @@ import com.redhat.developer.database.mongo.MongoQueryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//@ApplicationScoped
+@ApplicationScoped
 public class MongoStorageManager implements IStorageManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MongoStorageManager.class);

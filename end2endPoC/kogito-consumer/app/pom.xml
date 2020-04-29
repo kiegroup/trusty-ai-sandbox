@@ -89,6 +89,7 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-openapi</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.kie</groupId>
       <artifactId>kie-dmn-api</artifactId>
@@ -125,10 +126,19 @@
       <version>10.1.6.Final</version>
     </dependency>
 
-<!--    <dependency>-->
-<!--      <groupId>io.quarkus</groupId>-->
-<!--      <artifactId>quarkus-mongodb-panache</artifactId>-->
-<!--    </dependency>-->
+    <!-- https://mvnrepository.com/artifact/org.infinispan/infinispan-cachestore-rocksdb -->
+    <dependency>
+      <groupId>org.infinispan</groupId>
+      <artifactId>infinispan-cachestore-rocksdb</artifactId>
+      <version>10.1.6.Final</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.elasticsearch.client</groupId>
+      <artifactId>elasticsearch-rest-high-level-client</artifactId>
+      <version>7.6.2</version>
+    </dependency>
 
       <dependency>
         <groupId>io.quarkus</groupId>
