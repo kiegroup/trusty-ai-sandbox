@@ -4,7 +4,6 @@
   "private": true,
   "homepage": "https://kelvah.github.io/xai-poc",
   "dependencies": {
-    "@manstis/pmml-linear-model-viewer": "file:../front-end-poc-pmml-linear-model-viewer",
     "@patternfly/react-charts": "^5.2.21",
     "@patternfly/react-core": "3.134.2",
     "@patternfly/react-table": "^2.25.6",
@@ -19,6 +18,7 @@
     "@types/react-dom": "^16.9.0",
     "@types/react-router-dom": "^5.1.3",
     "@types/react-sticky": "^6.0.3",
+    "@wikipathways/cxml": "^0.2.14",
     "axios": "^0.19.2",
     "lodash": "^4.17.15",
     "node-sass": "^4.13.1",
@@ -32,12 +32,14 @@
     "victory": "^34.1.1"
   },
   "scripts": {
+    "cxsd": "cxsd",
+    "generate-cxsd": "cxsd --out-js ./src/ModelLookup/pmml/generated --out-ts ./src/ModelLookup/pmml/generated http://dmg.org/pmml/v4-4/pmml-4-4.xsd",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "gh-pages -d build",
-    "mock-api": "json-server --watch api-mock/db.js --routes api-mock/routes.json --port 4000 --delay 1500"
+    "mock-api": "json-server --watch api-mock/db.js --routes api-mock/routes.json --port 4000 --delay 1500 --id executionId"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -55,6 +57,7 @@
     ]
   },
   "devDependencies": {
+    "cxsd": "^0.1.1",
     "faker": "^4.1.0",
     "gh-pages": "^2.2.0",
     "json-server": "^0.16.1"

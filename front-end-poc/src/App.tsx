@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.scss';
 import {
     Avatar,
@@ -17,7 +17,7 @@ import {
     TextContent,
     Text, Title, NavItem
 } from '@patternfly/react-core';
-import {Switch, Route, NavLink, Redirect, useLocation} from "react-router-dom";
+import { Switch, Route, NavLink, Redirect, useLocation } from "react-router-dom";
 import Audit from "./Audit/Audit";
 import AuditDetail from "./Audit/AuditDetail";
 import ScrollToTop from "./Shared/ScrollToTop";
@@ -39,7 +39,7 @@ const App = () => {
         setIsNavOpenMobile(!isNavOpenMobile);
     };
 
-    const handlePageResize = (stuff:{ windowSize: number, mobileView: boolean }) => {
+    const handlePageResize = (stuff: { windowSize: number, mobileView: boolean }) => {
         // closing sidebar menu when resolution is < 1200
         if (stuff.windowSize < 1200) {
             if (!isMobileView)
@@ -107,7 +107,7 @@ const App = () => {
                                 </Text>
                             </TextContent>
                         </PageSection>
-                        <PageSection style={{height: "50em"}} isFilled={true}>
+                        <PageSection style={{ height: "50em" }} isFilled={true}>
                             <Gallery gutter="md">
                                 {Array.apply(0, Array(20)).map((x, i) => (
                                     <GalleryItem key={i}>
@@ -128,7 +128,7 @@ const App = () => {
                                 </Text>
                             </TextContent>
                         </PageSection>
-                        <PageSection style={{height: "50em"}} isFilled={true}>
+                        <PageSection style={{ height: "50em" }} isFilled={true}>
                             <Gallery gutter="md">
                                 {Array.apply(0, Array(20)).map((x, i) => (
                                     <GalleryItem key={i}>
@@ -141,9 +141,9 @@ const App = () => {
                         </PageSection>
                     </Route>
                     <Route exact path="/audit">
-                        <Audit/>
+                        <Audit />
                     </Route>
-                    <Route path="/audit/:executionType/:id">
+                    <Route path="/audit/:executionType/:executionId">
                         <AuditDetail />
                     </Route>
                 </Switch>

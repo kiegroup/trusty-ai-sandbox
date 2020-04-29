@@ -27,6 +27,8 @@ hs_err_pid*
 #intellij
 .idea
 
-#python virtualenvs
+#vscode
+.vscode
 
+#python virtualenvs
 **venv/
