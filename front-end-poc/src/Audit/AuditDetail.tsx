@@ -17,7 +17,7 @@ import {
 } from "react-router-dom";
 import AuditDetailOverview from "../AuditOverview/AuditDetailOverview";
 import InputData from "../InputData/InputData";
-import Explanation from "../Explanation/Explanation";
+import ExplanationView from "../Explanation/ExplanationView/ExplanationView";
 import ModelLookup from "../ModelLookup/ModelLookup";
 
 
@@ -56,7 +56,7 @@ const AuditDetail = () => {
                     <InputData />
                 </Route>
                 <Route path={`${path}/explanation`}>
-                    <Explanation />
+                    <ExplanationView />
                 </Route>
                 <Route path={`${path}/model-lookup`}>
                     <ModelLookup />

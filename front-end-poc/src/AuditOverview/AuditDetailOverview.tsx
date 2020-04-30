@@ -36,7 +36,6 @@ const AuditDetailOverview = () => {
                                 </CardHeader>
                                 <CardBody>
                                     <OutcomeOverview />
-                                    {/*<OutcomeList allAttributes={false} />*/}
                                 </CardBody>
                             </Card>
                         </StackItem>

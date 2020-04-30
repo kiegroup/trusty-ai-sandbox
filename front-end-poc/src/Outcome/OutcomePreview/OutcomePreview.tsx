@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Grid, GridItem, Title} from "@patternfly/react-core";
+import { Grid, GridItem, Split, SplitItem, Title } from "@patternfly/react-core";
 import FormattedValue from "../../Shared/components/FormattedValue/FormattedValue";
 import { IOutcome } from "../types";
 import { IItemObject, isIItemObjectArray, isIItemObjectMultiArray } from "../../InputData/types";
@@ -83,10 +83,22 @@ const OutcomeProperty = (props: { property: IItemObject }) => {
     const { property } = props;
 
     return (
-        <Grid key={Math.floor(Math.random() * 10000)} className="outcome__property">
-            <GridItem span={6} key={`item-label`} className="outcome__property__name">{property.name}</GridItem>
-            <GridItem span={6} key={`item-value`}><FormattedValue value={property.value} /></GridItem>
-        </Grid>
+        <>
+        <Split key={Math.floor(Math.random() * 10000)} className="outcome__property">
+            <SplitItem className="outcome__property__name" key="property-name">
+                {property.name}:
+            </SplitItem>
+            <SplitItem className="outcome__property__value" key="property-value">
+                <FormattedValue value={property.value} />
+            </SplitItem>
+        </Split>
+        {/*
+                <Grid key={Math.floor(Math.random() * 10000)} className="outcome__property">
+                    <GridItem span={6} key={`item-label`} className="outcome__property__name">{property.name}</GridItem>
+                    <GridItem span={6} key={`item-value`}><FormattedValue value={property.value} /></GridItem>
+                </Grid>
+        */}
+        </>
     )
 }
 

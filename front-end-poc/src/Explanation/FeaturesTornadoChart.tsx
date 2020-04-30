@@ -40,7 +40,7 @@ const FeaturesTornadoChart = (props:{onlyTopFeatures?:boolean}) => {
             <VictoryChart
                 domainPadding={{x: [20, 20], y: 50}}
                 height={260}
-                padding={{top: 10, right:50, bottom: 30, left: 50}}
+                padding={{top: 10, right:50, bottom: 30, left: 20}}
             >
                 <VictoryAxis tickFormat={() => ""} style={{axis: {stroke: "#c6c6c6"}}}/>
                 <VictoryBar

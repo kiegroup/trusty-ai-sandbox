@@ -31,6 +31,9 @@
   &--padded {
     padding: 0 1em;
   }
+  &--lighter {
+    background: linear-gradient(to right, #d5d5d5 8%, #dddddd 18%, #d5d5d5 33%);
+  }
 }
 
 @keyframes placeHolderShimmer {
