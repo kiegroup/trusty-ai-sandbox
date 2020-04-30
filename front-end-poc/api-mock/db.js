@@ -2,6 +2,7 @@ const faker = require('faker');
 //const inputDataWithScores = require('./mocks/inputDataWithScores');
 const inputData = require('./mocks/inputData');
 const outcomeData = require('./mocks/outcomes');
+const outcomeDetailData = require('./mocks/outcomeDetail');
 const modelData = require('./mocks/modelData')
 
 let generateFakeAPIs = () => {
@@ -40,6 +41,7 @@ let generateFakeAPIs = () => {
         "decisions": decisionDetail,
         "inputs": inputData,
         "outcomes": outcomeData,
+        "outcomeDetail": outcomeDetailData,
         "models": modelData
     }
 };

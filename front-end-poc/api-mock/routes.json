@@ -2,5 +2,6 @@
   "/executions/:executionType/:executionId": "/decisions?executionId=:executionId",
   "/executions/:executionType/:executionId/structuredInputs": "/inputs?executionId=:executionId",
   "/executions/:executionType/:executionId/outcomes": "/outcomes?executionId=:executionId",
+  "/executions/:executionType/:executionId/outcomes/:outcomeId": "/outcomeDetail?executionId=:executionId&outcomeId=:outcomeId",
   "/models/:executionId": "/models?executionId=:executionId"
 }
