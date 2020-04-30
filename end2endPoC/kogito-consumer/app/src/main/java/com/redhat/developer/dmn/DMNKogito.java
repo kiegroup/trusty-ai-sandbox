@@ -27,7 +27,7 @@ public class DMNKogito {
     public static DMNRuntime createGenericDMNRuntime(Reader... readers) {
         List<Resource> resources = Stream.of(readers).map(ReaderResource::new).collect(Collectors.toList());
         return DMNRuntimeBuilder.fromDefaults()
-                .setRootClassLoader(null)
+                .setRootClassLoader(Thread.currentThread().getContextClassLoader())
                 .buildConfiguration()
                 .fromResources(resources)
                 .getOrElseThrow(e -> new RuntimeException("Error initalizing DMNRuntime", e));
