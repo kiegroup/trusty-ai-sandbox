@@ -21,8 +21,10 @@ import com.redhat.developer.dmn.models.input.TypeDefinition;
 import com.redhat.developer.dmn.storage.IDmnStorageExtension;
 import org.kie.dmn.api.core.DMNModel;
 import org.kie.dmn.api.core.DMNRuntime;
+import org.kie.dmn.api.core.DMNType;
 import org.kie.dmn.api.core.ast.DMNNode;
 import org.kie.dmn.api.core.ast.InputDataNode;
+import org.kie.dmn.api.core.ast.ItemDefNode;
 import org.kie.dmn.core.ast.DMNBaseNode;
 import org.kie.dmn.core.impl.DMNContextImpl;
 import org.kie.dmn.core.impl.DMNModelImpl;
@@ -46,6 +48,25 @@ public class DmnService implements IDmnService {
     }
 
     @Override
+    public ModelInputStructure getTypesDefinitions(String id) {
+        DMNModel model = getDmnModel(id);
+        Set<ItemDefNode> inputs = model.getItemDefinitions();
+        ModelInputStructure modelInputStructure = new ModelInputStructure();
+        modelInputStructure.inputData = inputs.stream().map(x -> new InputData(x.getName(), x.getType().getName(), x.getType().isComposite(), x.getType().isCollection())).collect(Collectors.toList());
+        modelInputStructure.customTypes = new ArrayList<>();
+
+        for (ItemDefNode input : inputs) {
+            if (input.getType().isComposite()) {
+                List<TypeComponent> components = input.getType().getFields().entrySet().stream().map(x -> new TypeComponent(
+                        x.getKey(), x.getValue().getBaseType() != null ? x.getValue().getBaseType().getName() : x.getValue().getName(), x.getValue().isCollection(), x.getValue().isComposite(), false, null)).collect(Collectors.toList());
+                modelInputStructure.customTypes.add(new TypeDefinition(input.getType().getName(), input.getType().isCollection(), input.getType().isComposite(), components));
+            }
+        }
+
+        return modelInputStructure;
+    }
+
+    @Override
     public ModelInputStructure getDmnInputStructure(String id) {
         DMNModel model = getDmnModel(id);
         Set<InputDataNode> inputs = model.getInputs();
@@ -54,11 +75,11 @@ public class DmnService implements IDmnService {
         modelInputStructure.customTypes = new ArrayList<>();
 
         for (InputDataNode input : inputs) {
-                if (input.getType().isComposite()) { // it's a bkm node or something
-                    List<TypeComponent> components = input.getType().getFields().values().stream().map(x -> new TypeComponent(
-                            x.getName(), x.getBaseType().getName(), x.isCollection(), x.isComposite(), false, null)).collect(Collectors.toList());
-                    modelInputStructure.customTypes.add(new TypeDefinition(input.getType().getName(), input.getType().isCollection(), input.getType().isComposite(), components));
-                }
+            if (input.getType().isComposite()) {
+                List<TypeComponent> components = input.getType().getFields().entrySet().stream().map(x -> new TypeComponent(
+                        x.getKey(), x.getValue().getBaseType() != null ? x.getValue().getBaseType().getName() : x.getValue().getName(), x.getValue().isCollection(), x.getValue().isComposite(), false, null)).collect(Collectors.toList());
+                modelInputStructure.customTypes.add(new TypeDefinition(input.getType().getName(), input.getType().isCollection(), input.getType().isComposite(), components));
+            }
         }
 
         return modelInputStructure;
