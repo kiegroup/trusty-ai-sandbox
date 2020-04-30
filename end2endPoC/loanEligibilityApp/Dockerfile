@@ -5,4 +5,3 @@ WORKDIR app/target
 CMD ["java", "-jar", "loanEligibilityApp-runner.jar"]
 #CMD ["./mvnw", "compile", "quarkus:dev"]
 #CMD ["sleep", "10000"] 
-

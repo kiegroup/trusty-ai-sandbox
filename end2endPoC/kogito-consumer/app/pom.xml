@@ -167,7 +167,23 @@
       <artifactId>kie-dmn-core</artifactId>
       <version>${version.org.kie7}</version>
     </dependency>
+    <!-- Alternative dependencies for JPMML Evaluator, override `kie-pmml` dependency -->
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>kie-dmn-jpmml</artifactId>
+      <version>7.36.1.Final</version>
+    </dependency>
 
+    <dependency>
+      <groupId>org.jpmml</groupId>
+      <artifactId>pmml-evaluator</artifactId>
+      <version>1.4.9</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jpmml</groupId>
+      <artifactId>pmml-evaluator-extension</artifactId>
+      <version>1.4.9</version>
+    </dependency>
   </dependencies>
   <build>
 
