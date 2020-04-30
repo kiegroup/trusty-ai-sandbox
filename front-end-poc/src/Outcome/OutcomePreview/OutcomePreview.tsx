@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {IOutcome, IOutcomeResult, isIOutcomeResultArray, isOutcomeResultMultiArray} from "../types";
 import {Grid, GridItem, Title} from "@patternfly/react-core";
 import FormattedValue from "../../Shared/components/FormattedValue/FormattedValue";
+import { IOutcome } from "../types";
+import { IItemObject, isIItemObjectArray, isIItemObjectMultiArray } from "../../InputData/types";
+import './OutcomePreview.scss';
 
-const OutcomeSubListItem = (props: { subListItem: IOutcomeResult[]}) => {
+const OutcomeSubListItem = (props: { subListItem: IItemObject[]}) => {
     const { subListItem } = props;
-    const [title, setTitle] = useState<IOutcomeResult | null>(null);
-    const [otherProperties, setOtherProperties] = useState<IOutcomeResult[]>();
+    const [title, setTitle] = useState<IItemObject | null>(null);
+    const [otherProperties, setOtherProperties] = useState<IItemObject[]>();
 
     useEffect(() => {
         // assuming that the first item in the array is the name of the recommendation...
@@ -38,7 +40,7 @@ const OutcomeSubListItem = (props: { subListItem: IOutcomeResult[]}) => {
     )
 }
 
-const OutcomeSubList = (props: { subList: IOutcomeResult}) => {
+const OutcomeSubList = (props: { subList: IItemObject}) => {
     const { subList } = props;
     return (
         <div className={"outcome-list"} key={subList.name}>
@@ -47,7 +49,7 @@ const OutcomeSubList = (props: { subList: IOutcomeResult}) => {
             </Title>
             <ul className={"outcome-list__items"}>
                 {subList.components.map((item, index) => (
-                    <OutcomeSubListItem subListItem={item as IOutcomeResult[]} key={`recommendation-${index}`}
+                    <OutcomeSubListItem subListItem={item as IItemObject[]} key={`recommendation-${index}`}
                     />
                 ))
                 }
@@ -56,7 +58,7 @@ const OutcomeSubList = (props: { subList: IOutcomeResult}) => {
     )
 }
 
-const OutcomeComposed = (props: { outcome: IOutcomeResult }) => {
+const OutcomeComposed = (props: { outcome: IItemObject }) => {
     const { outcome } = props;
     let renderItems:JSX.Element[] = [];
 
@@ -67,28 +69,28 @@ const OutcomeComposed = (props: { outcome: IOutcomeResult }) => {
         key={outcome.name}>
             {outcome.name}
     </Title>);
-    for (let subItem of outcome.components as IOutcomeResult[]) {
+    for (let subItem of outcome.components as IItemObject[]) {
         renderItems.push(<div className="outcome-item" key={subItem.name}>{renderOutcome(subItem)}</div>)
     }
     return (
-        <div className="outcome" key={outcome.name}>
+        <div className="outcome outcome--struct" key={outcome.name}>
             {renderItems.map(item => item)}
         </div>
     )
 }
 
-const OutcomeProperty = (props: { property: IOutcomeResult }) => {
+const OutcomeProperty = (props: { property: IItemObject }) => {
     const { property } = props;
 
     return (
         <Grid key={Math.floor(Math.random() * 10000)} className="outcome__property">
-            <GridItem span={6} key={`item-label`} className="outcome-property__name">{property.name}</GridItem>
+            <GridItem span={6} key={`item-label`} className="outcome__property__name">{property.name}</GridItem>
             <GridItem span={6} key={`item-value`}><FormattedValue value={property.value} /></GridItem>
         </Grid>
     )
 }
 
-const renderOutcome = (outcomeData: IOutcomeResult) => {
+const renderOutcome = (outcomeData: IItemObject) => {
     let renderItems: JSX.Element[] = [];
 
     if (outcomeData.value !== null) {
@@ -97,10 +99,10 @@ const renderOutcome = (outcomeData: IOutcomeResult) => {
         )
     }
     if (outcomeData.components.length) {
-        if (isIOutcomeResultArray(outcomeData.components)) {
+        if (isIItemObjectArray(outcomeData.components)) {
             renderItems.push(<OutcomeComposed outcome={outcomeData} key={outcomeData.name}/>)
 
-        } else if (isOutcomeResultMultiArray(outcomeData.components)) {
+        } else if (isIItemObjectMultiArray(outcomeData.components)) {
             renderItems.push(<OutcomeSubList subList={outcomeData} key={outcomeData.name}/>)
         }
     }

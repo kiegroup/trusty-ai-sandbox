@@ -1,0 +1,32 @@
+.outcomes-preview {
+  .outcome {
+    margin-bottom: var(--pf-global--spacer--md);
+    &__title {
+      margin-bottom: var(--pf-global--spacer--md);
+    }
+    &__property {
+      margin-bottom: var(--pf-global--spacer--sm);
+      max-width: 680px;
+      &__name {
+        color: var(--pf-global--Color--200);
+      }
+    }
+    &--struct {
+    }
+  }
+  .outcome .outcome {
+    padding-left: var(--pf-global--spacer--md);
+    border-left: 3px solid lightblue;
+    .outcome {
+      margin-top: var(--pf-global--spacer--md);
+    }
+  }
+  & > .outcome-list {
+    font-size: 1.125rem;
+    padding: (10/18)+em 0;
+    border-bottom: 1px solid lightgray;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}

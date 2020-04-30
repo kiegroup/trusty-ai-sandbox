@@ -15,3 +15,11 @@ export interface IInputRow {
     key: string,
     category: string
 }
+
+export function isIItemObjectArray(object: any): object is IItemObject[] {
+    return typeof object[0].name == 'string';
+}
+
+export function isIItemObjectMultiArray(object: any): object is IItemObject[][] {
+    return Array.isArray(object[0]);
+}

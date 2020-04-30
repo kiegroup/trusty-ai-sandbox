@@ -13,15 +13,10 @@ import FeatureDistributionBoxPlot from "./FeatureDistributionBoxPlot";
 import FeatureDistributionStackedChart from "./FeatureDistributionStackedChart";
 import SkeletonStripes from "../Shared/skeletons/SkeletonStripes";
 import SkeletonDataList from "../Shared/skeletons/SkeletonDataList";
-import {IInputRow, IItemObject} from "./types";
+import { IInputRow, IItemObject, isIItemObjectArray, isIItemObjectMultiArray } from "./types";
 import FormattedValue from "../Shared/components/FormattedValue/FormattedValue";
 
-function instanceOfItemObjectArray(object: any): object is IItemObject[] {
-    return typeof object[0].name == 'string';
-}
-function instanceOfItemObjectMultiArray(object: any): object is IItemObject[][] {
-    return Array.isArray(object[0]);
-}
+
 
 const ItemsSubList = (props: { itemsList: IItemObject[] }) => {
     const { itemsList } = props;
@@ -147,11 +142,11 @@ const renderItem = (item: IItemObject, category?: string): JSX.Element => {
         let categoryLabel = (itemCategory.length > 0) ? `${itemCategory}` : item.name;
 
         if (item.components) {
-            if (instanceOfItemObjectArray(item.components)) {
+            if (isIItemObjectArray(item.components)) {
                 for (let subItem of item.components) {
                     renderItems.push(renderItem(subItem, subItem.name));
                 }
-            } else if (instanceOfItemObjectMultiArray(item.components)) {
+            } else if (isIItemObjectMultiArray(item.components)) {
                 for (let subItem of item.components) {
                     renderItems.push(<ItemsSubList
                         itemsList={subItem}
