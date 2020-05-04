@@ -1,6 +1,8 @@
 package com.redhat.developer.execution.api;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -84,6 +86,7 @@ public class ExecutionsApi {
 
         try {
             results = storageExtension.getDecisions(from, to, prefix);
+            results.sort(Comparator.comparing(DMNResultModel::getExecutionDate));
         } catch (RuntimeException e) {
             e.printStackTrace();
             return Response.status(400, String.format("Bad request: {}", e.getMessage())).build();
@@ -91,7 +94,6 @@ public class ExecutionsApi {
 
         int totalResults = results.size();
         if (totalResults >= limit) {
-            results.sort(Comparator.comparing(DMNResultModel::getExecutionDate));
             results = results.subList(offset, Math.min(results.size(), offset + limit));
         }
 
