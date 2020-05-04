@@ -58,7 +58,7 @@ const OutcomeSubListItem = (props: { subListItem: IItemObject[], compact: boolea
             <Card className="outcome-list__card" isHoverable={true}>
                 <CardHeader>
                     {title && (
-                        <Title headingLevel="h5" size="lg" className="outcome-list__card__title">
+                        <Title headingLevel="h5" size="xl" className="outcome-list__card__title">
                             {title.name}:<br />{title.value}
                         </Title>
                     )}
@@ -82,6 +82,19 @@ const OutcomeSubListItem = (props: { subListItem: IItemObject[], compact: boolea
                 </CardBody>
             </Card>
     )
+}
+
+const CardWrapper = (props: { condition: boolean, children: React.ReactNode }) => {
+    const { condition, children } = props;
+    if (condition)
+        return (
+            <Card key={uuid()}>
+                <CardBody>
+                    {children}
+                </CardBody>
+            </Card>
+        )
+    else return <div key={uuid()}>{children}</div>
 }
 
 const OutcomeSubList = (props: { subList: IItemObject, compact: boolean}) => {
@@ -125,19 +138,23 @@ const OutcomeSubList = (props: { subList: IItemObject, compact: boolean}) => {
 
 }
 
-const OutcomeComposed = (props: { outcome: IItemObject }) => {
-    const { outcome } = props;
+const OutcomeComposed = (props: { outcome: IItemObject, compact: boolean }) => {
+    const { outcome, compact } = props;
     let renderItems:JSX.Element[] = [];
+    const headingLevel = (compact) ? 'h5' : 'h4';
+    const headingSize = (compact) ? 'lg' : 'xl';
+
+    console.log('compact is ' + compact.toString());
 
     renderItems.push(<Title
-        headingLevel="h5"
-        size="lg"
-        className={"outcome__title"}
+        headingLevel={headingLevel}
+        size={headingSize}
+        className="outcome__title"
         key={outcome.name}>
             {outcome.name}
     </Title>);
     for (let subItem of outcome.components as IItemObject[]) {
-        renderItems.push(<div className="outcome-item" key={subItem.name}>{renderOutcome(subItem)}</div>)
+        renderItems.push(<div className="outcome-item" key={subItem.name}>{renderOutcome(subItem, compact)}</div>)
     }
     return (
         <div className="outcome outcome--struct" key={outcome.name}>
@@ -151,7 +168,7 @@ const OutcomeProperty = (props: { property: IItemObject }) => {
 
     return (
         <>
-            <Split key={Math.floor(Math.random() * 10000)} className="outcome__property">
+            <Split key={uuid()} className="outcome__property">
                 <SplitItem className="outcome__property__name" key="property-name">
                     {property.name}:
                 </SplitItem>
@@ -169,17 +186,21 @@ const OutcomeProperty = (props: { property: IItemObject }) => {
     )
 }
 
-const renderOutcome = (outcomeData: IItemObject, compact = true) => {
+const renderOutcome = (outcomeData: IItemObject, compact = true, rootLevel = false) => {
     let renderItems: JSX.Element[] = [];
 
     if (outcomeData.value !== null) {
         return (
-            <OutcomeProperty property={outcomeData} key={outcomeData.name} />
+            <CardWrapper condition={!compact && rootLevel} key={uuid()}>
+                <OutcomeProperty property={outcomeData} key={outcomeData.name} />
+            </CardWrapper>
         )
     }
     if (outcomeData.components.length) {
         if (isIItemObjectArray(outcomeData.components)) {
-            renderItems.push(<OutcomeComposed outcome={outcomeData} key={outcomeData.name} />)
+            renderItems.push(<CardWrapper condition={!compact && rootLevel} key={uuid()}>
+                <OutcomeComposed outcome={outcomeData} key={outcomeData.name} compact={compact} />
+            </CardWrapper>)
 
         } else if (isIItemObjectMultiArray(outcomeData.components)) {
             renderItems.push(<OutcomeSubList subList={outcomeData} key={outcomeData.name} compact={compact}/>)
@@ -187,7 +208,7 @@ const renderOutcome = (outcomeData: IItemObject, compact = true) => {
     }
 
     return (
-        <React.Fragment key={Math.floor(Math.random() * 10000000)}>
+        <React.Fragment key={uuid()}>
             {renderItems.map((item: JSX.Element) => item)}
         </React.Fragment>
     );
@@ -200,12 +221,13 @@ type OutcomePreviewProps = {
 
 const OutcomePreview = (props: OutcomePreviewProps) => {
     const { outcomeData, compact = true } = props;
+    const cssClass =  (compact) ? 'outcomes-preview' : 'outcomes-preview outcomes-preview--extended';
 
     return (
-        <div className="outcomes-preview">
+        <div className={cssClass}>
             {outcomeData && outcomeData.map(item => (
                 <div className="outcome" key={item.outcomeName}>
-                    {renderOutcome(item.outcomeResult, compact)}
+                    {renderOutcome(item.outcomeResult, compact, true)}
                 </div>
             ))}
         </div>

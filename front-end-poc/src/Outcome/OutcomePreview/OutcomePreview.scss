@@ -8,7 +8,6 @@
       margin-bottom: var(--pf-global--spacer--sm);
       max-width: 680px;
       &__name {
-        //color: var(--pf-global--Color--200);
         font-weight: 600;
         padding-right: 1em;
       }
@@ -18,9 +17,26 @@
   }
   .outcome .outcome {
     padding-left: var(--pf-global--spacer--md);
-    border-left: 3px solid lightblue;
+    border-left: 3px solid var(--pf-global--info-color--100);
     .outcome {
       margin-top: var(--pf-global--spacer--md);
+    }
+  }
+  &--extended {
+    .outcome .outcome {
+      border-width: 6px;
+      padding-left: var(--pf-global--spacer--xl);
+      .outcome {
+        margin-top: var(--pf-global--spacer--xl);
+      }
+    }
+    .outcome-item + .outcome-item {
+      .outcome-struct {
+        margin-top: var(--pf-global--spacer--xl);
+      }
+    }
+    .pf-c-card__body > .outcome {
+      margin-top: 0;
     }
   }
   & > .outcome-list {
