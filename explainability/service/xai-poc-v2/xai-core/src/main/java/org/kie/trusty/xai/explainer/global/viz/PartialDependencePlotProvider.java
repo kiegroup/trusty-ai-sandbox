@@ -2,13 +2,14 @@ package org.kie.trusty.xai.explainer.global.viz;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import io.swagger.client.api.GlobalApi;
 import org.kie.trusty.xai.explainer.utils.DataUtils;
-import org.kie.trusty.xai.handler.ApiClient;
 import org.kie.trusty.xai.handler.ApiException;
 import org.kie.trusty.xai.handler.Configuration;
 import org.kie.trusty.xai.model.DataDistribution;
+import org.kie.trusty.xai.model.Feature;
 import org.kie.trusty.xai.model.ModelInfo;
 import org.kie.trusty.xai.model.Output;
 import org.kie.trusty.xai.model.PredictionInput;
@@ -28,28 +29,33 @@ public class PartialDependencePlotProvider implements GlobalVizExplanationProvid
     private static final int TABLE_SIZE = 100;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final GlobalApi apiInstance;
+
+    PartialDependencePlotProvider(GlobalApi apiInstance) {
+        this.apiInstance = apiInstance;
+    }
+
+    public PartialDependencePlotProvider() {
+        apiInstance = new GlobalApi(Configuration.getDefaultApiClient());
+    }
 
     @Override
     public Collection<TabularData> explain(ModelInfo modelInfo) {
         long start = System.currentTimeMillis();
 
+        apiInstance.getApiClient().setBasePath(modelInfo.getEndpoint());
+
         Collection<TabularData> pdps = new LinkedList<>();
-
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-        defaultClient.setBasePath(modelInfo.getEndpoint());
-        GlobalApi apiInstance = new GlobalApi();
-        apiInstance.setApiClient(defaultClient);
-
         try {
             DataDistribution dataDistribution = apiInstance.dataDistribution();
+            int noOfFeatures = modelInfo.getInputShape();
 
-            for (int featureIndex = 0; featureIndex < modelInfo.getInputShape(); featureIndex++) {
+            for (int featureIndex = 0; featureIndex < noOfFeatures; featureIndex++) {
                 for (int outputIndex = 0; outputIndex < modelInfo.getOutputShape(); outputIndex++) {
                     double[] featureXSvalues = DataUtils.generateSamples(dataDistribution.getFeatureDistributions().get(featureIndex).getMin().doubleValue(),
                                                                          dataDistribution.getFeatureDistributions().get(featureIndex).getMax().doubleValue(), TABLE_SIZE);
 
                     TabularData tabularData = new TabularData();
-                    int noOfFeatures = modelInfo.getInputShape();
                     double[][] trainingData = new double[noOfFeatures][TABLE_SIZE];
                     for (int i = 0; i < noOfFeatures; i++) {
                         double[] featureData = DataUtils.generateData(dataDistribution.getFeatureDistributions().get(i).getMean().doubleValue(),
@@ -59,6 +65,7 @@ public class PartialDependencePlotProvider implements GlobalVizExplanationProvid
 
                     double[] marginalImpacts = new double[featureXSvalues.length];
                     for (int i = 0; i < featureXSvalues.length; i++) {
+                        List<PredictionInput> predictionInputs = new LinkedList<>();
                         double xs = featureXSvalues[i];
                         double[] inputs = new double[noOfFeatures];
                         inputs[featureIndex] = xs;
@@ -70,13 +77,20 @@ public class PartialDependencePlotProvider implements GlobalVizExplanationProvid
                                 }
                             }
                             input.setFeatures(DataUtils.doublesToFeatures(inputs));
-                            PredictionOutput predictionOutput = apiInstance.predict(input);
+                            predictionInputs.add(input);
+                        }
+
+                        // prediction requests are batched per value of feature 'Xs' under analysis
+                        for (PredictionOutput predictionOutput : apiInstance.predict(predictionInputs)) {
                             Output output = predictionOutput.getOutputs().get(outputIndex);
                             marginalImpacts[i] += output.getScore().doubleValue() / (double) TABLE_SIZE;
                         }
                     }
                     tabularData.setXAxis(DataUtils.doublesToBigDecimals(featureXSvalues));
                     tabularData.setYAxis(DataUtils.doublesToBigDecimals(marginalImpacts));
+                    Feature feature = new Feature();
+                    feature.setName("f" + featureIndex + "_o" + outputIndex);
+                    tabularData.setFeature(feature);
                     pdps.add(tabularData);
                 }
             }

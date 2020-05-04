@@ -1,0 +1,38 @@
+.explanation-view {
+  padding-bottom: var(--pf-global--spacer--xl);
+  background-color: var(--pf-c-page__main-section--BackgroundColor);
+  &__title {
+    font-weight: 500;
+  }
+  &__section {
+    padding-top: var(--pf-global--spacer--2xl);
+    padding-bottom: var(--pf-global--spacer--2xl);
+  }
+  &__input-help {
+    fill: var(--pf-global--info-color--100);
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: .5em;
+  }
+}
+
+
+.container {
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    max-width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1170px;
+  }
+}

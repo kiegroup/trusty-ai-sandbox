@@ -9,9 +9,17 @@ export interface IItemObject {
 
 export interface IInputRow {
     inputLabel: string,
-    inputValue?: string | number | null,
+    inputValue?: string | number | boolean | object | null,
     hasEffect?: boolean | number,
     score?: number,
     key: string,
     category: string
+}
+
+export function isIItemObjectArray(object: any): object is IItemObject[] {
+    return typeof object[0].name == 'string';
+}
+
+export function isIItemObjectMultiArray(object: any): object is IItemObject[][] {
+    return Array.isArray(object[0]);
 }

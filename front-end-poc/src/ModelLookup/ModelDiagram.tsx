@@ -1,22 +1,48 @@
 import React from 'react';
-import { IModelVersion } from "./types"
-import { LinearRegressionViewer, example3 } from "@manstis/pmml-linear-model-viewer"
+import { LinearRegressionViewer } from "./pmml/LinearRegressionViewer";
 
-const ModelDiagram = (props: { selectedVersion: IModelVersion }) => {
-  const { selectedVersion } = props;
+interface Props {
+  executionId?: string;
+  modelType?: string;
+  xml?: string;
+}
+
+function makeUnknownModel(): JSX.Element {
+  return <div>Unknown model type</div>
+}
+
+function makeDMNEditor(executionId: string): JSX.Element {
   const editorUrl = "https://kiegroup.github.io/kogito-online/?file=https://raw.githubusercontent.com/kiegroup/kogito-tooling/master/packages/online-editor/static/samples/sample.dmn#/editor/dmn";
   const kogitoIframe = () => {
-    return { __html: `<iframe src=${editorUrl} data-key="${selectedVersion.version}"></iframe>` };
+    return { __html: `<iframe src=${editorUrl} data-key="${executionId}"></iframe>` };
   };
+  return <div className="model-diagram__iframe" dangerouslySetInnerHTML={kogitoIframe()} />;
+}
 
-  //This will determine the correct view to return based upon model type (to be in IModelVersion) 
-  //but for now it simply shows a mocked DMN editor _and_ a mocked PMML Linear Regression model viewer
-  return (
-    <div className="model-diagram">
-      <div className="model-diagram__iframe" dangerouslySetInnerHTML={kogitoIframe()} />
-      <LinearRegressionViewer xml={example3} />
-    </div>
-  );
+function makePMMLEditor(xml: string): JSX.Element {
+  return <LinearRegressionViewer xml={xml} />;
+}
+
+const DEFAULT: JSX.Element = makeUnknownModel();
+
+const ModelDiagram = (props: Props) => {
+
+  const { executionId = undefined, modelType = undefined, xml = undefined } = props;
+
+  switch (modelType) {
+    case "DMN":
+      if (executionId !== undefined) {
+        return makeDMNEditor(executionId as string);
+      }
+      break;
+    case "PMML":
+      if (xml !== undefined) {
+        return makePMMLEditor(xml as string);
+      }
+      break;
+  }
+
+  return DEFAULT;
 };
 
 export default ModelDiagram;

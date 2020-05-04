@@ -17,7 +17,7 @@ import {
 } from "react-router-dom";
 import AuditDetailOverview from "../AuditOverview/AuditDetailOverview";
 import InputData from "../InputData/InputData";
-import Explanation from "../Explanation/Explanation";
+import ExplanationView from "../Explanation/ExplanationView/ExplanationView";
 import ModelLookup from "../ModelLookup/ModelLookup";
 
 
@@ -28,14 +28,14 @@ const AuditDetail = () => {
         { url: "/overview", desc: "Overview" },
         { url: "/explanation", desc: "Explanation" },
         { url: "/input-data", desc: "Input Data" },
-        { url: "/model-lookup", desc: "Model Lookup"}
-        ];
-    let { id } = useParams();
+        { url: "/model-lookup", desc: "Model Lookup" }
+    ];
+    let { executionId } = useParams();
     return (
         <>
             <PageSection variant={PageSectionVariants.light}>
                 <TextContent>
-                    <Title size="4xl" headingLevel="h1">ID #{id} - Decision Detail</Title>
+                    <Title size="4xl" headingLevel="h1">ID #{executionId} - Decision Detail</Title>
                 </TextContent>
                 <Nav>
                     <NavList variant={NavVariants.tertiary}>
@@ -43,25 +43,25 @@ const AuditDetail = () => {
                             <NavItem key={`sub-nav-${index}`} isActive={location.pathname === (url + item.url)}>
                                 <Link to={url + item.url}>{item.desc}</Link>
                             </NavItem>
-                            )
+                        )
                         )}
                     </NavList>
                 </Nav>
             </PageSection>
             <Switch>
                 <Route path={`${path}/overview`}>
-                    <AuditDetailOverview/>
+                    <AuditDetailOverview />
                 </Route>
                 <Route path={`${path}/input-data`}>
                     <InputData />
                 </Route>
                 <Route path={`${path}/explanation`}>
-                    <Explanation />
+                    <ExplanationView />
                 </Route>
                 <Route path={`${path}/model-lookup`}>
                     <ModelLookup />
                 </Route>
-                <Route render={() => <Redirect to={`${location.pathname}/overview`}/>}/>
+                <Route render={() => <Redirect to={`${location.pathname}/overview`} />} />
             </Switch>
         </>
     )

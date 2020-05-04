@@ -33,7 +33,7 @@
               <goal>generate</goal>
             </goals>
             <configuration>
-              <inputSpec>src/main/resources/service.yaml</inputSpec>
+              <inputSpec>${project.basedir}/src/main/resources/service.yaml</inputSpec>
               <language>jaxrs-spec</language>
               <modelPackage>org.kie.trusty.xai.model</modelPackage>
               <invokerPackage>org.kie.trusty.xai.handler</invokerPackage>
@@ -77,7 +77,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.4</version>
+        <version>3.2.0</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -90,7 +90,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>2.2.1</version>
+        <version>3.2.1</version>
         <executions>
           <execution>
             <id>attach-sources</id>

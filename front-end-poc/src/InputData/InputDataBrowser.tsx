@@ -5,7 +5,7 @@ import {
     DataListCell,
     DataListItem,
     DataListItemCells,
-    DataListItemRow, Grid, GridItem
+    DataListItemRow, Grid, GridItem, Split, SplitItem
 } from "@patternfly/react-core";
 
 import "./inputDataBrowser.scss";
@@ -13,14 +13,10 @@ import FeatureDistributionBoxPlot from "./FeatureDistributionBoxPlot";
 import FeatureDistributionStackedChart from "./FeatureDistributionStackedChart";
 import SkeletonStripes from "../Shared/skeletons/SkeletonStripes";
 import SkeletonDataList from "../Shared/skeletons/SkeletonDataList";
-import {IInputRow, IItemObject} from "./types";
+import { IInputRow, IItemObject, isIItemObjectArray, isIItemObjectMultiArray } from "./types";
+import FormattedValue from "../Shared/components/FormattedValue/FormattedValue";
 
-function instanceOfItemObjectArray(object: any): object is IItemObject[] {
-    return typeof object[0].name == 'string';
-}
-function instanceOfItemObjectMultiArray(object: any): object is IItemObject[][] {
-    return Array.isArray(object[0]);
-}
+
 
 const ItemsSubList = (props: { itemsList: IItemObject[] }) => {
     const { itemsList } = props;
@@ -66,14 +62,14 @@ const InputValue = (props: IInputRow) => {
     dataListCells.push(<DataListCell width={3} key="primary content" className="input-data__wrap">
         <span>{inputLabel}</span><span className="input-data__wrap__desc">{category}</span>
     </DataListCell>);
-    dataListCells.push(<DataListCell width={2} key="secondary content"><span>{inputValue}</span></DataListCell>);
+    dataListCells.push(<DataListCell width={2} key="secondary content"><span><FormattedValue value={inputValue}/></span></DataListCell>);
     dataListCells.push((
         <DataListCell width={1} key="score content" className="input-data__score">
             {score || "N/A"}
         </DataListCell>
     ));
 
-    if (typeof inputValue === "number") {
+    if (typeof inputValue === "number" || typeof inputValue === "object" || typeof inputValue === "object") {
         dataListCells.push((
             <DataListCell width={5} key="dist 5" style={{paddingTop: 0}}>
                 <Grid className="input-browser__distribution">
@@ -131,7 +127,7 @@ let itemCategory = "";
 const renderItem = (item: IItemObject, category?: string): JSX.Element => {
     let renderItems: JSX.Element[] = [];
 
-    if (item.value) {
+    if (item.value !== null) {
         return <InputValue
                     inputLabel={item.name}
                     inputValue={item.value}
@@ -146,11 +142,11 @@ const renderItem = (item: IItemObject, category?: string): JSX.Element => {
         let categoryLabel = (itemCategory.length > 0) ? `${itemCategory}` : item.name;
 
         if (item.components) {
-            if (instanceOfItemObjectArray(item.components)) {
+            if (isIItemObjectArray(item.components)) {
                 for (let subItem of item.components) {
                     renderItems.push(renderItem(subItem, subItem.name));
                 }
-            } else if (instanceOfItemObjectMultiArray(item.components)) {
+            } else if (isIItemObjectMultiArray(item.components)) {
                 for (let subItem of item.components) {
                     renderItems.push(<ItemsSubList
                         itemsList={subItem}
@@ -215,43 +211,45 @@ const InputDataBrowser = (props: {inputData: IItemObject[] | null}) => {
     return (
         <div className="input-browser">
             <div className="input-browser__section-list">
-                {!inputData && (
-                    <SkeletonStripes stripesNumber={6} stripesWidth={100} stripesHeight={2} />
-                )}
-                {inputData && (
-                    <>
-                        <span className="input-browser__section-list__label">Browse Section</span>
-                        {categories.map((item, index) => (
-                            <Button
-                                type={"button"}
-                                variant={(index === viewSection) ? "primary" : "control"}
-                                isActive={(index === viewSection)}
-                                key={`section-${index}`}
-                                onClick={() => handleSectionSwitch(index)}>
-                                {item}
-                            </Button>
-                        ))}
-                    </>
-                )}
-            </div>
+                    {!inputData && (
+                        <SkeletonStripes stripesNumber={6} stripesWidth={100} stripesHeight={1.5} />
+                    )}
+                    {inputData && (
+                        <Split>
+                            <SplitItem>
+                                <span className="input-browser__section-list__label">Browse Sections</span>
+                            </SplitItem>
+                            <SplitItem>
+                                {categories.map((item, index) => (
+                                    <Button
+                                        type={"button"}
+                                        variant={(index === viewSection) ? "primary" : "control"}
+                                        isActive={(index === viewSection)}
+                                        key={`section-${index}`}
+                                        onClick={() => handleSectionSwitch(index)}>
+                                        {item}
+                                    </Button>
+                                ))}
+                            </SplitItem>
+                        </Split>
+                    )}
+                </div>
             {!inputData && <SkeletonDataList rowsNumber={4} colsNumber={6} hasHeader={true} />}
             {inputData && (
-                <>
-                    <DataList aria-label="Input Data">
-                        <DataListItem aria-labelledby="header" key="header" className="input-browser__header">
-                            <DataListItemRow>
-                                <DataListItemCells dataListCells={[
-                                    <DataListCell width={3} key="Input Data"><span>Input Data</span></DataListCell>,
-                                    <DataListCell width={2} key="Value"><span>Value</span></DataListCell>,
-                                    <DataListCell width={1} key="Score"><span>Score</span></DataListCell>,
-                                    <DataListCell width={5} key="Distribution"><span>Distribution</span></DataListCell>,
-                                ]}>
-                                </DataListItemCells>
-                            </DataListItemRow>
-                        </DataListItem>
-                        { inputs && renderItem(inputs[viewSection]) }
-                    </DataList>
-                </>
+                <DataList aria-label="Input Data">
+                    <DataListItem aria-labelledby="header" key="header" className="input-browser__header">
+                        <DataListItemRow>
+                            <DataListItemCells dataListCells={[
+                                <DataListCell width={3} key="Input Data"><span>Input Data</span></DataListCell>,
+                                <DataListCell width={2} key="Value"><span>Value</span></DataListCell>,
+                                <DataListCell width={1} key="Score"><span>Score</span></DataListCell>,
+                                <DataListCell width={5} key="Distribution"><span>Distribution</span></DataListCell>,
+                            ]}>
+                            </DataListItemCells>
+                        </DataListItemRow>
+                    </DataListItem>
+                    { inputs && renderItem(inputs[viewSection]) }
+                </DataList>
             )}
        </div>
     );

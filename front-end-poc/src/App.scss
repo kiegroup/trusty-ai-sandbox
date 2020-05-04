@@ -73,7 +73,7 @@ $danger-color: #f7923d;
 .input-data {
   &__item {
     transition: all 0.33s ease-out;
-    max-height: 4.5em;
+    //max-height: 4.5em;
     &:hover {
       background-color: #f5f5f5;
     }
@@ -84,12 +84,10 @@ $danger-color: #f7923d;
   &__wrap {
     position: relative;
     &__desc {
-      position: absolute;
+      display: block;
       text-transform: uppercase;
       font-size: 10px;
       line-height: 12px;
-      left: 0;
-      bottom: 10px;
     }
   }
   &__icons {

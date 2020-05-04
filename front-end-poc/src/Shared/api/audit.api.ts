@@ -1,9 +1,10 @@
-import {callOnce, httpClient} from "./httpClient";
-import {AxiosRequestConfig} from "axios";
+import { callOnce, httpClient } from "./httpClient";
+import { AxiosRequestConfig } from "axios";
 
 const EXECUTIONS_PATH = "/executions";
 const DECISIONS_PATH = EXECUTIONS_PATH + "/decisions";
 const PROCESS_PATH = EXECUTIONS_PATH + "/processes";
+const MODELS_PATH = "/models";
 
 export type ExecutionType = 'decision' | 'process';
 
@@ -37,7 +38,7 @@ const getExecutions = (searchString: string, from: string, to: string, limit: nu
 };
 
 const getExecution = (executionType: ExecutionType, id: string) => {
-    const getExecConfig: AxiosRequestConfig =  {
+    const getExecConfig: AxiosRequestConfig = {
         url: `${getExecPath(executionType)}/${id}`,
         method: 'get'
     };
@@ -53,16 +54,34 @@ const getDecisionInput = (id: string) => {
 };
 
 const getDecisionOutcome = (id: string) => {
-    const getDecisionOutcomeConfig : AxiosRequestConfig = {
+    const getDecisionOutcomeConfig: AxiosRequestConfig = {
         url: `${DECISIONS_PATH}/${id}/outcomes`,
         method: 'get'
     }
     return httpClient(getDecisionOutcomeConfig);
 }
 
+const getDecisionOutcomeDetail = (executionId: string, outcomeId: string) => {
+    const getDecisionOutcomeDetailConfig : AxiosRequestConfig = {
+        url: `${DECISIONS_PATH}/${executionId}/outcomes/${outcomeId}`,
+        method: 'get'
+    }
+    return httpClient(getDecisionOutcomeDetailConfig);
+}
+
+const getModelDetail = (id: string) => {
+    const getModelDetailConfig: AxiosRequestConfig = {
+        url: `${MODELS_PATH}/${id}`,
+        method: 'get'
+    }
+    return httpClient(getModelDetailConfig);
+}
+
 export {
     getExecutions,
     getExecution,
     getDecisionInput,
-    getDecisionOutcome
+    getDecisionOutcome,
+    getDecisionOutcomeDetail,
+    getModelDetail
 };

@@ -11,10 +11,12 @@ import org.kie.trusty.xai.explainer.utils.LinearClassifier;
 import org.kie.trusty.xai.handler.ApiClient;
 import org.kie.trusty.xai.handler.ApiException;
 import org.kie.trusty.xai.handler.Configuration;
+import org.kie.trusty.xai.model.Feature;
 import org.kie.trusty.xai.model.FeatureImportance;
 import org.kie.trusty.xai.model.ModelInfo;
 import org.kie.trusty.xai.model.Prediction;
 import org.kie.trusty.xai.model.PredictionInput;
+import org.kie.trusty.xai.model.PredictionOutput;
 import org.kie.trusty.xai.model.Saliency;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,13 +33,19 @@ public class LIMEishSaliencyExplanationProvider implements SaliencyLocalExplanat
      * no. of samples to be generated for the local linear classifier model training
      */
     private final int noOfSamples;
+    private final LocalApi apiInstance;
+
+    LIMEishSaliencyExplanationProvider(LocalApi apiInstance, int noOfSamples) {
+        this.apiInstance = apiInstance;
+        this.noOfSamples = noOfSamples;
+    }
 
     public LIMEishSaliencyExplanationProvider() {
-        this.noOfSamples = 100;
+        this(100);
     }
 
     public LIMEishSaliencyExplanationProvider(int noOfSamples) {
-        this.noOfSamples = noOfSamples;
+        this(new LocalApi(Configuration.getDefaultApiClient()), noOfSamples);
     }
 
     @Override
@@ -45,30 +53,31 @@ public class LIMEishSaliencyExplanationProvider implements SaliencyLocalExplanat
         long start = System.currentTimeMillis();
         Saliency saliency = new Saliency();
         ModelInfo info = prediction.getInfo();
-        ApiClient defaultClient = Configuration.getDefaultApiClient();
-        defaultClient.setBasePath(info.getEndpoint());
-        LocalApi apiInstance = new LocalApi();
-        apiInstance.setApiClient(defaultClient);
         try {
-
-            double[] input = DataUtils.toNumbers(prediction.getInput());
+            apiInstance.getApiClient().setBasePath(info.getEndpoint());
             Collection<Prediction> training = new LinkedList<>();
+            List<PredictionInput> perturbedInputs = new LinkedList<>();
             for (int i = 0; i < noOfSamples; i++) {
-                double[] perturbed = DataUtils.perturbDrop(input);
-                PredictionInput perturbedInput = DataUtils.inputFrom(perturbed);
+                perturbedInputs.add(DataUtils.perturbDrop(prediction.getInput()));
+            }
+            List<PredictionOutput> predictionOutputs = apiInstance.predict(perturbedInputs);
+
+            for (int i = 0; i < perturbedInputs.size(); i++) {
                 Prediction perturbedDataPrediction = new Prediction();
                 perturbedDataPrediction.setInfo(info);
-                perturbedDataPrediction.setInput(perturbedInput);
-                perturbedDataPrediction.setOutput(apiInstance.predict(perturbedInput));
+                perturbedDataPrediction.setInput(perturbedInputs.get(i));
+                perturbedDataPrediction.setOutput(predictionOutputs.get(i));
                 training.add(perturbedDataPrediction);
             }
-            LinearClassifier linearClassifier = new LinearClassifier(input.length);
+
+            List<Feature> features = prediction.getInput().getFeatures();
+            LinearClassifier linearClassifier = new LinearClassifier(features.size());
             linearClassifier.fit(training);
             double[] weights = linearClassifier.getWeights();
             List<FeatureImportance> saliencyMap = new LinkedList<>();
             for (int i = 0; i < weights.length; i++) {
                 FeatureImportance featureImportance = new FeatureImportance();
-                featureImportance.setFeature(prediction.getInput().getFeatures().get(i));
+                featureImportance.setFeature(features.get(i));
                 featureImportance.setScore(BigDecimal.valueOf(weights[i]));
                 saliencyMap.add(featureImportance);
             }

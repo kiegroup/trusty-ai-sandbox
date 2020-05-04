@@ -6,6 +6,14 @@
     }
     &__property {
       margin-bottom: var(--pf-global--spacer--sm);
+      max-width: 680px;
+      &__name {
+        //color: var(--pf-global--Color--200);
+        font-weight: 600;
+        padding-right: 1em;
+      }
+    }
+    &--struct {
     }
   }
   .outcome .outcome {
@@ -14,7 +22,6 @@
     .outcome {
       margin-top: var(--pf-global--spacer--md);
     }
-
   }
   & > .outcome-list {
     font-size: 1.125rem;
@@ -25,11 +32,7 @@
     }
   }
 }
-.outcome-property {
-  &__name {
-    color: var(--pf-global--Color--200);
-  }
-}
+
 .outcome-list {
   &__title {
     margin-bottom: var(--pf-global--spacer--md);
@@ -51,17 +54,18 @@
       margin-bottom: var(--pf-global--spacer--sm);
     }
   }
-}
-
-.sticky-stuff {
-  position: relative;
-  &.is-sticky {
-    overflow: hidden;
-    .sticky-inner {
-      position: fixed;
-      top: 0;
-      height: 100vh;
-      overflow: auto;
+  &__card {
+    transition: box-shadow .15s;
+    &__title {
+      color: var(--pf-global--info-color--200);
+    }
+    .outcome__property__name {
+      font-weight: 500;
+      padding-right: 0.5em;
     }
   }
+}
+
+.outcome-cards {
+  grid-template-columns: 1fr 1fr 1fr;
 }
