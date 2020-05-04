@@ -211,47 +211,45 @@ const InputDataBrowser = (props: {inputData: IItemObject[] | null}) => {
     return (
         <div className="input-browser">
             <div className="input-browser__section-list">
-                {!inputData && (
-                    <SkeletonStripes stripesNumber={6} stripesWidth={100} stripesHeight={2} />
-                )}
-                {inputData && (
-                    <Split>
-                        <SplitItem>
-                            <span className="input-browser__section-list__label">Browse Sections</span>
-                        </SplitItem>
-                        <SplitItem>
-                            {categories.map((item, index) => (
-                                <Button
-                                    type={"button"}
-                                    variant={(index === viewSection) ? "primary" : "control"}
-                                    isActive={(index === viewSection)}
-                                    key={`section-${index}`}
-                                    onClick={() => handleSectionSwitch(index)}>
-                                    {item}
-                                </Button>
-                            ))}
-                        </SplitItem>
-                    </Split>
-                )}
-            </div>
+                    {!inputData && (
+                        <SkeletonStripes stripesNumber={6} stripesWidth={100} stripesHeight={1.5} />
+                    )}
+                    {inputData && (
+                        <Split>
+                            <SplitItem>
+                                <span className="input-browser__section-list__label">Browse Sections</span>
+                            </SplitItem>
+                            <SplitItem>
+                                {categories.map((item, index) => (
+                                    <Button
+                                        type={"button"}
+                                        variant={(index === viewSection) ? "primary" : "control"}
+                                        isActive={(index === viewSection)}
+                                        key={`section-${index}`}
+                                        onClick={() => handleSectionSwitch(index)}>
+                                        {item}
+                                    </Button>
+                                ))}
+                            </SplitItem>
+                        </Split>
+                    )}
+                </div>
             {!inputData && <SkeletonDataList rowsNumber={4} colsNumber={6} hasHeader={true} />}
             {inputData && (
-                <>
-                    <DataList aria-label="Input Data">
-                        <DataListItem aria-labelledby="header" key="header" className="input-browser__header">
-                            <DataListItemRow>
-                                <DataListItemCells dataListCells={[
-                                    <DataListCell width={3} key="Input Data"><span>Input Data</span></DataListCell>,
-                                    <DataListCell width={2} key="Value"><span>Value</span></DataListCell>,
-                                    <DataListCell width={1} key="Score"><span>Score</span></DataListCell>,
-                                    <DataListCell width={5} key="Distribution"><span>Distribution</span></DataListCell>,
-                                ]}>
-                                </DataListItemCells>
-                            </DataListItemRow>
-                        </DataListItem>
-                        { inputs && renderItem(inputs[viewSection]) }
-                    </DataList>
-                </>
+                <DataList aria-label="Input Data">
+                    <DataListItem aria-labelledby="header" key="header" className="input-browser__header">
+                        <DataListItemRow>
+                            <DataListItemCells dataListCells={[
+                                <DataListCell width={3} key="Input Data"><span>Input Data</span></DataListCell>,
+                                <DataListCell width={2} key="Value"><span>Value</span></DataListCell>,
+                                <DataListCell width={1} key="Score"><span>Score</span></DataListCell>,
+                                <DataListCell width={5} key="Distribution"><span>Distribution</span></DataListCell>,
+                            ]}>
+                            </DataListItemCells>
+                        </DataListItemRow>
+                    </DataListItem>
+                    { inputs && renderItem(inputs[viewSection]) }
+                </DataList>
             )}
        </div>
     );

@@ -1,20 +1,19 @@
 .input-browser {
   &__section-list {
-    margin: 20px 0 20px 0;
+    margin: var(--pf-global--spacer--md) 0 var(--pf-global--spacer--lg) 0;
+    padding: var(--pf-global--spacer--sm) var(--pf-global--spacer--md);
+    background-color: var(--pf-global--BackgroundColor--100);
     Button {
-      margin: 0 12px 12px 0;
+      margin: 6px 12px 6px 0;
     }
     &__label {
       display: block;
       width: max-content;
-      margin: 0 10px 0 10px;
+      margin: 6px 10px 6px 10px;
       font-weight: 700;
       padding-top: var(--pf-global--spacer--form-element);
       padding-bottom: var(--pf-global--spacer--form-element);
     }
-  }
-  &__header {
-    background-color: #f2f2f2;
   }
   &__browser {
     background-color: #c6c6c6;

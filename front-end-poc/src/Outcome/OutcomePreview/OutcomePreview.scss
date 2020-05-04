@@ -54,4 +54,18 @@
       margin-bottom: var(--pf-global--spacer--sm);
     }
   }
+  &__card {
+    transition: box-shadow .15s;
+    &__title {
+      color: var(--pf-global--info-color--200);
+    }
+    .outcome__property__name {
+      font-weight: 500;
+      padding-right: 0.5em;
+    }
+  }
+}
+
+.outcome-cards {
+  grid-template-columns: 1fr 1fr 1fr;
 }

@@ -9,84 +9,6 @@ const outcome = {
     outcomes: [
         {
             outcomeId: "432343443",
-            outcomeName: "Client Ratings",
-            evaluationStatus: "EVALUATED",
-            hasErrors: false,
-            messages: [],
-            outcomeResult: {
-                name: "Client Ratings",
-                type: "tProducts",
-                value: null,
-                components: [
-                    {
-                        name: "Rating Type A",
-                        value: null,
-                        typeRef: "string",
-                        components: [
-                            {
-                                name: "Loan Amount",
-                                value: 540000,
-                                typeRef: "number",
-                                components: null
-                            },
-                            {
-                                name: "Repayment Rate",
-                                value: 900,
-                                typeRef: "number",
-                                components: null
-                            },
-                            {
-                                name: "Loan Eligibility",
-                                value: true,
-                                typeRef: "boolean",
-                                components: null
-                            }
-                        ]
-                    },
-                    {
-                        name: "Rating Type B",
-                        value: null,
-                        typeRef: "number",
-                        components: [
-                            {
-                                name: "Loan amount",
-                                value: 340000,
-                                typeRef: "number",
-                                components: null
-                            },
-                            {
-                                name: "Repayment rate",
-                                value: 2000,
-                                typeRef: "number",
-                                components: null
-                            },
-                            {
-                                name: "Sub-Rating Type C",
-                                value: null,
-                                typeRef: "number",
-                                components: [
-                                    {
-                                        name: "Loan amount",
-                                        value: 340000,
-                                        typeRef: "number",
-                                        components: null
-                                    },
-                                    {
-                                        name: "Repayment rate",
-                                        value: 2000,
-                                        typeRef: "number",
-                                        components: null
-                                    }
-                                ]
-                            }
-
-                        ]
-                    }
-                ]
-            }
-        },
-        {
-            outcomeId: "432343443",
             outcomeName: "Recommended Loan Products",
             evaluationStatus: "EVALUATED",
             hasErrors: false,
@@ -117,7 +39,7 @@ const outcome = {
                         },
                         {
                             name: "Interest Rate",
-                            value: "$273,775.90",
+                            value: "3.8",
                             typeRef: "string",
                             components: null
                         },
@@ -360,6 +282,84 @@ const outcome = {
                             components: null
                         }
                     ]
+                ]
+            }
+        },
+        {
+            outcomeId: "432343443",
+            outcomeName: "Client Ratings",
+            evaluationStatus: "EVALUATED",
+            hasErrors: false,
+            messages: [],
+            outcomeResult: {
+                name: "Client Ratings",
+                type: "tProducts",
+                value: null,
+                components: [
+                    {
+                        name: "Rating Type A",
+                        value: null,
+                        typeRef: "string",
+                        components: [
+                            {
+                                name: "Loan Amount",
+                                value: 540000,
+                                typeRef: "number",
+                                components: null
+                            },
+                            {
+                                name: "Repayment Rate",
+                                value: 900,
+                                typeRef: "number",
+                                components: null
+                            },
+                            {
+                                name: "Loan Eligibility",
+                                value: true,
+                                typeRef: "boolean",
+                                components: null
+                            }
+                        ]
+                    },
+                    {
+                        name: "Rating Type B",
+                        value: null,
+                        typeRef: "number",
+                        components: [
+                            {
+                                name: "Loan amount",
+                                value: 340000,
+                                typeRef: "number",
+                                components: null
+                            },
+                            {
+                                name: "Repayment rate",
+                                value: 2000,
+                                typeRef: "number",
+                                components: null
+                            },
+                            {
+                                name: "Sub-Rating Type C",
+                                value: null,
+                                typeRef: "number",
+                                components: [
+                                    {
+                                        name: "Loan amount",
+                                        value: 340000,
+                                        typeRef: "number",
+                                        components: null
+                                    },
+                                    {
+                                        name: "Repayment rate",
+                                        value: 2000,
+                                        typeRef: "number",
+                                        components: null
+                                    }
+                                ]
+                            }
+
+                        ]
+                    }
                 ]
             }
         }

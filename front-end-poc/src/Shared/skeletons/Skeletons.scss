@@ -4,7 +4,11 @@
     height: 1.5em;
     display: block;
     background: #f6f7f8;
-    background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+    background: linear-gradient(
+                    to right,
+                    #dddddd 8%,
+                    #eeeeee 18%,
+                    #dddddd 33%);
     background-size: 800px 104px;
     animation: linear 1.3s placeHolderShimmer infinite;
     &--md {
@@ -23,13 +27,12 @@
     }
   }
   &__header {
-    background-color: #f2f2f2;
     .skeleton__stripe {
       opacity: 0.7;
     }
   }
   &--padded {
-    padding: 0 1em;
+    padding: 0.5em 1em;
   }
   &--lighter {
     background: linear-gradient(to right, #d5d5d5 8%, #dddddd 18%, #d5d5d5 33%);

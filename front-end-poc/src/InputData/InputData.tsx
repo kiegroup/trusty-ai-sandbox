@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import InputDataBrowser from "./InputDataBrowser";
-import { Divider, PageSection, PageSectionVariants } from "@patternfly/react-core";
+import { PageSection } from "@patternfly/react-core";
 import { getDecisionInput } from "../Shared/api/audit.api";
 import { useParams } from "react-router-dom";
 import { IExecutionRouteParams } from "../Audit/types";
@@ -22,16 +22,9 @@ const InputData = () => {
     }, [executionId]);
 
     return (
-        <>
-            <PageSection
-                variant={PageSectionVariants.light}
-                style={{ paddingTop: 0, paddingBottom: 0 }}>
-                <Divider />
-            </PageSection>
-            <PageSection variant={PageSectionVariants.light}>
-                <InputDataBrowser inputData={inputData} />
-            </PageSection>
-        </>
+        <PageSection>
+            <InputDataBrowser inputData={inputData} />
+        </PageSection>
     );
 };
 
