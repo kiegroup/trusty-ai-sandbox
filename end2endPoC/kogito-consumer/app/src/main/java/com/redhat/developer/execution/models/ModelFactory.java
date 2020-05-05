@@ -26,7 +26,6 @@ public class ModelFactory {
         resultModel.context = resultDto.context;
         resultModel.decisions = resultDto.decisions.stream().map(x -> fromDecisionDto(x)).collect(Collectors.toList());
         resultModel.modelId = MyMD5.getMd5(resultModel.modelNamespace + resultModel.modelName);
-        //resultModel.modelId = MyMD5.getMd5("provaname");
 
         DMNEventModel eventModel = new DMNEventModel();
         eventModel.id = event.id;

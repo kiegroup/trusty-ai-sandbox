@@ -1,1 +1,1 @@
-curl --location --request POST 'http://localhost:8080/LoanEligibility' --header 'Content-Type: application/json' -d "{\"Client\": {\"age\": 43,\"salary\": 1950,\"existing payments\": 100},\"Loan\": {\"duration\": 15,\"installment\": 180}, \"God\" : \"Yes\", \"Bribe\": 1000}"
+curl --location --request POST 'http://localhost:1337/LoanEligibility' --header 'Content-Type: application/json' -d "{\"Client\": {\"age\": 43,\"salary\": 1950,\"existing payments\": 100},\"Loan\": {\"duration\": 15,\"installment\": 180}, \"God\" : \"Yes\", \"Bribe\": 1000}"
