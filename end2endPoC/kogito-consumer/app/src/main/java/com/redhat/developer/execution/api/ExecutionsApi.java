@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.redhat.developer.execution.IExecutionService;
 import com.redhat.developer.execution.models.DMNResultModel;
 import com.redhat.developer.execution.responses.execution.ExecutionHeaderResponse;
 import com.redhat.developer.execution.responses.execution.ExecutionResponse;
@@ -34,7 +35,7 @@ import org.jboss.resteasy.annotations.jaxrs.QueryParam;
 public class ExecutionsApi {
 
     @Inject
-    IExecutionsStorageExtension storageExtension;
+    IExecutionService executionService;
 
     @GET
     @APIResponses(value = {
@@ -85,7 +86,7 @@ public class ExecutionsApi {
         List<DMNResultModel> results;
 
         try {
-            results = storageExtension.getDecisions(from, to, prefix);
+            results = executionService.getDecisions(from, to, prefix);
             results.sort(Comparator.comparing(DMNResultModel::getExecutionDate));
         } catch (RuntimeException e) {
             e.printStackTrace();
@@ -224,7 +225,7 @@ public class ExecutionsApi {
                     required = true,
                     schema = @Schema(implementation = String.class)
             ) @NotNull @QueryParam("id") String id) {
-        List<DMNResultModel> results = storageExtension.getEventsByMatchingId(id);
+        List<DMNResultModel> results = executionService.getEventsByMatchingId(id);
 
         int totalResults = results.size();
         if (totalResults >= limit) {
