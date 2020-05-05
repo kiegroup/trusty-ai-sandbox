@@ -13,4 +13,10 @@ public interface IExecutionService {
     OutcomeModelWithInputs getStructuredOutcome(String outcomeId, DMNResultModel event);
 
     List<SingleDecisionInputResponse> getStructuredOutcomesValues(DMNResultModel event);
+
+    boolean storeEvent(String key, DMNResultModel event);
+
+    List<DMNResultModel> getEventsByMatchingId(String key);
+
+    List<DMNResultModel> getDecisions(String from, String to, String prefix);
 }

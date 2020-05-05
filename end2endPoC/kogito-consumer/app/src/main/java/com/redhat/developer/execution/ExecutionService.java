@@ -23,6 +23,7 @@ import com.redhat.developer.execution.models.OutcomeModelWithInputs;
 import com.redhat.developer.execution.responses.decisions.DecisionInputStructured;
 import com.redhat.developer.execution.responses.decisions.inputs.DecisionStructuredInputsResponse;
 import com.redhat.developer.execution.responses.decisions.inputs.SingleDecisionInputResponse;
+import com.redhat.developer.execution.storage.IExecutionsStorageExtension;
 import org.apache.avro.generic.GenericData;
 import org.kie.dmn.core.ast.DMNBaseNode;
 import org.slf4j.Logger;
@@ -31,6 +32,9 @@ import org.slf4j.LoggerFactory;
 @ApplicationScoped
 public class ExecutionService implements IExecutionService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExecutionService.class);
+
+    @Inject
+    IExecutionsStorageExtension storageExtension;
 
     @Inject
     IDmnService dmnService;
@@ -54,6 +58,21 @@ public class ExecutionService implements IExecutionService {
                     outcome.result));
         }
         return response;
+    }
+
+    @Override
+    public boolean storeEvent(String key, DMNResultModel event) {
+        return storageExtension.storeEvent(key, event);
+    }
+
+    @Override
+    public List<DMNResultModel> getEventsByMatchingId(String key) {
+        return storageExtension.getEventsByMatchingId(key);
+    }
+
+    @Override
+    public List<DMNResultModel> getDecisions(String from, String to, String prefix) {
+        return storageExtension.getDecisions(from, to, prefix);
     }
 
     @Override

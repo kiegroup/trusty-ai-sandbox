@@ -70,13 +70,13 @@ services:
   #   ports:
   #     - 5601:5601
   
-  infinispan:
-    image: infinispan/server:10.0.0.Final-1
-    ports:
-      - 11222:11222
-    command: "/opt/infinispan/bin/server.sh -c infinispan-demo.xml"
-    volumes:
-      - ./infinispan/infinispan.xml:/opt/infinispan/server/conf/infinispan-demo.xml:z
+  # infinispan:
+  #   image: infinispan/server:10.0.0.Final-1
+  #   ports:
+  #     - 11222:11222
+  #   command: "/opt/infinispan/bin/server.sh -c infinispan-demo.xml"
+  #   volumes:
+  #     - ./infinispan/infinispan.xml:/opt/infinispan/server/conf/infinispan-demo.xml:z
     
   mongo:
     image: mongo:latest
@@ -91,17 +91,16 @@ services:
   producer:
     build: loanEligibilityApp/
     ports:
-      - 8080:8080
-      - 8001:8001
+      - 1337:1337
     depends_on:
       - kafka
 
-  # consumer:
-  #   build: kogito-consumer/
-  #   ports:
-  #     - 8180:8180
-  #   depends_on:
-  #     - kafka
+  consumer:
+    build: kogito-consumer/
+    ports:
+      - 1336:1336
+    depends_on:
+      - kafka
 
 volumes:
   mongodb_data_container:

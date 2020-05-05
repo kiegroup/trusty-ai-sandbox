@@ -115,7 +115,6 @@ public class DmnService implements IDmnService {
     }
 
     private DMNRuntime getDmnRuntime(String id) {
-        System.out.println(id);
         if (decisionModelCache.containsKey(id)) {
             return decisionModelCache.get(id);
         }
@@ -125,7 +124,6 @@ public class DmnService implements IDmnService {
         }
 
         DmnModel model = storageExtension.getModel(id);
-        System.out.println(model);
         decisionModelCache.put(id, DMNKogito.createGenericDMNRuntime(new StringReader(model.model)));
         return decisionModelCache.get(id);
     }
