@@ -106,9 +106,9 @@ const ExplanationView = () => {
                 </div>
             </PageSection>
             <PageSection className="explanation-view__section">
-                <Stack gutter="md">
-                    <StackItem>
-                        <div className="container">
+                <div className="container">
+                    <Stack gutter="md">
+                        <StackItem>
                             <Title headingLevel="h3" size="2xl">
                                 <span>Decision Influencing Inputs</span>
                                 <Tooltip position="auto" content={
@@ -120,12 +120,12 @@ const ExplanationView = () => {
                                     <HelpIcon className="explanation-view__input-help" />
                                 </Tooltip>
                             </Title>
-                        </div>
-                    </StackItem>
-                    <StackItem>
-                        {<InputDataBrowser inputData={outcomeDetail} />}
-                    </StackItem>
-                </Stack>
+                        </StackItem>
+                        <StackItem>
+                            {<InputDataBrowser inputData={outcomeDetail} />}
+                        </StackItem>
+                    </Stack>
+                </div>
             </PageSection>
         </section>
     );

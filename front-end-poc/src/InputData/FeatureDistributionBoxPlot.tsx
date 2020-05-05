@@ -15,7 +15,7 @@ const FeatureDistributionBoxPlot = () => {
     const min = chartData[0].min;
     return (
         <div style={{
-            width: "220px",
+            width: "190px",
             marginTop: 0,
             paddingTop: 0
         }}>
@@ -24,7 +24,7 @@ const FeatureDistributionBoxPlot = () => {
                 domainPadding={5}
                 domain={{y: [min, max]}}
                 horizontal
-                width={220}
+                width={190}
                 height={60}
             >
                 <VictoryBoxPlot

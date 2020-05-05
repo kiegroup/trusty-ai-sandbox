@@ -15,8 +15,7 @@ import SkeletonStripes from "../Shared/skeletons/SkeletonStripes";
 import SkeletonDataList from "../Shared/skeletons/SkeletonDataList";
 import { IInputRow, IItemObject, isIItemObjectArray, isIItemObjectMultiArray } from "./types";
 import FormattedValue from "../Shared/components/FormattedValue/FormattedValue";
-
-
+import { v4 as uuid } from 'uuid';
 
 const ItemsSubList = (props: { itemsList: IItemObject[] }) => {
     const { itemsList } = props;
@@ -59,7 +58,7 @@ const InputValue = (props: IInputRow) => {
     //const effectIconClass = (hasEffect === true) ? "input-data__icons__effect" : "input-data__icons__no-effect";
     //const effectTitle = (hasEffect === true) ? "Impacting Feature" : "Not Impacting Feature";
     const dataListCells = [];
-    dataListCells.push(<DataListCell width={3} key="primary content" className="input-data__wrap">
+    dataListCells.push(<DataListCell width={2} key="primary content" className="input-data__wrap">
         <span>{inputLabel}</span><span className="input-data__wrap__desc">{category}</span>
     </DataListCell>);
     dataListCells.push(<DataListCell width={2} key="secondary content"><span><FormattedValue value={inputValue}/></span></DataListCell>);
@@ -150,7 +149,7 @@ const renderItem = (item: IItemObject, category?: string): JSX.Element => {
                 for (let subItem of item.components) {
                     renderItems.push(<ItemsSubList
                         itemsList={subItem}
-                        key={Math.floor(Math.random() * 10000)} />
+                        key={uuid()} />
                     )
                 }
             }
@@ -240,7 +239,7 @@ const InputDataBrowser = (props: {inputData: IItemObject[] | null}) => {
                     <DataListItem aria-labelledby="header" key="header" className="input-browser__header">
                         <DataListItemRow>
                             <DataListItemCells dataListCells={[
-                                <DataListCell width={3} key="Input Data"><span>Input Data</span></DataListCell>,
+                                <DataListCell width={2} key="Input Data"><span>Input Data</span></DataListCell>,
                                 <DataListCell width={2} key="Value"><span>Value</span></DataListCell>,
                                 <DataListCell width={1} key="Score"><span>Score</span></DataListCell>,
                                 <DataListCell width={5} key="Distribution"><span>Distribution</span></DataListCell>,
