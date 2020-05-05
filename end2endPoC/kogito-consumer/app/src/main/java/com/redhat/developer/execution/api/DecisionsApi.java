@@ -41,9 +41,6 @@ public class DecisionsApi {
     private static final Logger LOGGER = LoggerFactory.getLogger(DecisionsApi.class);
 
     @Inject
-    IExecutionsStorageExtension storageExtension;
-
-    @Inject
     IDmnService dmnService;
 
     @Inject
@@ -65,7 +62,7 @@ public class DecisionsApi {
                     required = true,
                     schema = @Schema(implementation = String.class)
             ) @PathParam("key") String key) {
-        List<DMNResultModel> event = storageExtension.getEventsByMatchingId(key);
+        List<DMNResultModel> event = executionService.getEventsByMatchingId(key);
 
         if (event == null) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Event with id {} does not exist.", key)).build();
@@ -96,7 +93,7 @@ public class DecisionsApi {
                     schema = @Schema(implementation = String.class)
             )
             @PathParam("key") String key) {
-        List<DMNResultModel> event = storageExtension.getEventsByMatchingId(key);
+        List<DMNResultModel> event = executionService.getEventsByMatchingId(key);
 
         if (event == null) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Event with id {} does not exist.", key)).build();
@@ -134,7 +131,7 @@ public class DecisionsApi {
                     schema = @Schema(implementation = String.class)
             )
             @PathParam("key") String key) {
-        DMNResultModel event = storageExtension.getEventsByMatchingId(key).get(0);
+        DMNResultModel event = executionService.getEventsByMatchingId(key).get(0);
 
         DecisionStructuredInputsResponse response = executionService.getStructuredInputs(event);
 
@@ -158,7 +155,7 @@ public class DecisionsApi {
                     schema = @Schema(implementation = String.class)
             )
             @PathParam("key") String key) {
-        List<DMNResultModel> event = storageExtension.getEventsByMatchingId(key);
+        List<DMNResultModel> event = executionService.getEventsByMatchingId(key);
 
         if (event == null) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Event with id {} does not exist.", key)).build();
@@ -194,7 +191,7 @@ public class DecisionsApi {
                     schema = @Schema(implementation = String.class)
             )
             @PathParam("key") String key) {
-        List<DMNResultModel> event = storageExtension.getEventsByMatchingId(key);
+        List<DMNResultModel> event = executionService.getEventsByMatchingId(key);
 
         if (event == null) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Event with id {} does not exist.", key)).build();
@@ -232,7 +229,7 @@ public class DecisionsApi {
             )
             @PathParam("outcomeId") String outcomeId) {
         // TODO HUGE REFACTORING
-        List<DMNResultModel> event = storageExtension.getEventsByMatchingId(key);
+        List<DMNResultModel> event = executionService.getEventsByMatchingId(key);
 
         if (event == null) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Event with id {} does not exist.", key)).build();
