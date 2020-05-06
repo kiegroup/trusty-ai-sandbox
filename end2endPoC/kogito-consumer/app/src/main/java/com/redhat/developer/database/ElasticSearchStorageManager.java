@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
@@ -14,7 +13,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.redhat.developer.database.elastic.ElasticQueryFactory;
 import com.redhat.developer.database.elastic.model.ElasticSearchResponse;
 import com.redhat.developer.database.elastic.model.Hit;
-import com.redhat.developer.database.elastic.utils.HttpHelper;
+import com.redhat.developer.utils.HttpHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
