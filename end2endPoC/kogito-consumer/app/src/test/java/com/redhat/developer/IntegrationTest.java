@@ -52,7 +52,7 @@ public class IntegrationTest {
         String body = "{\"Client\": {\"age\": 43,\"salary\": 1950,\"existing payments\": 100},\"Loan\": {\"duration\": 15,\"installment\": 180}, \"God\" : \"Yes\", \"Bribe\": 1000}";
 
         given().contentType(ContentType.JSON).body(body)
-                .when().post("http://localhost:8080/LoanEligibility")
+                .when().post("http://localhost:1336/LoanEligibility")
                 .then()
                 .statusCode(200);
     }
