@@ -9,22 +9,29 @@ import {
     Title, Tooltip
 } from "@patternfly/react-core";
 import { HelpIcon } from '@patternfly/react-icons'
-import FeaturesTornadoChart from "../FeaturesTornadoChart";
 import { useParams } from "react-router-dom";
 import { IExecutionRouteParams } from "../../Audit/types";
-import { getDecisionOutcome, getDecisionOutcomeDetail } from "../../Shared/api/audit.api";
 import { IOutcome } from "../../Outcome/types";
+import { getDecisionFeatureScores, getDecisionOutcome, getDecisionOutcomeDetail } from "../../Shared/api/audit.api";
 import OutcomePreview from "../../Outcome/OutcomePreview/OutcomePreview";
 import InputDataBrowser from "../../InputData/InputDataBrowser";
 import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
 import SkeletonGrid from "../../Shared/skeletons/SkeletonGrid";
+import FeaturesScoreChart from "../FeaturesScoreChart/FeaturesScoreChart";
+import { sortBy } from "lodash";
 import './ExplanationView.scss';
+
+export interface IFeatureScores {
+    featureName: string,
+    featureScore: number
+}
 
 const ExplanationView = () => {
     const { executionId } = useParams<IExecutionRouteParams>();
     const [outcomeData, setOutcomeData] = useState<IOutcome[] | null>(null);
     const [outcomeId, setOutcomeId] = useState<string | null>(null);
     const [outcomeDetail, setOutcomeDetail] = useState(null);
+    const [featuresScores, setFeaturesScores] = useState<IFeatureScores[] | null>(null);
 
     useEffect(() => {
         let isMounted = true;
@@ -35,6 +42,13 @@ const ExplanationView = () => {
                     let defaultOutcome = response.data.outcomes[0];
                     setOutcomeId(defaultOutcome.outcomeId);
                 }
+            }
+        });
+        getDecisionFeatureScores(executionId).then(response => {
+            if (response.data && response.data.featureImportance) {
+                const sortedFeatures = sortBy(response.data.featureImportance, (item) => Math.abs(item.featureScore));
+                if (isMounted)
+                    setFeaturesScores(sortedFeatures);
             }
         });
         return () => {
@@ -95,7 +109,8 @@ const ExplanationView = () => {
                             <Title headingLevel="h4" size="xl">Features Score Chart</Title>
                             <Grid>
                                 <GridItem span={8}>
-                                    <FeaturesTornadoChart onlyTopFeatures={true} />
+                                    {!featuresScores && <span>loading features</span>}
+                                    {featuresScores && <FeaturesScoreChart onlyTopFeatures={true} featuresScore={featuresScores} />}
                                 </GridItem>
                                 <GridItem span={4}>
 
