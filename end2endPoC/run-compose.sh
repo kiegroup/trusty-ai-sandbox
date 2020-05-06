@@ -7,5 +7,5 @@ mvn clean package
 cp target/resources/dashboards/* ../../grafana/provisioning/dashboards/
 
 cd ../../
-sudo docker-compose build && sudo docker-compose up
+sudo docker-compose build && sudo docker-compose up $1
 
