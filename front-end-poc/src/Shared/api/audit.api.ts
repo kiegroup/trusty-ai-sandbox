@@ -61,6 +61,14 @@ const getDecisionOutcome = (id: string) => {
     return httpClient(getDecisionOutcomeConfig);
 }
 
+const getDecisionFeatureScores = (executionId: string) => {
+    const requestCfg: AxiosRequestConfig = {
+        url: `${DECISIONS_PATH}/${executionId}/featureImportance`,
+        method: 'get'
+    }
+    return httpClient(requestCfg);
+}
+
 const getDecisionOutcomeDetail = (executionId: string, outcomeId: string) => {
     const getDecisionOutcomeDetailConfig : AxiosRequestConfig = {
         url: `${DECISIONS_PATH}/${executionId}/outcomes/${outcomeId}`,
@@ -83,5 +91,6 @@ export {
     getDecisionInput,
     getDecisionOutcome,
     getDecisionOutcomeDetail,
-    getModelDetail
+    getModelDetail,
+    getDecisionFeatureScores
 };

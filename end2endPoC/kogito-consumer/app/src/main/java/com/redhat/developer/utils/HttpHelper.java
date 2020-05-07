@@ -1,4 +1,4 @@
-package com.redhat.developer.database.elastic.utils;
+package com.redhat.developer.utils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -7,12 +7,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -20,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 public class HttpHelper {
 
-    private static final CloseableHttpClient httpclient = HttpClients.createDefault();
+    private static final CloseableHttpClient httpclient = createHttpClient();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpHelper.class);
 
@@ -30,6 +32,15 @@ public class HttpHelper {
 
     public HttpHelper(String baseHost) {
         this.baseHost = baseHost;
+    }
+
+    private static CloseableHttpClient createHttpClient(){
+        int timeout = 60;
+        RequestConfig config = RequestConfig.custom()
+                .setConnectTimeout(timeout * 1000)
+                .setConnectionRequestTimeout(timeout * 1000)
+                .setSocketTimeout(timeout * 1000).build();
+        return HttpClientBuilder.create().setDefaultRequestConfig(config).build();
     }
 
     public String doGet(String path) {
