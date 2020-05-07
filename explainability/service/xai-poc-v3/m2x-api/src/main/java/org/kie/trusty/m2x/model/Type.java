@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 /**
  * an enum for accepted types of input / output values
  */
-@Schema(name="Type")
+@Schema(name = "Type")
 public enum Type {
 
     STRING("string"),
@@ -33,6 +33,10 @@ public enum Type {
     CURRENCY("currency");
 
     private final String value;
+
+    Type() {
+        this.value = null;
+    }
 
     @JsonCreator
     Type(@JsonProperty("value") String value) {

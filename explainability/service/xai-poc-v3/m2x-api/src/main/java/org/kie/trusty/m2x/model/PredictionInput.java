@@ -13,7 +13,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(name="PredictionInput")
 public class PredictionInput {
 
-    private final List<Feature> features;
+    private List<Feature> features;
+
+    public PredictionInput() {
+        this.features = Collections.emptyList();
+    }
 
     @JsonCreator
     public PredictionInput(@JsonProperty("features") List<Feature> features) {
@@ -22,5 +26,16 @@ public class PredictionInput {
 
     public List<Feature> getFeatures() {
         return features;
+    }
+
+    public void setFeatures(List<Feature> features) {
+        this.features = features;
+    }
+
+    @Override
+    public String toString() {
+        return "PredictionInput{" +
+                "features=" + features +
+                '}';
     }
 }

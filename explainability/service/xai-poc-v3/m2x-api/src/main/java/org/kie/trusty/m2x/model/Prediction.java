@@ -10,11 +10,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(name="Prediction")
 public class Prediction {
 
-    private final ModelInfo modelInfo;
+    private ModelInfo modelInfo;
 
-    private final PredictionInput input;
+    private PredictionInput input;
 
-    private final PredictionOutput output;
+    private PredictionOutput output;
+
+    public Prediction() {
+        this.modelInfo = null;
+        this.input = new PredictionInput();
+        this.output = new PredictionOutput();
+    }
 
     @JsonCreator
     public Prediction(@JsonProperty("modelInfo") ModelInfo modelInfo, @JsonProperty("predictionInput") PredictionInput input,
@@ -36,4 +42,15 @@ public class Prediction {
         return output;
     }
 
+    public void setInput(PredictionInput input) {
+        this.input = input;
+    }
+
+    public void setModelInfo(ModelInfo modelInfo) {
+        this.modelInfo = modelInfo;
+    }
+
+    public void setOutput(PredictionOutput output) {
+        this.output = output;
+    }
 }

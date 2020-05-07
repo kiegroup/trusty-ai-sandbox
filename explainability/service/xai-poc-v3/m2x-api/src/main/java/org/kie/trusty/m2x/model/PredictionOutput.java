@@ -13,7 +13,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(name="PredictionOutput")
 public class PredictionOutput {
 
-    private final List<Output> outputs;
+    private List<Output> outputs;
+
+    public PredictionOutput() {
+        this.outputs = Collections.emptyList();
+    }
 
     @JsonCreator
     public PredictionOutput(@JsonProperty("predictionOutputs") List<Output> outputs) {
@@ -22,5 +26,16 @@ public class PredictionOutput {
 
     public List<Output> getOutputs() {
         return outputs;
+    }
+
+    public void setOutputs(List<Output> outputs) {
+        this.outputs = outputs;
+    }
+
+    @Override
+    public String toString() {
+        return "PredictionOutput{" +
+                "outputs=" + outputs +
+                '}';
     }
 }

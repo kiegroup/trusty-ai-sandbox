@@ -1,5 +1,6 @@
 package org.kie.trusty.m2x.model;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -36,10 +37,10 @@ public class ModelResource {
                                     schema = @Schema(implementation = PredictionOutput.class))))})
     public Response predict(
             @Parameter(required = true) PredictionInput... inputs) {
+        System.out.println(Arrays.toString(inputs));
         List<PredictionOutput> outputs = getModelProvider().getModel().predict(inputs);
-        Gson gson = new Gson();
-        String s = gson.toJson(outputs);
-        return Response.ok().entity(s).build();
+        System.out.println(outputs);
+        return Response.ok().entity(outputs).build();
     }
 
     @GET

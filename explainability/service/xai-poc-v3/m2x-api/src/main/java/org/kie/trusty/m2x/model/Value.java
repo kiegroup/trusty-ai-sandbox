@@ -9,7 +9,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(name = "Value")
 public class Value<S> {
 
-    private final S underlyingObject;
+    private S underlyingObject;
+
+    public Value() {
+        this.underlyingObject = null;
+    }
 
     @JsonCreator
     public Value(@JsonProperty("object") S underlyingObject) {
@@ -30,5 +34,20 @@ public class Value<S> {
 
     public double asNumber(ValueEncoder<S, Double> encoder) {
         return encoder.encode(underlyingObject);
+    }
+
+    public void setUnderlyingObject(S underlyingObject) {
+        this.underlyingObject = underlyingObject;
+    }
+
+    public S getUnderlyingObject() {
+        return underlyingObject;
+    }
+
+    @Override
+    public String toString() {
+        return "Value{" +
+                "underlyingObject=" + underlyingObject +
+                '}';
     }
 }

@@ -10,10 +10,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(name="FeatureDistribution")
 public class FeatureDistribution {
 
-    private final double min;
-    private final double max;
-    private final double mean;
-    private final double stdDev;
+    private double min;
+    private double max;
+    private double mean;
+    private double stdDev;
+
+    public FeatureDistribution() {
+        this.min = 0;
+        this.max = 0;
+        this.mean = 0;
+        this.stdDev = 0;
+    }
 
     @JsonCreator
     public FeatureDistribution(@JsonProperty("min") double min, @JsonProperty("max") double max,
@@ -58,5 +65,21 @@ public class FeatureDistribution {
      */
     public double getStdDev() {
         return stdDev;
+    }
+
+    public void setMin(double min) {
+        this.min = min;
+    }
+
+    public void setMax(double max) {
+        this.max = max;
+    }
+
+    public void setMean(double mean) {
+        this.mean = mean;
+    }
+
+    public void setStdDev(double stdDev) {
+        this.stdDev = stdDev;
     }
 }
