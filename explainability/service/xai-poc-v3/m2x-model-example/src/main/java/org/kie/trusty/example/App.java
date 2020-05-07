@@ -15,9 +15,12 @@ import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.ws.rs.core.Feature;
+
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
 
 public class App {
 
@@ -25,7 +28,8 @@ public class App {
 
     public static void main(String[] args) {
         try {
-            final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(BASE_URI, createApp(), false);
+            ResourceConfig app = createApp();
+            final HttpServer server = GrizzlyHttpServerFactory.createHttpServer(BASE_URI, app, false);
             Runtime.getRuntime().addShutdownHook(new Thread(server::shutdownNow));
             server.start();
 
@@ -37,7 +41,10 @@ public class App {
         }
     }
 
-    public static ResourceConfig createApp() {
-        return new ResourceConfig().register(DummyResource.class);
+    private static ResourceConfig createApp() {
+        return new ResourceConfig()
+                .register(DummyResource.class)
+                .property(ServerProperties.TRACING, "ALL")
+                .property(ServerProperties.TRACING_THRESHOLD, "VERBOSE");
     }
 }

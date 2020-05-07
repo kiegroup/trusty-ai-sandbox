@@ -34,7 +34,6 @@
 
     </plugins>
   </build>
-
   <dependencies>
     <dependency>
       <groupId>org.kie.trusty</groupId>
