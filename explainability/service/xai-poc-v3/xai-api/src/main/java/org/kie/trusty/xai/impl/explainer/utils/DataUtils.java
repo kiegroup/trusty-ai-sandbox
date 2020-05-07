@@ -180,7 +180,16 @@ public class DataUtils {
     public static PredictionInput perturbDrop(PredictionInput input) {
         PredictionInput perturbedInput = new PredictionInput(input.getFeatures());
         int droppedFeatures = 1 + Math.min(random.nextInt(3), perturbedInput.getFeatures().size() / 2);
-        random.ints(0, droppedFeatures).mapToObj(i -> perturbedInput.getFeatures().get(i)).map(DataUtils::featureDrop).close();
+        boolean dropped = false;
+        for (int i = 0; i < droppedFeatures; i++) {
+            if (!dropped && random.nextBoolean()) {
+                perturbedInput.getFeatures().set(i, featureDrop(perturbedInput.getFeatures().get(i)));
+                dropped = true;
+            }
+        }
+        if (!dropped) {
+            perturbedInput.getFeatures().set(droppedFeatures, featureDrop(perturbedInput.getFeatures().get(droppedFeatures)));
+        }
         return perturbedInput;
     }
 
