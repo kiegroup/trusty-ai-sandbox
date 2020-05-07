@@ -1,5 +1,7 @@
 package org.kie.trusty.m2x.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -13,7 +15,8 @@ public class Feature {
     private final Type type;
     private final Value value;
 
-    public Feature(String name, Type type, Value value) {
+    @JsonCreator
+    public Feature(@JsonProperty("name") String name, @JsonProperty("type") Type type, @JsonProperty("value") Value value) {
         this.name = name;
         this.type = type;
         this.value = value;

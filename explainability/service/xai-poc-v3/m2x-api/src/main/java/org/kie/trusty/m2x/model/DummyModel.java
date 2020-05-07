@@ -14,7 +14,7 @@ class DummyModel implements Model {
         for (PredictionInput predictionInput : inputs) {
             double sum = predictionInput.getFeatures().stream().map(f -> f.getValue().asNumber())
                     .mapToDouble(d -> d.doubleValue()).sum();
-            Output output = new Output(new Value<>(1 / (1 - Math.exp(sum))), Type.NUMBER, 1d);
+            Output output = new Output(new DoubleValue(1 / (1 - Math.exp(sum))), Type.NUMBER, 1d);
             PredictionOutput predictionOutput = new PredictionOutput(List.of(output));
             predictionOutputs.add(predictionOutput);
         }
@@ -51,12 +51,12 @@ class DummyModel implements Model {
 
             @Override
             public PredictionInput getInputShape() {
-                return new PredictionInput(Collections.singletonList(new Feature("f1", Type.NUMBER, new Value<>(""))));
+                return new PredictionInput(Collections.singletonList(new Feature("f1", Type.NUMBER, new StringValue(""))));
             }
 
             @Override
             public PredictionOutput getOutputShape() {
-                return new PredictionOutput(List.of(new Output(new Value<>(""), Type.NUMBER, 1d)));
+                return new PredictionOutput(List.of(new Output(new StringValue(""), Type.NUMBER, 1d)));
             }
 
             @Override

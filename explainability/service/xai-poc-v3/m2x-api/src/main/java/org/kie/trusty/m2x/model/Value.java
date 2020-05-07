@@ -2,14 +2,17 @@ package org.kie.trusty.m2x.model;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(name = "Value")
-public class Value<S extends Serializable> {
+public class Value<S> {
 
     private final S underlyingObject;
 
-    public Value(S underlyingObject) {
+    @JsonCreator
+    public Value(@JsonProperty("object") S underlyingObject) {
         this.underlyingObject = underlyingObject;
     }
 

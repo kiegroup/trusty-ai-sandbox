@@ -1,5 +1,7 @@
 package org.kie.trusty.m2x.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -12,7 +14,8 @@ public class Output {
     private final Type type;
     private final double score;
 
-    public Output(Value value, Type type, double score) {
+    @JsonCreator
+    public Output(@JsonProperty("value") Value value, @JsonProperty("type") Type type, @JsonProperty("score") double score) {
         this.value = value;
         this.type = type;
         this.score = score;

@@ -1,5 +1,7 @@
 package org.kie.trusty.m2x.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -14,7 +16,9 @@ public class Prediction {
 
     private final PredictionOutput output;
 
-    public Prediction(ModelInfo modelInfo, PredictionInput input, PredictionOutput output) {
+    @JsonCreator
+    public Prediction(@JsonProperty("modelInfo") ModelInfo modelInfo, @JsonProperty("predictionInput") PredictionInput input,
+                      @JsonProperty("predictionOutput") PredictionOutput output) {
         this.modelInfo = modelInfo;
         this.input = input;
         this.output = output;

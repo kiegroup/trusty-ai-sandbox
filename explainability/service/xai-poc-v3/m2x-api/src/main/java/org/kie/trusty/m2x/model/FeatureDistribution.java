@@ -1,5 +1,7 @@
 package org.kie.trusty.m2x.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -13,7 +15,9 @@ public class FeatureDistribution {
     private final double mean;
     private final double stdDev;
 
-    public FeatureDistribution(double min, double max, double mean, double stdDev) {
+    @JsonCreator
+    public FeatureDistribution(@JsonProperty("min") double min, @JsonProperty("max") double max,
+                               @JsonProperty("mean") double mean, @JsonProperty("stdDev") double stdDev) {
         this.min = min;
         this.max = max;
         this.mean = mean;

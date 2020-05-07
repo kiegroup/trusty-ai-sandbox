@@ -3,6 +3,8 @@ package org.kie.trusty.m2x.model;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -13,7 +15,8 @@ public class DataDistribution {
 
     private final List<FeatureDistribution> featureDistributions;
 
-    public DataDistribution(List<FeatureDistribution> featureDistributions) {
+    @JsonCreator
+    public DataDistribution(@JsonProperty("featureDistributions") List<FeatureDistribution> featureDistributions) {
         this.featureDistributions = Collections.unmodifiableList(featureDistributions);
     }
 
