@@ -51,17 +51,17 @@ class DummyModel implements Model {
 
             @Override
             public PredictionInput getInputShape() {
-                return new PredictionInput(Collections.singletonList(new Feature("f1", Type.NUMBER, new Value<>(""))));
+                return new PredictionInput(Collections.singletonList(new Feature("f1", Type.NUMBER, new StringValue(""))));
             }
 
             @Override
             public PredictionOutput getOutputShape() {
-                return new PredictionOutput(List.of(new Output(new Value<>(""), Type.NUMBER, 1d)));
+                return new PredictionOutput(List.of(new Output(new StringValue(""), Type.NUMBER, 1d)));
             }
 
             @Override
             public TaskType getTaskType() {
-                return TaskType.CLASSIFICATION;
+                return TaskType.REGRESSION;
             }
         };
     }

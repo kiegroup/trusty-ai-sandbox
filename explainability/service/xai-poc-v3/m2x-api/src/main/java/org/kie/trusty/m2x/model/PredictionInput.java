@@ -3,6 +3,8 @@ package org.kie.trusty.m2x.model;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -11,13 +13,29 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(name="PredictionInput")
 public class PredictionInput {
 
-    private final List<Feature> features;
+    private List<Feature> features;
 
-    public PredictionInput(List<Feature> features) {
+    public PredictionInput() {
+        this.features = Collections.emptyList();
+    }
+
+    @JsonCreator
+    public PredictionInput(@JsonProperty("features") List<Feature> features) {
         this.features = Collections.unmodifiableList(features);
     }
 
     public List<Feature> getFeatures() {
         return features;
+    }
+
+    public void setFeatures(List<Feature> features) {
+        this.features = features;
+    }
+
+    @Override
+    public String toString() {
+        return "PredictionInput{" +
+                "features=" + features +
+                '}';
     }
 }

@@ -13,6 +13,7 @@
   <description>The TrustyAI Explainability reactor.</description>
   <modules>
     <module>m2x-api</module>
+    <module>m2x-model-example</module>
     <module>xai-api</module>
   </modules>
 </project>

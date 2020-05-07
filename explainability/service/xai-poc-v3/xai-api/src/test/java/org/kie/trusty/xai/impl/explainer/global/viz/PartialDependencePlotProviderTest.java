@@ -13,7 +13,6 @@ import java.util.stream.DoubleStream;
 
 import org.junit.Test;
 import org.kie.trusty.m2x.api.GlobalApi;
-import org.kie.trusty.m2x.handler.ApiException;
 import org.kie.trusty.m2x.model.DataDistribution;
 import org.kie.trusty.m2x.model.Feature;
 import org.kie.trusty.m2x.model.ModelInfo;

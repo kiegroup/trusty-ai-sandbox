@@ -2,14 +2,21 @@ package org.kie.trusty.m2x.model;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(name = "Value")
-public class Value<S extends Serializable> {
+public class Value<S> {
 
-    private final S underlyingObject;
+    private S underlyingObject;
 
-    public Value(S underlyingObject) {
+    public Value() {
+        this.underlyingObject = null;
+    }
+
+    @JsonCreator
+    public Value(@JsonProperty("object") S underlyingObject) {
         this.underlyingObject = underlyingObject;
     }
 
@@ -27,5 +34,20 @@ public class Value<S extends Serializable> {
 
     public double asNumber(ValueEncoder<S, Double> encoder) {
         return encoder.encode(underlyingObject);
+    }
+
+    public void setUnderlyingObject(S underlyingObject) {
+        this.underlyingObject = underlyingObject;
+    }
+
+    public S getUnderlyingObject() {
+        return underlyingObject;
+    }
+
+    @Override
+    public String toString() {
+        return "Value{" +
+                "underlyingObject=" + underlyingObject +
+                '}';
     }
 }

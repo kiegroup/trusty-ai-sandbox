@@ -1,11 +1,13 @@
 package org.kie.trusty.m2x.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * an enum for accepted types of input / output values
  */
-@Schema(name="Type")
+@Schema(name = "Type")
 public enum Type {
 
     STRING("string"),
@@ -32,7 +34,12 @@ public enum Type {
 
     private final String value;
 
-    Type(String value) {
+    Type() {
+        this.value = null;
+    }
+
+    @JsonCreator
+    Type(@JsonProperty("value") String value) {
         this.value = value;
     }
 
