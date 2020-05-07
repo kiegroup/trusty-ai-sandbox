@@ -26,6 +26,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
+        <version>1.5.0</version>
         <configuration>
           <mainClass>org.kie.trusty.example.App</mainClass>
         </configuration>
@@ -50,9 +51,18 @@
       <artifactId>jersey-container-grizzly2-http</artifactId>
       <version>2.30</version>
     </dependency>
+
+    <!-- test dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit-version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <properties>
+    <junit-version>4.12</junit-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
