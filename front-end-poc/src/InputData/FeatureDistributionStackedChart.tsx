@@ -4,14 +4,14 @@ import { VictoryStack, VictoryBar } from 'victory';
 const FeatureDistributionStackedChart = () => {
     return (
         <div style={{
-            width: "220px",
+            width: "190px",
             marginTop: 0,
             paddingTop: 0
         }}>
             <VictoryStack
                 colorScale={["tomato", "orange", "gold"]}
                 horizontal={true}
-                width={220}
+                width={190}
                 height={60}
                 padding={{ top: 0, bottom: 0 }}
             >
