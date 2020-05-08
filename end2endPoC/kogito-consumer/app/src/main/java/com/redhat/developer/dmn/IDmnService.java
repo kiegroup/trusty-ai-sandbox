@@ -4,13 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.redhat.developer.dmn.models.input.ModelInputStructure;
+import org.kie.dmn.api.core.DMNContext;
 import org.kie.dmn.api.core.DMNModel;
 import org.kie.dmn.api.core.ast.DMNNode;
 import org.kie.dmn.core.ast.DMNBaseNode;
 
 public interface IDmnService {
 
-    Object evaluateModel(String id, Map<String, Object> inputs);
+    Map<String, Object>  evaluateModel(String id, Map<String, Object> inputs);
 
     DMNModel getDmnModel(String id);
 

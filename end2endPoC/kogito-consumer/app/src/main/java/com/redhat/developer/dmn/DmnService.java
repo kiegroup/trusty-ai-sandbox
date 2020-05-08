@@ -19,6 +19,7 @@ import com.redhat.developer.dmn.models.input.ModelInputStructure;
 import com.redhat.developer.dmn.models.input.TypeComponent;
 import com.redhat.developer.dmn.models.input.TypeDefinition;
 import com.redhat.developer.dmn.storage.IDmnStorageExtension;
+import org.kie.dmn.api.core.DMNContext;
 import org.kie.dmn.api.core.DMNModel;
 import org.kie.dmn.api.core.DMNRuntime;
 import org.kie.dmn.api.core.DMNType;
@@ -109,9 +110,9 @@ public class DmnService implements IDmnService {
     }
 
     @Override
-    public Object evaluateModel(String id, Map<String, Object> inputs) {
+    public Map<String, Object> evaluateModel(String id, Map<String, Object> inputs) {
         DMNRuntime runtime = getDmnRuntime(id);
-        return runtime.evaluateAll(runtime.getModels().get(0), new DMNContextImpl(inputs)).getContext();
+        return runtime.evaluateAll(runtime.getModels().get(0), new DMNContextImpl(inputs)).getContext().getAll();
     }
 
     private DMNRuntime getDmnRuntime(String id) {

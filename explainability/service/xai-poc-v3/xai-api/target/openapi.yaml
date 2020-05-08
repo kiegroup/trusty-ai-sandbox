@@ -1,0 +1,205 @@
+openapi: 3.0.1
+paths:
+  /xai/saliency/lime:
+    post:
+      tags:
+      - local
+      summary: Generate a LIME local explanation
+      operationId: lime
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Prediction'
+        required: true
+      responses:
+        default:
+          description: The saliency explanation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Saliency'
+  /xai/tabular/pdp:
+    post:
+      tags:
+      - global
+      summary: Generate PDP plots model explanation
+      operationId: pdp
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/ModelInfo'
+        required: true
+      responses:
+        default:
+          description: PDPs for all features in the model
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TabularData'
+components:
+  schemas:
+    Feature:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+          - string
+          - binary
+          - number
+          - boolean
+          - date
+          - uri
+          - time
+          - duration
+          - vector
+          - undefined
+          - currency
+        value:
+          $ref: '#/components/schemas/Value'
+    FeatureImportance:
+      type: object
+      properties:
+        feature:
+          $ref: '#/components/schemas/Feature'
+        score:
+          type: number
+          format: double
+    Saliency:
+      type: object
+      properties:
+        perFeatureImportance:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureImportance'
+    Value:
+      type: object
+      properties:
+        object:
+          type: object
+          writeOnly: true
+    DataDistribution:
+      type: object
+      properties:
+        featureDistributions:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureDistribution'
+      description: Information about distribution of data used for training a model
+    FeatureDistribution:
+      type: object
+      properties:
+        min:
+          type: number
+          format: double
+        max:
+          type: number
+          format: double
+        mean:
+          type: number
+          format: double
+        stdDev:
+          type: number
+          format: double
+    ModelInfo:
+      type: object
+      properties:
+        outputShape:
+          $ref: '#/components/schemas/PredictionOutput'
+        version:
+          type: string
+        trainingDataDistribution:
+          $ref: '#/components/schemas/DataDistribution'
+        taskType:
+          type: string
+          enum:
+          - CLASSIFICATION
+          - REGRESSION
+        inputShape:
+          $ref: '#/components/schemas/PredictionInput'
+        predictionEndpoint:
+          type: string
+          format: uri
+        name:
+          type: string
+        id:
+          type: string
+          format: uuid
+      description: Various information associated to a model
+    Output:
+      type: object
+      properties:
+        value:
+          $ref: '#/components/schemas/Value'
+        type:
+          type: string
+          enum:
+          - string
+          - binary
+          - number
+          - boolean
+          - date
+          - uri
+          - time
+          - duration
+          - vector
+          - undefined
+          - currency
+        score:
+          type: number
+          format: double
+    Prediction:
+      type: object
+      properties:
+        modelInfo:
+          $ref: '#/components/schemas/ModelInfo'
+        predictionInput:
+          $ref: '#/components/schemas/PredictionInput'
+        predictionOutput:
+          $ref: '#/components/schemas/PredictionOutput'
+        input:
+          $ref: '#/components/schemas/PredictionInput'
+        output:
+          $ref: '#/components/schemas/PredictionOutput'
+    PredictionInput:
+      type: object
+      properties:
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/Feature'
+    PredictionOutput:
+      type: object
+      properties:
+        predictionOutputs:
+          type: array
+          writeOnly: true
+          items:
+            $ref: '#/components/schemas/Output'
+        outputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Output'
+    TabularData:
+      type: object
+      properties:
+        x:
+          type: array
+          items:
+            type: number
+            format: double
+        y:
+          type: array
+          items:
+            type: number
+            format: double
+        feature:
+          $ref: '#/components/schemas/Feature'

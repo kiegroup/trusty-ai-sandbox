@@ -53,7 +53,7 @@ public class ExecutionService implements IExecutionService {
             response.add(buildStructuredForValue(
                     event.modelId,
                     baseNode.getName(),
-                    baseNode.getType().getName(),
+                    baseNode.getType().getBaseType() != null ? baseNode.getType().getBaseType().getName() : baseNode.getType().getName(),
                     baseNode.getType().isComposite(),
                     outcome.result));
         }
@@ -103,7 +103,7 @@ public class ExecutionService implements IExecutionService {
                                       buildStructuredForValue(
                                               event.modelId,
                                               node.getName(),
-                                              node.getType().getName(),
+                                              node.getType().getBaseType() != null ? node.getType().getBaseType().getName() : node.getType().getName(),
                                               node.getType().isComposite(),
                                               modelDecisions.get(node.getId()).result))
                 .collect(Collectors.toList());
@@ -118,7 +118,7 @@ public class ExecutionService implements IExecutionService {
         SingleDecisionInputResponse bbn = buildStructuredForValue(
                 event.modelId,
                 baseNode.getName(),
-                baseNode.getType().getName(),
+                baseNode.getType().getBaseType() != null ? baseNode.getType().getBaseType().getName() : baseNode.getType().getName(),
                 baseNode.getType().isComposite(),
                 outcomeModel.result);
 

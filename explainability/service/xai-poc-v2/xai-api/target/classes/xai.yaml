@@ -1,0 +1,61 @@
+swagger: "2.0"
+info:
+  description: "Trusty XAI explainability API."
+  version: "1.0.0"
+  title: "TrustyXAI"
+  termsOfService: "http://kie.org/trusty/"
+  contact:
+    email: "tteofili@redhat.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "kie.org"
+basePath: "/xai"
+paths:
+  /info:
+    head:
+      operationId: "head"
+      responses:
+        200:
+          description: "Prediction"
+          schema:
+            $ref: "#/definitions/Prediction"
+definitions:
+  Prediction:
+    type: "object"
+    properties:
+      input:
+        $ref: "https://raw.githubusercontent.com/kiegroup/trusty-ai-sandbox/master/explainability/service/xai-poc-v2/m2x-api/src/main/resources/m2x.yaml#/definitions/PredictionInput"
+      output:
+        $ref: "https://raw.githubusercontent.com/kiegroup/trusty-ai-sandbox/master/explainability/service/xai-poc-v2/m2x-api/src/main/resources/m2x.yaml#/definitions/PredictionOutput"
+      info:
+        $ref: "https://raw.githubusercontent.com/kiegroup/trusty-ai-sandbox/master/explainability/service/xai-poc-v2/m2x-api/src/main/resources/m2x.yaml#/definitions/ModelInfo"
+  TabularData:
+    type: "object"
+    properties:
+      feature:
+        $ref: "https://raw.githubusercontent.com/kiegroup/trusty-ai-sandbox/master/explainability/service/xai-poc-v2/m2x-api/src/main/resources/m2x.yaml#/definitions/Feature"
+      output:
+        $ref: "https://raw.githubusercontent.com/kiegroup/trusty-ai-sandbox/master/explainability/service/xai-poc-v2/m2x-api/src/main/resources/m2x.yaml#/definitions/Output"
+      x-axis:
+        type: "array"
+        items:
+          type: "number"
+      y-axis:
+        type: "array"
+        items:
+          type: "number"
+  Saliency:
+    type: "object"
+    properties:
+      featureImportances:
+        type: "array"
+        items:
+          $ref: "#/definitions/FeatureImportance"
+  FeatureImportance:
+    type: "object"
+    properties:
+      feature:
+        $ref: "https://raw.githubusercontent.com/kiegroup/trusty-ai-sandbox/master/explainability/service/xai-poc-v2/m2x-api/src/main/resources/m2x.yaml#/definitions/Feature"
+      score:
+        type : "number"
