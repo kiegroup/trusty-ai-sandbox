@@ -12,9 +12,7 @@ import com.redhat.developer.execution.IExecutionService;
 import com.redhat.developer.execution.models.DMNResultModel;
 import com.redhat.developer.execution.responses.decisions.inputs.SingleDecisionInputResponse;
 import com.redhat.developer.explainability.model.LimeExplanationRequest;
-import com.redhat.developer.explainability.model.LimeResponse;
 import com.redhat.developer.explainability.model.Saliency;
-import com.redhat.developer.explainability.responses.local.DecisionExplanationResponse;
 import com.redhat.developer.explainability.storage.IExplanabilityStorageExtension;
 import com.redhat.developer.utils.HttpHelper;
 import org.slf4j.Logger;
@@ -34,19 +32,14 @@ public class ExplainabilityService implements IExplainabilityService {
     @Inject
     IExplanabilityStorageExtension storageExtension;
 
-    @Override
-    public DecisionExplanationResponse lime(String decisionId) {
-        return null;
-    }
 
     @Override
-    public Saliency getFeatureImportace(String decisionId) {
+    public Saliency getFeatureImportance(String decisionId) {
         return storageExtension.getExplanation(decisionId);
     }
 
     @Override
     public boolean processExecution(DMNResultModel execution) {
-
         List<SingleDecisionInputResponse> structuredInputs = executionService.getStructuredInputs(execution).input;
         List<SingleDecisionInputResponse> structuredOutcomes = executionService.getStructuredOutcomesValues(execution);
         LimeExplanationRequest request = new LimeExplanationRequest(structuredInputs, structuredOutcomes, execution.modelName);
@@ -58,15 +51,15 @@ public class ExplainabilityService implements IExplainabilityService {
             return false;
         }
 
-        LimeResponse limeResponse = null;
+        Saliency saliency = null;
         try {
-            limeResponse = objectMapper.readValue(response, LimeResponse.class);
+            saliency = objectMapper.readValue(response, Saliency.class);
         } catch (JsonProcessingException e) {
             LOGGER.error("Can't parse the explanability response. ", e);
             return false;
         }
 
-        Saliency saliency = null; // create dto
+        saliency.executionId = execution.executionId;
 
         storageExtension.storeExplanation(execution.executionId, saliency);
 
