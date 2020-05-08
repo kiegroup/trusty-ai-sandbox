@@ -11,7 +11,6 @@ import javax.ws.rs.core.Response;
 
 import com.redhat.developer.explainability.IExplainabilityService;
 import com.redhat.developer.explainability.model.Saliency;
-import com.redhat.developer.explainability.responses.local.DecisionExplanationResponse;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -30,13 +29,14 @@ public class LocalExplanabilityApi {
     @Consumes({"application/json"})
     @Produces({"application/json"})
     @APIResponses(value = {
-            @APIResponse(description = "Gets the local explanation of a decision.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = DecisionExplanationResponse.class))),
+            @APIResponse(description = "Gets the local explanation of a decision.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = Saliency.class))),
             @APIResponse(description = "Bad Request", responseCode = "400", content = @Content(mediaType = MediaType.TEXT_PLAIN))
     }
     )
     @Operation(summary = "Returns the feature importance for a decision.", description = "Returns the feature importance for a particular decision calculated using the lime algorithm.")
     public Response lime(@QueryParam("key") String decisionId) {
-        Saliency saliency = explainabilityService.getFeatureImportace(decisionId);
-        return Response.ok(new DecisionExplanationResponse()).build();
+        Saliency saliency = explainabilityService.getFeatureImportance(decisionId);
+        saliency.executionId = null; // quick hack to remove execution id from response, TODO convert to dto.
+        return Response.ok(saliency).build();
     }
 }
