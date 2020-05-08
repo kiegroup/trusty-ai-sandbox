@@ -1,0 +1,13 @@
+[
+  {
+    "features": [
+      {
+        "name": "f1",
+        "type": "NUMBER",
+        "value": {
+          "underlyingObject": 0.2
+        }
+      }
+    ]
+  }
+]

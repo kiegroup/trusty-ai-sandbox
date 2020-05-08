@@ -14,7 +14,7 @@ class DummyModel implements Model {
         for (PredictionInput predictionInput : inputs) {
             double sum = predictionInput.getFeatures().stream().map(f -> f.getValue().asNumber())
                     .mapToDouble(d -> d.doubleValue()).sum();
-            Output output = new Output(new Value<>(1 / (1 - Math.exp(sum))), Type.NUMBER, 1d);
+            Output output = new Output(new Value<>(1 / (1 + Math.exp(-sum))), Type.NUMBER, 1d);
             PredictionOutput predictionOutput = new PredictionOutput(List.of(output));
             predictionOutputs.add(predictionOutput);
         }
@@ -61,7 +61,7 @@ class DummyModel implements Model {
 
             @Override
             public TaskType getTaskType() {
-                return TaskType.REGRESSION;
+                return TaskType.CLASSIFICATION;
             }
         };
     }

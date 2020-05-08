@@ -56,7 +56,7 @@ public class LIMEishSaliencyExplanationProvider implements SaliencyLocalExplanat
             Collection<Prediction> training = new LinkedList<>();
             List<PredictionInput> perturbedInputs = new LinkedList<>();
             for (int i = 0; i < noOfSamples; i++) {
-                perturbedInputs.add(DataUtils.perturbDrop(prediction.getInput()));
+                perturbedInputs.add(DataUtils.perturbDrop(prediction.getPredictionInput()));
             }
             List<PredictionOutput> predictionOutputs = apiInstance.predict(perturbedInputs);
 
@@ -65,7 +65,7 @@ public class LIMEishSaliencyExplanationProvider implements SaliencyLocalExplanat
                 training.add(perturbedDataPrediction);
             }
 
-            List<Feature> features = prediction.getInput().getFeatures();
+            List<Feature> features = prediction.getPredictionInput().getFeatures();
             LinearClassifier linearClassifier = new LinearClassifier(features.size());
             linearClassifier.fit(training);
             double[] weights = linearClassifier.getWeights();

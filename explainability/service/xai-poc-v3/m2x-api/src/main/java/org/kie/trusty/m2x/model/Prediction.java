@@ -12,45 +12,45 @@ public class Prediction {
 
     private ModelInfo modelInfo;
 
-    private PredictionInput input;
+    private PredictionInput predictionInput;
 
-    private PredictionOutput output;
+    private PredictionOutput predictionOutput;
 
     public Prediction() {
         this.modelInfo = null;
-        this.input = new PredictionInput();
-        this.output = new PredictionOutput();
+        this.predictionInput = new PredictionInput();
+        this.predictionOutput = new PredictionOutput();
     }
 
     @JsonCreator
-    public Prediction(@JsonProperty("modelInfo") ModelInfo modelInfo, @JsonProperty("predictionInput") PredictionInput input,
+    public Prediction(@JsonProperty("modelInfo") ModelInfo modelInfo, @JsonProperty("predictionInput") PredictionInput predictionInput,
                       @JsonProperty("predictionOutput") PredictionOutput output) {
         this.modelInfo = modelInfo;
-        this.input = input;
-        this.output = output;
+        this.predictionInput = predictionInput;
+        this.predictionOutput = output;
     }
 
     public ModelInfo getModelInfo() {
         return modelInfo;
     }
 
-    public PredictionInput getInput() {
-        return input;
+    public PredictionInput getPredictionInput() {
+        return predictionInput;
     }
 
-    public PredictionOutput getOutput() {
-        return output;
+    public PredictionOutput getPredictionOutput() {
+        return predictionOutput;
     }
 
-    public void setInput(PredictionInput input) {
-        this.input = input;
+    public void setPredictionInput(PredictionInput predictionInput) {
+        this.predictionInput = predictionInput;
     }
 
     public void setModelInfo(ModelInfo modelInfo) {
         this.modelInfo = modelInfo;
     }
 
-    public void setOutput(PredictionOutput output) {
-        this.output = output;
+    public void setPredictionOutput(PredictionOutput predictionOutput) {
+        this.predictionOutput = predictionOutput;
     }
 }
