@@ -23,4 +23,8 @@ public class Value<S> {
     public double asNumber(ValueEncoder<S, Double> encoder) {
         return encoder.encode(underlyingObject);
     }
+
+    public S getUnderlyingObject() {
+        return underlyingObject;
+    }
 }
