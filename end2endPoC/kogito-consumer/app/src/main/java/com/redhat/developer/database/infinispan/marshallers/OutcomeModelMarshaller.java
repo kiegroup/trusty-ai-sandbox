@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.redhat.developer.database.infinispan.marshallers.AbstractMarshaller;
 import com.redhat.developer.execution.models.OutcomeEvaluationStatusModel;
 import com.redhat.developer.execution.models.OutcomeModel;
 import org.infinispan.protostream.MessageMarshaller;

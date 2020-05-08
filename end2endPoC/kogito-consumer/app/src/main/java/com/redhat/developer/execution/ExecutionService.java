@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import com.redhat.developer.dmn.DmnService;
 import com.redhat.developer.dmn.IDmnService;
 import com.redhat.developer.dmn.models.input.InputData;
 import com.redhat.developer.dmn.models.input.ModelInputStructure;
@@ -24,7 +23,6 @@ import com.redhat.developer.execution.responses.decisions.DecisionInputStructure
 import com.redhat.developer.execution.responses.decisions.inputs.DecisionStructuredInputsResponse;
 import com.redhat.developer.execution.responses.decisions.inputs.SingleDecisionInputResponse;
 import com.redhat.developer.execution.storage.IExecutionsStorageExtension;
-import org.apache.avro.generic.GenericData;
 import org.kie.dmn.core.ast.DMNBaseNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +51,7 @@ public class ExecutionService implements IExecutionService {
             response.add(buildStructuredForValue(
                     event.modelId,
                     baseNode.getName(),
-                    baseNode.getType().getName(),
+                    baseNode.getType().getBaseType() != null ? baseNode.getType().getBaseType().getName() : baseNode.getType().getName(),
                     baseNode.getType().isComposite(),
                     outcome.result));
         }
@@ -103,7 +101,7 @@ public class ExecutionService implements IExecutionService {
                                       buildStructuredForValue(
                                               event.modelId,
                                               node.getName(),
-                                              node.getType().getName(),
+                                              node.getType().getBaseType() != null ? node.getType().getBaseType().getName() : node.getType().getName(),
                                               node.getType().isComposite(),
                                               modelDecisions.get(node.getId()).result))
                 .collect(Collectors.toList());
@@ -118,7 +116,7 @@ public class ExecutionService implements IExecutionService {
         SingleDecisionInputResponse bbn = buildStructuredForValue(
                 event.modelId,
                 baseNode.getName(),
-                baseNode.getType().getName(),
+                baseNode.getType().getBaseType() != null ? baseNode.getType().getBaseType().getName() : baseNode.getType().getName(),
                 baseNode.getType().isComposite(),
                 outcomeModel.result);
 

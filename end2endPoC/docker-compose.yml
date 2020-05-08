@@ -102,5 +102,12 @@ services:
     depends_on:
       - kafka
 
+  explanation-service:
+    build: explanation-service/
+    ports:
+      - 1338:1338
+    depends_on:
+      - kafka
+
 volumes:
   mongodb_data_container:

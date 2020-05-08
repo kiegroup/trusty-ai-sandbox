@@ -1,0 +1,17 @@
+/home/jrota/vagrant/bionic64/trusty-ai-sandbox/explainability/service/xai-poc-v3/xai-api/src/main/java/org/kie/trusty/xai/impl/explainer/utils/LinearClassifier.java
+/home/jrota/vagrant/bionic64/trusty-ai-sandbox/explainability/service/xai-poc-v3/xai-api/src/main/java/org/kie/trusty/xai/impl/builder/ExplanationProviderBuilder.java
+/home/jrota/vagrant/bionic64/trusty-ai-sandbox/explainability/service/xai-poc-v3/xai-api/src/main/java/org/kie/trusty/xai/impl/builder/pdp/PartialDependencePlotBuilder.java
+/home/jrota/vagrant/bionic64/trusty-ai-sandbox/explainability/service/xai-poc-v3/xai-api/src/main/java/org/kie/trusty/xai/impl/explainer/local/saliency/SaliencyLocalExplanationProvider.java
+/home/jrota/vagrant/bionic64/trusty-ai-sandbox/explainability/service/xai-poc-v3/xai-api/src/main/java/org/kie/trusty/xai/impl/explainer/global/GlobalExplanationProvider.java
+/home/jrota/vagrant/bionic64/trusty-ai-sandbox/explainability/service/xai-poc-v3/xai-api/src/main/java/org/kie/trusty/xai/impl/explainer/utils/DataUtils.java
+/home/jrota/vagrant/bionic64/trusty-ai-sandbox/explainability/service/xai-poc-v3/xai-api/src/main/java/org/kie/trusty/xai/model/FeatureImportance.java
+/home/jrota/vagrant/bionic64/trusty-ai-sandbox/explainability/service/xai-poc-v3/xai-api/src/main/java/org/kie/trusty/xai/impl/explainer/global/viz/GlobalVizExplanationProvider.java
+/home/jrota/vagrant/bionic64/trusty-ai-sandbox/explainability/service/xai-poc-v3/xai-api/src/main/java/org/kie/trusty/xai/model/TabularData.java
+/home/jrota/vagrant/bionic64/trusty-ai-sandbox/explainability/service/xai-poc-v3/xai-api/src/main/java/org/kie/trusty/xai/model/Saliency.java
+/home/jrota/vagrant/bionic64/trusty-ai-sandbox/explainability/service/xai-poc-v3/xai-api/src/main/java/org/kie/trusty/xai/impl/explainer/local/LocalExplanationProvider.java
+/home/jrota/vagrant/bionic64/trusty-ai-sandbox/explainability/service/xai-poc-v3/xai-api/src/main/java/org/kie/trusty/xai/impl/explainer/global/saliency/VariableFeatureImportanceProvider.java
+/home/jrota/vagrant/bionic64/trusty-ai-sandbox/explainability/service/xai-poc-v3/xai-api/src/main/java/org/kie/trusty/xai/impl/explainer/global/saliency/SaliencyGlobalExplanationProvider.java
+/home/jrota/vagrant/bionic64/trusty-ai-sandbox/explainability/service/xai-poc-v3/xai-api/src/main/java/org/kie/trusty/xai/impl/explainer/local/saliency/LIMEishSaliencyExplanationProvider.java
+/home/jrota/vagrant/bionic64/trusty-ai-sandbox/explainability/service/xai-poc-v3/xai-api/src/main/java/org/kie/trusty/xai/impl/explainer/global/viz/PartialDependencePlotProvider.java
+/home/jrota/vagrant/bionic64/trusty-ai-sandbox/explainability/service/xai-poc-v3/xai-api/src/main/java/org/kie/trusty/xai/resource/ExplainResource.java
+/home/jrota/vagrant/bionic64/trusty-ai-sandbox/explainability/service/xai-poc-v3/xai-api/src/main/java/org/kie/trusty/xai/impl/explainer/global/saliency/PredictionFeatureImportanceProvider.java
