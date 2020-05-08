@@ -1,7 +1,6 @@
 package com.redhat.developer.dmn.storage.codecs;
 
 import com.redhat.developer.dmn.models.DmnModel;
-import com.redhat.developer.execution.models.DMNResultModel;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;

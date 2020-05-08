@@ -3,7 +3,6 @@ package com.redhat.developer.database;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import com.redhat.developer.database.infinispan.InfinispanQueryFactory;
@@ -11,7 +10,6 @@ import com.redhat.developer.database.infinispan.TrustyCacheDefaultConfig;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.Search;
-import org.infinispan.commons.configuration.XMLStringConfiguration;
 import org.infinispan.query.dsl.Query;
 import org.infinispan.query.dsl.QueryFactory;
 import org.slf4j.Logger;

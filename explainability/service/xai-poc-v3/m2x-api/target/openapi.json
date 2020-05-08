@@ -1,0 +1,196 @@
+{
+  "openapi" : "3.0.1",
+  "paths" : {
+    "/model/predict" : {
+      "post" : {
+        "summary" : "Perform a prediction",
+        "operationId" : "predict",
+        "requestBody" : {
+          "content" : {
+            "*/*" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/PredictionInput"
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "default" : {
+            "description" : "The prediction outputs",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/PredictionOutput"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/model/info" : {
+      "get" : {
+        "summary" : "Get information about the model",
+        "operationId" : "info",
+        "responses" : {
+          "default" : {
+            "description" : "Information about the model",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ModelInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Output" : {
+        "type" : "object",
+        "properties" : {
+          "value" : {
+            "$ref" : "#/components/schemas/Value"
+          },
+          "type" : {
+            "type" : "string",
+            "enum" : [ "string", "binary", "number", "boolean", "date", "uri", "time", "duration", "vector", "undefined", "currency" ]
+          },
+          "score" : {
+            "type" : "number",
+            "format" : "double"
+          }
+        }
+      },
+      "PredictionOutput" : {
+        "type" : "object",
+        "properties" : {
+          "predictionOutputs" : {
+            "type" : "array",
+            "writeOnly" : true,
+            "items" : {
+              "$ref" : "#/components/schemas/Output"
+            }
+          },
+          "outputs" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Output"
+            }
+          }
+        }
+      },
+      "Value" : {
+        "type" : "object",
+        "properties" : {
+          "object" : {
+            "type" : "object",
+            "writeOnly" : true
+          }
+        }
+      },
+      "Feature" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "type" : {
+            "type" : "string",
+            "enum" : [ "string", "binary", "number", "boolean", "date", "uri", "time", "duration", "vector", "undefined", "currency" ]
+          },
+          "value" : {
+            "$ref" : "#/components/schemas/Value"
+          }
+        }
+      },
+      "PredictionInput" : {
+        "type" : "object",
+        "properties" : {
+          "features" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Feature"
+            }
+          }
+        }
+      },
+      "DataDistribution" : {
+        "type" : "object",
+        "properties" : {
+          "featureDistributions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/FeatureDistribution"
+            }
+          }
+        },
+        "description" : "Information about distribution of data used for training a model"
+      },
+      "FeatureDistribution" : {
+        "type" : "object",
+        "properties" : {
+          "min" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "max" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "mean" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "stdDev" : {
+            "type" : "number",
+            "format" : "double"
+          }
+        }
+      },
+      "ModelInfo" : {
+        "type" : "object",
+        "properties" : {
+          "outputShape" : {
+            "$ref" : "#/components/schemas/PredictionOutput"
+          },
+          "version" : {
+            "type" : "string"
+          },
+          "trainingDataDistribution" : {
+            "$ref" : "#/components/schemas/DataDistribution"
+          },
+          "taskType" : {
+            "type" : "string",
+            "enum" : [ "CLASSIFICATION", "REGRESSION" ]
+          },
+          "inputShape" : {
+            "$ref" : "#/components/schemas/PredictionInput"
+          },
+          "predictionEndpoint" : {
+            "type" : "string",
+            "format" : "uri"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          }
+        },
+        "description" : "Various information associated to a model"
+      }
+    }
+  }
+}
