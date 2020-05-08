@@ -10,9 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.developer.execution.IExecutionService;
 import com.redhat.developer.execution.models.DMNResultModel;
-import com.redhat.developer.execution.responses.decisions.inputs.DecisionStructuredInputsResponse;
 import com.redhat.developer.execution.responses.decisions.inputs.SingleDecisionInputResponse;
-import com.redhat.developer.execution.storage.ExecutionsStorageExtension;
 import com.redhat.developer.explainability.model.LimeExplanationRequest;
 import com.redhat.developer.explainability.model.LimeResponse;
 import com.redhat.developer.explainability.model.Saliency;
@@ -26,7 +24,7 @@ import org.slf4j.LoggerFactory;
 public class ExplainabilityService implements IExplainabilityService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExplainabilityService.class);
 
-    private static final HttpHelper httpHelper = new HttpHelper("http://explanability:1338/");
+    private static final HttpHelper httpHelper = new HttpHelper("http://explanation-service:1338");
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -54,7 +52,7 @@ public class ExplainabilityService implements IExplainabilityService {
         LimeExplanationRequest request = new LimeExplanationRequest(structuredInputs, structuredOutcomes, execution.modelName);
         String response = null;
         try {
-            response = httpHelper.doPost("xai/saliency/lime", objectMapper.writeValueAsString(request));
+            response = httpHelper.doPost("/xai/saliency/lime", objectMapper.writeValueAsString(request));
         } catch (IOException e) {
             LOGGER.error("Something went wrong in the communication with the explanability service: ", e);
             return false;

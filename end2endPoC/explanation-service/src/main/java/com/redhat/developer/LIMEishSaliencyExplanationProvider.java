@@ -1,5 +1,6 @@
 package com.redhat.developer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,7 +34,7 @@ public class LIMEishSaliencyExplanationProvider {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static final HttpHelper httpHelper = new HttpHelper("http://loanEligibilityApp:1337/");
+    private static final HttpHelper httpHelper = new HttpHelper("http://producer:1337/");
 
     /**
      * no. of samples to be generated for the local linear classifier model training
@@ -83,7 +84,12 @@ public class LIMEishSaliencyExplanationProvider {
         List<PredictionOutput> result = new ArrayList<>();
         for (PredictionInput perturbatedInput : perturbatedInputs){
             String request = perturbatedInput.toKogitoRequestJson(originalInput).toString();
-            String response = httpHelper.doPost("/" + modelName + "?tracing=false", request);
+            String response = null;
+            try {
+                response = httpHelper.doPost("/" + modelName + "?tracing=false", request);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             logger.info(request);
             Map<String, Object> outcome = null;
             try {

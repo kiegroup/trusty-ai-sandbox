@@ -23,7 +23,6 @@ import com.redhat.developer.execution.responses.decisions.inputs.DecisionInputsR
 import com.redhat.developer.execution.responses.decisions.inputs.DecisionStructuredInputsResponse;
 import com.redhat.developer.execution.responses.decisions.inputs.SingleDecisionInputResponse;
 import com.redhat.developer.execution.responses.execution.ExecutionHeaderResponse;
-import com.redhat.developer.execution.storage.IExecutionsStorageExtension;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;

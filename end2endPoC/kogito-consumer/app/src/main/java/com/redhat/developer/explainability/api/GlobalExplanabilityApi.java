@@ -1,9 +1,6 @@
 package com.redhat.developer.explainability.api;
 
-import java.util.Collection;
-
 import javax.inject.Inject;
-import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;

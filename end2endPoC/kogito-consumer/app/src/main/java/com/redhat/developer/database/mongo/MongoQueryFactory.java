@@ -15,7 +15,6 @@ import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.gte;
 import static com.mongodb.client.model.Filters.lte;
-import static com.mongodb.client.model.Filters.or;
 public class MongoQueryFactory {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MongoQueryFactory.class);

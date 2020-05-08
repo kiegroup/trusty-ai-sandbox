@@ -33,7 +33,6 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
-import org.kie.dmn.api.core.DMNContext;
 
 @Path("/models")
 @RequestScoped

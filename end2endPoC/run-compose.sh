@@ -1,3 +1,7 @@
+cd explanation-service/
+mvn clean package -DskipTests
+cd ../
+
 cd kogito-consumer/app
 mvn clean package -DskipTests
 

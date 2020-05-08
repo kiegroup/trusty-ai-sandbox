@@ -1,12 +1,9 @@
 package com.redhat.developer.utils;
-
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -33,7 +30,7 @@ public class HttpHelper {
         this.baseHost = baseHost;
     }
 
-    private static CloseableHttpClient createHttpClient(){
+    private static CloseableHttpClient createHttpClient() {
         int timeout = 60;
         RequestConfig config = RequestConfig.custom()
                 .setConnectTimeout(timeout * 1000)
@@ -42,40 +39,28 @@ public class HttpHelper {
         return HttpClientBuilder.create().setDefaultRequestConfig(config).build();
     }
 
-    public String doGet(String path) {
+    public String doGet(String path) throws IOException {
         HttpGet request = new HttpGet(baseHost + path);
         HttpResponse response = null;
-        try {
-            response = httpclient.execute(request);
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                String result = EntityUtils.toString(entity);
-                LOGGER.debug("Get request returned " + result);
-                return result;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        response = httpclient.execute(request);
+        HttpEntity entity = response.getEntity();
+        if (entity != null) {
+            String result = EntityUtils.toString(entity);
+            LOGGER.debug("Get request returned " + result);
+            return result;
         }
+
         return null;
     }
 
-    public String doPost(String path, String params) {
+    public String doPost(String path, String params) throws IOException {
 
         HttpPost post = new HttpPost(baseHost + path);
         LOGGER.debug("Going to post to: " + path + "\n with: " + params);
-        try {
-            post.setEntity(new StringEntity(params, ContentType.APPLICATION_JSON));
-            CloseableHttpResponse response = httpclient.execute(post);
-            String result = EntityUtils.toString(response.getEntity());
-            LOGGER.debug("I've got " + result);
-            return result;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        post.setEntity(new StringEntity(params, ContentType.APPLICATION_JSON));
+        CloseableHttpResponse response = httpclient.execute(post);
+        String result = EntityUtils.toString(response.getEntity());
+        LOGGER.debug("I've got " + result);
+        return result;
     }
 }

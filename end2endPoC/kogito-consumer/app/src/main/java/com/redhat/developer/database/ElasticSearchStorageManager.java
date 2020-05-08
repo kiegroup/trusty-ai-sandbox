@@ -1,5 +1,6 @@
 package com.redhat.developer.database;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,7 +42,7 @@ public class ElasticSearchStorageManager implements IStorageManager {
         try {
             httpHelper.doPost(index + "/_doc/" + key, objectMapper.writeValueAsString(request));
             return true;
-        } catch (JsonProcessingException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return false;
@@ -51,7 +52,12 @@ public class ElasticSearchStorageManager implements IStorageManager {
     public <T> List<T> search(TrustyStorageQuery query, String index, Class<T> type) {
         String esQuery = ElasticQueryFactory.build(query);
         LOGGER.info("ES query " + esQuery);
-        String response = httpHelper.doPost(index + "/_search", esQuery);
+        String response = null;
+        try {
+            response = httpHelper.doPost(index + "/_search", esQuery);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         JavaType javaType = TypeFactory.defaultInstance()
                 .constructParametricType(ElasticSearchResponse.class, type);
         LOGGER.info("ES returned " + response);

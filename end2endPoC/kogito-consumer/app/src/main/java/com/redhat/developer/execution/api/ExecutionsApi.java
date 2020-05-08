@@ -1,8 +1,6 @@
 package com.redhat.developer.execution.api;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -21,7 +19,6 @@ import com.redhat.developer.execution.IExecutionService;
 import com.redhat.developer.execution.models.DMNResultModel;
 import com.redhat.developer.execution.responses.execution.ExecutionHeaderResponse;
 import com.redhat.developer.execution.responses.execution.ExecutionResponse;
-import com.redhat.developer.execution.storage.IExecutionsStorageExtension;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;

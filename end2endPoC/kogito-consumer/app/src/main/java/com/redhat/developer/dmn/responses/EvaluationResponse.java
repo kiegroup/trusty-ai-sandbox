@@ -3,7 +3,6 @@ package com.redhat.developer.dmn.responses;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.kie.dmn.api.core.DMNContext;
 
 public class EvaluationResponse {
 

@@ -6,8 +6,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoClientSettings;
 import com.redhat.developer.dmn.models.DmnModel;
-import com.redhat.developer.execution.models.DMNResultModel;
-import com.redhat.developer.execution.models.OutcomeModel;
 import org.bson.BsonReader;
 import org.bson.BsonString;
 import org.bson.BsonValue;
@@ -17,7 +15,6 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.CollectibleCodec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-import org.bson.codecs.configuration.CodecRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
