@@ -12,19 +12,23 @@ const colorOpacity = (value: number): number => {
 };
 
 type ownProps = {
-  onlyTopFeatures?: boolean;
   featuresScore: IFeatureScores[];
+  large?: boolean;
 };
 
 const FeaturesScoreChart = (props: ownProps) => {
-  const { featuresScore } = props;
+  const { featuresScore, large = false } = props;
+  const size = {
+    width: large ? 1400 : 800,
+    height: large ? 50 * featuresScore.length : 500,
+  };
 
   return (
     <Chart
       ariaDesc="Importance of different features on the decision"
       ariaTitle="Features Scores Chart"
-      width={800}
-      height={500}
+      width={size.width}
+      height={size.height}
       domainPadding={{ x: [20, 20], y: 80 }}
       domain={{ y: [-1, 1] }}
       horizontal
@@ -57,7 +61,7 @@ const FeaturesScoreChart = (props: ownProps) => {
       <ChartLegend
         data={[{ name: "Negative Impact" }, { name: "Positive Impact" }]}
         colorScale={["var(--pf-global--palette--orange-300)", "var(--pf-global--info-color--100)"]}
-        x={250}
+        x={size.width / 2 - 150}
         y={10}
       />
     </Chart>

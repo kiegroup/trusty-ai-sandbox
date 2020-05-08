@@ -14,6 +14,13 @@
     vertical-align: middle;
     margin-left: .5em;
   }
+  .all-features-opener {
+    margin-left: var(--pf-global--spacer--md);
+  }
+  &__chart {
+    height: 550px;
+    margin: var(--pf-global--spacer--md) 0;
+  }
 }
 
 
