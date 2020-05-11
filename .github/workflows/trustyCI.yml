@@ -16,7 +16,7 @@ jobs:
       with:
         java-version: 1.11
     - name: Build services and run docker compose
-      run: ./end2endPoC/run-compose.sh -d
+      run: cd end2endPoC && ./run-compose.sh -d && cd ..
     - name: wait until mongodb is responsive
       run: timeout 300 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:27017)" != "200" ]]; do sleep 5; done' || false
     - name: add test user to mongodb
