@@ -128,13 +128,17 @@ public class LIMEishSaliencyExplanationProvider {
     private List<Output> flattenDmnResult(Map<String, Object> dmnResult, List<String> validOutcomeNames) {
         List<Output> result = new ArrayList<>();
         dmnResult.entrySet().stream().filter(x -> validOutcomeNames.contains(x.getKey())).forEach(x -> result.addAll(flattenOutput(x.getKey(), x.getValue())));
-        return result;
-    }
+        return result;      }
 
     private List<Output> flattenOutput(String key, Object value) {
         List<Output> result = new ArrayList<>();
-        if (value instanceof Double  || value instanceof Integer || value instanceof Float) {
+        if (value instanceof Double  || value instanceof Float) {
             result.add(new Output(key, Type.NUMBER, new Value<>((Double) value), 0));
+            return result;
+        }
+
+        if (value instanceof Integer) {
+            result.add(new Output(key, Type.NUMBER, new Value<>((Integer) value), 0));
             return result;
         }
 
