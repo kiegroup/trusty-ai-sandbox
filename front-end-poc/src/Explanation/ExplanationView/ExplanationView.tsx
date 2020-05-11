@@ -92,8 +92,7 @@ const ExplanationView = () => {
         <div className="container">
           <Title headingLevel="h2" size="3xl">
             <span className="explanation-view__title">Decision Explanation: </span>
-            {!outcomeData && <SkeletonInlineStripe />}
-            {outcomeData && <span>{outcomeData[0].outcomeName}</span>}
+            {outcomeData === null ? <SkeletonInlineStripe /> : <span>{outcomeData[0].outcomeName}</span>}
           </Title>
         </div>
       </PageSection>
@@ -109,8 +108,11 @@ const ExplanationView = () => {
               </Title>
             </StackItem>
             <StackItem>
-              {!outcomeData && <SkeletonGrid rowsNumber={6} colsNumber={2} gutterSize="md" />}
-              {outcomeData && <OutcomePreview outcomeData={outcomeData} compact={false} />}
+              {outcomeData === null ? (
+                <SkeletonGrid rowsNumber={6} colsNumber={2} gutterSize="md" />
+              ) : (
+                <OutcomePreview outcomeData={outcomeData} compact={false} />
+              )}
             </StackItem>
           </Stack>
         </div>
@@ -124,26 +126,24 @@ const ExplanationView = () => {
               </Title>
             </StackItem>
             <StackItem>
-              {topFeatures && (
+              {topFeatures ? (
                 <Title headingLevel="h4" size="xl">
                   Top Features Score Chart
                 </Title>
-              )}
-              {!topFeatures && (
+              ) : (
                 <Title headingLevel="h4" size="xl">
                   Features Score Chart
                 </Title>
               )}
               <Grid>
-                <GridItem span={8}>
+                <GridItem span={9}>
                   <div className="explanation-view__chart">
-                    {!featuresScores && <SkeletonTornadoChart valuesCount={10} height={400} />}
-                    {featuresScores && (
-                      <FeaturesScoreChart
-                        featuresScore={featuresScores.slice(Math.max(featuresScores.length - 10, 0))}
-                      />
+                    {featuresScores === null ? (
+                      <SkeletonTornadoChart valuesCount={10} height={400} />
+                    ) : (
+                      <FeaturesScoreChart featuresScore={featuresScores} />
                     )}
-                    {topFeatures && featuresScores && (
+                    {topFeatures && featuresScores !== null && (
                       <>
                         <Button
                           variant="secondary"
@@ -169,7 +169,7 @@ const ExplanationView = () => {
                     )}
                   </div>
                 </GridItem>
-                <GridItem span={4}>{featuresScores && <FeaturesScoreTable featuresScore={featuresScores} />}</GridItem>
+                <GridItem span={3}>{featuresScores && <FeaturesScoreTable featuresScore={featuresScores} />}</GridItem>
               </Grid>
             </StackItem>
           </Stack>
