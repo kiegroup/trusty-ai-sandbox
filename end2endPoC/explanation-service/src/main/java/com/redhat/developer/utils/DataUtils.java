@@ -8,13 +8,20 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
+import javax.xml.crypto.Data;
+
 import com.redhat.developer.model.Feature;
 import com.redhat.developer.model.Output;
+import com.redhat.developer.model.Prediction;
 import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.PredictionOutput;
 import com.redhat.developer.model.Type;
@@ -123,14 +130,6 @@ public class DataUtils {
         return new PredictionInput(features);
     }
 
-//    public static PredictionOutput outputFrom(double[] doubles) {
-//        List<Output> outputs = new ArrayList<>(doubles.length);
-//        for (double d : doubles) {
-//            outputs.add(new Output(new Value<>(d), Type.NUMBER, d));
-//        }
-//        return new PredictionOutput(outputs);
-//    }
-
     public static double[] toNumbers(PredictionInput input) {
         double[] doubles = new double[input.getFeatures().size()];
         int i = 0;
@@ -163,7 +162,6 @@ public class DataUtils {
         return new Feature(String.valueOf(d), Type.NUMBER, new Value<>(d));
     }
 
-
     public static PredictionInput perturbDrop(PredictionInput input) {
         PredictionInput perturbedInput = new PredictionInput(new ArrayList<>(input.getFeatures()));
         // Extract 1+ random indexes to be perturbed
@@ -173,6 +171,67 @@ public class DataUtils {
             perturbedInput.getFeatures().set(indexesToBePerturbed[i], featureDrop(perturbedInput.getFeatures().get(indexesToBePerturbed[i])));
         }
         return perturbedInput;
+    }
+
+    public static void encodeFeatures(Collection<Prediction> trainingData, Prediction original) {
+        Prediction firstItem = trainingData.stream().findFirst().get();
+        List<Type> featureTypes = firstItem.getInput().getFeatures().stream().map(Feature::getType).collect(Collectors.toList());
+
+        for (int t = 0; t < featureTypes.size(); t++) {
+            if (!Type.NUMBER.equals(featureTypes.get(t))) {
+                // convert values for this feature into a number
+                switch (featureTypes.get(t)) {
+                    case STRING:
+                        for (Prediction p : trainingData) {
+                            Feature originalFeature = p.getInput().getFeatures().get(t);
+                            Feature newFeature = new Feature(originalFeature.getName(), Type.NUMBER,
+                                                             new Value<>(originalFeature.getValue().asString().equals(original.getInput().getFeatures().get(t).getValue().asString()) ? 1 : 0));
+                            p.getInput().getFeatures().set(t, newFeature);
+                        }
+                        break;
+                    case BINARY:
+                        break;
+                    case BOOLEAN:
+                        break;
+                    case DATE:
+                        break;
+                    case URI:
+                        break;
+                    case TIME:
+                        break;
+                    case DURATION:
+                        break;
+                    case VECTOR:
+                        break;
+                    case UNDEFINED:
+                        break;
+                    case CURRENCY:
+                        break;
+                }
+            } else {
+                // max - min scaling
+                double[] doubles = new double[trainingData.size()];
+                int i = 0;
+                for (Prediction p : trainingData) {
+                    Feature feature = p.getInput().getFeatures().get(t);
+                    doubles[i] = feature.getValue().asNumber();
+                    i++;
+                }
+                double min = DoubleStream.of(doubles).min().getAsDouble();
+                double max = DoubleStream.of(doubles).max().getAsDouble();
+                doubles = DoubleStream.of(doubles).map(d -> (d - min) / (max - min)).toArray();
+
+                int j = 0;
+                for (Prediction p : trainingData) {
+                    Feature originalFeature = p.getInput().getFeatures().get(t);
+                    double newValue = doubles[j];
+                    Feature newFeature = new Feature(originalFeature.getName(), Type.NUMBER,
+                                                     new Value<>(newValue));
+                    p.getInput().getFeatures().set(t, newFeature);
+                    j++;
+                }
+            }
+        }
     }
 
     private static Feature featureDrop(Feature feature) {
@@ -199,12 +258,10 @@ public class DataUtils {
                 }
                 break;
             case NUMBER:
-                // set the number to 0
-                if (0 != feature.getValue().asNumber()) {
-                    value = new Value<>(0);
-                } else { // or subtract one to the current value
-                    value = new Value<>(feature.getValue().asNumber() - 1);
-                }
+                double mean = feature.getValue().asNumber();
+                double stdDev = feature.getValue().asNumber() / 4;
+                int size = 10;
+                value = new Value<>(DataUtils.generateData(mean, stdDev, size)[random.nextInt(size - 1)]);
                 break;
             case BOOLEAN:
                 // flip the boolean value
@@ -228,5 +285,14 @@ public class DataUtils {
                 break;
         }
         return new Feature(feature.getName(), feature.getType(), value);
+    }
+
+    public static Output labelEncodeOutputValue(List<Output> actualOutputs, int o, List<PredictionOutput> predictionOutputs, int i) {
+        PredictionOutput generatedOutput = predictionOutputs.get(i);
+        Output predictedOutput = generatedOutput.getOutputs().get(o);
+        Object target = actualOutputs.get(o).getValue().getUnderlyingObject();
+        Object observed = predictedOutput.getValue().getUnderlyingObject();
+        Value<Integer> predictedValue = new Value<>(target.equals(observed) ? 1 : 0);
+        return new Output("target", Type.NUMBER, predictedValue, predictedOutput.getScore());
     }
 }
