@@ -13,7 +13,6 @@ const FeaturesScoreChart = (props: ownProps) => {
   const height = large ? 50 * featuresScore.length : 500;
 
   const labels = useMemo(() => {
-    console.log("compute labels");
     let labels: string[] = [];
     featuresScore.forEach((item) => {
       labels.push(`${item.featureName}\n${Math.floor(item.featureScore * 100) / 100}`);
