@@ -1,6 +1,5 @@
 package org.kie.trusty.xai.impl.explainer.local.saliency;
 
-import java.math.BigDecimal;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -45,10 +44,11 @@ public class LIMEishSaliencyExplanationProviderTest {
         for (double i : inputs) {
             Feature feature = mock(Feature.class);
             when(feature.getValue()).thenReturn(new Value<>(i));
+            when(feature.getType()).thenReturn(Type.NUMBER);
             features.add(feature);
         }
         when(input.getFeatures()).thenReturn(features);
-        when(prediction.getInput()).thenReturn(input);
+        when(prediction.getPredictionInput()).thenReturn(input);
         Saliency saliency = limEishSaliencyExplanationProvider.explain(prediction);
         assertNotNull(saliency);
         List<FeatureImportance> topFeatures = saliency.getTopFeatures(3);

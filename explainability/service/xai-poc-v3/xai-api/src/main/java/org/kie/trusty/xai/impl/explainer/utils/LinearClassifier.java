@@ -26,8 +26,8 @@ public class LinearClassifier {
 
     public void fit(Collection<Prediction> trainingData) {
         for (Prediction prediction : trainingData) {
-            PredictionInput input = prediction.getInput();
-            PredictionOutput output = prediction.getOutput();
+            PredictionInput input = prediction.getPredictionInput();
+            PredictionOutput output = prediction.getPredictionOutput();
             double predictedOutput = predict(input);
             double targetOutput = DoubleStream.of(DataUtils.toNumbers(output)).sum();
             double diff = targetOutput - predictedOutput;

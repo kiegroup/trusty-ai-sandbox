@@ -6,9 +6,15 @@ import org.kie.trusty.m2x.model.Feature;
 @Schema
 public class TabularData {
 
-    private final double[] x;
-    private final double[] y;
-    private final Feature feature;
+    private double[] x;
+    private double[] y;
+    private Feature feature;
+
+    public TabularData() {
+        this.x = new double[0];
+        this.y = new double[0];
+        this.feature = new Feature();
+    }
 
     public TabularData(Feature feature, double[] x, double[] y) {
         assert x.length == y.length : "x and y lenghts do not match";
@@ -28,4 +34,17 @@ public class TabularData {
     public double[] getY() {
         return y;
     }
+
+    public void setFeature(Feature feature) {
+        this.feature = feature;
+    }
+
+    public void setX(double[] x) {
+        this.x = x;
+    }
+
+    public void setY(double[] y) {
+        this.y = y;
+    }
+
 }

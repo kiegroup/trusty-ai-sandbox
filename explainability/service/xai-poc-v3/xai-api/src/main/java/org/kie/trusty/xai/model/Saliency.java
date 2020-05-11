@@ -1,5 +1,6 @@
 package org.kie.trusty.xai.model;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,7 +9,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema
 public class Saliency {
 
-    private final List<FeatureImportance> perFeatureImportance;
+    private List<FeatureImportance> perFeatureImportance;
+
+    public Saliency() {
+        this.perFeatureImportance = Collections.emptyList();
+    }
 
     public Saliency(List<FeatureImportance> perFeatureImportance) {
         this.perFeatureImportance = perFeatureImportance;
@@ -16,6 +21,10 @@ public class Saliency {
 
     public List<FeatureImportance> getPerFeatureImportance() {
         return perFeatureImportance;
+    }
+
+    public void setPerFeatureImportance(List<FeatureImportance> perFeatureImportance) {
+        this.perFeatureImportance = perFeatureImportance;
     }
 
     public List<FeatureImportance> getTopFeatures(int k) {

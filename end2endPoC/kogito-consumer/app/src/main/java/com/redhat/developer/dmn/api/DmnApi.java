@@ -1,6 +1,7 @@
 package com.redhat.developer.dmn.api;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.RequestScoped;
@@ -122,7 +123,7 @@ public class DmnApi {
             required = true,
             schema = @Schema(implementation = String.class)
     ) @PathParam("id") String id, EvaluationRequestBody inputs) {
-        Object o = dmnService.evaluateModel(id, inputs.inputs);
+        Map<String, Object> o = dmnService.evaluateModel(id, inputs.inputs);
         return new EvaluationResponse(o);
     }
 }

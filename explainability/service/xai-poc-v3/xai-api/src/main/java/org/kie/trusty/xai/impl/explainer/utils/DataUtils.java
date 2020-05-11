@@ -148,6 +148,7 @@ public class DataUtils {
     public static double[] toNumbers(PredictionInput input) {
         double[] doubles = new double[input.getFeatures().size()];
         int i = 0;
+        // TODO : strings 
         for (Feature f : input.getFeatures()) {
             doubles[i] = f.getValue().asNumber();
             i++;

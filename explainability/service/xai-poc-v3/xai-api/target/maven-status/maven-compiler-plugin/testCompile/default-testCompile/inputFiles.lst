@@ -1,0 +1,2 @@
+/home/jrota/vagrant/bionic64/trusty-ai-sandbox/explainability/service/xai-poc-v3/xai-api/src/test/java/org/kie/trusty/xai/impl/explainer/local/saliency/LIMEishSaliencyExplanationProviderTest.java
+/home/jrota/vagrant/bionic64/trusty-ai-sandbox/explainability/service/xai-poc-v3/xai-api/src/test/java/org/kie/trusty/xai/impl/explainer/global/viz/PartialDependencePlotProviderTest.java

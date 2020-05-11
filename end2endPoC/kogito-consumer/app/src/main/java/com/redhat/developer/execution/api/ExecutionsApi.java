@@ -1,8 +1,9 @@
 package com.redhat.developer.execution.api;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 
@@ -21,7 +22,6 @@ import com.redhat.developer.execution.IExecutionService;
 import com.redhat.developer.execution.models.DMNResultModel;
 import com.redhat.developer.execution.responses.execution.ExecutionHeaderResponse;
 import com.redhat.developer.execution.responses.execution.ExecutionResponse;
-import com.redhat.developer.execution.storage.IExecutionsStorageExtension;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -48,13 +48,15 @@ public class ExecutionsApi {
     public Response getExecutions(
             @Parameter(
                     name = "from",
-                    description = "Start datetime for the lookup. Date in the format \"yyyy-MM-dd'T'HH:mm:ss.SSS\"",
+//                    description = "Start datetime for the lookup. Date in the format \"yyyy-MM-dd'T'HH:mm:ss.SSS\"",
+                    description = "Start datetime for the lookup. Date in the format \"yyyy-MM-dd\"",
                     required = false,
                     schema = @Schema(implementation = String.class)
             ) @DefaultValue("yesterday") @QueryParam("from") String from,
             @Parameter(
                     name = "to",
-                    description = "End datetime for the lookup. Date in the format \"yyyy-MM-dd'T'HH:mm:ss.SSS\"",
+//                    description = "End datetime for the lookup. Date in the format \"yyyy-MM-dd'T'HH:mm:ss.SSS\"",
+                    description = "End datetime for the lookup. Date in the format \"yyyy-MM-dd\"",
                     required = false,
                     schema = @Schema(implementation = String.class)
             ) @DefaultValue("now") @QueryParam("to") String to,
@@ -75,19 +77,26 @@ public class ExecutionsApi {
                     description = "Execution ID prefix to be matched",
                     required = false,
                     schema = @Schema(implementation = String.class)
-            ) @DefaultValue("") @QueryParam("search") String prefix) {
+            ) @DefaultValue("") @QueryParam("search") String prefix) throws ParseException {
 
         if (from.equals("yesterday")) {
             from = java.time.LocalDateTime.now().minusDays(1).toString();
         }
         if (to.equals("now")) {
             to = java.time.LocalDateTime.now().plusDays(1).toString();
+        } else {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(dateFormat.parse(to));
+            cal.add(Calendar.DATE, 1);
+            to = cal.toString();
         }
+
         List<DMNResultModel> results;
 
         try {
             results = executionService.getDecisions(from, to, prefix);
-            results.sort(Comparator.comparing(DMNResultModel::getExecutionDate));
+            results.sort(Comparator.comparing(DMNResultModel::getExecutionDate).reversed());
         } catch (RuntimeException e) {
             e.printStackTrace();
             return Response.status(400, String.format("Bad request: {}", e.getMessage())).build();

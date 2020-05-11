@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
 
 import com.redhat.developer.database.infinispan.InfinispanQueryFactory;
 import org.infinispan.Cache;
