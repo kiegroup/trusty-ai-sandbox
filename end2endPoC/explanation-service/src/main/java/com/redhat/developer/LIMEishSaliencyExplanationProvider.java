@@ -128,13 +128,22 @@ public class LIMEishSaliencyExplanationProvider {
     private List<Output> flattenDmnResult(Map<String, Object> dmnResult, List<String> validOutcomeNames) {
         List<Output> result = new ArrayList<>();
         dmnResult.entrySet().stream().filter(x -> validOutcomeNames.contains(x.getKey())).forEach(x -> result.addAll(flattenOutput(x.getKey(), x.getValue())));
-        return result;
-    }
+        return result;      }
 
     private List<Output> flattenOutput(String key, Object value) {
         List<Output> result = new ArrayList<>();
-        if (value instanceof Double || value instanceof Integer || value instanceof Float) {
+        if (value instanceof Double  || value instanceof Float) {
             result.add(new Output(key, Type.NUMBER, new Value<>((Double) value), 0));
+            return result;
+        }
+
+        if (value instanceof Integer) {
+            result.add(new Output(key, Type.NUMBER, new Value<>((Integer) value), 0));
+            return result;
+        }
+
+        if (value instanceof Boolean) {
+            result.add(new Output(key, Type.BOOLEAN, new Value<>((Boolean) value), 0));
             return result;
         }
 
@@ -184,6 +193,12 @@ public class LIMEishSaliencyExplanationProvider {
             features.add(new Output(input.inputName, Type.NUMBER, new Value<>(Double.valueOf(String.valueOf(input.value))), 0));
             return features;
         }
+        if(input.typeRef.equals("boolean")) {
+            features.add(new Output(input.inputName, Type.BOOLEAN, new Value<>((Boolean) input.value), 0));
+            return features;
+        }
+
+        System.out.println(input.typeRef);
         input.components.get(0).forEach(x -> features.addAll(getFlatBuiltInOutputs(x)));
         return features;
     }
