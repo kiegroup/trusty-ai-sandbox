@@ -25,7 +25,7 @@ import com.redhat.developer.model.Value;
 import com.redhat.developer.requests.TypedData;
 import com.redhat.developer.utils.DataUtils;
 import com.redhat.developer.utils.HttpHelper;
-import com.redhat.developer.utils.LinearClassifier;
+import com.redhat.developer.utils.LinearModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,23 +60,39 @@ public class LIMEishSaliencyExplanationProvider {
         for (int o = 0; o < actualOutputs.size(); o++) {
             Collection<Prediction> training = new LinkedList<>();
             List<PredictionInput> perturbedInputs = new LinkedList<>();
-            for (int i = 0; i < noOfSamples; i++) {
+            double perturbedDataSize = Math.min(noOfSamples, Math.pow(2, features.size()));
+            for (int i = 0; i < perturbedDataSize; i++) {
                 perturbedInputs.add(DataUtils.perturbDrop(prediction.getInput()));
             }
             List<PredictionOutput> predictionOutputs = predict(perturbedInputs, inputs, outputs, modelName);
 
+            Map<Double, Long> rawClassesBalance = predictionOutputs.stream().map(p -> p.getOutputs().get(0).getValue()
+                    .asNumber()).collect(Collectors.groupingBy(Double::doubleValue, Collectors.counting()));
+
+            logger.debug("raw samples per class: {}", rawClassesBalance);
+
+            boolean classification = rawClassesBalance.size() == 2;
             for (int i = 0; i < perturbedInputs.size(); i++) {
-                Output classifierOutput = labelEncodeOutputValue(actualOutputs, o, predictionOutputs, i);
-                Prediction perturbedDataPrediction = new Prediction(perturbedInputs.get(i), new PredictionOutput(List.of(classifierOutput)));
+                Output output = classification ? DataUtils.labelEncodeOutputValue(
+                        actualOutputs, o, predictionOutputs, i) : predictionOutputs.get(i).getOutputs().get(o);
+                Prediction perturbedDataPrediction = new Prediction(perturbedInputs.get(i), new PredictionOutput(List.of(output)));
                 training.add(perturbedDataPrediction);
             }
 
-            LinearClassifier linearClassifier = new LinearClassifier(features.size());
-            linearClassifier.fit(training);
-            for (int i = 0; i < weights.length; i++) {
-                weights[i] += linearClassifier.getWeights()[i] / (double) outputs.size();
+            if (logger.isDebugEnabled()) {
+                Map<Double, Long> encodedClassesBalance = training.stream().map(p -> p.getOutput().getOutputs().get(0)
+                        .getValue().asNumber()).collect(Collectors.groupingBy(Double::doubleValue, Collectors.counting()));
+                logger.debug("encoded samples per class: {}", encodedClassesBalance);
             }
-            logger.debug("weights updated for output {}", outputs.get(o));
+
+            DataUtils.encodeFeatures(training, prediction);
+
+            LinearModel linearModel = new LinearModel(features.size(), classification, 0);
+            linearModel.fit(training);
+            for (int i = 0; i < weights.length; i++) {
+                weights[i] += linearModel.getWeights()[i] / (double) outputs.size();
+            }
+            logger.info("weights updated for output {}", outputs.get(o).value);
         }
         for (int i = 0; i < weights.length; i++) {
             FeatureImportance featureImportance = new FeatureImportance(features.get(i), weights[i]);
@@ -85,13 +101,6 @@ public class LIMEishSaliencyExplanationProvider {
         long end = System.currentTimeMillis();
         logger.info("explanation time: {}ms", (end - start));
         return new Saliency(saliencies);
-    }
-
-    private Output labelEncodeOutputValue(List<Output> actualOutputs, int o, List<PredictionOutput> predictionOutputs, int i) {
-        PredictionOutput generatedOutput = predictionOutputs.get(i);
-        Output predictedOutput = generatedOutput.getOutputs().get(o);
-        Value<Integer> predictedValue = new Value<>(actualOutputs.get(o).equals(predictedOutput) ? 1 : 0);
-        return new Output("target", Type.NUMBER, predictedValue, predictedOutput.getScore());
     }
 
     private List<PredictionOutput> predict(List<PredictionInput> perturbatedInputs, List<TypedData> originalInput, List<TypedData> originalOutputs, String modelName) {
