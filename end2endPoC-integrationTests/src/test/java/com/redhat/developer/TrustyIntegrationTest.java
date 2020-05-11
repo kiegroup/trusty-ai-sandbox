@@ -19,6 +19,7 @@ import com.redhat.developer.models.decisions.OutcomesResponse;
 import com.redhat.developer.models.decisions.Saliency;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
@@ -75,6 +76,7 @@ public class TrustyIntegrationTest {
         LOGGER.info("Test 3: retrieve execution list");
         LOGGER.info(given().when().get(trustyEndpoint + "/executions")
                 .then().contentType(ContentType.JSON).extract().response().jsonPath().prettyPrint());
+
         retryUntilSuccess(
                 () -> given().when().get(trustyEndpoint + "/executions")
                         .then().contentType(ContentType.JSON).extract().response().jsonPath().getObject("$", ExecutionResponse.class).headers.size() >= 1);
@@ -88,12 +90,13 @@ public class TrustyIntegrationTest {
     @Test
     @Order(4)
     public void retrieveInputs() throws InterruptedException {
-        LOGGER.info("Test 4: retrieve inputs of decision");
+        LOGGER.info("Test 4: retrieve inputs of decision " + executionId);
         LOGGER.info(given().when().get(trustyEndpoint + "/executions/decisions/" + executionId + "/inputs")
-                            .then().contentType(ContentType.JSON).extract().response().jsonPath().prettyPrint());
+                            .then().extract().response().asString());
 
-        DecisionInputsResponse response =  given()
-                .when().get(trustyEndpoint + "/executions/decisions/" + executionId + "/inputs").then().extract().jsonPath().getObject("$", DecisionInputsResponse.class);
+        DecisionInputsResponse response =  executeUntilSuccess(
+                    () -> given().when().get(trustyEndpoint + "/executions/decisions/" + executionId + "/inputs")
+                ).then().extract().jsonPath().getObject("$", DecisionInputsResponse.class);
 
 
         Assertions.assertNotNull(response);
@@ -111,6 +114,8 @@ public class TrustyIntegrationTest {
     @Order(5)
     public void retrieveDecisionOutcomes() throws InterruptedException {
         LOGGER.info("Test 5: retrieve outcomes");
+        LOGGER.info(given().when().get(trustyEndpoint + "/executions/decisions/" + executionId + "/outcomes")
+                            .then().extract().response().asString());
 
         OutcomesResponse outcomes =  given()
                 .when().get(trustyEndpoint + "/executions/decisions/" + executionId + "/outcomes").then().extract().jsonPath().getObject("$", OutcomesResponse.class);
@@ -147,6 +152,22 @@ public class TrustyIntegrationTest {
         }
     }
 
+    private Response executeUntilSuccess(Callable callable) throws InterruptedException {
+        ExecutorService executor = new ScheduledThreadPoolExecutor(1);
+        for (int i = 0; i <= 60; i++) {
+            try {
+                Future<Response> future = executor.submit(callable);
+                Response response = future.get();
+                if (response.statusCode() == 200) {
+                    return response;
+                }
+            } catch (Exception e) {
+                LOGGER.info("Request failed due to " + e.getMessage());
+            }
+            Thread.sleep(1000);
+        }
+        throw new NotFoundException("Request did not success.");
+    }
 
     private boolean retryUntilSuccess(Callable callable) throws InterruptedException {
         ExecutorService executor = new ScheduledThreadPoolExecutor(1);
