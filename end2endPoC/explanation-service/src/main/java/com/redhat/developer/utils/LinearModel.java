@@ -49,7 +49,9 @@ public class LinearModel {
                 double diff = targetOutput - predictedOutput;
                 loss = Math.max(0, 1 - targetOutput * predictedOutput);
                 if (diff != 0) { // avoid null update to save computation
-                    weights = DoubleStream.of(weights).map(d -> d + 1e-5 * diff).map(d -> Double.isNaN(d) ? 0d : d).toArray();
+                    for (int j = 0; j < weights.length; j++) {
+                        weights[j] += 1e-2 * diff * doubles[j];
+                    }
                 }
                 i++;
                 if (i == trainingData.size()) {
