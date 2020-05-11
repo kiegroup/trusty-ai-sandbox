@@ -142,6 +142,11 @@ public class TrustyIntegrationTest {
     @Order(7)
     public void retrieveFeatureImportance() throws InterruptedException {
         LOGGER.info("Test 7: retrieve feature importance");
+
+        retryUntilSuccess(
+                () -> given().when().get(trustyEndpoint + "/executions/decisions/" + executionId + "/featureImportance")
+                        .then().contentType(ContentType.JSON).extract().response().jsonPath().getObject("$", Saliency.class).featureImportance.size() >= 1);
+
         Saliency saliency =  given()
                 .when().get(trustyEndpoint + "/executions/decisions/" + executionId + "/featureImportance").then().extract().jsonPath().getObject("$", Saliency.class);
 
