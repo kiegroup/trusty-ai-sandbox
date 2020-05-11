@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -34,7 +35,7 @@ public class LocalExplanabilityApi {
     }
     )
     @Operation(summary = "Returns the feature importance for a decision.", description = "Returns the feature importance for a particular decision calculated using the lime algorithm.")
-    public Response lime(@QueryParam("key") String decisionId) {
+    public Response lime(@PathParam("key") String decisionId) {
         Saliency saliency = explainabilityService.getFeatureImportance(decisionId);
         saliency.executionId = null; // quick hack to remove execution id from response, TODO convert to dto.
         return Response.ok(saliency).build();
