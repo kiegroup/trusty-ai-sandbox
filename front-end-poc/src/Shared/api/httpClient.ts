@@ -1,10 +1,9 @@
-import axios, {AxiosRequestConfig, CancelTokenSource} from "axios";
+import axios, { AxiosRequestConfig, CancelTokenSource } from "axios";
 
 const httpClient = axios.create({
-    baseURL: "http://localhost:4000",
-    timeout: 5000,
-    headers: {
-    }
+  baseURL: "http://localhost:4000",
+  timeout: 5000,
+  headers: {},
 });
 
 /**
@@ -14,15 +13,15 @@ const httpClient = axios.create({
  * at some point it will need to check for an identifier
  * if parallel requests need canceling
  * */
-let call:CancelTokenSource;
+let call: CancelTokenSource;
 const callOnce = (config: AxiosRequestConfig) => {
-    if (call) {
-        call.cancel("Request superseded");
-    }
-    call = axios.CancelToken.source();
+  if (call) {
+    call.cancel("Request superseded");
+  }
+  call = axios.CancelToken.source();
 
-    config.cancelToken = call.token;
-    return httpClient(config);
+  config.cancelToken = call.token;
+  return httpClient(config);
 };
 
 export { httpClient, callOnce };
