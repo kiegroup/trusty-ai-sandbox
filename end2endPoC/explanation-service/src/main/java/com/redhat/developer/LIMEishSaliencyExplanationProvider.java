@@ -54,15 +54,17 @@ public class LIMEishSaliencyExplanationProvider {
 
         Prediction prediction = convert(inputs, outputs);
         List<FeatureImportance> saliencies = new LinkedList<>();
-        List<Feature> features = prediction.getInput().getFeatures();
+        PredictionInput predictionInput = prediction.getInput();
+        List<Feature> features = predictionInput.getFeatures();
         List<Output> actualOutputs = prediction.getOutput().getOutputs();
-        double[] weights = new double[features.size()];
+        int noOfFeatures = features.size();
+        double[] weights = new double[noOfFeatures];
         for (int o = 0; o < actualOutputs.size(); o++) {
             Collection<Prediction> training = new LinkedList<>();
             List<PredictionInput> perturbedInputs = new LinkedList<>();
-            double perturbedDataSize = Math.min(noOfSamples, Math.pow(2, features.size()));
+            double perturbedDataSize = Math.min(noOfSamples, Math.pow(2, noOfFeatures));
             for (int i = 0; i < perturbedDataSize; i++) {
-                perturbedInputs.add(DataUtils.perturbDrop(prediction.getInput()));
+                perturbedInputs.add(DataUtils.perturbDrop(predictionInput));
             }
             List<PredictionOutput> predictionOutputs = predict(perturbedInputs, inputs, outputs, modelName);
 
@@ -86,8 +88,9 @@ public class LIMEishSaliencyExplanationProvider {
             }
 
             DataUtils.encodeFeatures(training, prediction);
+            double[] sampleWeights = getSampleWeights(prediction, noOfFeatures, training);
 
-            LinearModel linearModel = new LinearModel(features.size(), classification, 0);
+            LinearModel linearModel = new LinearModel(noOfFeatures, classification, 0, sampleWeights);
             linearModel.fit(training);
             for (int i = 0; i < weights.length; i++) {
                 weights[i] += linearModel.getWeights()[i] / (double) outputs.size();
@@ -100,7 +103,17 @@ public class LIMEishSaliencyExplanationProvider {
         }
         long end = System.currentTimeMillis();
         logger.info("explanation time: {}ms", (end - start));
-        return new Saliency(saliencies);
+        return new Saliency(new Saliency(saliencies).getTopFeatures(5));
+    }
+
+    private double[] getSampleWeights(Prediction prediction, int noOfFeatures, Collection<Prediction> training) {
+        List<Prediction> singleton = List.of(prediction);
+        DataUtils.encodeFeatures(singleton, prediction);
+        double[] x = DataUtils.toNumbers(singleton.get(0).getInput());
+
+        return training.stream().map(p -> p.getInput()).map(DataUtils::toNumbers).map(
+                d -> DataUtils.euclidean(x, d)).map(d -> DataUtils.exponentialSmoothingKernel(
+                d, 0.75 * Math.sqrt(noOfFeatures))).mapToDouble(Double::doubleValue).toArray();
     }
 
     private List<PredictionOutput> predict(List<PredictionInput> perturbatedInputs, List<TypedData> originalInput, List<TypedData> originalOutputs, String modelName) {
@@ -128,11 +141,12 @@ public class LIMEishSaliencyExplanationProvider {
     private List<Output> flattenDmnResult(Map<String, Object> dmnResult, List<String> validOutcomeNames) {
         List<Output> result = new ArrayList<>();
         dmnResult.entrySet().stream().filter(x -> validOutcomeNames.contains(x.getKey())).forEach(x -> result.addAll(flattenOutput(x.getKey(), x.getValue())));
-        return result;      }
+        return result;
+    }
 
     private List<Output> flattenOutput(String key, Object value) {
         List<Output> result = new ArrayList<>();
-        if (value instanceof Double  || value instanceof Float) {
+        if (value instanceof Double || value instanceof Float) {
             result.add(new Output(key, Type.NUMBER, new Value<>((Double) value), 0));
             return result;
         }
@@ -194,7 +208,7 @@ public class LIMEishSaliencyExplanationProvider {
             features.add(new Output(input.inputName, Type.NUMBER, new Value<>(Double.valueOf(String.valueOf(input.value))), 0));
             return features;
         }
-        if(input.typeRef.equals("boolean")) {
+        if (input.typeRef.equals("boolean")) {
             features.add(new Output(input.inputName, Type.BOOLEAN, new Value<>((Boolean) input.value), 0));
             return features;
         }
