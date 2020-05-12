@@ -143,7 +143,8 @@ public class LIMEishSaliencyExplanationProvider {
         }
 
         if (value instanceof Boolean) {
-            result.add(new Output(key, Type.BOOLEAN, new Value<>((Boolean) value), 0));
+            Boolean vv = (Boolean) value;
+            result.add(new Output(key, Type.NUMBER, new Value<>(vv ? 1d : 0d), 0));
             return result;
         }
 
