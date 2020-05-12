@@ -25,7 +25,7 @@ import {
   DataToolbarItem,
   DataToolbarItemVariant,
 } from "@patternfly/react-core/dist/js/experimental";
-import { SearchIcon } from "@patternfly/react-icons";
+import { SearchIcon, CheckCircleIcon, ErrorCircleOIcon } from "@patternfly/react-icons";
 import FromFilter from "../FromFilter/FromFilter";
 import ToFilter from "../ToFilter/ToFilter";
 import PaginationContainer from "../PaginationContainer/PaginationContainer";
@@ -33,15 +33,23 @@ import NoExecutions from "../NoExecutions/NoExecutions";
 
 const ExecutionStatus = (props: { result: boolean }) => {
   let className = "execution-status-badge execution-status-badge--";
-  let status;
   if (props.result) {
     className += "success";
-    status = "Completed";
+    return (
+      <>
+        <CheckCircleIcon className={className} />
+        <span>Completed</span>
+      </>
+    );
   } else {
-    className += "failure";
-    status = "Failed";
+    className += "error";
+    return (
+      <>
+        <ErrorCircleOIcon className={className} />
+        <span>Error</span>
+      </>
+    );
   }
-  return <span className={className}>{status}</span>;
 };
 
 const prepareExecutionTableRows = (rowData: IExecution[]) => {
