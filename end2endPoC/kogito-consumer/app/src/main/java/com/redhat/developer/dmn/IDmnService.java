@@ -15,7 +15,5 @@ public interface IDmnService {
 
     ModelInputStructure getDmnInputStructure(String id);
 
-    ModelInputStructure getTypesDefinitions(String id);
-
     Map<DMNBaseNode, List<DMNBaseNode>> getDmnDependencyGraph(String id);
 }

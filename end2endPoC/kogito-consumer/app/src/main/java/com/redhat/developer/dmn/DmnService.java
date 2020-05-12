@@ -47,25 +47,6 @@ public class DmnService implements IDmnService {
     }
 
     @Override
-    public ModelInputStructure getTypesDefinitions(String id) {
-        DMNModel model = getDmnModel(id);
-        Set<ItemDefNode> inputs = model.getItemDefinitions();
-        ModelInputStructure modelInputStructure = new ModelInputStructure();
-        modelInputStructure.inputData = inputs.stream().map(x -> new InputData(x.getName(), x.getType().getName(), x.getType().isComposite(), x.getType().isCollection())).collect(Collectors.toList());
-        modelInputStructure.customTypes = new ArrayList<>();
-
-        for (ItemDefNode input : inputs) {
-            if (input.getType().isComposite()) {
-                List<TypeComponent> components = input.getType().getFields().entrySet().stream().map(x -> new TypeComponent(
-                        x.getKey(), x.getValue().getBaseType() != null ? x.getValue().getBaseType().getName() : x.getValue().getName(), x.getValue().isCollection(), x.getValue().isComposite(), false, null)).collect(Collectors.toList());
-                modelInputStructure.customTypes.add(new TypeDefinition(input.getType().getName(), input.getType().isCollection(), input.getType().isComposite(), components));
-            }
-        }
-
-        return modelInputStructure;
-    }
-
-    @Override
     public ModelInputStructure getDmnInputStructure(String id) {
         DMNModel model = getDmnModel(id);
         Set<InputDataNode> inputs = model.getInputs();
@@ -73,14 +54,15 @@ public class DmnService implements IDmnService {
         modelInputStructure.inputData = inputs.stream().map(x -> new InputData(x.getName(), x.getType().getName(), x.getType().isComposite(), x.getType().isCollection())).collect(Collectors.toList());
         modelInputStructure.customTypes = new ArrayList<>();
 
-        for (InputDataNode input : inputs) {
-            if (input.getType().isComposite()) {
-                List<TypeComponent> components = input.getType().getFields().entrySet().stream().map(x -> new TypeComponent(
-                        x.getKey(), x.getValue().getBaseType() != null ? x.getValue().getBaseType().getName() : x.getValue().getName(), x.getValue().isCollection(), x.getValue().isComposite(), false, null)).collect(Collectors.toList());
-                modelInputStructure.customTypes.add(new TypeDefinition(input.getType().getName(), input.getType().isCollection(), input.getType().isComposite(), components));
+        Set<ItemDefNode> allDefinitions = model.getItemDefinitions();
+        for (ItemDefNode ff : allDefinitions) {
+            String comp = ff.getType().getName();
+            if (!modelInputStructure.customTypes.stream().filter(x -> x.typeName.equals(comp)).findFirst().isPresent() && comp != "number" && comp != "boolean" && comp != "string" && comp != "dateTime") { // TODO: REVIEW BUILT IN TYPES
+                List<TypeComponent> components = ff.getType().getFields().entrySet().stream().map(x -> new TypeComponent(
+                        x.getKey(), x.getValue().getName(), x.getValue().isCollection(), x.getValue().isComposite(), false, null)).collect(Collectors.toList());
+                modelInputStructure.customTypes.add(new TypeDefinition(ff.getType().getName(), ff.getType().isCollection(), ff.getType().isComposite(), components));
             }
         }
-
         return modelInputStructure;
     }
 
@@ -93,7 +75,7 @@ public class DmnService implements IDmnService {
         stream.forEach(base -> {
             usedWhere.computeIfAbsent(base, x -> new ArrayList<>());
             for (DMNNode d : base.getDependencies().values()) {
-                usedWhere.computeIfAbsent((DMNBaseNode)d, x -> new ArrayList<>()).add(base);
+                usedWhere.computeIfAbsent((DMNBaseNode) d, x -> new ArrayList<>()).add(base);
             }
         });
     }

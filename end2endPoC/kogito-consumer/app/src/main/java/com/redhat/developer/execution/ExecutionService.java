@@ -45,10 +45,7 @@ public class ExecutionService implements IExecutionService {
         List<SingleDecisionInputResponse> response = new ArrayList<>();
 
         for (OutcomeModel outcome : event.decisions){
-            LOGGER.info("new outcome");
-            LOGGER.info(outcome.outcomeName);
             DMNBaseNode baseNode = dependencyGraph.keySet().stream().filter(x -> x.getId().equals(outcome.outcomeId)).findFirst().get();
-            LOGGER.info(baseNode.getName() + " " + baseNode.getType().getName() + " " + baseNode.getType().isComposite() + " " + outcome.result);
             response.add(buildStructuredForValue(
                     event.modelId,
                     baseNode.getName(),
@@ -171,11 +168,8 @@ public class ExecutionService implements IExecutionService {
     }
 
     private SingleDecisionInputResponse buildStructuredForValue(String modelId, String name, String typeRef, boolean isComposite, Object value) {
-        ModelInputStructure dmnInputStructure = dmnService.getTypesDefinitions(modelId);
+        ModelInputStructure dmnInputStructure = dmnService.getDmnInputStructure(modelId);
         List<TypeDefinition> customTypes = dmnInputStructure.customTypes;
-        LOGGER.info(String.valueOf(dmnInputStructure.customTypes.size()));
-        LOGGER.info(name + " " + typeRef);
-
         if (isComposite){
             return new SingleDecisionInputResponse(name, typeRef, analyzeComponents(value, typeRef, customTypes), null);
         }
@@ -183,9 +177,6 @@ public class ExecutionService implements IExecutionService {
     }
 
     private List<List<SingleDecisionInputResponse>> analyzeComponents(Object value, String typeRef, List<TypeDefinition> definitions) {
-        LOGGER.info("Type ref name " + value);
-        LOGGER.info("Type ref input " + typeRef);
-        definitions.forEach(x -> LOGGER.info(x.typeName));
         TypeDefinition typeDefinition = definitions.stream().filter(x -> x.typeName.equals(typeRef)).findFirst().orElseThrow(() -> new NoSuchElementException());
         List<List<SingleDecisionInputResponse>> components = new ArrayList<>();
 
@@ -208,7 +199,7 @@ public class ExecutionService implements IExecutionService {
         for (Map.Entry<String, Object> entry : aa.entrySet()) {
             String componentInputName = entry.getKey();
             Object componentValue = entry.getValue();
-            TypeComponent componentType = typeDefinition.components.stream().filter(x -> x.name.equals(componentInputName)).findFirst().orElseThrow(() -> new NoSuchElementException());
+            TypeComponent componentType = typeDefinition.components.stream().filter(x -> x.typeRef.equals(componentInputName) || x.name.equals(componentInputName)).findFirst().orElseThrow(() -> new NoSuchElementException());
             if (!componentType.isComposite) {
                 component.add(new SingleDecisionInputResponse(componentInputName, componentType.typeRef, null, componentValue));
             } else {
