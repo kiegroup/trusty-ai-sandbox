@@ -8,6 +8,6 @@ scrape_configs:
     metrics_path: /metrics
 
     static_configs:
-      - targets: ['producer:8080'] 
+      - targets: ['producer:1337'] 
         
         #['host.docker.internal:8180']
