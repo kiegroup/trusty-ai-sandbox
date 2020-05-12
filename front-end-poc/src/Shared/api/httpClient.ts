@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, CancelTokenSource } from "axios";
 
 const httpClient = axios.create({
-  baseURL: "http://localhost:4000",
+  baseURL: "http://localhost:1336",
   timeout: 5000,
   headers: {},
 });
