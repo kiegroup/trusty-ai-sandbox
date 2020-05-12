@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./App.scss";
 import {
   Avatar,
@@ -81,10 +81,6 @@ const App = () => {
     <PageSidebar nav={PageNav} isNavOpen={isMobileView ? isNavOpenMobile : isNavOpenDesktop} theme="dark" />
   );
   const pageId = "main-content-page-layout-manual-nav";
-
-  useEffect(() => {
-    document.title = "Trusty PoC";
-  }, []);
 
   return (
     <>
