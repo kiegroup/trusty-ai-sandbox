@@ -1,9 +1,7 @@
 package com.redhat.developer.utils;
 
 import java.security.SecureRandom;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
 import com.redhat.developer.model.Prediction;
@@ -16,7 +14,7 @@ public class LinearModel {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private double[] weights;
+    private final double[] weights;
     private final boolean classification;
     private final double threshold;
 
@@ -29,7 +27,7 @@ public class LinearModel {
         this.threshold = threshold;
         SecureRandom secureRandom = new SecureRandom();
         for (int i = 0; i < weights.length; i++) {
-            this.weights[i] = 1f / (double) secureRandom.nextInt(100);
+            this.weights[i] = 1f / (1d + secureRandom.nextInt(100));
         }
         this.classification = classification;
     }
@@ -37,9 +35,8 @@ public class LinearModel {
     public void fit(Collection<Prediction> trainingData) {
         assert !trainingData.isEmpty() : "cannot fit on an empty dataset";
 
-        double loss;
+        double loss = 1;
         for (int e = 0; e < 3; e++) {
-            int i = 0;
             for (Prediction prediction : trainingData) {
                 PredictionInput input = prediction.getInput();
                 PredictionOutput output = prediction.getOutput();
@@ -47,18 +44,25 @@ public class LinearModel {
                 double predictedOutput = predict(doubles);
                 double targetOutput = DataUtils.toNumbers(output)[0]; // assume the output has always one element (by previous label encoding construction)
                 double diff = targetOutput - predictedOutput;
-                loss = Math.max(0, 1 - targetOutput * predictedOutput);
+                diff = checkFinite(diff);
+                loss = Math.max(0, 1 - checkFinite(targetOutput * predictedOutput));
                 if (diff != 0) { // avoid null update to save computation
                     for (int j = 0; j < weights.length; j++) {
-                        weights[j] += 1e-2 * diff * doubles[j];
+                        double v = 1e-2 * diff * doubles[j];
+                        v = checkFinite(v);
+                        weights[j] += v;
                     }
                 }
-                i++;
-                if (i == trainingData.size()) {
-                    logger.info("loss: {}", loss);
-                }
             }
+            logger.info("loss: {}", loss);
         }
+    }
+
+    private double checkFinite(double diff) {
+        if (Double.isNaN(diff) || Double.isInfinite(diff)) {
+            diff = 0;
+        }
+        return diff;
     }
 
     private double predict(double[] input) {
