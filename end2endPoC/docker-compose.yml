@@ -36,26 +36,26 @@ services:
       JVM_OPTS: "-Xms32M -Xmx64M"
       SERVER_SERVLET_CONTEXTPATH: "/"
 
-  # prometheus:
-  #   image: prom/prometheus:v2.8.0
-  #   volumes:
-  #     - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-  #   command:
-  #     - '--config.file=/etc/prometheus/prometheus.yml'
-  #   ports:
-  #     - '9090:9090'
-  #   depends_on:
-  #     - consumer
+  prometheus:
+    image: prom/prometheus:v2.8.0
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - '9090:9090'
+    depends_on:
+      - consumer
 
-  # grafana:
-  #   image: grafana/grafana:6.6.1
-  #   depends_on:
-  #     - prometheus
-  #   ports:
-  #     - 3000:3000
-  #   volumes:
-  #     - ./grafana/provisioning/:/etc/grafana/provisioning/
-  #     - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+  grafana:
+    image: grafana/grafana:6.6.1
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
   
   
   # elasticsearch:
