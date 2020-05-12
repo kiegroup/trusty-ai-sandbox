@@ -15,14 +15,16 @@ public class LinearModel {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final double[] weights;
+    private final double[] sampleWeights;
     private final boolean classification;
     private final double threshold;
 
-    public LinearModel(int noOfWeights) {
-        this(noOfWeights, false, 0);
+    public LinearModel(int size, boolean classification, int noOfWeights) {
+        this(noOfWeights, false, 0, new double[0]);
     }
 
-    public LinearModel(int size, boolean classification, double threshold) {
+    public LinearModel(int size, boolean classification, double threshold, double[] sampleWeights) {
+        this.sampleWeights = sampleWeights;
         this.weights = new double[size];
         this.threshold = threshold;
         SecureRandom secureRandom = new SecureRandom();
@@ -35,24 +37,28 @@ public class LinearModel {
     public void fit(Collection<Prediction> trainingData) {
         assert !trainingData.isEmpty() : "cannot fit on an empty dataset";
 
-        double loss = 1;
-        for (int e = 0; e < 3; e++) {
+        for (int e = 0; e < 10; e++) {
+            double loss = 0;
+            int i = 0;
             for (Prediction prediction : trainingData) {
                 PredictionInput input = prediction.getInput();
                 PredictionOutput output = prediction.getOutput();
                 double[] doubles = DataUtils.toNumbers(input);
                 double predictedOutput = predict(doubles);
                 double targetOutput = DataUtils.toNumbers(output)[0]; // assume the output has always one element (by previous label encoding construction)
-                double diff = targetOutput - predictedOutput;
-                diff = checkFinite(diff);
-                loss = Math.max(0, 1 - checkFinite(targetOutput * predictedOutput));
+                double diff = checkFinite(targetOutput - predictedOutput);
+                loss += Math.max(0, 1 - checkFinite(targetOutput * predictedOutput)) / trainingData.size();
                 if (diff != 0) { // avoid null update to save computation
                     for (int j = 0; j < weights.length; j++) {
-                        double v = 1e-2 * diff * doubles[j];
+                        double v = 1e-1 * diff * doubles[j];
+                        if (trainingData.size() == sampleWeights.length) {
+                            v *= sampleWeights[i];
+                        }
                         v = checkFinite(v);
                         weights[j] += v;
                     }
                 }
+                i++;
             }
             logger.info("loss: {}", loss);
         }

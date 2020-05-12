@@ -41,10 +41,11 @@ public class ExplainabilityService implements IExplainabilityService {
     @Override
     public boolean processExecution(DMNResultModel execution) {
         List<SingleDecisionInputResponse> structuredInputs = executionService.getStructuredInputs(execution).input;
-        List<SingleDecisionInputResponse> structuredOutcomes = executionService.getStructuredOutcomesValues(execution);
+        List<SingleDecisionInputResponse> structuredOutcomes = executionService.getStructuredOutcomesValues(execution).subList(0, 1);
         LimeExplanationRequest request = new LimeExplanationRequest(structuredInputs, structuredOutcomes, execution.modelName);
         String response = null;
         try {
+            LOGGER.info(objectMapper.writeValueAsString(request));
             response = httpHelper.doPost("/xai/saliency/lime", objectMapper.writeValueAsString(request));
         } catch (IOException e) {
             LOGGER.error("Something went wrong in the communication with the explanability service: ", e);

@@ -1,6 +1,7 @@
 package com.redhat.developer.execution;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +56,18 @@ public class ExecutionService implements IExecutionService {
                     baseNode.getType().isComposite(),
                     outcome.result));
         }
+
+        DMNBaseNode topLevelNode = dependencyGraph.entrySet()
+                .stream()
+                .filter(kv -> kv.getValue().size() == 0)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList()).get(0);
+
+        SingleDecisionInputResponse top = response.stream().filter(x -> x.inputName.equals(topLevelNode.getName())).findFirst().get();
+
+        response.remove(top);
+        response.add(0, top);
+
         return response;
     }
 

@@ -9,15 +9,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
-
-import javax.xml.crypto.Data;
 
 import com.redhat.developer.model.Feature;
 import com.redhat.developer.model.Output;
@@ -219,7 +214,7 @@ public class DataUtils {
                 }
                 double min = DoubleStream.of(doubles).min().getAsDouble();
                 double max = DoubleStream.of(doubles).max().getAsDouble();
-                doubles = DoubleStream.of(doubles).map(d -> (d - min) / (max - min)).toArray();
+                doubles = DoubleStream.of(doubles).map(d -> (d - min) / (max - min)).map(d -> Double.isNaN(d) ? 1 : d).toArray();
 
                 int j = 0;
                 for (Prediction p : trainingData) {
@@ -294,5 +289,35 @@ public class DataUtils {
         Object observed = predictedOutput.getValue().getUnderlyingObject();
         Value<Integer> predictedValue = new Value<>(target.equals(observed) ? 1 : 0);
         return new Output("target", Type.NUMBER, predictedValue, predictedOutput.getScore());
+    }
+
+    public static double hamming(double[] x, double[] y) {
+        int h = 0;
+        for (int i = 0; i < Math.min(x.length, y.length); i++) {
+            if (x[i] != y[i]) {
+                h++;
+            }
+        }
+        return h + (x.length - y.length);
+    }
+
+    public static double euclidean(double[] x, double[] y) {
+        double e = 0;
+        for (int i = 0; i < Math.min(x.length, y.length); i++) {
+            e += Math.pow(x[i] - y[i], 2);
+        }
+        return Math.sqrt(e);
+    }
+
+    public static double gower(double[] x, double[] y, double lambda) {
+        return euclidean(x, y) + lambda * hamming(x, y);
+    }
+
+    public static double gaussianKernel(double x) {
+        return Math.exp(-Math.pow(x, 2) / 2) / Math.sqrt(3.14);
+    }
+
+    public static double exponentialSmoothingKernel(double x, double sigma) {
+        return Math.sqrt(Math.exp(-(Math.pow(x, 2)) / Math.pow(sigma, 2)));
     }
 }

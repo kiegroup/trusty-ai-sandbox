@@ -16,6 +16,7 @@ import com.redhat.developer.dmn.IDmnService;
 import com.redhat.developer.dmn.models.input.ModelInputStructure;
 import com.redhat.developer.execution.IExecutionService;
 import com.redhat.developer.execution.models.DMNResultModel;
+import com.redhat.developer.execution.models.OutcomeModel;
 import com.redhat.developer.execution.models.OutcomeModelWithInputs;
 import com.redhat.developer.execution.responses.decisions.OutcomesResponse;
 import com.redhat.developer.execution.responses.decisions.OutcomesStructuredResponse;
@@ -164,13 +165,18 @@ public class DecisionsApi {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Multiple events have been retrieved with this ID.", key)).build();
         }
 
-        List<SingleDecisionInputResponse> structuredOutcomesValues = executionService.getStructuredOutcomesValues(event.get(0));
+        DMNResultModel dmnEvent = event.get(0);
+
+        List<SingleDecisionInputResponse> structuredOutcomesValues = executionService.getStructuredOutcomesValues(dmnEvent);
         Map<String, SingleDecisionInputResponse> mmap = new HashMap<>();
         structuredOutcomesValues.forEach(x -> mmap.put(x.inputName, x));
 
-        event.get(0).decisions.forEach(x -> x.result = mmap.get(x.outcomeName));
+        dmnEvent.decisions.forEach(x -> x.result = mmap.get(x.outcomeName));
+        OutcomeModel outcomeModel = dmnEvent.decisions.stream().filter(x -> x.outcomeName.equals(structuredOutcomesValues.get(0).inputName)).findFirst().get();
+        dmnEvent.decisions.remove(outcomeModel);
+        dmnEvent.decisions.add(0, outcomeModel);
 
-        return Response.ok(new OutcomesResponse(ExecutionHeaderResponse.fromDMNResultModel(event.get(0)), event.get(0).decisions)).build();
+        return Response.ok(new OutcomesResponse(ExecutionHeaderResponse.fromDMNResultModel(dmnEvent), dmnEvent.decisions)).build();
     }
 
     @GET
