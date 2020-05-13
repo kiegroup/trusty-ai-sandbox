@@ -13,11 +13,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.redhat.developer.dmn.IDmnService;
+import com.redhat.developer.dmn.models.DmnModel;
 import com.redhat.developer.dmn.models.input.ModelInputStructure;
 import com.redhat.developer.execution.IExecutionService;
 import com.redhat.developer.execution.models.DMNResultModel;
 import com.redhat.developer.execution.models.OutcomeModel;
 import com.redhat.developer.execution.models.OutcomeModelWithInputs;
+import com.redhat.developer.execution.responses.ExecutionModelResponse;
 import com.redhat.developer.execution.responses.decisions.OutcomesResponse;
 import com.redhat.developer.execution.responses.decisions.OutcomesStructuredResponse;
 import com.redhat.developer.execution.responses.decisions.inputs.DecisionInputsResponse;
@@ -32,6 +34,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
+import org.kie.dmn.api.core.DMNModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +61,7 @@ public class DecisionsApi {
     public Response getExecutionByKey(
             @Parameter(
                     name = "key",
-                    description = "ID of the decision that needs to be fetched",
+                    description = "ID of the execution that needs to be fetched",
                     required = true,
                     schema = @Schema(implementation = String.class)
             ) @PathParam("key") String key) {
@@ -88,7 +91,7 @@ public class DecisionsApi {
     public Response getExecutionInputs(
             @Parameter(
                     name = "key",
-                    description = "ID of the decision that needs to be fetched",
+                    description = "ID of the execution that needs to be fetched",
                     required = true,
                     schema = @Schema(implementation = String.class)
             )
@@ -126,7 +129,7 @@ public class DecisionsApi {
     public Response getExecutionStructuredInputs(
             @Parameter(
                     name = "key",
-                    description = "ID of the decision that needs to be fetched",
+                    description = "ID of the execution that needs to be fetched",
                     required = true,
                     schema = @Schema(implementation = String.class)
             )
@@ -150,7 +153,7 @@ public class DecisionsApi {
     public Response getExecutionOutcome(
             @Parameter(
                     name = "key",
-                    description = "ID of the decision that needs to be fetched",
+                    description = "ID of the execution that needs to be fetched",
                     required = true,
                     schema = @Schema(implementation = String.class)
             )
@@ -210,6 +213,28 @@ public class DecisionsApi {
     }
 
     @GET
+    @Path("/{key}/model")
+    @APIResponses(value = {
+            @APIResponse(description = "Gets the model that evaluated the execution.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = ExecutionModelResponse.class))),
+            @APIResponse(description = "Bad Request", responseCode = "400", content = @Content(mediaType = MediaType.TEXT_PLAIN))
+    }
+    )
+    @Operation(summary = "Gets the model that evaluated the execution.", description = "Gets the model that evaluated the execution.")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDecisionModel(
+            @Parameter(
+                    name = "key",
+                    description = "ID of the execution that needs to be fetched",
+                    required = true,
+                    schema = @Schema(implementation = String.class)
+            )
+            @PathParam("key") String key) {
+        DMNResultModel event = executionService.getEventsByMatchingId(key).get(0);
+        DmnModel model = dmnService.getDmnModelDocument(event.modelId);
+        return Response.ok(ExecutionModelResponse.fromDmnModel(model)).build();
+    }
+
+    @GET
     @Path("/{key}/outcomes/{outcomeId}")
     @APIResponses(value = {
             @APIResponse(description = "Gets the decision outcome detail.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = OutcomeModelWithInputs.class))),
@@ -221,14 +246,14 @@ public class DecisionsApi {
     public Response getExecutionOutcomeById(
             @Parameter(
                     name = "key",
-                    description = "ID of the decision that needs to be fetched",
+                    description = "ID of the execution that needs to be fetched",
                     required = true,
                     schema = @Schema(implementation = String.class)
             )
             @PathParam("key") String key,
             @Parameter(
                     name = "outcomeId",
-                    description = "ID of the decision that needs to be fetched",
+                    description = "ID of the outcome that needs to be fetched",
                     required = true,
                     schema = @Schema(implementation = String.class)
             )
