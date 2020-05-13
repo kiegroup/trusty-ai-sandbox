@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from "react";
 import { IFeatureScores } from "../ExplanationView/ExplanationView";
 import { Chart, ChartAxis, ChartBar, ChartLegend } from "@patternfly/react-charts";
+import { maxBy } from "lodash";
 
 type ownProps = {
   featuresScore: IFeatureScores[];
@@ -11,6 +12,13 @@ const FeaturesScoreChart = (props: ownProps) => {
   const { featuresScore, large = false } = props;
   const width = large ? 1400 : 800;
   const height = large ? 50 * featuresScore.length : 500;
+
+  const maxValue = useMemo(() => {
+    const max = maxBy(featuresScore, function (item) {
+      return Math.abs(item.featureScore);
+    });
+    return max ? max.featureScore : 1;
+  }, [featuresScore]);
 
   const labels = useMemo(() => {
     let labels: string[] = [];
@@ -36,7 +44,7 @@ const FeaturesScoreChart = (props: ownProps) => {
       width={width}
       height={height}
       domainPadding={{ x: [20, 20], y: 80 }}
-      domain={{ y: [-1, 1] }}
+      domain={{ y: [-maxValue, maxValue] }}
       horizontal
       padding={{ top: 60, right: 30, bottom: 30, left: 30 }}>
       <ChartAxis tickFormat={() => ""} />
