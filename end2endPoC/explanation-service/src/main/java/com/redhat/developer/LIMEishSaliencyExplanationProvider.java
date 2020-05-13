@@ -93,7 +93,7 @@ public class LIMEishSaliencyExplanationProvider {
         }
         long end = System.currentTimeMillis();
         logger.info("explanation time: {}ms", (end - start));
-        return new Saliency(saliencies, 3);
+        return new Saliency(saliencies);
     }
 
     private List<PredictionInput> getPerturbedInputs(PredictionInput predictionInput, int noOfFeatures) {
