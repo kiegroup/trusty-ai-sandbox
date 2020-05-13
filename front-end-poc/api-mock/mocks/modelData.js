@@ -90,7 +90,7 @@ const modelData = [
         executionId: 1001,
         deploymentDate: "01012020",
         modelId: "1234567890",
-        name: "modelName",
+        name: "fraud-scoring",
         namespace: "modelNameSpace",
         type: "http://www.omg.org/spec/DMN/20151101/dmn.xsd",
         serviceIdentifier: {
