@@ -14,6 +14,16 @@
   --pf-c-title--m-4xl--FontSize: 3rem;
 }
 
+.toast-notification-container {
+  width: 600px !important;
+  .Toastify__toast {
+    padding: 0 !important;
+  }
+  .Toastify__toast-body {
+    margin: 0 !important;
+  }
+}
+
 $danger-color: #f7923d;
 .decision {
   line-height: 10px;

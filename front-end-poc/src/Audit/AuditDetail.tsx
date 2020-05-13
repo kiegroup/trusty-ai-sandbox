@@ -41,9 +41,11 @@ const AuditDetail = () => {
   };
 
   useEffect(() => {
-    getExecution(executionType as ExecutionType, executionId).then((response) => {
-      setExecutionData(response.data);
-    });
+    getExecution(executionType as ExecutionType, executionId)
+      .then((response) => {
+        setExecutionData(response.data);
+      })
+      .catch(() => {});
   }, [executionType, executionId]);
 
   return (
