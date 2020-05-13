@@ -71,6 +71,11 @@ public class DmnService implements IDmnService {
         return getGraph(model);
     }
 
+    @Override
+    public DmnModel getDmnModelDocument(String id) {
+        return storageExtension.getModel(id);
+    }
+
     private void process(Stream<DMNBaseNode> stream, Map<DMNBaseNode, List<DMNBaseNode>> usedWhere) {
         stream.forEach(base -> {
             usedWhere.computeIfAbsent(base, x -> new ArrayList<>());
