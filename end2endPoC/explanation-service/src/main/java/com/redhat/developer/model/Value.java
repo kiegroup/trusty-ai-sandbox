@@ -17,7 +17,7 @@ public class Value<S> {
     }
 
     public double asNumber() {
-        return Double.parseDouble(asString());
+        return underlyingObject instanceof Boolean ? (Boolean) underlyingObject ? 1d : 0d : Double.parseDouble(asString());
     }
 
     public double asNumber(ValueEncoder<S, Double> encoder) {

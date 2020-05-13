@@ -6,7 +6,7 @@ import com.redhat.developer.dmn.models.DmnModel;
 
 public interface IDmnStorageExtension {
 
-    DmnModel getModel(String nameSpace);
+    DmnModel getModel(String modelId);
 
     boolean storeModel(DmnModel model);
 

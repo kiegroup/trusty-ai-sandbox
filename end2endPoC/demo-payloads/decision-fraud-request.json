@@ -1,0 +1,9 @@
+{"Transactions" : 
+ [ 
+  {"Card Type" : "Debit", "Location" : "Local", "Amount" : 10000, "Auth Code" : "Authorized"}, 
+  {"Card Type" : "Debit", "Location" : "Local", "Amount" : 10000, "Auth Code" : "Denied"},
+  {"Card Type" : "Prepaid", "Location" : "Local", "Amount" : 100, "Auth Code" : "Denied"},
+  {"Card Type" : "Reward", "Location" : "Local", "Amount" : 1000, "Auth Code" : "Authorized", "Date" : "2020-05-12T12:00:00Z"},
+  {"Card Type" : "Reward", "Location" : "Local", "Amount" : 1000, "Auth Code" : "Authorized", "Date" : "2020-05-13T12:00:00Z"}
+ ]
+}
