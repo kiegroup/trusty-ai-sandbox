@@ -1,11 +1,10 @@
 import { Divider, PageSection, PageSectionVariants, Spinner } from "@patternfly/react-core";
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
-import { IExecutionRouteParams } from "../Audit/types";
+import { IExecutionModelResponse, IExecutionRouteParams } from "../Audit/types";
 import { getModelDetail } from "../Shared/api/audit.api";
 import ModelDiagram from "./ModelDiagram";
 import "./ModelLookup.scss";
-
 
 const ModelLookup = () => {
     const { executionId } = useParams<IExecutionRouteParams>();
@@ -16,10 +15,8 @@ const ModelLookup = () => {
         getModelDetail(executionId)
             .then(response => {
                 if (didMount) {
-                    const modelType: string = response.data[0].modelType;
-                    const xml: string = response.data[0].xml;
-
-                    setViewer(<ModelDiagram executionId={executionId} modelType={modelType} xml={xml} />);
+                    const model: IExecutionModelResponse = response.data[0] as IExecutionModelResponse;
+                    setViewer(<ModelDiagram model={model} />);
                 }
             })
             .catch(() => { });
