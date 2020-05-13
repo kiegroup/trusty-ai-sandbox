@@ -61,7 +61,7 @@ public class DecisionsApi {
     public Response getExecutionByKey(
             @Parameter(
                     name = "key",
-                    description = "ID of the decision that needs to be fetched",
+                    description = "ID of the execution that needs to be fetched",
                     required = true,
                     schema = @Schema(implementation = String.class)
             ) @PathParam("key") String key) {
@@ -91,7 +91,7 @@ public class DecisionsApi {
     public Response getExecutionInputs(
             @Parameter(
                     name = "key",
-                    description = "ID of the decision that needs to be fetched",
+                    description = "ID of the execution that needs to be fetched",
                     required = true,
                     schema = @Schema(implementation = String.class)
             )
@@ -129,7 +129,7 @@ public class DecisionsApi {
     public Response getExecutionStructuredInputs(
             @Parameter(
                     name = "key",
-                    description = "ID of the decision that needs to be fetched",
+                    description = "ID of the execution that needs to be fetched",
                     required = true,
                     schema = @Schema(implementation = String.class)
             )
@@ -153,7 +153,7 @@ public class DecisionsApi {
     public Response getExecutionOutcome(
             @Parameter(
                     name = "key",
-                    description = "ID of the decision that needs to be fetched",
+                    description = "ID of the execution that needs to be fetched",
                     required = true,
                     schema = @Schema(implementation = String.class)
             )
@@ -224,7 +224,7 @@ public class DecisionsApi {
     public Response getDecisionModel(
             @Parameter(
                     name = "key",
-                    description = "ID of the decision that needs to be fetched",
+                    description = "ID of the execution that needs to be fetched",
                     required = true,
                     schema = @Schema(implementation = String.class)
             )
@@ -246,14 +246,14 @@ public class DecisionsApi {
     public Response getExecutionOutcomeById(
             @Parameter(
                     name = "key",
-                    description = "ID of the decision that needs to be fetched",
+                    description = "ID of the execution that needs to be fetched",
                     required = true,
                     schema = @Schema(implementation = String.class)
             )
             @PathParam("key") String key,
             @Parameter(
                     name = "outcomeId",
-                    description = "ID of the decision that needs to be fetched",
+                    description = "ID of the outcome that needs to be fetched",
                     required = true,
                     schema = @Schema(implementation = String.class)
             )
