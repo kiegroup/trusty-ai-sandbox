@@ -19,3 +19,18 @@ export interface IExecutionRouteParams {
     executionId: string,
     executionType: ExecutionType
 }
+
+export interface IFullModelResponse {
+    executionId: number,
+    deploymentDate: string,
+    modelId: string,
+    name: string,
+    namespace: string,
+    type: string,
+    serviceIdentifier: {
+        groupId: string,
+        artifactId: string,
+        version: string
+    },
+    model: string
+}
