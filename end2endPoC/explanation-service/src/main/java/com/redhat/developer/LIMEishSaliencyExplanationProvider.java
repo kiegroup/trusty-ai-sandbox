@@ -61,40 +61,31 @@ public class LIMEishSaliencyExplanationProvider {
         double[] weights = new double[noOfFeatures];
         for (int o = 0; o < actualOutputs.size(); o++) {
             Collection<Prediction> training = new LinkedList<>();
-            List<PredictionInput> perturbedInputs = new LinkedList<>();
-            double perturbedDataSize = Math.min(noOfSamples, Math.pow(2, noOfFeatures));
-            for (int i = 0; i < perturbedDataSize; i++) {
-                perturbedInputs.add(DataUtils.perturbDrop(predictionInput));
-            }
+            List<PredictionInput> perturbedInputs = getPerturbedInputs(predictionInput, noOfFeatures);
             List<PredictionOutput> predictionOutputs = predict(perturbedInputs, inputs, outputs, modelName);
 
-            Map<Double, Long> rawClassesBalance = predictionOutputs.stream().map(p -> p.getOutputs().get(0).getValue()
-                    .asNumber()).collect(Collectors.groupingBy(Double::doubleValue, Collectors.counting()));
-
-            logger.debug("raw samples per class: {}", rawClassesBalance);
-
-            boolean classification = rawClassesBalance.size() == 2;
             for (int i = 0; i < perturbedInputs.size(); i++) {
                 Output output = predictionOutputs.get(i).getOutputs().get(o);
                 Prediction perturbedDataPrediction = new Prediction(perturbedInputs.get(i), new PredictionOutput(List.of(output)));
                 training.add(perturbedDataPrediction);
             }
 
-            if (logger.isDebugEnabled()) {
-                Map<Double, Long> encodedClassesBalance = training.stream().map(p -> p.getOutput().getOutputs().get(0)
-                        .getValue().asNumber()).collect(Collectors.groupingBy(Double::doubleValue, Collectors.counting()));
-                logger.debug("encoded samples per class: {}", encodedClassesBalance);
-            }
-
             DataUtils.encodeFeatures(training, prediction);
+
             double[] sampleWeights = getSampleWeights(prediction, noOfFeatures, training);
+
+            Map<Double, Long> rawClassesBalance = predictionOutputs.stream().map(p -> p.getOutputs().get(0).getValue()
+                    .asNumber()).collect(Collectors.groupingBy(Double::doubleValue, Collectors.counting()));
+            logger.debug("raw samples per class: {}", rawClassesBalance);
+
+            boolean classification = rawClassesBalance.size() == 2;
 
             LinearModel linearModel = new LinearModel(noOfFeatures, classification, 0, sampleWeights);
             linearModel.fit(training);
             for (int i = 0; i < weights.length; i++) {
                 weights[i] += linearModel.getWeights()[i] / (double) outputs.size();
             }
-            logger.info("weights updated for output {}", outputs.get(o).value);
+            logger.debug("weights updated for output {}", outputs.get(o).value);
         }
         for (int i = 0; i < weights.length; i++) {
             FeatureImportance featureImportance = new FeatureImportance(features.get(i), weights[i]);
@@ -103,6 +94,15 @@ public class LIMEishSaliencyExplanationProvider {
         long end = System.currentTimeMillis();
         logger.info("explanation time: {}ms", (end - start));
         return new Saliency(saliencies, 3);
+    }
+
+    private List<PredictionInput> getPerturbedInputs(PredictionInput predictionInput, int noOfFeatures) {
+        List<PredictionInput> perturbedInputs = new LinkedList<>();
+        double perturbedDataSize = Math.min(noOfSamples, Math.pow(2, noOfFeatures));
+        for (int i = 0; i < perturbedDataSize; i++) {
+            perturbedInputs.add(DataUtils.perturbDrop(predictionInput));
+        }
+        return perturbedInputs;
     }
 
     private double[] getSampleWeights(Prediction prediction, int noOfFeatures, Collection<Prediction> training) {

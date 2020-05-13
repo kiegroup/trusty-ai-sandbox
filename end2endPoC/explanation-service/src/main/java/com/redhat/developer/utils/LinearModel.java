@@ -25,7 +25,7 @@ public class LinearModel {
     public LinearModel(int size, boolean classification, double threshold, double[] sampleWeights) {
         this.sampleWeights = sampleWeights;
         this.threshold = threshold;
-        this.weights = new double[size];//DataUtils.generateData(0, 1, size);
+        this.weights = new double[size];
         this.classification = classification;
     }
 
@@ -35,7 +35,7 @@ public class LinearModel {
         double lr = 0.01;
         double floss = 1;
         int e = 0;
-        while(floss > 0.2 && e < 15) {
+        while(floss > 0.1 && e < 15) {
             double loss = 0;
             int i = 0;
             for (Prediction prediction : trainingData) {
@@ -60,7 +60,7 @@ public class LinearModel {
                 i++;
             }
             floss = loss;
-            logger.info("loss: {}", loss);
+            logger.debug("loss: {}", loss);
             e++;
         }
     }

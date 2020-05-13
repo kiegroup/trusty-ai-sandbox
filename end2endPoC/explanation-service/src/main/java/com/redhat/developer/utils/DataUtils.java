@@ -161,8 +161,7 @@ public class DataUtils {
         List<Feature> originalFeatures = input.getFeatures();
         List<Feature> newFeatures = new ArrayList<>(originalFeatures);
         PredictionInput perturbedInput = new PredictionInput(newFeatures);
-        // Extract 1 + random indexes to be perturbed
-        int perturbationSize = Math.min(2, originalFeatures.size());
+        int perturbationSize = Math.min(2, originalFeatures.size()); // perturb up to 2 features at once
         int[] indexesToBePerturbed = new Random().ints(0, perturbedInput.getFeatures().size()).distinct().limit(perturbationSize).toArray();
         for (int i = 0; i < indexesToBePerturbed.length; i++) {
             perturbedInput.getFeatures().set(indexesToBePerturbed[i], featureDrop(perturbedInput.getFeatures().get(indexesToBePerturbed[i])));
@@ -222,12 +221,10 @@ public class DataUtils {
 
                 int j = 0;
                 for (Prediction p : trainingData) {
-                    Feature originalFeature = p.getInput().getFeatures().get(t);
-                    double perturbedNumber = doubles[j];
-                    double originalNumber = 1d;
-                    double newValue = Math.abs(perturbedNumber - originalNumber) < 0.1 ? 1 : 0;
+                    Feature originalFeature = original.getInput().getFeatures().get(t);
+                    double perturbedNumber = doubles[j]; // no binning, the feature is left perturbed
                     Feature newFeature = new Feature(originalFeature.getName(), Type.NUMBER,
-                                                     new Value<>(newValue));
+                                                     new Value<>(perturbedNumber));
                     p.getInput().getFeatures().set(t, newFeature);
                     j++;
                 }
@@ -259,10 +256,11 @@ public class DataUtils {
                 }
                 break;
             case NUMBER:
-                double mean = feature.getValue().asNumber();
-                double stdDev = feature.getValue().asNumber() * 0.33;
+                double ov = feature.getValue().asNumber();
                 int size = 10;
-                value = new Value<>(DataUtils.generateData(mean, stdDev, size)[random.nextInt(size - 1)]);
+                // sample from normal distribution and center around feature value
+                double v = DataUtils.generateData(0, 1, size)[random.nextInt(size - 1)] * ov;
+                value = new Value<>(v);
                 break;
             case BOOLEAN:
                 // flip the boolean value
