@@ -1,5 +1,7 @@
 package com.redhat.developer.explainability.api;
 
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -36,8 +38,13 @@ public class LocalExplanabilityApi {
     )
     @Operation(summary = "Returns the feature importance for a decision.", description = "Returns the feature importance for a particular decision calculated using the lime algorithm.")
     public Response lime(@PathParam("key") String decisionId) {
-        Saliency saliency = explainabilityService.getFeatureImportance(decisionId);
-        saliency.executionId = null; // quick hack to remove execution id from response, TODO convert to dto.
-        return Response.ok(saliency).build();
+        try {
+            Saliency saliency = explainabilityService.getFeatureImportance(decisionId);
+            saliency.executionId = null; // quick hack to remove execution id from response, TODO convert to dto.
+            return Response.ok(saliency).build();
+        }
+        catch (Exception e){
+            return Response.ok(new Saliency(new ArrayList<>())).build();
+        }
     }
 }
