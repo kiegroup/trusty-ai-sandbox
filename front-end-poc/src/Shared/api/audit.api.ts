@@ -4,7 +4,6 @@ import { AxiosRequestConfig } from "axios";
 const EXECUTIONS_PATH = "/executions";
 const DECISIONS_PATH = EXECUTIONS_PATH + "/decisions";
 const PROCESS_PATH = EXECUTIONS_PATH + "/processes";
-const MODELS_PATH = "/models";
 
 export type ExecutionType = 'decision' | 'process';
 
@@ -70,16 +69,16 @@ const getDecisionFeatureScores = (executionId: string) => {
 }
 
 const getDecisionOutcomeDetail = (executionId: string, outcomeId: string) => {
-    const getDecisionOutcomeDetailConfig : AxiosRequestConfig = {
+    const getDecisionOutcomeDetailConfig: AxiosRequestConfig = {
         url: `${DECISIONS_PATH}/${executionId}/outcomes/${outcomeId}`,
         method: 'get'
     }
     return httpClient(getDecisionOutcomeDetailConfig);
 }
 
-const getModelDetail = (id: string) => {
+const getModelDetail = (executionId: string) => {
     const getModelDetailConfig: AxiosRequestConfig = {
-        url: `${MODELS_PATH}/${id}`,
+        url: `${DECISIONS_PATH}/${executionId}/model`,
         method: 'get'
     }
     return httpClient(getModelDetailConfig);
