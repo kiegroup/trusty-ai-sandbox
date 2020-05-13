@@ -11,7 +11,7 @@ paths:
       parameters:
       - name: from
         in: query
-        description: Start datetime for the lookup. Date in the format "yyyy-MM-dd'T'HH:mm:ss.SSS"
+        description: Start datetime for the lookup. Date in the format "yyyy-MM-dd"
         required: false
         schema:
           default: yesterday
@@ -41,7 +41,7 @@ paths:
           type: string
       - name: to
         in: query
-        description: End datetime for the lookup. Date in the format "yyyy-MM-dd'T'HH:mm:ss.SSS"
+        description: End datetime for the lookup. Date in the format "yyyy-MM-dd"
         required: false
         schema:
           default: now
@@ -141,7 +141,7 @@ paths:
       parameters:
       - name: key
         in: path
-        description: ID of the decision that needs to be fetched
+        description: ID of the execution that needs to be fetched
         required: true
         schema:
           type: string
@@ -167,6 +167,33 @@ paths:
                     $ref: '#/components/schemas/ExecutionEnum'
                   executorName:
                     type: string
+  /executions/decisions/{key}/featureImportance:
+    get:
+      summary: Returns the feature importance for a decision.
+      description: Returns the feature importance for a particular decision calculated
+        using the lime algorithm.
+      parameters:
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            text/plain: {}
+        "200":
+          description: Gets the local explanation of a decision.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  executionId:
+                    type: string
+                  featureImportance:
+                    $ref: '#/components/schemas/ListFeatureImportance'
   /executions/decisions/{key}/inputs:
     get:
       summary: Gets the decision inputs.
@@ -174,7 +201,7 @@ paths:
       parameters:
       - name: key
         in: path
-        description: ID of the decision that needs to be fetched
+        description: ID of the execution that needs to be fetched
         required: true
         schema:
           type: string
@@ -192,6 +219,43 @@ paths:
                 properties:
                   inputs:
                     $ref: '#/components/schemas/MapStringObject'
+  /executions/decisions/{key}/model:
+    get:
+      summary: Gets the model that evaluated the execution.
+      description: Gets the model that evaluated the execution.
+      parameters:
+      - name: key
+        in: path
+        description: ID of the execution that needs to be fetched
+        required: true
+        schema:
+          type: string
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            text/plain: {}
+        "200":
+          description: Gets the model that evaluated the execution.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deploymentDate:
+                    type: string
+                  model:
+                    type: string
+                  modelId:
+                    type: string
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                  serviceIdentifier:
+                    $ref: '#/components/schemas/ServiceIdentifier'
+                  type:
+                    type: string
   /executions/decisions/{key}/outcomes:
     get:
       summary: Gets the decision outcomes.
@@ -199,7 +263,7 @@ paths:
       parameters:
       - name: key
         in: path
-        description: ID of the decision that needs to be fetched
+        description: ID of the execution that needs to be fetched
         required: true
         schema:
           type: string
@@ -227,13 +291,13 @@ paths:
       parameters:
       - name: key
         in: path
-        description: ID of the decision that needs to be fetched
+        description: ID of the execution that needs to be fetched
         required: true
         schema:
           type: string
       - name: outcomeId
         in: path
-        description: ID of the decision that needs to be fetched
+        description: ID of the outcome that needs to be fetched
         required: true
         schema:
           type: string
@@ -270,7 +334,7 @@ paths:
       parameters:
       - name: key
         in: path
-        description: ID of the decision that needs to be fetched
+        description: ID of the execution that needs to be fetched
         required: true
         schema:
           type: string
@@ -449,101 +513,16 @@ paths:
                   total:
                     format: int32
                     type: integer
-  /explainability:
-    get:
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AvailableAlgorithmsClassResponse'
-  /explainability/global:
-    get:
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AvailableAlgorithmsResponse'
-  /explainability/global/{explanabilityType}:
-    get:
-      parameters:
-      - name: explanabilityType
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ModelExplainationResponse'
-  /explainability/local:
-    get:
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AvailableAlgorithmsResponse'
-  /explainability/local/{explanabilityType}:
-    get:
-      parameters:
-      - name: explanabilityType
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ModelExplainationResponse'
-  /explainability/local/{explanabilityType}/featureInteraction:
+  /global/tabular/pdp:
     post:
       parameters:
-      - name: explanabilityType
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: modelId
+      - name: executionId
         in: query
         schema:
           type: string
       responses:
         "200":
           description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DecisionExplanationResponse'
-  /explainability/local/{explanabilityType}/score:
-    post:
-      parameters:
-      - name: explanabilityType
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: modelId
-        in: query
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DecisionExplanationResponse'
   /models:
     get:
       responses:
@@ -661,6 +640,13 @@ paths:
                 $ref: '#/components/schemas/AvailablePmmlModelsResponse'
 components:
   schemas:
+    AvailablePmmlModelsResponse:
+      type: object
+      properties:
+        availableModels:
+          type: array
+          items:
+            type: string
     ExecutionHeaderResponse:
       type: object
       properties:
@@ -686,6 +672,20 @@ components:
       - DECISION
       - PROCESS
       type: string
+    ExecutionDetailResponse:
+      type: object
+      properties:
+        header:
+          $ref: '#/components/schemas/ExecutionHeaderResponse'
+    ServiceIdentifier:
+      type: object
+      properties:
+        artifactId:
+          type: string
+        groupId:
+          type: string
+        version:
+          type: string
     OutcomeModelWithInputs:
       type: object
       properties:
@@ -780,11 +780,6 @@ components:
           type: string
         value:
           type: object
-    ExecutionDetailResponse:
-      type: object
-      properties:
-        header:
-          $ref: '#/components/schemas/ExecutionHeaderResponse'
     EvaluationRequestBody:
       type: object
       properties:
@@ -794,7 +789,7 @@ components:
       type: object
       properties:
         decisions:
-          type: object
+          $ref: '#/components/schemas/MapStringObject'
     FullModelResponse:
       type: object
       properties:
@@ -907,36 +902,15 @@ components:
           type: string
         version:
           type: string
-    AvailablePmmlModelsResponse:
+    FeatureImportance:
       type: object
       properties:
-        availableModels:
-          type: array
-          items:
-            type: string
-    ModelExplainationResponse:
-      type: object
-      properties:
-        test:
+        featureName:
           type: string
-    DecisionExplanationResponse:
-      type: object
-      properties:
-        explaination:
-          type: object
-    AlgorithmClassEnum:
-      type: object
-    AvailableAlgorithmsClassResponse:
-      type: object
-      properties:
-        types:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlgorithmClassEnum'
-    AvailableAlgorithmsResponse:
-      type: object
-      properties:
-        availableAlgorithms:
-          type: array
-          items:
-            type: string
+        featureScore:
+          format: double
+          type: number
+    ListFeatureImportance:
+      type: array
+      items:
+        $ref: '#/components/schemas/FeatureImportance'
