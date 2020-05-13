@@ -21,16 +21,15 @@ export interface IExecutionRouteParams {
 }
 
 export interface IFullModelResponse {
-    executionId: number,
-    deploymentDate: string,
-    modelId: string,
+    deploymentDate?: string,
+    modelId?: string,
     name: string,
     namespace: string,
     type: string,
     serviceIdentifier: {
-        groupId: string,
-        artifactId: string,
-        version: string
+        groupId?: string,
+        artifactId?: string,
+        version?: string
     },
     model: string
 }
