@@ -74,53 +74,143 @@ const example3 = "<PMML xmlns='http://www.dmg.org/PMML-4_4' version='4.4'> " +
 const modelData = [
     {
         executionId: 1000,
-        modelType: "DMN",
-        xml: ""
+        deploymentDate: "01012020",
+        modelId: "1234567890",
+        name: "myMortgage",
+        namespace: "modelNameSpace",
+        type: "http://www.omg.org/spec/DMN/20151101/dmn.xsd",
+        serviceIdentifier: {
+            groupId: "groupId",
+            artifactId: "artifacrtId",
+            version: "version"
+        },
+        model: ""
     },
     {
         executionId: 1001,
-        modelType: "DMN",
-        xml: ""
+        deploymentDate: "01012020",
+        modelId: "1234567890",
+        name: "fraud-scoring",
+        namespace: "modelNameSpace",
+        type: "http://www.omg.org/spec/DMN/20151101/dmn.xsd",
+        serviceIdentifier: {
+            groupId: "groupId",
+            artifactId: "artifacrtId",
+            version: "version"
+        },
+        model: ""
     },
     {
         executionId: 1002,
-        modelType: "DMN",
-        xml: ""
+        deploymentDate: "01012020",
+        modelId: "1234567890",
+        name: "modelName",
+        namespace: "modelNameSpace",
+        type: "http://www.omg.org/spec/DMN/20151101/dmn.xsd",
+        serviceIdentifier: {
+            groupId: "groupId",
+            artifactId: "artifacrtId",
+            version: "version"
+        },
+        model: ""
     },
     {
         executionId: 1003,
-        modelType: "DMN",
-        xml: ""
+        deploymentDate: "01012020",
+        modelId: "1234567890",
+        name: "modelName",
+        namespace: "modelNameSpace",
+        type: "http://www.omg.org/spec/DMN/20151101/dmn.xsd",
+        serviceIdentifier: {
+            groupId: "groupId",
+            artifactId: "artifacrtId",
+            version: "version"
+        },
+        model: ""
     },
     {
         executionId: 1004,
-        modelType: "DMN",
-        xml: ""
+        deploymentDate: "01012020",
+        modelId: "1234567890",
+        name: "modelName",
+        namespace: "modelNameSpace",
+        type: "http://www.omg.org/spec/DMN/20151101/dmn.xsd",
+        serviceIdentifier: {
+            groupId: "groupId",
+            artifactId: "artifacrtId",
+            version: "version"
+        },
+        model: ""
     },
     {
         executionId: 1005,
-        modelType: "PMML",
-        xml: example1
+        deploymentDate: "01012020",
+        modelId: "1234567890",
+        name: "modelName",
+        namespace: "modelNameSpace",
+        type: "http://www.dmg.org/PMML-4_4",
+        serviceIdentifier: {
+            groupId: "groupId",
+            artifactId: "artifacrtId",
+            version: "version"
+        },
+        model: example1
     },
     {
         executionId: 1006,
-        modelType: "PMML",
-        xml: example2
+        deploymentDate: "01012020",
+        modelId: "1234567890",
+        name: "modelName",
+        namespace: "modelNameSpace",
+        type: "http://www.dmg.org/PMML-4_4",
+        serviceIdentifier: {
+            groupId: "groupId",
+            artifactId: "artifacrtId",
+            version: "version"
+        },
+        model: example2
     },
     {
         executionId: 1007,
-        modelType: "PMML",
-        xml: example3
+        deploymentDate: "01012020",
+        modelId: "1234567890",
+        name: "modelName",
+        namespace: "modelNameSpace",
+        type: "http://www.dmg.org/PMML-4_4",
+        serviceIdentifier: {
+            groupId: "groupId",
+            artifactId: "artifacrtId",
+            version: "version"
+        },
+        model: example3
     },
     {
         executionId: 1008,
-        modelType: "PMML",
-        xml: example1
+        deploymentDate: "01012020",
+        modelId: "1234567890",
+        name: "modelName",
+        namespace: "modelNameSpace",
+        type: "http://www.dmg.org/PMML-4_4",
+        serviceIdentifier: {
+            groupId: "groupId",
+            artifactId: "artifacrtId",
+            version: "version"
+        },
+        model: example1
     },
     {
         executionId: 1009,
-        modelType: "PMML",
-        xml: example2
+        deploymentDate: "01012020",
+        modelId: "1234567890",
+        name: "modelName",
+        namespace: "modelNameSpace",
+        type: "http://www.dmg.org/PMML-4_4",
+        serviceIdentifier: {
+            groupId: "groupId",
+            artifactId: "artifacrtId",
+            version: "version"
+        },
+        model: example2
     }
 ];
 
