@@ -19,6 +19,7 @@ import com.redhat.developer.execution.IExecutionService;
 import com.redhat.developer.execution.models.DMNResultModel;
 import com.redhat.developer.execution.models.OutcomeModel;
 import com.redhat.developer.execution.models.OutcomeModelWithInputs;
+import com.redhat.developer.execution.responses.ExecutionModelResponse;
 import com.redhat.developer.execution.responses.decisions.OutcomesResponse;
 import com.redhat.developer.execution.responses.decisions.OutcomesStructuredResponse;
 import com.redhat.developer.execution.responses.decisions.inputs.DecisionInputsResponse;
@@ -214,7 +215,7 @@ public class DecisionsApi {
     @GET
     @Path("/{key}/model")
     @APIResponses(value = {
-            @APIResponse(description = "Gets the model that evaluated the execution.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = DmnModel.class))),
+            @APIResponse(description = "Gets the model that evaluated the execution.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = ExecutionModelResponse.class))),
             @APIResponse(description = "Bad Request", responseCode = "400", content = @Content(mediaType = MediaType.TEXT_PLAIN))
     }
     )
@@ -229,8 +230,8 @@ public class DecisionsApi {
             )
             @PathParam("key") String key) {
         DMNResultModel event = executionService.getEventsByMatchingId(key).get(0);
-        DMNModel model = dmnService.getDmnModel(event.modelId);
-        return Response.ok(model).build();
+        DmnModel model = dmnService.getDmnModelDocument(event.modelId);
+        return Response.ok(ExecutionModelResponse.fromDmnModel(model)).build();
     }
 
     @GET

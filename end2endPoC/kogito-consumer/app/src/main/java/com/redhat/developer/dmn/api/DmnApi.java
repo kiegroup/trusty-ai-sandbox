@@ -64,7 +64,7 @@ public class DmnApi {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public FullModelResponse getModelById(@PathParam("id") String id) {
-        DmnModel model = storageExtension.getModel(id);
+        DmnModel model = dmnService.getDmnModelDocument(id);
         return FullModelResponse.fromStorageModel(model);
     }
 
