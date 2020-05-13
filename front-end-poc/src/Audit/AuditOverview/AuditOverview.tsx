@@ -80,7 +80,7 @@ const AuditOverview = () => {
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
   const [rows, setRows] = useState<IRow[]>([]);
   const [searchString, setSearchString] = useState("");
-  const [latestSearches] = useState(["1001", "1007", "1032"]);
+  const [latestSearches, setLatestSearches] = useState<string[]>([]);
   const [fromDate, setFromDate] = useState(oneMonthAgo.toISOString().substr(0, 10));
   const [toDate, setToDate] = useState(new Date().toISOString().substr(0, 10));
   const [page, setPage] = useState(1);
@@ -114,6 +114,14 @@ const AuditOverview = () => {
           let tableRows = response.data.headers.length ? prepareExecutionTableRows(response.data.headers) : noResults;
           setRows(tableRows);
           setTotal(response.data.total);
+          // temporary solution: for demo purposes we display the first 3 executions here
+          if (response.data.total > 0 && latestSearches.length === 0) {
+            let searches = [];
+            for (let i = 0; i < 3; i++) {
+              searches.push(response.data.headers[i].executionId);
+            }
+            setLatestSearches(searches);
+          }
         }
       })
       .catch(() => {});
@@ -135,11 +143,12 @@ const AuditOverview = () => {
       <PageSection style={{ minHeight: "50em" }} isFilled={true}>
         <div style={{ marginBottom: "var(--pf-global--spacer--lg)" }}>
           <List variant={ListVariant.inline}>
-            <ListItem>Last Opened Decisions:</ListItem>
+            <ListItem>Last Opened:</ListItem>
             {latestSearches.map((item, index) => {
+              let splittedId = item.split("-");
               return (
                 <ListItem key={`row-${index}`}>
-                  <Link to={`/audit/${item}`}>#{item}</Link>
+                  <Link to={`/audit/decision/${item}`}>#{splittedId[splittedId.length - 1]}</Link>
                 </ListItem>
               );
             })}
