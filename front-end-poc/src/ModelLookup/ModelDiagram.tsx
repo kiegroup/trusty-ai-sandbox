@@ -14,9 +14,8 @@ function makeUnknownModel(): JSX.Element {
 }
 
 function makeDMNEditor(model: IExecutionModelResponse): JSX.Element {
-  const model1Url: string = "https://raw.githubusercontent.com/kiegroup/kogito-tooling/master/packages/online-editor/static/samples/sample.dmn#/editor/dmn";
-  const model2Url: string = "https://gist.githubusercontent.com/r00ta/c5077ac1f12746e356e1d4f03620ee05/raw/a3d2a865398547a18010e78dd4c1b0d76cc85d99/myMortgage.dmn";
-  const editorUrl = `https://kiegroup.github.io/kogito-online/?file=${model1Url}`;
+  const modelUrl: string = "https://raw.githubusercontent.com/kiegroup/kogito-tooling/master/packages/online-editor/static/samples/sample.dmn#/editor/dmn";
+  const editorUrl = `https://kiegroup.github.io/kogito-online/?file=${modelUrl}`;
   const kogitoIframe = () => {
     return { __html: `<iframe src=${editorUrl}"></iframe>` };
   };
