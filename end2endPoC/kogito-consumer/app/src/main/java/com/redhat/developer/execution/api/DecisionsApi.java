@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.redhat.developer.dmn.IDmnService;
+import com.redhat.developer.dmn.models.DmnModel;
 import com.redhat.developer.dmn.models.input.ModelInputStructure;
 import com.redhat.developer.execution.IExecutionService;
 import com.redhat.developer.execution.models.DMNResultModel;
@@ -32,6 +33,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
+import org.kie.dmn.api.core.DMNModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -207,6 +209,28 @@ public class DecisionsApi {
         }
 
         return Response.ok(new OutcomesStructuredResponse(ExecutionHeaderResponse.fromDMNResultModel(event.get(0)), event.get(0).decisions)).build();
+    }
+
+    @GET
+    @Path("/{key}/model")
+    @APIResponses(value = {
+            @APIResponse(description = "Gets the model that evaluated the execution.", responseCode = "200", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = SchemaType.OBJECT, implementation = DmnModel.class))),
+            @APIResponse(description = "Bad Request", responseCode = "400", content = @Content(mediaType = MediaType.TEXT_PLAIN))
+    }
+    )
+    @Operation(summary = "Gets the model that evaluated the execution.", description = "Gets the model that evaluated the execution.")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDecisionModel(
+            @Parameter(
+                    name = "key",
+                    description = "ID of the decision that needs to be fetched",
+                    required = true,
+                    schema = @Schema(implementation = String.class)
+            )
+            @PathParam("key") String key) {
+        DMNResultModel event = executionService.getEventsByMatchingId(key).get(0);
+        DMNModel model = dmnService.getDmnModel(event.modelId);
+        return Response.ok(model).build();
     }
 
     @GET
