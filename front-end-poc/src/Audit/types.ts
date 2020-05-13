@@ -20,7 +20,7 @@ export interface IExecutionRouteParams {
     executionType: ExecutionType
 }
 
-export interface IFullModelResponse {
+export interface IExecutionModelResponse {
     deploymentDate?: string,
     modelId?: string,
     name: string,
