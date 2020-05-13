@@ -1,6 +1,5 @@
 package com.redhat.developer.utils;
 
-import java.security.SecureRandom;
 import java.util.Collection;
 import java.util.stream.IntStream;
 
@@ -17,7 +16,7 @@ public class LinearModel {
     private final double[] weights;
     private final double[] sampleWeights;
     private final boolean classification;
-    private final double threshold;
+    private double threshold;
 
     public LinearModel(int size, boolean classification, int noOfWeights) {
         this(noOfWeights, false, 0, new double[0]);
@@ -25,19 +24,18 @@ public class LinearModel {
 
     public LinearModel(int size, boolean classification, double threshold, double[] sampleWeights) {
         this.sampleWeights = sampleWeights;
-        this.weights = new double[size];
         this.threshold = threshold;
-        SecureRandom secureRandom = new SecureRandom();
-        for (int i = 0; i < weights.length; i++) {
-            this.weights[i] = 1f / (1d + secureRandom.nextInt(100));
-        }
+        this.weights = new double[size];//DataUtils.generateData(0, 1, size);
         this.classification = classification;
     }
 
     public void fit(Collection<Prediction> trainingData) {
         assert !trainingData.isEmpty() : "cannot fit on an empty dataset";
 
-        for (int e = 0; e < 10; e++) {
+        double lr = 0.01;
+        double floss = 1;
+        int e = 0;
+        while(floss > 0.2 && e < 15) {
             double loss = 0;
             int i = 0;
             for (Prediction prediction : trainingData) {
@@ -47,20 +45,23 @@ public class LinearModel {
                 double predictedOutput = predict(doubles);
                 double targetOutput = DataUtils.toNumbers(output)[0]; // assume the output has always one element (by previous label encoding construction)
                 double diff = checkFinite(targetOutput - predictedOutput);
-                loss += Math.max(0, 1 - checkFinite(targetOutput * predictedOutput)) / trainingData.size();
-                if (diff != 0) { // avoid null update to save computation
+                if (diff != 0) { // avoid null updates to save computation
+                    loss += Math.abs(diff) / trainingData.size();
                     for (int j = 0; j < weights.length; j++) {
-                        double v = 1e-1 * diff * doubles[j];
+                        double v = lr * diff * doubles[j];
                         if (trainingData.size() == sampleWeights.length) {
                             v *= sampleWeights[i];
                         }
                         v = checkFinite(v);
                         weights[j] += v;
+                        threshold += lr * diff ;
                     }
                 }
                 i++;
             }
+            floss = loss;
             logger.info("loss: {}", loss);
+            e++;
         }
     }
 
@@ -72,7 +73,7 @@ public class LinearModel {
     }
 
     private double predict(double[] input) {
-        double linearCombination = threshold + IntStream.range(0, input.length).mapToDouble(i -> input[i] * weights[i]).sum();
+        double linearCombination = IntStream.range(0, input.length).mapToDouble(i -> input[i] * weights[i]).sum();
         if (classification) {
             linearCombination = linearCombination > 0 ? 1 : 0;
         }

@@ -75,8 +75,7 @@ public class LIMEishSaliencyExplanationProvider {
 
             boolean classification = rawClassesBalance.size() == 2;
             for (int i = 0; i < perturbedInputs.size(); i++) {
-                Output output = classification ? DataUtils.labelEncodeOutputValue(
-                        actualOutputs, o, predictionOutputs, i) : predictionOutputs.get(i).getOutputs().get(o);
+                Output output = predictionOutputs.get(i).getOutputs().get(o);
                 Prediction perturbedDataPrediction = new Prediction(perturbedInputs.get(i), new PredictionOutput(List.of(output)));
                 training.add(perturbedDataPrediction);
             }
@@ -103,7 +102,7 @@ public class LIMEishSaliencyExplanationProvider {
         }
         long end = System.currentTimeMillis();
         logger.info("explanation time: {}ms", (end - start));
-        return new Saliency(new Saliency(saliencies).getTopFeatures(5));
+        return new Saliency(saliencies, 3);
     }
 
     private double[] getSampleWeights(Prediction prediction, int noOfFeatures, Collection<Prediction> training) {
@@ -112,8 +111,8 @@ public class LIMEishSaliencyExplanationProvider {
         double[] x = DataUtils.toNumbers(singleton.get(0).getInput());
 
         return training.stream().map(p -> p.getInput()).map(DataUtils::toNumbers).map(
-                d -> DataUtils.euclidean(x, d)).map(d -> DataUtils.exponentialSmoothingKernel(
-                d, 0.75 * Math.sqrt(noOfFeatures))).mapToDouble(Double::doubleValue).toArray();
+                d -> DataUtils.euclidean(x, d)).map(d -> DataUtils.exponentialSmoothingKernel(d, 0.75 *
+                Math.sqrt(noOfFeatures))).mapToDouble(Double::doubleValue).toArray();
     }
 
     private List<PredictionOutput> predict(List<PredictionInput> perturbatedInputs, List<TypedData> originalInput, List<TypedData> originalOutputs, String modelName) {

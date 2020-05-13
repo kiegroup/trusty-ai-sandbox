@@ -44,7 +44,7 @@ public class DataUtils {
         double[] data = new double[size];
         // generate random data
         for (int i = 0; i < size; i++) {
-            double g = random.nextDouble();
+            double g = 1d / (1d + random.nextInt(10));
             data[i] = g;
         }
 
@@ -158,9 +158,11 @@ public class DataUtils {
     }
 
     public static PredictionInput perturbDrop(PredictionInput input) {
-        PredictionInput perturbedInput = new PredictionInput(new ArrayList<>(input.getFeatures()));
-        // Extract 1+ random indexes to be perturbed
-        int perturbationSize = 1 + random.nextInt(perturbedInput.getFeatures().size() - 1);
+        List<Feature> originalFeatures = input.getFeatures();
+        List<Feature> newFeatures = new ArrayList<>(originalFeatures);
+        PredictionInput perturbedInput = new PredictionInput(newFeatures);
+        // Extract 1 + random indexes to be perturbed
+        int perturbationSize = Math.min(2, originalFeatures.size());
         int[] indexesToBePerturbed = new Random().ints(0, perturbedInput.getFeatures().size()).distinct().limit(perturbationSize).toArray();
         for (int i = 0; i < indexesToBePerturbed.length; i++) {
             perturbedInput.getFeatures().set(indexesToBePerturbed[i], featureDrop(perturbedInput.getFeatures().get(indexesToBePerturbed[i])));
@@ -178,9 +180,11 @@ public class DataUtils {
                 switch (featureTypes.get(t)) {
                     case STRING:
                         for (Prediction p : trainingData) {
-                            Feature originalFeature = p.getInput().getFeatures().get(t);
+                            Feature originalFeature = original.getInput().getFeatures().get(t);
+                            String originalString = originalFeature.getValue().asString();
+                            String perturbedString = p.getInput().getFeatures().get(t).getValue().asString();
                             Feature newFeature = new Feature(originalFeature.getName(), Type.NUMBER,
-                                                             new Value<>(originalFeature.getValue().asString().equals(original.getInput().getFeatures().get(t).getValue().asString()) ? 1 : 0));
+                                                             new Value<>(originalString.equals(perturbedString) ? 1 : 0));
                             p.getInput().getFeatures().set(t, newFeature);
                         }
                         break;
@@ -219,7 +223,9 @@ public class DataUtils {
                 int j = 0;
                 for (Prediction p : trainingData) {
                     Feature originalFeature = p.getInput().getFeatures().get(t);
-                    double newValue = doubles[j];
+                    double perturbedNumber = doubles[j];
+                    double originalNumber = 1d;
+                    double newValue = Math.abs(perturbedNumber - originalNumber) < 0.1 ? 1 : 0;
                     Feature newFeature = new Feature(originalFeature.getName(), Type.NUMBER,
                                                      new Value<>(newValue));
                     p.getInput().getFeatures().set(t, newFeature);
@@ -254,7 +260,7 @@ public class DataUtils {
                 break;
             case NUMBER:
                 double mean = feature.getValue().asNumber();
-                double stdDev = feature.getValue().asNumber() / 4;
+                double stdDev = feature.getValue().asNumber() * 0.33;
                 int size = 10;
                 value = new Value<>(DataUtils.generateData(mean, stdDev, size)[random.nextInt(size - 1)]);
                 break;
