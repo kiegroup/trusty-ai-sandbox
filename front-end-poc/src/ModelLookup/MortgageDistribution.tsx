@@ -3,7 +3,7 @@ import { Chart, ChartAxis, ChartBar, ChartGroup, ChartLegend, ChartVoronoiContai
 
 const MortgageDistribution = () => {
   return (
-    <div style={{ height: "300px", width: "100%" }}>
+    <div style={{ height: "auto", width: "100%" }}>
       <Chart
         ariaDesc="Model distribution over 60 days"
         ariaTitle="Model distribution"
