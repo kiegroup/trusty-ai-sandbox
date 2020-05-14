@@ -104,8 +104,7 @@ const InputValue = (props: IInputRow) => {
         </Grid>
       </DataListCell>
     );
-  }
-  if (typeof inputValue === "string") {
+  } else if (typeof inputValue === "string") {
     dataListCells.push(
       <DataListCell width={5} key="dist 5" style={{ paddingTop: 0 }}>
         <Grid className="input-browser__distribution">
@@ -125,6 +124,14 @@ const InputValue = (props: IInputRow) => {
             <FeatureDistributionStackedChart />
           </GridItem>
         </Grid>
+      </DataListCell>
+    );
+  } else {
+    dataListCells.push(
+      <DataListCell width={5} key="dist 5">
+        <span>
+          <em>No data available</em>
+        </span>
       </DataListCell>
     );
   }
