@@ -10,7 +10,7 @@ const FraudScoringDistribution = () => {
         containerComponent={
           <ChartVoronoiContainer labels={({ datum }) => `${datum.name}: ${datum.y}`} constrainToVisibleArea />
         }
-        domain={{ y: [0, 3] }}
+        domain={{ y: [0, 50] }}
         domainPadding={{ x: [30, 25] }}
         height={250}
         padding={{
@@ -23,14 +23,13 @@ const FraudScoringDistribution = () => {
         <ChartAxis />
         <ChartAxis dependentAxis showGrid />
         <ChartLegend
-          data={[
-            { name: "Merchant" },
-            { name: "Transactions" },
-            { name: "Denied" },
-            { name: "Amount" },
-            { name: "24 hrs" },
+          data={[{ name: "0" }, { name: "1" }, { name: "2" }, { name: "3" }]}
+          colorScale={[
+            "var(--pf-global--palette--orange-100)",
+            "var(--pf-global--palette--orange-200)",
+            "var(--pf-global--palette--orange-300)",
+            "var(--pf-global--palette--orange-400)",
           ]}
-          colorScale={["var(--pf-global--info-color--100)", "var(--pf-global--palette--orange-300)"]}
           x={465}
           y={85}
           orientation="vertical"
@@ -38,53 +37,43 @@ const FraudScoringDistribution = () => {
         <ChartGroup offset={11}>
           <ChartBar
             data={[
-              { name: "Merchant", x: "w1", y: 1 },
-              { name: "Merchant", x: "w2", y: 2 },
-              { name: "Merchant", x: "w3", y: 3 },
-              { name: "Merchant", x: "w4", y: 2 },
-              { name: "Merchant", x: "w5", y: 2 },
+              { name: "0", x: "w1", y: 10 },
+              { name: "0", x: "w2", y: 25 },
+              { name: "0", x: "w3", y: 7 },
+              { name: "0", x: "w4", y: 19 },
+              { name: "0", x: "w5", y: 12 },
             ]}
-            style={{ data: { fill: "var(--pf-global--info-color--100)" } }}
+            style={{ data: { fill: "var(--pf-global--palette--orange-100)" } }}
           />
           <ChartBar
             data={[
-              { name: "Transactions", x: "w1", y: 0 },
-              { name: "Transactions", x: "w2", y: 0 },
-              { name: "Transactions", x: "w3", y: 3 },
-              { name: "Transactions", x: "w4", y: 3 },
-              { name: "Transactions", x: "w5", y: 1 },
+              { name: "1", x: "w1", y: 35 },
+              { name: "1", x: "w2", y: 32 },
+              { name: "1", x: "w3", y: 29 },
+              { name: "1", x: "w4", y: 7 },
+              { name: "1", x: "w5", y: 19 },
+            ]}
+            style={{ data: { fill: "var(--pf-global--palette--orange-200)" } }}
+          />
+          <ChartBar
+            data={[
+              { name: "2", x: "w1", y: 7 },
+              { name: "2", x: "w2", y: 9 },
+              { name: "2", x: "w3", y: 40 },
+              { name: "2", x: "w4", y: 32 },
+              { name: "2", x: "w5", y: 30 },
             ]}
             style={{ data: { fill: "var(--pf-global--palette--orange-300)" } }}
           />
           <ChartBar
             data={[
-              { name: "Denied", x: "w1", y: 3 },
-              { name: "Denied", x: "w2", y: 0 },
-              { name: "Denied", x: "w3", y: 1 },
-              { name: "Denied", x: "w4", y: 0 },
-              { name: "Denied", x: "w5", y: 0 },
+              { name: "3", x: "w1", y: 3 },
+              { name: "3", x: "w2", y: 9 },
+              { name: "3", x: "w3", y: 45 },
+              { name: "3", x: "w4", y: 12 },
+              { name: "3", x: "w5", y: 15 },
             ]}
-            style={{ data: { fill: "var(--pf-global--info-color--100)" } }}
-          />
-          <ChartBar
-            data={[
-              { name: "Amount", x: "w1", y: 1 },
-              { name: "Amount", x: "w2", y: 1 },
-              { name: "Amount", x: "w3", y: 0 },
-              { name: "Amount", x: "w4", y: 2 },
-              { name: "Amount", x: "w5", y: 2 },
-            ]}
-            style={{ data: { fill: "var(--pf-global--palette--orange-300)" } }}
-          />
-          <ChartBar
-            data={[
-              { name: "24 hrs", x: "w1", y: 0 },
-              { name: "24 hrs", x: "w2", y: 1 },
-              { name: "24 hrs", x: "w3", y: 0 },
-              { name: "24 hrs", x: "w4", y: 2 },
-              { name: "24 hrs", x: "w5", y: 0 },
-            ]}
-            style={{ data: { fill: "var(--pf-global--info-color--100)" } }}
+            style={{ data: { fill: "var(--pf-global--palette--orange-400)" } }}
           />
         </ChartGroup>
       </Chart>
