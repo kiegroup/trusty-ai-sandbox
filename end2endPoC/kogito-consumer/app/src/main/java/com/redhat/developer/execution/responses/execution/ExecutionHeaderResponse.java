@@ -22,20 +22,24 @@ public class ExecutionHeaderResponse {
     @JsonProperty("executorName")
     public String executorName;
 
+    @JsonProperty("executedModelName")
+    public String executedModelName;
+
     @JsonProperty("executionType")
     public ExecutionEnum executionType = ExecutionEnum.DECISION;
 
     public ExecutionHeaderResponse() {
     }
 
-    public ExecutionHeaderResponse(String executionId, Date executionDate, boolean executionSucceeded, String executorName) {
+    public ExecutionHeaderResponse(String executionId, Date executionDate, boolean executionSucceeded, String executorName, String executedModelName) {
         this.executionId = executionId;
         this.executionDate = executionDate;
         this.executionSucceeded = executionSucceeded;
         this.executorName = executorName;
+        this.executedModelName = executedModelName;
     }
 
     public static ExecutionHeaderResponse fromDMNResultModel(DMNResultModel result) {
-        return new ExecutionHeaderResponse(result.executionId, result.executionDate, !result.decisions.stream().anyMatch(y -> y.hasErrors), "testUser");
+        return new ExecutionHeaderResponse(result.executionId, result.executionDate, !result.decisions.stream().anyMatch(y -> y.hasErrors), "testUser", result.modelName);
     }
 }
