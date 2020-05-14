@@ -15,6 +15,8 @@ import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.gte;
 import static com.mongodb.client.model.Filters.lte;
+import static com.mongodb.client.model.Filters.regex;
+
 public class MongoQueryFactory {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MongoQueryFactory.class);
@@ -27,7 +29,14 @@ public class MongoQueryFactory {
         }
 
         for (TrustyStorageQuery.InternalWhereDecision<StringOperator, String> condition : query.stringOperations) {
-            conditions.add(eq(condition.property, condition.value));
+            switch (condition.operator){
+                case EQUALS:
+                    conditions.add(eq(condition.property, condition.value));
+                    break;
+                case PREFIX:
+                    conditions.add(regex(condition.property, "^" + condition.value + "*"));
+                    break;
+            }
         }
 
 //        conditions = new ArrayList<>();
