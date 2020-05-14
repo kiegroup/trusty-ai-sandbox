@@ -10,7 +10,7 @@ import {
   PageSidebar,
   NavItem,
 } from "@patternfly/react-core";
-import {Switch, Route, Redirect, useLocation, NavLink} from "react-router-dom";
+import { Switch, Route, NavLink, Redirect, useLocation } from "react-router-dom";
 import AuditOverview from "./Audit/AuditOverview/AuditOverview";
 import AuditDetail from "./Audit/AuditDetail";
 import ScrollToTop from "./Shared/ScrollToTop";
