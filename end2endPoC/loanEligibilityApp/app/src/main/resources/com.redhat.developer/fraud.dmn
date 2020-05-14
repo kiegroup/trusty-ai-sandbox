@@ -47,7 +47,7 @@
       <dmn:text>"Local","Foreign"</dmn:text>
     </dmn:allowedValues>
   </dmn:itemDefinition>
-  <dmn:itemDefinition id="_270E87F8-55E9-4735-A98F-C31B9F7D1EC7" name="tMarchantBacklist" isCollection="true">
+  <dmn:itemDefinition id="_270E87F8-55E9-4735-A98F-C31B9F7D1EC7" name="tMerchantBlacklist" isCollection="true">
     <dmn:typeRef>string</dmn:typeRef>
   </dmn:itemDefinition>
   <dmn:inputData id="_c911759f-e2d3-4d2d-aa35-041581344c77" name="Transactions">
@@ -98,21 +98,21 @@ else
     </dmn:knowledgeRequirement>
     <dmn:context id="_f9b865a7-23e9-4b79-bc1f-dd4055e02731" typeRef="tRiskScore">
       <dmn:contextEntry>
-        <dmn:variable id="_f284da73-50de-4a67-b02d-e1cc5ea5776d" name="Blacklisted Marchant Score" typeRef="tRiskScore"/>
+        <dmn:variable id="_f284da73-50de-4a67-b02d-e1cc5ea5776d" name="Blacklisted Merchant Score" typeRef="tRiskScore"/>
         <dmn:invocation id="_520e2668-f597-4222-a114-ad7556af128f">
           <dmn:literalExpression id="literal__520e2668-f597-4222-a114-ad7556af128f">
-            <dmn:text>Risk Rating for Blacklisted Marchant</dmn:text>
+            <dmn:text>Risk Rating for Blacklisted Merchant</dmn:text>
           </dmn:literalExpression>
           <dmn:binding>
-            <dmn:parameter id="_326ba563-a4bc-401d-a9cb-7402e5d81334" name="Marchant Code" typeRef="tMarchantBacklist"/>
+            <dmn:parameter id="_326ba563-a4bc-401d-a9cb-7402e5d81334" name="Merchant Code" typeRef="tMerchantBlacklist"/>
             <dmn:literalExpression id="_b5acf415-18ac-4408-8ab6-e518af611ebe">
               <dmn:text>Last Transaction.Merchant Code</dmn:text>
             </dmn:literalExpression>
           </dmn:binding>
           <dmn:binding>
-            <dmn:parameter id="_fade100c-ec27-4393-8f57-6ed8413f0e97" name="Marchant Blacklist" typeRef="tMarchantBacklist"/>
+            <dmn:parameter id="_fade100c-ec27-4393-8f57-6ed8413f0e97" name="Merchant Blacklist" typeRef="tMerchantBlacklist"/>
             <dmn:literalExpression id="_34c613d1-34e2-4be5-94ef-233745500ffe">
-              <dmn:text>Marchant Backlist</dmn:text>
+              <dmn:text>Merchant Blacklist</dmn:text>
             </dmn:literalExpression>
           </dmn:binding>
         </dmn:invocation>
@@ -179,7 +179,7 @@ else
       </dmn:contextEntry>
       <dmn:contextEntry>
         <dmn:literalExpression id="_6ef992ec-a8bc-485b-9551-3ee2b1f30e64">
-          <dmn:text>max([Blacklisted Marchant Score, Last Transaction Amount Score, Denied Transactions Score, Last 24 hours Transactions Score ])</dmn:text>
+          <dmn:text>max([Blacklisted Merchant Score, Last Transaction Amount Score, Denied Transactions Score, Last 24 hours Transactions Score ])</dmn:text>
         </dmn:literalExpression>
       </dmn:contextEntry>
     </dmn:context>
@@ -445,15 +445,15 @@ else
       <dmn:text>reverse(Transactions)[1]</dmn:text>
     </dmn:literalExpression>
   </dmn:decision>
-  <dmn:businessKnowledgeModel id="_a896bfac-0161-4196-8b31-f6ca05b28a64" name="Risk Rating for Blacklisted Marchant">
+  <dmn:businessKnowledgeModel id="_a896bfac-0161-4196-8b31-f6ca05b28a64" name="Risk Rating for Blacklisted Merchant">
     <dmn:extensionElements/>
-    <dmn:variable id="_08e23055-0b54-4ee0-8e7f-9b810072e5bb" name="Risk Rating for Blacklisted Marchant" typeRef="tRiskScore"/>
+    <dmn:variable id="_08e23055-0b54-4ee0-8e7f-9b810072e5bb" name="Risk Rating for Blacklisted Merchant" typeRef="tRiskScore"/>
     <dmn:encapsulatedLogic id="_1432506a-61aa-488e-bbe5-4db7947a55a9" typeRef="tRiskScore" kind="FEEL">
-      <dmn:formalParameter id="_27cf2ad4-e59a-4fc7-9a71-8f747972f830" name="Marchant Code" typeRef="string"/>
-      <dmn:formalParameter id="_318c25da-3158-42c7-a753-b327a339bb29" name="Marchant Blacklist" typeRef="tMarchantBacklist"/>
+      <dmn:formalParameter id="_27cf2ad4-e59a-4fc7-9a71-8f747972f830" name="Merchant Code" typeRef="string"/>
+      <dmn:formalParameter id="_318c25da-3158-42c7-a753-b327a339bb29" name="Merchant Blacklist" typeRef="tMerchantBlacklist"/>
       <dmn:literalExpression id="_9d41e293-a54a-4eed-9123-1d6861acbc04" typeRef="tRiskScore">
         <dmn:text>if
-    list contains( Marchant Blacklist , Marchant Code )
+    list contains( Merchant Blacklist , Merchant Code )
 then
     3
 else
@@ -461,9 +461,9 @@ else
       </dmn:literalExpression>
     </dmn:encapsulatedLogic>
   </dmn:businessKnowledgeModel>
-  <dmn:decision id="_ff34378e-fe90-4c58-9f7f-b9ce5767a415" name="Marchant Backlist">
+  <dmn:decision id="_ff34378e-fe90-4c58-9f7f-b9ce5767a415" name="Merchant Blacklist">
     <dmn:extensionElements/>
-    <dmn:variable id="_01e74db4-a2ba-473a-8f8e-6fc6663c5bf9" name="Marchant Backlist" typeRef="tMarchantBacklist"/>
+    <dmn:variable id="_01e74db4-a2ba-473a-8f8e-6fc6663c5bf9" name="Merchant Blacklist" typeRef="tMerchantBlacklist"/>
     <dmn:literalExpression id="_28F7EF55-E806-4A6D-A4F5-F4A9EA2530C9">
       <dmn:text>["ILLICITCORP", "SLIMSHADY", "TAINTEDTHINGS", "UNSCRUPULOUS", "UNETHICALBIZ", "WECORRUPT", "WICKEDSTUFF","VERYBADTHING"]
 </dmn:text>

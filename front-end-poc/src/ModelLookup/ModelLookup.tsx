@@ -13,13 +13,13 @@ const ModelLookup = () => {
   useEffect(() => {
     let didMount = true;
     getModelDetail(executionId)
-      .then((response) => {
+      .then(response => {
         if (didMount) {
           const model: IExecutionModelResponse = response.data as IExecutionModelResponse;
           setViewer(<ModelDiagram model={model} />);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
     return () => {
       didMount = false;
     };
