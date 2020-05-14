@@ -15,7 +15,7 @@ const ModelLookup = () => {
         getModelDetail(executionId)
             .then(response => {
                 if (didMount) {
-                    const model: IExecutionModelResponse = response.data[0] as IExecutionModelResponse;
+                    const model: IExecutionModelResponse = response.data as IExecutionModelResponse;
                     setViewer(<ModelDiagram model={model} />);
                 }
             })
