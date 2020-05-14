@@ -30,6 +30,7 @@ import FromFilter from "../FromFilter/FromFilter";
 import ToFilter from "../ToFilter/ToFilter";
 import PaginationContainer from "../PaginationContainer/PaginationContainer";
 import NoExecutions from "../NoExecutions/NoExecutions";
+import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
 
 const ExecutionStatus = (props: { result: boolean }) => {
   let className = "execution-status-badge execution-status-badge--";
@@ -128,7 +129,7 @@ const AuditOverview = () => {
     return () => {
       didMount = false;
     };
-  }, [searchString, fromDate, toDate, page, pageSize, skeletons, noResults]);
+  }, [searchString, fromDate, toDate, page, pageSize, skeletons, noResults, latestSearches]);
 
   return (
     <>
@@ -144,14 +145,16 @@ const AuditOverview = () => {
         <div style={{ marginBottom: "var(--pf-global--spacer--lg)" }}>
           <List variant={ListVariant.inline}>
             <ListItem>Last Opened:</ListItem>
-            {latestSearches.map((item, index) => {
-              let splittedId = item.split("-");
-              return (
-                <ListItem key={`row-${index}`}>
-                  <Link to={`/audit/decision/${item}`}>#{splittedId[splittedId.length - 1]}</Link>
-                </ListItem>
-              );
-            })}
+            {latestSearches.length === 0 && <SkeletonInlineStripe customStyle={{ height: "inherit" }} />}
+            {latestSearches.length > 0 &&
+              latestSearches.map((item, index) => {
+                let splittedId = item.split("-");
+                return (
+                  <ListItem key={`row-${index}`}>
+                    <Link to={`/audit/decision/${item}`}>#{splittedId[splittedId.length - 1]}</Link>
+                  </ListItem>
+                );
+              })}
           </List>
         </div>
         <DataToolbar id="audit-list-top-toolbar" style={{ marginBottom: "var(--pf-global--spacer--lg)" }}>
