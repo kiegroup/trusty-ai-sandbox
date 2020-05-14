@@ -11,4 +11,11 @@ public class FeatureImportance {
     public String featureName;
     @JsonProperty("featureScore")
     public Double featureScore;
+
+    public FeatureImportance(){}
+
+    public FeatureImportance(String featureName, Double featureScore){
+        this.featureName = featureName;
+        this.featureScore = featureScore;
+    }
 }
