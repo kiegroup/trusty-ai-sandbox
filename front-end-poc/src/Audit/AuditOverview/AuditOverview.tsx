@@ -129,7 +129,8 @@ const AuditOverview = () => {
     return () => {
       didMount = false;
     };
-  }, [searchString, fromDate, toDate, page, pageSize, skeletons, noResults, latestSearches]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchString, fromDate, toDate, page, pageSize, skeletons, noResults]);
 
   return (
     <>
