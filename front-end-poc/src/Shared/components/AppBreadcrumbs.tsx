@@ -1,13 +1,6 @@
 import React from "react";
-import withBreadcrumbs, { BreadcrumbsProps } from "react-router-breadcrumbs-hoc";
+import withBreadcrumbs from "react-router-breadcrumbs-hoc";
 import { Breadcrumb, BreadcrumbItem } from "@patternfly/react-core";
-
-type TAuditParams = { id: string };
-
-const AuditDetailBreadcrumb = (breadcrumb: BreadcrumbsProps<TAuditParams>) => {
-  const { match } = breadcrumb;
-  return <span>ID #{match.params.id} Decision Detail</span>;
-};
 
 // todo: move routes config somewhere and consolidate with routes declaration
 const routes = [
