@@ -149,10 +149,14 @@ const AuditOverview = () => {
             {latestSearches.length === 0 && <SkeletonInlineStripe customStyle={{ height: "inherit" }} />}
             {latestSearches.length > 0 &&
               latestSearches.map((item, index) => {
-                let splittedId = item.split("-");
+                let latestSearchId;
+                if (item.toString().indexOf("-") > -1) {
+                  let splitted = item.split("-");
+                  latestSearchId = splitted[splitted.length - 1];
+                } else latestSearchId = item;
                 return (
                   <ListItem key={`row-${index}`}>
-                    <Link to={`/audit/decision/${item}`}>#{splittedId[splittedId.length - 1]}</Link>
+                    <Link to={`/audit/decision/${item}`}>#{latestSearchId}</Link>
                   </ListItem>
                 );
               })}
