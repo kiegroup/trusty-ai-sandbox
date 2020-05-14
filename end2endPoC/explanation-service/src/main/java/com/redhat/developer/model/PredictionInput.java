@@ -23,7 +23,7 @@ public class PredictionInput {
                 json.put(input.inputName, input.typeRef.equals("string") ? value.asString() : value.asNumber());
             }
             else{
-                json.put(input.inputName, toKogitoRequestJson(input.components.get(0)));
+                json.put(input.inputName, toKogitoRequestJson(input.components));
             }
         }
         return json;
