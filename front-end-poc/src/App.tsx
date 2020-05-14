@@ -50,7 +50,7 @@ const App = () => {
           <NavLink to="/audit">Audit Investigation</NavLink>
         </NavItem>
         <NavItem to="http://localhost:3001/" target="_blank" isActive={location.pathname === "/dashboard"}>
-          Domain Monitoring
+          Business Monitoring
         </NavItem>
         <NavItem to="http://localhost:3001/" target="_blank" isActive={location.pathname === "/op-dashboard"}>
           Operational Monitoring
