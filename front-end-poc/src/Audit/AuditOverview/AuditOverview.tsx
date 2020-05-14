@@ -60,6 +60,7 @@ const prepareExecutionTableRows = (rowData: IExecution[]) => {
     let row: IRow = {};
     let cells = [];
     cells.push("#" + item.executionId);
+    cells.push(item.executedModelName);
     cells.push(item.executorName);
     cells.push(new Date(item.executionDate).toLocaleString());
     cells.push({
@@ -76,7 +77,7 @@ const prepareExecutionTableRows = (rowData: IExecution[]) => {
 };
 
 const AuditOverview = () => {
-  const columns = ["ID", "Executor", "Date", "Execution Status", ""];
+  const columns = ["ID", "Description", "Executor", "Date", "Execution Status", ""];
   const oneMonthAgo = new Date();
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
   const [rows, setRows] = useState<IRow[]>([]);
@@ -105,7 +106,6 @@ const AuditOverview = () => {
       setSearchString(searchField.current.value);
     }
   };
-
   useEffect(() => {
     let didMount = true;
     setRows(skeletons);

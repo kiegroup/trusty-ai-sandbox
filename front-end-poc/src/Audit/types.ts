@@ -3,6 +3,7 @@ import { ExecutionType } from "../Shared/api/audit.api";
 export interface IExecution {
   executionId: string;
   executionDate: string;
+  executedModelName: string;
   executionType: string;
   executionSucceeded: boolean;
   executorName: string;
@@ -21,15 +22,15 @@ export interface IExecutionRouteParams {
 }
 
 export interface IExecutionModelResponse {
-    deploymentDate?: string,
-    modelId?: string,
-    name: string,
-    namespace: string,
-    type: string,
-    serviceIdentifier: {
-        groupId?: string,
-        artifactId?: string,
-        version?: string
-    },
-    model: string
+  deploymentDate?: string;
+  modelId?: string;
+  name: string;
+  namespace: string;
+  type: string;
+  serviceIdentifier: {
+    groupId?: string;
+    artifactId?: string;
+    version?: string;
+  };
+  model: string;
 }
