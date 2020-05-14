@@ -132,7 +132,7 @@ const OutcomeComposed = (props: { outcome: IItemObject; compact: boolean }) => {
   }
   return (
     <>
-      <div className="outcome__title" key={outcome.name}>
+      <div className="outcome__title" key={uuid()}>
         <span className="outcome__property__name">{outcome.name}</span>
       </div>
       <div className="outcome outcome--struct" key={outcome.name}>
