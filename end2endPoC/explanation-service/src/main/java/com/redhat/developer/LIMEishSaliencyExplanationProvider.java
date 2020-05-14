@@ -213,7 +213,7 @@ public class LIMEishSaliencyExplanationProvider {
         }
 
         System.out.println(input.typeRef);
-        input.components.get(0).forEach(x -> features.addAll(getFlatBuiltInOutputs(x)));
+        input.components.forEach(x -> features.addAll(getFlatBuiltInOutputs(x)));
         return features;
     }
 
@@ -227,7 +227,7 @@ public class LIMEishSaliencyExplanationProvider {
             features.add(new Feature(input.inputName, Type.NUMBER, new Value<>(Double.valueOf(String.valueOf(input.value)))));
             return features;
         }
-        input.components.get(0).forEach(x -> features.addAll(getFlatBuiltInInput(x)));
+        input.components.forEach(x -> features.addAll(getFlatBuiltInInput(x)));
         return features;
     }
 }

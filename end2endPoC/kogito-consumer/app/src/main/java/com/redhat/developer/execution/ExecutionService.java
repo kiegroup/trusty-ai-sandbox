@@ -176,7 +176,7 @@ public class ExecutionService implements IExecutionService {
         return new SingleDecisionInputResponse(name, typeRef, null, value);
     }
 
-    private List<List<SingleDecisionInputResponse>> analyzeComponents(Object value, String typeRef, List<TypeDefinition> definitions) {
+    private Object analyzeComponents(Object value, String typeRef, List<TypeDefinition> definitions) {
         TypeDefinition typeDefinition = definitions.stream().filter(x -> x.typeName.equals(typeRef)).findFirst().orElseThrow(() -> new NoSuchElementException());
         List<List<SingleDecisionInputResponse>> components = new ArrayList<>();
 
@@ -189,7 +189,7 @@ public class ExecutionService implements IExecutionService {
         } else {
             Map<String, Object> aa = (Map) value;
             List<SingleDecisionInputResponse> component = buildComponent(aa, typeDefinition, definitions);
-            components.add(component);
+            return component;
         }
         return components;
     }
@@ -203,7 +203,7 @@ public class ExecutionService implements IExecutionService {
             if (!componentType.isComposite) {
                 component.add(new SingleDecisionInputResponse(componentInputName, componentType.typeRef, null, componentValue));
             } else {
-                List<List<SingleDecisionInputResponse>> myComponent = analyzeComponents(componentValue, componentType.typeRef, definitions);
+                Object myComponent = analyzeComponents(componentValue, componentType.typeRef, definitions);
                 component.add(new SingleDecisionInputResponse(componentInputName, componentType.typeRef, myComponent, null));
             }
         }

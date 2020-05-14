@@ -15,9 +15,9 @@ public class TypedData {
     public Object value;
 
     @JsonProperty("components")
-    public List<List<TypedData>> components;
+    public List<TypedData> components;
 
-    public TypedData(String inputName, String typeRef, List<List<TypedData>> components, Object value) {
+    public TypedData(String inputName, String typeRef, List<TypedData> components, Object value) {
         this.inputName = inputName;
         this.typeRef = typeRef;
         this.components = components;

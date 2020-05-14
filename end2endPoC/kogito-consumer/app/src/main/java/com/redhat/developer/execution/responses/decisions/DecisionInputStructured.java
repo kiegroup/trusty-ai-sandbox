@@ -14,7 +14,7 @@ public class DecisionInputStructured extends SingleDecisionInputResponse {
     public String category;
 
 
-    public DecisionInputStructured(String id, String category, String inputName, String typeRef, List<List<SingleDecisionInputResponse>> components, Object value) {
+    public DecisionInputStructured(String id, String category, String inputName, String typeRef, Object components, Object value) {
         super(inputName, typeRef, components, value);
         this.category = category;
         this.id = id;
