@@ -3,23 +3,14 @@ import "./App.scss";
 import {
   Avatar,
   Brand,
-  Card,
-  CardBody,
-  Gallery,
-  GalleryItem,
   Nav,
   NavList,
   Page,
   PageHeader,
-  PageSection,
-  PageSectionVariants,
   PageSidebar,
-  TextContent,
-  Text,
-  Title,
   NavItem,
 } from "@patternfly/react-core";
-import { Switch, Route, NavLink, Redirect, useLocation } from "react-router-dom";
+import {Switch, Route, Redirect, useLocation, NavLink} from "react-router-dom";
 import AuditOverview from "./Audit/AuditOverview/AuditOverview";
 import AuditDetail from "./Audit/AuditDetail";
 import ScrollToTop from "./Shared/ScrollToTop";
@@ -55,11 +46,11 @@ const App = () => {
   const PageNav = (
     <Nav aria-label="Nav" theme="dark">
       <NavList>
-        <NavItem isActive={location.pathname === "/dashboard"}>
-          <NavLink to="/dashboard">Domain Monitoring</NavLink>
+        <NavItem to="http://localhost:3001/" target="_blank" isActive={location.pathname === "/dashboard"}>
+          Domain Monitoring
         </NavItem>
-        <NavItem isActive={location.pathname === "/op-dashboard"}>
-          <NavLink to="/op-dashboard">Operational Monitoring</NavLink>
+        <NavItem to="http://localhost:3001/" target="_blank" isActive={location.pathname === "/op-dashboard"}>
+          Operational Monitoring
         </NavItem>
         <NavItem isActive={location.pathname.startsWith("/audit")}>
           <NavLink to="/audit">Audit Investigation</NavLink>
@@ -93,49 +84,7 @@ const App = () => {
         onPageResize={handlePageResize}>
         <Switch>
           <Route exact path="/">
-            <Redirect to="/dashboard" />
-          </Route>
-          <Route path="/dashboard">
-            <PageSection variant={PageSectionVariants.light}>
-              <TextContent>
-                <Title size="4xl" headingLevel="h1">
-                  Domain Monitoring Dashboard
-                </Title>
-                <Text component="p">Here will be the monitoring dashboard</Text>
-              </TextContent>
-            </PageSection>
-            <PageSection style={{ height: "50em" }} isFilled={true}>
-              <Gallery gutter="md">
-                {Array.apply(0, Array(20)).map((x, i) => (
-                  <GalleryItem key={i}>
-                    <Card>
-                      <CardBody>This is a card</CardBody>
-                    </Card>
-                  </GalleryItem>
-                ))}
-              </Gallery>
-            </PageSection>
-          </Route>
-          <Route path="/op-dashboard">
-            <PageSection variant={PageSectionVariants.light}>
-              <TextContent>
-                <Title size="4xl" headingLevel="h1">
-                  Operational Monitoring Dashboard
-                </Title>
-                <Text component="p">Here will be the monitoring dashboard</Text>
-              </TextContent>
-            </PageSection>
-            <PageSection style={{ height: "50em" }} isFilled={true}>
-              <Gallery gutter="md">
-                {Array.apply(0, Array(20)).map((x, i) => (
-                  <GalleryItem key={i}>
-                    <Card>
-                      <CardBody>This is a card</CardBody>
-                    </Card>
-                  </GalleryItem>
-                ))}
-              </Gallery>
-            </PageSection>
+            <Redirect to="/audit" />
           </Route>
           <Route exact path="/audit">
             <AuditOverview />
