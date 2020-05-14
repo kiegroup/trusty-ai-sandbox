@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Gallery,
-  GalleryItem,
-  Split,
-  SplitItem,
-  Title,
-} from "@patternfly/react-core";
+import { Card, CardBody, CardHeader, Gallery, GalleryItem, Split, SplitItem, Title } from "@patternfly/react-core";
 import FormattedValue from "../../Shared/components/FormattedValue/FormattedValue";
 import { IOutcome } from "../types";
 import { IItemObject, isIItemObjectArray, isIItemObjectMultiArray } from "../../InputData/types";
@@ -131,14 +122,7 @@ const OutcomeSubList = (props: { subList: IItemObject; compact: boolean }) => {
 const OutcomeComposed = (props: { outcome: IItemObject; compact: boolean }) => {
   const { outcome, compact } = props;
   let renderItems: JSX.Element[] = [];
-  const headingLevel = compact ? "h5" : "h4";
-  const headingSize = compact ? "lg" : "xl";
 
-  renderItems.push(
-    <Title headingLevel={headingLevel} size={headingSize} className="outcome__title" key={outcome.name}>
-      {outcome.name}
-    </Title>
-  );
   for (let subItem of outcome.components as IItemObject[]) {
     renderItems.push(
       <div className="outcome-item" key={subItem.name}>
@@ -147,9 +131,14 @@ const OutcomeComposed = (props: { outcome: IItemObject; compact: boolean }) => {
     );
   }
   return (
-    <div className="outcome outcome--struct" key={outcome.name}>
-      {renderItems.map((item) => item)}
-    </div>
+    <>
+      <div className="outcome__title" key={outcome.name}>
+        <span className="outcome__property__name">{outcome.name}</span>
+      </div>
+      <div className="outcome outcome--struct" key={outcome.name}>
+        {renderItems.map((item) => item)}
+      </div>
+    </>
   );
 };
 
@@ -166,12 +155,6 @@ const OutcomeProperty = (props: { property: IItemObject }) => {
           <FormattedValue value={property.value} />
         </SplitItem>
       </Split>
-      {/*
-                <Grid key={Math.floor(Math.random() * 10000)} className="outcome__property">
-                    <GridItem span={6} key={`item-label`} className="outcome__property__name">{property.name}</GridItem>
-                    <GridItem span={6} key={`item-value`}><FormattedValue value={property.value} /></GridItem>
-                </Grid>
-            */}
     </>
   );
 };
