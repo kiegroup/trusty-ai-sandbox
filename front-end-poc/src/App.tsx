@@ -46,14 +46,14 @@ const App = () => {
   const PageNav = (
     <Nav aria-label="Nav" theme="dark">
       <NavList>
+        <NavItem isActive={location.pathname.startsWith("/audit")}>
+          <NavLink to="/audit">Audit Investigation</NavLink>
+        </NavItem>
         <NavItem to="http://localhost:3001/" target="_blank" isActive={location.pathname === "/dashboard"}>
           Domain Monitoring
         </NavItem>
         <NavItem to="http://localhost:3001/" target="_blank" isActive={location.pathname === "/op-dashboard"}>
           Operational Monitoring
-        </NavItem>
-        <NavItem isActive={location.pathname.startsWith("/audit")}>
-          <NavLink to="/audit">Audit Investigation</NavLink>
         </NavItem>
       </NavList>
     </Nav>
