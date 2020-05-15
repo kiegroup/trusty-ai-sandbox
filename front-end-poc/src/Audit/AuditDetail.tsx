@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import {
   Nav,
   NavItem,
@@ -9,14 +8,17 @@ import {
   TextContent,
   Title,
 } from "@patternfly/react-core";
-import { Switch, Route, Link, Redirect, useLocation, useParams, useRouteMatch } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, Redirect, Route, Switch, useLocation, useParams, useRouteMatch } from "react-router-dom";
+import { IExecutionModelResponse } from "../Audit/types";
 import AuditDetailOverview from "../AuditOverview/AuditDetailOverview";
-import InputData from "../InputData/InputData";
 import ExplanationView from "../Explanation/ExplanationView/ExplanationView";
+import InputData from "../InputData/InputData";
 import ModelLookup from "../ModelLookup/ModelLookup";
 import { ExecutionType, getExecution } from "../Shared/api/audit.api";
-import { IExecution, IExecutionRouteParams } from "./types";
 import SkeletonInlineStripe from "../Shared/skeletons/SkeletonInlineStripe";
+import { IExecution, IExecutionRouteParams } from "./types";
+import { getModelDetail } from "../Shared/api/audit.api";
 
 const AuditDetail = () => {
   let { path, url } = useRouteMatch();
@@ -40,6 +42,14 @@ const AuditDetail = () => {
     return `${mm}/${dd}/${y}, ${h}:${m}`;
   };
 
+  const [model, setModel] = useState<IExecutionModelResponse>({
+    name: "",
+    namespace: "",
+    type: "",
+    model: "",
+    serviceIdentifier: {},
+  });
+
   useEffect(() => {
     getExecution(executionType as ExecutionType, executionId)
       .then((response) => {
@@ -47,6 +57,21 @@ const AuditDetail = () => {
       })
       .catch(() => {});
   }, [executionType, executionId]);
+
+  useEffect(() => {
+    let didMount = true;
+    getModelDetail(executionId)
+      .then((response) => {
+        if (didMount) {
+          const model: IExecutionModelResponse = response.data as IExecutionModelResponse;
+          setModel(model);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      didMount = false;
+    };
+  }, [executionId]);
 
   return (
     <>
@@ -79,7 +104,7 @@ const AuditDetail = () => {
       </PageSection>
       <Switch>
         <Route path={`${path}/overview`}>
-          <AuditDetailOverview />
+          <AuditDetailOverview model={model} />
         </Route>
         <Route path={`${path}/input-data`}>
           <InputData />
@@ -88,7 +113,7 @@ const AuditDetail = () => {
           <ExplanationView />
         </Route>
         <Route path={`${path}/model-lookup`}>
-          <ModelLookup />
+          <ModelLookup model={model} />
         </Route>
         <Route render={() => <Redirect to={`${location.pathname}/overview`} />} />
       </Switch>

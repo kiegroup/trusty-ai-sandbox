@@ -1,8 +1,19 @@
 import React from "react";
 import { Card, CardBody, CardHeader, Grid, GridItem, Title } from "@patternfly/react-core";
 import MortgageDistribution from "../ModelLookup/MortgageDistribution";
+import FraudScoringDistribution from "../ModelLookup/FraudScoringDistribution";
+import { IExecutionModelResponse } from "../Audit/types";
 
-function ModelOverview() {
+const models: Map<string, JSX.Element> = new Map([
+  ["myMortgage", <MortgageDistribution />],
+  ["fraud-scoring", <FraudScoringDistribution />],
+]);
+
+interface Props {
+  model: IExecutionModelResponse;
+}
+
+function ModelOverview(props: Props) {
   return (
     <Card>
       <CardHeader>
@@ -32,9 +43,7 @@ function ModelOverview() {
             <Title headingLevel="h5" size="lg">
               Decision Distribution (last 60 days)
             </Title>
-            {/* <DecisionDistributionChart /> */}
-            {/* <RecommendationDistributionChart /> */}
-            <MortgageDistribution />
+            {models.get(props.model.name)}
           </GridItem>
         </Grid>
       </CardBody>
