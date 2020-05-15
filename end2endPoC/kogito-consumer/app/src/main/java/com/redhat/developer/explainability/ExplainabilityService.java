@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redhat.developer.execution.IExecutionService;
 import com.redhat.developer.execution.models.DMNResultModel;
 import com.redhat.developer.execution.responses.decisions.inputs.SingleDecisionInputResponse;
+import com.redhat.developer.explainability.model.FeatureImportance;
 import com.redhat.developer.explainability.model.LimeExplanationRequest;
 import com.redhat.developer.explainability.model.Saliency;
 import com.redhat.developer.explainability.storage.IExplanabilityStorageExtension;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
 public class ExplainabilityService implements IExplainabilityService {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ExplainabilityService.class);
 
     private static final HttpHelper httpHelper = new HttpHelper("http://explanation-service:1338");
@@ -28,10 +30,9 @@ public class ExplainabilityService implements IExplainabilityService {
 
     @Inject
     IExecutionService executionService;
-    
+
     @Inject
     IExplanabilityStorageExtension storageExtension;
-
 
     @Override
     public Saliency getFeatureImportance(String decisionId) {
@@ -62,8 +63,16 @@ public class ExplainabilityService implements IExplainabilityService {
 
         saliency.executionId = execution.executionId;
 
+        for (FeatureImportance fi : saliency.featureImportance){
+            fi.featureScore = roundNumber(fi.featureScore);
+        }
+        
         storageExtension.storeExplanation(execution.executionId, saliency);
 
         return true;
+    }
+
+    private Double roundNumber(Double number) {
+        return Double.valueOf(String.format("%.2f", number));
     }
 }
