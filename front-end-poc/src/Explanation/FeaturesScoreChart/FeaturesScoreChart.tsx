@@ -28,10 +28,14 @@ const FeaturesScoreChart = (props: ownProps) => {
     return labels;
   }, [featuresScore]);
 
-  const computeOpacity = useCallback((data) => {
-    const computedOpacity = Math.floor(Math.abs(data.datum.featureScore) * 100) / 100;
-    return computedOpacity < 0.25 ? 0.25 : computedOpacity;
-  }, []);
+  const computeOpacity = useCallback(
+    (data) => {
+      const computedOpacity = Math.abs(Math.floor((data.datum.featureScore / maxValue) * 100) / 100);
+      console.log(data.datum.featuresScore, computedOpacity);
+      return computedOpacity < 0.25 ? 0.25 : computedOpacity;
+    },
+    [maxValue]
+  );
 
   const computeColor = useCallback((data) => {
     return data.datum.featureScore >= 0 ? "var(--pf-global--info-color--100)" : "var(--pf-global--palette--orange-300)";

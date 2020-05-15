@@ -118,7 +118,8 @@ const AuditOverview = () => {
           // temporary solution: for demo purposes we display the first 3 executions here
           if (response.data.total > 0 && latestSearches.length === 0) {
             let searches = [];
-            for (let i = 0; i < 3; i++) {
+            let maxSearches = Math.min(3, response.data.headers.length);
+            for (let i = 0; i < maxSearches; i++) {
               searches.push(response.data.headers[i].executionId);
             }
             setLatestSearches(searches);
@@ -149,10 +150,14 @@ const AuditOverview = () => {
             {latestSearches.length === 0 && <SkeletonInlineStripe customStyle={{ height: "inherit" }} />}
             {latestSearches.length > 0 &&
               latestSearches.map((item, index) => {
-                let splittedId = item.split("-");
+                let latestSearchId;
+                if (item.toString().indexOf("-") > -1) {
+                  let splitted = item.split("-");
+                  latestSearchId = splitted[splitted.length - 1];
+                } else latestSearchId = item;
                 return (
                   <ListItem key={`row-${index}`}>
-                    <Link to={`/audit/decision/${item}`}>#{splittedId[splittedId.length - 1]}</Link>
+                    <Link to={`/audit/decision/${item}`}>#{latestSearchId}</Link>
                   </ListItem>
                 );
               })}

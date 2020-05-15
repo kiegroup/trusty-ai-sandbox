@@ -79,23 +79,27 @@ const InputValue = (props: IInputRow) => {
   );
 
   if (typeof inputValue === "number") {
+    const mean = Math.floor((inputValue - Math.floor((inputValue / 4) * Math.random())) * 100) / 100;
+    const stdMean = Math.floor(Math.floor((inputValue / 12) * Math.random()) * 100) / 100;
+    const high = Math.floor(inputValue + Math.floor(inputValue * Math.random()) * 100) / 100;
+    const avg = Math.floor((inputValue - Math.floor((inputValue / 2) * Math.random())) * 100) / 100;
     dataListCells.push(
       <DataListCell width={5} key="dist 5" style={{ paddingTop: 0 }}>
         <Grid className="input-browser__distribution">
           <GridItem span={2} className="input-data__wrap">
-            <span>{inputValue - Math.floor((inputValue / 4) * Math.random())}</span>
+            <span>{mean}</span>
             <span className="input-data__wrap__desc">Mean</span>
           </GridItem>
           <GridItem span={2} className="input-data__wrap">
-            <span>{Math.floor((inputValue / 12) * Math.random())}</span>
+            <span>{stdMean}</span>
             <span className="input-data__wrap__desc">Std Mean</span>
           </GridItem>
           <GridItem span={2} className="input-data__wrap">
-            <span>{inputValue + Math.floor(inputValue * Math.random())}</span>
+            <span>{high}</span>
             <span className="input-data__wrap__desc">High</span>
           </GridItem>
           <GridItem span={2} className="input-data__wrap">
-            <span>{inputValue - Math.floor((inputValue / 2) * Math.random())}</span>
+            <span>{avg}</span>
             <span className="input-data__wrap__desc">Avg</span>
           </GridItem>
           <GridItem span={4} className="input-data__wrap input-browser__distribution__chart">
