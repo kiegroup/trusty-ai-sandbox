@@ -1,8 +1,8 @@
-import React from "react";
 import { Card, CardBody, CardHeader, Grid, GridItem, Title } from "@patternfly/react-core";
-import MortgageDistribution from "../ModelLookup/MortgageDistribution";
-import FraudScoringDistribution from "../ModelLookup/FraudScoringDistribution";
+import React from "react";
 import { IExecutionModelResponse } from "../Audit/types";
+import FraudScoringDistribution from "../ModelLookup/FraudScoringDistribution";
+import MortgageDistribution from "../ModelLookup/MortgageDistribution";
 
 const models: Map<string, JSX.Element> = new Map([
   ["myMortgage", <MortgageDistribution />],
@@ -23,6 +23,10 @@ function ModelOverview(props: Props) {
       </CardHeader>
       <CardBody>
         <Grid gutter="md" className={"data"}>
+          <GridItem span={6}>
+            <label className={"data__label"}>Name</label>
+            <span>{props.model.name}</span>
+          </GridItem>
           <GridItem span={6}>
             <label className={"data__label"}>Version</label>
             <span>v5.0</span>
