@@ -21,16 +21,18 @@ export interface IExecutionRouteParams {
   executionType: ExecutionType;
 }
 
+export interface IServiceIdentifier {
+  groupId?: string;
+  artifactId?: string;
+  version?: string;
+}
+
 export interface IExecutionModelResponse {
   deploymentDate?: string;
   modelId?: string;
   name: string;
   namespace: string;
   type: string;
-  serviceIdentifier: {
-    groupId?: string;
-    artifactId?: string;
-    version?: string;
-  };
+  serviceIdentifier: IServiceIdentifier;
   model: string;
 }
