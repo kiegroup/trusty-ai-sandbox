@@ -5,8 +5,8 @@ import { LinearRegressionViewer } from "./pmml/LinearRegressionViewer";
 const DMN1_2: string = "http://www.omg.org/spec/DMN/20151101/dmn.xsd";
 const PMML4_4: string = "http://www.dmg.org/PMML-4_4";
 
-const model1Url: string = "https://gist.githubusercontent.com/r00ta/c5077ac1f12746e356e1d4f03620ee05/raw/a3d2a865398547a18010e78dd4c1b0d76cc85d99/myMortgage.dmn";
-const model2Url: string = "https://gist.githubusercontent.com/r00ta/89e8688889a36e16d74789cf3bb92565/raw/70599df8b3c8ec61133f8c6197a5407656c71661/fraud.dmn";
+const model1Url: string = "https://raw.githubusercontent.com/kiegroup/trusty-ai-sandbox/FAI-133-demo/end2endPoC/modelLookup/myMortgage.dmn";
+const model2Url: string = "https://raw.githubusercontent.com/kiegroup/trusty-ai-sandbox/FAI-133-demo/end2endPoC/modelLookup/fraud.dmn";
 const defaultModelUrl: string = "https://raw.githubusercontent.com/kiegroup/kogito-tooling/master/packages/online-editor/static/samples/sample.dmn";
 
 const models: Map<string, string> = new Map(
