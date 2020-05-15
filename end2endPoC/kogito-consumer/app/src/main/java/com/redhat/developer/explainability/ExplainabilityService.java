@@ -66,7 +66,7 @@ public class ExplainabilityService implements IExplainabilityService {
         for (FeatureImportance fi : saliency.featureImportance){
             fi.featureScore = roundNumber(fi.featureScore);
         }
-        
+
         storageExtension.storeExplanation(execution.executionId, saliency);
 
         return true;
