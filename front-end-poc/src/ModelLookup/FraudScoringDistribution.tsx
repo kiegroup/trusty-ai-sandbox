@@ -16,7 +16,7 @@ const FraudScoringDistribution = () => {
         padding={{
           bottom: 50,
           left: 50,
-          right: 150, // Adjusted to accommodate legend
+          right: 100, // Adjusted to accommodate legend
           top: 50,
         }}
         width={600}>
@@ -30,8 +30,8 @@ const FraudScoringDistribution = () => {
             "var(--pf-global--palette--orange-300)",
             "var(--pf-global--palette--orange-400)",
           ]}
-          x={465}
-          y={85}
+          x={515}
+          y={65}
           orientation="vertical"
         />
         <ChartGroup offset={11}>
