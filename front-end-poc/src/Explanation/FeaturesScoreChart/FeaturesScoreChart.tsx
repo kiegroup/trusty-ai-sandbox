@@ -2,6 +2,7 @@ import React, { useCallback, useMemo } from "react";
 import { IFeatureScores } from "../ExplanationView/ExplanationView";
 import { Chart, ChartAxis, ChartBar, ChartLegend } from "@patternfly/react-charts";
 import { maxBy } from "lodash";
+import formattedScore from "../../Shared/components/FormattedScore/formattedScore";
 
 type ownProps = {
   featuresScore: IFeatureScores[];
@@ -23,7 +24,7 @@ const FeaturesScoreChart = (props: ownProps) => {
   const labels = useMemo(() => {
     let labels: string[] = [];
     featuresScore.forEach((item) => {
-      labels.push(`${item.featureName}\n${Math.floor(item.featureScore * 100) / 100}`);
+      labels.push(`${item.featureName}\n${formattedScore(item.featureScore)}`);
     });
     return labels;
   }, [featuresScore]);
@@ -31,7 +32,6 @@ const FeaturesScoreChart = (props: ownProps) => {
   const computeOpacity = useCallback(
     (data) => {
       const computedOpacity = Math.abs(Math.floor((data.datum.featureScore / maxValue) * 100) / 100);
-      console.log(data.datum.featuresScore, computedOpacity);
       return computedOpacity < 0.25 ? 0.25 : computedOpacity;
     },
     [maxValue]
