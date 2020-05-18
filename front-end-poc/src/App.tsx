@@ -59,9 +59,14 @@ const App = () => {
     </Nav>
   );
 
+  const logoProps = {
+    href: '#/'
+  };
+
   const Header = (
     <PageHeader
       logo={<Brand src={imgBrand} alt="Kogito TrustyAI" className="trusty-logo" />}
+      logoProps={logoProps}
       avatar={<Avatar src={imgAvatar} alt="Avatar image" />}
       showNavToggle
       onNavToggle={isMobileView ? onNavToggleMobile : onNavToggleDesktop}

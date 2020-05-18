@@ -19,6 +19,6 @@ case $ID in
     ;;
 
   5)
-    curl --location --request POST 'http://localhost:1337/myMortgage' --header 'Content-Type: application/json' -d "{\"Applicant\" : {\"First Name\" : \"Brienne\", \"Last Name\" : \"of Tarth\", \"Age\": 40, \"Email\" : \"brienne.of.tarth@wannabe-knight.ws\"}, \"Mortgage Request\" : {\"TotalRequired\" : 10000, \"NumberInstallments\" : 100}, \"Finantial Situation\": {\"MonthlySalary\" : 1000, \"TotalAsset\" : 2000}}"
+    curl --location --request POST 'http://localhost:1337/myMortgage' --header 'Content-Type: application/json' -d "{\"Applicant\" : {\"First Name\" : \"Brienne\", \"Last Name\" : \"ofTarth\", \"Age\": 40, \"Email\" : \"brienne.of.tarth@wannabe-knight.ws\"}, \"Mortgage Request\" : {\"TotalRequired\" : 10000, \"NumberInstallments\" : 100}, \"Finantial Situation\": {\"MonthlySalary\" : 1000, \"TotalAsset\" : 2000}}"
     ;;
 esac
