@@ -12,7 +12,7 @@
 ## Installation Steps
 ### Common Steps
 - Clone `https://github.com/kiegroup/trusty-ai-sandbox`
-- Checkout branch `FAI-133-demo`
+- Checkout the commit `e1f8b0e04b86ddb742b7a57b3936d8bd138e06ed` (demo version 1.0)
 
 ### Backend
 - Open `end2endPoC` folder
