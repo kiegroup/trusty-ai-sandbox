@@ -241,8 +241,9 @@ public class DataUtils {
                 if (random.nextBoolean()) {
                     String stringValue = feature.getValue().asString();
                     if (stringValue.indexOf(' ') != -1) {
-                        List<String> words = Arrays.asList(stringValue.split(" "));
-                        for (int i = 0; i < 1 + random.nextInt(Math.min(2, words.size() / 2)); i++) {
+                        List<String> words = new ArrayList(Arrays.asList(stringValue.split(" ")));
+                        int featuresToDrop = random.nextInt(Math.min(2, words.size() / 2));
+                        for (int i = 0; i < 1 + featuresToDrop; i++) {
                             int dropIdx = random.nextInt(words.size());
                             words.remove(dropIdx);
                         }
