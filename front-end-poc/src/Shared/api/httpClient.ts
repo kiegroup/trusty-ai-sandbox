@@ -1,10 +1,28 @@
 import axios, { AxiosRequestConfig, CancelTokenSource } from "axios";
+import { toast, Slide } from "react-toastify";
+import ErrorNotification from "../components/ErrorNotification/ErrorNotification";
 
 const httpClient = axios.create({
-  baseURL: "http://localhost:4000",
+  baseURL: "http://localhost:1336",
   timeout: 5000,
   headers: {},
 });
+
+httpClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const { status, statusText, data } = error.response;
+    if (status === 500) {
+      toast(({ closeToast }) => ErrorNotification({ closeToast, message: statusText, details: data.details }), {
+        transition: Slide,
+        autoClose: 5000,
+        hideProgressBar: true,
+      });
+    } else {
+      return Promise.reject(error);
+    }
+  }
+);
 
 /**
  * first implementation of a repeated call canceler

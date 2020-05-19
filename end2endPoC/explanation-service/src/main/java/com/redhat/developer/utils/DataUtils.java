@@ -44,7 +44,7 @@ public class DataUtils {
         double[] data = new double[size];
         // generate random data
         for (int i = 0; i < size; i++) {
-            double g = random.nextDouble();
+            double g = 1d / (1d + random.nextInt(10));
             data[i] = g;
         }
 
@@ -158,9 +158,10 @@ public class DataUtils {
     }
 
     public static PredictionInput perturbDrop(PredictionInput input) {
-        PredictionInput perturbedInput = new PredictionInput(new ArrayList<>(input.getFeatures()));
-        // Extract 1+ random indexes to be perturbed
-        int perturbationSize = 1 + random.nextInt(perturbedInput.getFeatures().size() - 1);
+        List<Feature> originalFeatures = input.getFeatures();
+        List<Feature> newFeatures = new ArrayList<>(originalFeatures);
+        PredictionInput perturbedInput = new PredictionInput(newFeatures);
+        int perturbationSize = Math.min(2, originalFeatures.size()); // perturb up to 2 features at once
         int[] indexesToBePerturbed = new Random().ints(0, perturbedInput.getFeatures().size()).distinct().limit(perturbationSize).toArray();
         for (int i = 0; i < indexesToBePerturbed.length; i++) {
             perturbedInput.getFeatures().set(indexesToBePerturbed[i], featureDrop(perturbedInput.getFeatures().get(indexesToBePerturbed[i])));
@@ -178,9 +179,11 @@ public class DataUtils {
                 switch (featureTypes.get(t)) {
                     case STRING:
                         for (Prediction p : trainingData) {
-                            Feature originalFeature = p.getInput().getFeatures().get(t);
+                            Feature originalFeature = original.getInput().getFeatures().get(t);
+                            String originalString = originalFeature.getValue().asString();
+                            String perturbedString = p.getInput().getFeatures().get(t).getValue().asString();
                             Feature newFeature = new Feature(originalFeature.getName(), Type.NUMBER,
-                                                             new Value<>(originalFeature.getValue().asString().equals(original.getInput().getFeatures().get(t).getValue().asString()) ? 1 : 0));
+                                                             new Value<>(originalString.equals(perturbedString) ? 1 : 0));
                             p.getInput().getFeatures().set(t, newFeature);
                         }
                         break;
@@ -218,10 +221,10 @@ public class DataUtils {
 
                 int j = 0;
                 for (Prediction p : trainingData) {
-                    Feature originalFeature = p.getInput().getFeatures().get(t);
-                    double newValue = doubles[j];
+                    Feature originalFeature = original.getInput().getFeatures().get(t);
+                    double perturbedNumber = doubles[j]; // no binning, the feature is left perturbed
                     Feature newFeature = new Feature(originalFeature.getName(), Type.NUMBER,
-                                                     new Value<>(newValue));
+                                                     new Value<>(perturbedNumber));
                     p.getInput().getFeatures().set(t, newFeature);
                     j++;
                 }
@@ -238,8 +241,9 @@ public class DataUtils {
                 if (random.nextBoolean()) {
                     String stringValue = feature.getValue().asString();
                     if (stringValue.indexOf(' ') != -1) {
-                        List<String> words = Arrays.asList(stringValue.split(" "));
-                        for (int i = 0; i < 1 + random.nextInt(Math.min(2, words.size() / 2)); i++) {
+                        List<String> words = new ArrayList(Arrays.asList(stringValue.split(" ")));
+                        int featuresToDrop = random.nextInt(Math.min(2, words.size() / 2));
+                        for (int i = 0; i < 1 + featuresToDrop; i++) {
                             int dropIdx = random.nextInt(words.size());
                             words.remove(dropIdx);
                         }
@@ -253,10 +257,11 @@ public class DataUtils {
                 }
                 break;
             case NUMBER:
-                double mean = feature.getValue().asNumber();
-                double stdDev = feature.getValue().asNumber() / 4;
+                double ov = feature.getValue().asNumber();
                 int size = 10;
-                value = new Value<>(DataUtils.generateData(mean, stdDev, size)[random.nextInt(size - 1)]);
+                // sample from normal distribution and center around feature value
+                double v = DataUtils.generateData(0, 1, size)[random.nextInt(size - 1)] * ov;
+                value = new Value<>(v);
                 break;
             case BOOLEAN:
                 // flip the boolean value

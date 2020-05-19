@@ -1,0 +1,1 @@
+curl --location --request POST 'http://localhost:1337/myMortgage' --header 'Content-Type: application/json' -d "{\"Applicant\" : {\"First Name\" : \"jacopo\", \"Last Name\" : \"rota\", \"Age\": 18, \"Email\" : \"ciao\"}, \"Mortgage Request\" : {\"TotalRequired\" : 100000, \"NumberInstallments\" : 400}, \"Finantial Situation\": {\"MonthlySalary\" : 10000, \"TotalAsset\" : 10000}}"

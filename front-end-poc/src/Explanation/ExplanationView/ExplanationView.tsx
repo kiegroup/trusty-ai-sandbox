@@ -45,26 +45,30 @@ const ExplanationView = () => {
 
   useEffect(() => {
     let isMounted = true;
-    getDecisionOutcome(executionId).then((response) => {
-      if (isMounted) {
-        if (response.data && response.data.outcomes) {
-          setOutcomeData(response.data.outcomes.slice(0, 1));
-          let defaultOutcome = response.data.outcomes[0];
-          setOutcomeId(defaultOutcome.outcomeId);
-        }
-      }
-    });
-    getDecisionFeatureScores(executionId).then((response) => {
-      if (response.data && response.data.featureImportance) {
-        const sortedFeatures = orderBy(response.data.featureImportance, (item) => Math.abs(item.featureScore), "asc");
+    getDecisionOutcome(executionId)
+      .then((response) => {
         if (isMounted) {
-          setFeaturesScores(sortedFeatures);
-          if (sortedFeatures.length > 10) {
-            setTopFeatures(true);
+          if (response.data && response.data.outcomes) {
+            setOutcomeData(response.data.outcomes.slice(0, 1));
+            let defaultOutcome = response.data.outcomes[0];
+            setOutcomeId(defaultOutcome.outcomeId);
           }
         }
-      }
-    });
+      })
+      .catch(() => {});
+    getDecisionFeatureScores(executionId)
+      .then((response) => {
+        if (response.data && response.data.featureImportance) {
+          const sortedFeatures = orderBy(response.data.featureImportance, (item) => Math.abs(item.featureScore), "asc");
+          if (isMounted) {
+            setFeaturesScores(sortedFeatures);
+            if (sortedFeatures.length > 10) {
+              setTopFeatures(true);
+            }
+          }
+        }
+      })
+      .catch(() => {});
     return () => {
       isMounted = false;
     };
@@ -73,13 +77,15 @@ const ExplanationView = () => {
   useEffect(() => {
     let isMounted = true;
     if (outcomeId !== null) {
-      getDecisionOutcomeDetail(executionId, outcomeId).then((response) => {
-        if (isMounted) {
-          if (response.data && response.data && response.data.outcomeInputs) {
-            setOutcomeDetail(response.data.outcomeInputs);
+      getDecisionOutcomeDetail(executionId, outcomeId)
+        .then((response) => {
+          if (isMounted) {
+            if (response.data && response.data && response.data.outcomeInputs) {
+              setOutcomeDetail(response.data.outcomeInputs);
+            }
           }
-        }
-      });
+        })
+        .catch(() => {});
     }
     return () => {
       isMounted = false;

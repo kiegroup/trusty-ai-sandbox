@@ -17,6 +17,6 @@ public class SingleDecisionInputResponse {
     public Object value;
 
     @JsonProperty("components")
-    public List<List<SingleDecisionInputResponse>> components;
+    public Object components;
 
 }

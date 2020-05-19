@@ -15,9 +15,9 @@ public class SingleDecisionInputResponse {
     public Object value;
 
     @JsonProperty("components")
-    public List<List<SingleDecisionInputResponse>> components;
+    public Object components;
 
-    public SingleDecisionInputResponse(String inputName, String typeRef, List<List<SingleDecisionInputResponse>> components, Object value) {
+    public SingleDecisionInputResponse(String inputName, String typeRef, Object components, Object value) {
         this.inputName = inputName;
         this.typeRef = typeRef;
         this.components = components;

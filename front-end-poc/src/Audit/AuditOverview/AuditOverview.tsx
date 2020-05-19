@@ -25,23 +25,32 @@ import {
   DataToolbarItem,
   DataToolbarItemVariant,
 } from "@patternfly/react-core/dist/js/experimental";
-import { SearchIcon } from "@patternfly/react-icons";
+import { SearchIcon, CheckCircleIcon, ErrorCircleOIcon } from "@patternfly/react-icons";
 import FromFilter from "../FromFilter/FromFilter";
 import ToFilter from "../ToFilter/ToFilter";
 import PaginationContainer from "../PaginationContainer/PaginationContainer";
 import NoExecutions from "../NoExecutions/NoExecutions";
+import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
 
 const ExecutionStatus = (props: { result: boolean }) => {
   let className = "execution-status-badge execution-status-badge--";
-  let status;
   if (props.result) {
     className += "success";
-    status = "Completed";
+    return (
+      <>
+        <CheckCircleIcon className={className} />
+        <span>Completed</span>
+      </>
+    );
   } else {
-    className += "failure";
-    status = "Failed";
+    className += "error";
+    return (
+      <>
+        <ErrorCircleOIcon className={className} />
+        <span>Error</span>
+      </>
+    );
   }
-  return <span className={className}>{status}</span>;
 };
 
 const prepareExecutionTableRows = (rowData: IExecution[]) => {
@@ -51,6 +60,7 @@ const prepareExecutionTableRows = (rowData: IExecution[]) => {
     let row: IRow = {};
     let cells = [];
     cells.push("#" + item.executionId);
+    cells.push(item.executedModelName);
     cells.push(item.executorName);
     cells.push(new Date(item.executionDate).toLocaleString());
     cells.push({
@@ -67,12 +77,12 @@ const prepareExecutionTableRows = (rowData: IExecution[]) => {
 };
 
 const AuditOverview = () => {
-  const columns = ["ID", "Executor", "Date", "Execution Status", ""];
+  const columns = ["ID", "Description", "Executor", "Date", "Execution Status", ""];
   const oneMonthAgo = new Date();
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
   const [rows, setRows] = useState<IRow[]>([]);
   const [searchString, setSearchString] = useState("");
-  const [latestSearches] = useState(["1001", "1007", "1032"]);
+  const [latestSearches, setLatestSearches] = useState<string[]>([]);
   const [fromDate, setFromDate] = useState(oneMonthAgo.toISOString().substr(0, 10));
   const [toDate, setToDate] = useState(new Date().toISOString().substr(0, 10));
   const [page, setPage] = useState(1);
@@ -96,7 +106,6 @@ const AuditOverview = () => {
       setSearchString(searchField.current.value);
     }
   };
-
   useEffect(() => {
     let didMount = true;
     setRows(skeletons);
@@ -106,12 +115,22 @@ const AuditOverview = () => {
           let tableRows = response.data.headers.length ? prepareExecutionTableRows(response.data.headers) : noResults;
           setRows(tableRows);
           setTotal(response.data.total);
+          // temporary solution: for demo purposes we display the first 3 executions here
+          if (response.data.total > 0 && latestSearches.length === 0) {
+            let searches = [];
+            let maxSearches = Math.min(3, response.data.headers.length);
+            for (let i = 0; i < maxSearches; i++) {
+              searches.push(response.data.headers[i].executionId);
+            }
+            setLatestSearches(searches);
+          }
         }
       })
       .catch(() => {});
     return () => {
       didMount = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchString, fromDate, toDate, page, pageSize, skeletons, noResults]);
 
   return (
@@ -127,14 +146,21 @@ const AuditOverview = () => {
       <PageSection style={{ minHeight: "50em" }} isFilled={true}>
         <div style={{ marginBottom: "var(--pf-global--spacer--lg)" }}>
           <List variant={ListVariant.inline}>
-            <ListItem>Last Opened Decisions:</ListItem>
-            {latestSearches.map((item, index) => {
-              return (
-                <ListItem key={`row-${index}`}>
-                  <Link to={`/audit/${item}`}>#{item}</Link>
-                </ListItem>
-              );
-            })}
+            <ListItem>Last Opened:</ListItem>
+            {latestSearches.length === 0 && <SkeletonInlineStripe customStyle={{ height: "inherit" }} />}
+            {latestSearches.length > 0 &&
+              latestSearches.map((item, index) => {
+                let latestSearchId;
+                if (item.toString().indexOf("-") > -1) {
+                  let splitted = item.split("-");
+                  latestSearchId = splitted[splitted.length - 1];
+                } else latestSearchId = item;
+                return (
+                  <ListItem key={`row-${index}`}>
+                    <Link to={`/audit/decision/${item}`}>#{latestSearchId}</Link>
+                  </ListItem>
+                );
+              })}
           </List>
         </div>
         <DataToolbar id="audit-list-top-toolbar" style={{ marginBottom: "var(--pf-global--spacer--lg)" }}>

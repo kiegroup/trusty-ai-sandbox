@@ -9,6 +9,7 @@ import {
   Title,
 } from "@patternfly/react-core";
 import "./FeaturesScoreTable.scss";
+import formattedScore from "../../Shared/components/FormattedScore/formattedScore";
 
 type PScoreTable = {
   name: string;
@@ -45,7 +46,7 @@ const ScoreTable = (props: PScoreTable) => {
                 <DataListCell key="feature-name" width={2}>
                   <span id="simple-item2">{item.featureName}</span>
                 </DataListCell>,
-                <DataListCell key="feature-score">{Math.floor(item.featureScore * 100) / 100}</DataListCell>,
+                <DataListCell key="feature-score">{formattedScore(item.featureScore)}</DataListCell>,
               ]}
             />
           </DataListItemRow>

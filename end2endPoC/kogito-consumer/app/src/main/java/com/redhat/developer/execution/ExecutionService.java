@@ -1,6 +1,7 @@
 package com.redhat.developer.execution;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,10 +45,7 @@ public class ExecutionService implements IExecutionService {
         List<SingleDecisionInputResponse> response = new ArrayList<>();
 
         for (OutcomeModel outcome : event.decisions){
-            LOGGER.info("new outcome");
-            LOGGER.info(outcome.outcomeName);
             DMNBaseNode baseNode = dependencyGraph.keySet().stream().filter(x -> x.getId().equals(outcome.outcomeId)).findFirst().get();
-            LOGGER.info(baseNode.getName() + " " + baseNode.getType().getName() + " " + baseNode.getType().isComposite() + " " + outcome.result);
             response.add(buildStructuredForValue(
                     event.modelId,
                     baseNode.getName(),
@@ -55,6 +53,18 @@ public class ExecutionService implements IExecutionService {
                     baseNode.getType().isComposite(),
                     outcome.result));
         }
+
+        DMNBaseNode topLevelNode = dependencyGraph.entrySet()
+                .stream()
+                .filter(kv -> kv.getValue().size() == 0)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList()).get(0);
+
+        SingleDecisionInputResponse top = response.stream().filter(x -> x.inputName.equals(topLevelNode.getName())).findFirst().get();
+
+        response.remove(top);
+        response.add(0, top);
+
         return response;
     }
 
@@ -158,21 +168,15 @@ public class ExecutionService implements IExecutionService {
     }
 
     private SingleDecisionInputResponse buildStructuredForValue(String modelId, String name, String typeRef, boolean isComposite, Object value) {
-        ModelInputStructure dmnInputStructure = dmnService.getTypesDefinitions(modelId);
+        ModelInputStructure dmnInputStructure = dmnService.getDmnInputStructure(modelId);
         List<TypeDefinition> customTypes = dmnInputStructure.customTypes;
-        LOGGER.info(String.valueOf(dmnInputStructure.customTypes.size()));
-        LOGGER.info(name + " " + typeRef);
-
         if (isComposite){
             return new SingleDecisionInputResponse(name, typeRef, analyzeComponents(value, typeRef, customTypes), null);
         }
         return new SingleDecisionInputResponse(name, typeRef, null, value);
     }
 
-    private List<List<SingleDecisionInputResponse>> analyzeComponents(Object value, String typeRef, List<TypeDefinition> definitions) {
-        LOGGER.info("Type ref name " + value);
-        LOGGER.info("Type ref input " + typeRef);
-        definitions.forEach(x -> LOGGER.info(x.typeName));
+    private Object analyzeComponents(Object value, String typeRef, List<TypeDefinition> definitions) {
         TypeDefinition typeDefinition = definitions.stream().filter(x -> x.typeName.equals(typeRef)).findFirst().orElseThrow(() -> new NoSuchElementException());
         List<List<SingleDecisionInputResponse>> components = new ArrayList<>();
 
@@ -185,7 +189,7 @@ public class ExecutionService implements IExecutionService {
         } else {
             Map<String, Object> aa = (Map) value;
             List<SingleDecisionInputResponse> component = buildComponent(aa, typeDefinition, definitions);
-            components.add(component);
+            return component;
         }
         return components;
     }
@@ -195,11 +199,11 @@ public class ExecutionService implements IExecutionService {
         for (Map.Entry<String, Object> entry : aa.entrySet()) {
             String componentInputName = entry.getKey();
             Object componentValue = entry.getValue();
-            TypeComponent componentType = typeDefinition.components.stream().filter(x -> x.name.equals(componentInputName)).findFirst().orElseThrow(() -> new NoSuchElementException());
+            TypeComponent componentType = typeDefinition.components.stream().filter(x -> x.typeRef.equals(componentInputName) || x.name.equals(componentInputName)).findFirst().orElseThrow(() -> new NoSuchElementException());
             if (!componentType.isComposite) {
                 component.add(new SingleDecisionInputResponse(componentInputName, componentType.typeRef, null, componentValue));
             } else {
-                List<List<SingleDecisionInputResponse>> myComponent = analyzeComponents(componentValue, componentType.typeRef, definitions);
+                Object myComponent = analyzeComponents(componentValue, componentType.typeRef, definitions);
                 component.add(new SingleDecisionInputResponse(componentInputName, componentType.typeRef, myComponent, null));
             }
         }

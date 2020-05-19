@@ -29,9 +29,7 @@ public class ExplainResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response lime(LocalExplanationRequest request) {
-        List<TypedData> inputs = request.input;
-
-        Saliency saliency = explanationProvider.explain(inputs, request.outputs, request.modelName);
+        Saliency saliency = explanationProvider.explain(request.input, request.outputs, request.modelName);
 
         SaliencyResponse response = new SaliencyResponse(saliency.getPerFeatureImportance().stream().map(x -> new FeatureImportanceResponse(x.getFeature().getName(), x.getScore())).collect(Collectors.toList()));
         return Response.ok(response).build();
