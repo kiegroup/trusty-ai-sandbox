@@ -16,15 +16,11 @@ public class LinearModel {
     private final double[] weights;
     private final double[] sampleWeights;
     private final boolean classification;
-    private double threshold;
+    private double bias;
 
-    public LinearModel(int size, boolean classification, int noOfWeights) {
-        this(noOfWeights, false, 0, new double[0]);
-    }
-
-    public LinearModel(int size, boolean classification, double threshold, double[] sampleWeights) {
+    public LinearModel(int size, boolean classification, double[] sampleWeights) {
         this.sampleWeights = sampleWeights;
-        this.threshold = threshold;
+        this.bias = 0;
         this.weights = new double[size];
         this.classification = classification;
     }
@@ -54,11 +50,13 @@ public class LinearModel {
                         }
                         v = checkFinite(v);
                         weights[j] += v;
-                        threshold += lr * diff ;
+                        bias += lr * diff * sampleWeights[i] ;
                     }
                 }
                 i++;
             }
+            lr *= (1d / (1d + 0.01 * e)); // learning rate decay
+
             floss = loss;
             logger.debug("loss: {}", loss);
             e++;
@@ -73,9 +71,9 @@ public class LinearModel {
     }
 
     private double predict(double[] input) {
-        double linearCombination = IntStream.range(0, input.length).mapToDouble(i -> input[i] * weights[i]).sum();
+        double linearCombination = bias + IntStream.range(0, input.length).mapToDouble(i -> input[i] * weights[i]).sum();
         if (classification) {
-            linearCombination = linearCombination > 0 ? 1 : 0;
+            linearCombination = linearCombination >= 0 ? 1 : 0;
         }
         return linearCombination;
     }

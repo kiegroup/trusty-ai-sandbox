@@ -2,6 +2,7 @@ package com.redhat.developer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -37,11 +38,11 @@ public class LIMEishSaliencyExplanationProvider {
     private static final HttpHelper httpHelper = new HttpHelper("http://producer:1337/");
 
     /**
-     * no. of samples to be generated for the local linear classifier model training
+     * no. of samples to be generated for the local linear model training
      */
     private final int noOfSamples;
 
-    LIMEishSaliencyExplanationProvider(int noOfSamples) {
+    public LIMEishSaliencyExplanationProvider(int noOfSamples) {
         this.noOfSamples = noOfSamples;
     }
 
@@ -61,9 +62,39 @@ public class LIMEishSaliencyExplanationProvider {
         double[] weights = new double[noOfFeatures];
         for (int o = 0; o < actualOutputs.size(); o++) {
             Collection<Prediction> training = new LinkedList<>();
-            List<PredictionInput> perturbedInputs = getPerturbedInputs(predictionInput, noOfFeatures);
-            List<PredictionOutput> predictionOutputs = predict(perturbedInputs, inputs, outputs, modelName);
+            boolean separableDataset = false;
 
+            List<PredictionInput> perturbedInputs = new LinkedList<>();
+            List<PredictionOutput> predictionOutputs = new LinkedList<>();
+
+            boolean classification = false;
+            int sampleSize = noOfSamples;
+            int tries = 3;
+            Map<Double, Long> rawClassesBalance = new HashMap<>();
+            while (!separableDataset && tries > 0) {
+                List<PredictionInput> perturbed = getPerturbedInputs(predictionInput, noOfFeatures, sampleSize);
+                List<PredictionOutput> perturbedOutputs = predict(perturbed, inputs, outputs, modelName);
+
+                rawClassesBalance = perturbedOutputs.stream().map(p -> p.getOutputs().get(0).getValue()
+                        .asNumber()).collect(Collectors.groupingBy(Double::doubleValue, Collectors.counting()));
+                logger.debug("raw samples per class: {}", rawClassesBalance);
+
+                if (rawClassesBalance.size() > 1) {
+                    Long max = rawClassesBalance.values().stream().max(Long::compareTo).get();
+                    if ((double) max / (double) perturbed.size() < 0.9) {
+                        separableDataset = true;
+                        perturbedInputs.addAll(perturbed);
+                        predictionOutputs.addAll(perturbedOutputs);
+                        classification = rawClassesBalance.size() == 2;
+                    }
+                } else {
+                    sampleSize *= 2;
+                    tries--;
+                }
+            }
+            if (!separableDataset) {
+                logger.warn("the perturbed inputs / outputs dataset is not (easily) separable: {}", rawClassesBalance);
+            }
             for (int i = 0; i < perturbedInputs.size(); i++) {
                 Output output = predictionOutputs.get(i).getOutputs().get(o);
                 Prediction perturbedDataPrediction = new Prediction(perturbedInputs.get(i), new PredictionOutput(List.of(output)));
@@ -74,13 +105,7 @@ public class LIMEishSaliencyExplanationProvider {
 
             double[] sampleWeights = getSampleWeights(prediction, noOfFeatures, training);
 
-            Map<Double, Long> rawClassesBalance = predictionOutputs.stream().map(p -> p.getOutputs().get(0).getValue()
-                    .asNumber()).collect(Collectors.groupingBy(Double::doubleValue, Collectors.counting()));
-            logger.debug("raw samples per class: {}", rawClassesBalance);
-
-            boolean classification = rawClassesBalance.size() == 2;
-
-            LinearModel linearModel = new LinearModel(noOfFeatures, classification, 0, sampleWeights);
+            LinearModel linearModel = new LinearModel(noOfFeatures, classification, sampleWeights);
             linearModel.fit(training);
             for (int i = 0; i < weights.length; i++) {
                 weights[i] += linearModel.getWeights()[i] / (double) outputs.size();
@@ -96,28 +121,28 @@ public class LIMEishSaliencyExplanationProvider {
         return new Saliency(saliencies);
     }
 
-    private List<PredictionInput> getPerturbedInputs(PredictionInput predictionInput, int noOfFeatures) {
+    private List<PredictionInput> getPerturbedInputs(PredictionInput predictionInput, int noOfFeatures, int noOfSamples) {
         List<PredictionInput> perturbedInputs = new LinkedList<>();
-        double perturbedDataSize = Math.min(noOfSamples, Math.pow(2, noOfFeatures));
+        double perturbedDataSize = Math.max(noOfSamples, Math.pow(2, noOfFeatures));
         for (int i = 0; i < perturbedDataSize; i++) {
-            perturbedInputs.add(DataUtils.perturbDrop(predictionInput));
+            perturbedInputs.add(DataUtils.perturbDrop(predictionInput, noOfSamples));
         }
         return perturbedInputs;
     }
 
     private double[] getSampleWeights(Prediction prediction, int noOfFeatures, Collection<Prediction> training) {
-        List<Prediction> singleton = List.of(prediction);
-        DataUtils.encodeFeatures(singleton, prediction);
-        double[] x = DataUtils.toNumbers(singleton.get(0).getInput());
+        double[] x = new double[noOfFeatures];
+        Arrays.fill(x, 1);
 
-        return training.stream().map(p -> p.getInput()).map(DataUtils::toNumbers).map(
+        return training.stream().map(Prediction::getInput).map(DataUtils::toNumbers).map(
                 d -> DataUtils.euclidean(x, d)).map(d -> DataUtils.exponentialSmoothingKernel(d, 0.75 *
                 Math.sqrt(noOfFeatures))).mapToDouble(Double::doubleValue).toArray();
     }
 
-    private List<PredictionOutput> predict(List<PredictionInput> perturbatedInputs, List<TypedData> originalInput, List<TypedData> originalOutputs, String modelName) {
+    protected List<PredictionOutput> predict(List<PredictionInput> perturbedInputs, List<TypedData> originalInput,
+                                             List<TypedData> originalOutputs, String modelName) {
         List<PredictionOutput> result = new ArrayList<>();
-        for (PredictionInput perturbatedInput : perturbatedInputs) {
+        for (PredictionInput perturbatedInput : perturbedInputs) {
             String request = perturbatedInput.toKogitoRequestJson(originalInput).toString();
             String response = null;
             try {
@@ -212,7 +237,6 @@ public class LIMEishSaliencyExplanationProvider {
             return features;
         }
 
-        System.out.println(input.typeRef);
         input.components.forEach(x -> features.addAll(getFlatBuiltInOutputs(x)));
         return features;
     }

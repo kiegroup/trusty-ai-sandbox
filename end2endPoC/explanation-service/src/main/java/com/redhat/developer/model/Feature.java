@@ -38,4 +38,13 @@ public class Feature {
     public Value getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "Feature{" +
+                "name='" + name + '\'' +
+                ", type=" + type +
+                ", value=" + value +
+                '}';
+    }
 }

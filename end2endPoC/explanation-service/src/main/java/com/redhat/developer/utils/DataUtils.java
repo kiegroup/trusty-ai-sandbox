@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
@@ -24,7 +23,11 @@ import com.redhat.developer.model.Value;
 
 public class DataUtils {
 
-    private static final SecureRandom random = new SecureRandom();
+    private final static SecureRandom random = new SecureRandom();
+
+    public static void seed(long seed) {
+        random.setSeed(seed);
+    }
 
     /**
      * Generate a dataset of a certain size, given mean and standard deviation.
@@ -66,6 +69,10 @@ public class DataUtils {
         for (int i = 0; i < size; i++) {
             data[i] += mean - m1;
         }
+        double actualMean = getMean(data);
+        assert actualMean < mean + 1e-5 && actualMean > mean - 1e-5 : "mean is not " + mean + " but " + actualMean;
+        double actualStdDev = getStdDev(data, actualMean);
+        assert actualStdDev < stdDeviation + 1e-5 && actualStdDev > stdDeviation - 1e-5 : "stdDeviation is not " + stdDeviation + " but " + actualStdDev;
         return data;
     }
 
@@ -157,14 +164,15 @@ public class DataUtils {
         return new Feature(String.valueOf(d), Type.NUMBER, new Value<>(d));
     }
 
-    public static PredictionInput perturbDrop(PredictionInput input) {
+    public static PredictionInput perturbDrop(PredictionInput input, int noOfSamples) {
         List<Feature> originalFeatures = input.getFeatures();
         List<Feature> newFeatures = new ArrayList<>(originalFeatures);
         PredictionInput perturbedInput = new PredictionInput(newFeatures);
         int perturbationSize = Math.min(2, originalFeatures.size()); // perturb up to 2 features at once
-        int[] indexesToBePerturbed = new Random().ints(0, perturbedInput.getFeatures().size()).distinct().limit(perturbationSize).toArray();
+        int[] indexesToBePerturbed = random.ints(0, perturbedInput.getFeatures().size()).distinct().limit(perturbationSize).toArray();
         for (int i = 0; i < indexesToBePerturbed.length; i++) {
-            perturbedInput.getFeatures().set(indexesToBePerturbed[i], featureDrop(perturbedInput.getFeatures().get(indexesToBePerturbed[i])));
+            perturbedInput.getFeatures().set(indexesToBePerturbed[i], featureDrop(
+                    perturbedInput.getFeatures().get(indexesToBePerturbed[i]), noOfSamples));
         }
         return perturbedInput;
     }
@@ -232,7 +240,7 @@ public class DataUtils {
         }
     }
 
-    private static Feature featureDrop(Feature feature) {
+    private static Feature featureDrop(Feature feature, int noOfSamples) {
         Value<?> value = null;
         Type type = feature.getType();
         switch (type) {
@@ -258,9 +266,9 @@ public class DataUtils {
                 break;
             case NUMBER:
                 double ov = feature.getValue().asNumber();
-                int size = 10;
                 // sample from normal distribution and center around feature value
-                double v = DataUtils.generateData(0, 1, size)[random.nextInt(size - 1)] * ov;
+                int pickIdx = random.nextInt(noOfSamples - 1);
+                double v = DataUtils.generateData(0, 1, noOfSamples)[pickIdx] * ov + ov;
                 value = new Value<>(v);
                 break;
             case BOOLEAN:
