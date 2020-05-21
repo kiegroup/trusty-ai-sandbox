@@ -1,12 +1,117 @@
 import React, { useCallback, useMemo } from "react";
 import { IFeatureScores } from "../ExplanationView/ExplanationView";
-import { Chart, ChartAxis, ChartBar, ChartLegend } from "@patternfly/react-charts";
+import {
+  Chart,
+  ChartAxis,
+  ChartBar,
+  ChartGroup,
+  ChartLabel,
+  ChartLegend,
+  ChartTooltip,
+} from "@patternfly/react-charts";
+import { Selection } from "victory";
 import { maxBy } from "lodash";
 import formattedScore from "../../Shared/components/FormattedScore/formattedScore";
+import "./FeatureScoreChart.scss";
 
 type ownProps = {
   featuresScore: IFeatureScores[];
   large?: boolean;
+};
+
+const eventHandlers = [
+  {
+    target: "data",
+    eventHandlers: {
+      onMouseOver: function (event: React.MouseEvent) {
+        const { x, y } = Selection.getSVGEventCoordinates(event);
+        return [
+          {
+            target: "labels",
+            mutation: () => ({
+              x,
+              y,
+              active: true,
+            }),
+          },
+        ];
+      },
+      onMouseMove: function (event: React.MouseEvent) {
+        const { x, y } = Selection.getSVGEventCoordinates(event);
+        return [
+          {
+            target: "labels",
+            mutation: () => ({
+              x,
+              y,
+              active: true,
+            }),
+          },
+        ];
+      },
+      onTouchMove: function (event: React.MouseEvent) {
+        const { x, y } = Selection.getSVGEventCoordinates(event);
+        return [
+          {
+            target: "labels",
+            mutation: () => ({
+              x,
+              y,
+              active: true,
+            }),
+          },
+        ];
+      },
+      onTouchStart: function (event: React.MouseEvent) {
+        const { x, y } = Selection.getSVGEventCoordinates(event);
+        return [
+          {
+            target: "labels",
+            mutation: () => ({
+              x,
+              y,
+              active: true,
+            }),
+          },
+        ];
+      },
+      onMouseOut: function () {
+        return [
+          {
+            target: "labels",
+            mutation: () => ({
+              active: false,
+            }),
+          },
+        ];
+      },
+      onTouchEnd: function () {
+        return [
+          {
+            target: "labels",
+            mutation: () => ({
+              active: false,
+            }),
+          },
+        ];
+      },
+    },
+  },
+];
+
+const CustomLabel = (props: any) => {
+  return (
+    <ChartTooltip
+      {...props}
+      text={(data: any) => {
+        return data.datum.featureName + "\n" + data.datum.featureScore;
+      }}
+      pointerWidth={10}
+      orientation={"bottom"}
+      dy={25}
+      dx={0}
+    />
+  );
 };
 
 const FeaturesScoreChart = (props: ownProps) => {
@@ -24,7 +129,7 @@ const FeaturesScoreChart = (props: ownProps) => {
   const labels = useMemo(() => {
     let labels: string[] = [];
     featuresScore.forEach((item) => {
-      labels.push(`${item.featureName}\n${formattedScore(item.featureScore)}`);
+      labels.push(formattedScore(item.featureScore));
     });
     return labels;
   }, [featuresScore]);
@@ -44,7 +149,6 @@ const FeaturesScoreChart = (props: ownProps) => {
   return (
     <Chart
       ariaDesc="Importance of different features on the decision"
-      ariaTitle="Features Scores Chart"
       width={width}
       height={height}
       domainPadding={{ x: [20, 20], y: 80 }}
@@ -62,8 +166,10 @@ const FeaturesScoreChart = (props: ownProps) => {
         x="featureName"
         y="featureScore"
         labels={labels}
+        labelComponent={<CustomLabel />}
         alignment="middle"
         barWidth={25}
+        events={eventHandlers}
         style={{
           data: {
             fill: computeColor,
@@ -71,6 +177,38 @@ const FeaturesScoreChart = (props: ownProps) => {
           },
         }}
       />
+      <ChartGroup>
+        {featuresScore !== null &&
+          featuresScore.map((item, index) => {
+            return (
+              <ChartLabel
+                className={"feature-chart-axis-label"}
+                datum={{ x: index + 1, y: 0 }}
+                text={item.featureName}
+                direction="rtl"
+                textAnchor={item.featureScore >= 0 ? "start" : "end"}
+                dx={-10 * Math.sign(item.featureScore) || -10}
+                key={item.featureName}
+              />
+            );
+          })}
+      </ChartGroup>
+
+      <ChartGroup>
+        {featuresScore !== null &&
+          featuresScore.map((item, index) => {
+            return (
+              <ChartLabel
+                className={"feature-chart-score-label"}
+                datum={{ x: index + 1, y: item.featureScore }}
+                text={formattedScore(item.featureScore)}
+                textAnchor={item.featureScore >= 0 ? "start" : "end"}
+                dx={10 * Math.sign(item.featureScore) || 10}
+                key={item.featureName}
+              />
+            );
+          })}
+      </ChartGroup>
 
       <ChartLegend
         data={[{ name: "Negative Impact" }, { name: "Positive Impact" }]}
