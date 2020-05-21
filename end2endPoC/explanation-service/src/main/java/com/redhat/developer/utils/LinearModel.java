@@ -3,9 +3,7 @@ package com.redhat.developer.utils;
 import java.util.Collection;
 import java.util.stream.IntStream;
 
-import com.redhat.developer.model.Prediction;
-import com.redhat.developer.model.PredictionInput;
-import com.redhat.developer.model.PredictionOutput;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,34 +14,28 @@ public class LinearModel {
     private final double[] weights;
     private final double[] sampleWeights;
     private final boolean classification;
-    private double threshold;
+    private double bias;
 
-    public LinearModel(int size, boolean classification, int noOfWeights) {
-        this(noOfWeights, false, 0, new double[0]);
-    }
-
-    public LinearModel(int size, boolean classification, double threshold, double[] sampleWeights) {
+    public LinearModel(int size, boolean classification, double[] sampleWeights) {
         this.sampleWeights = sampleWeights;
-        this.threshold = threshold;
+        this.bias = 0;
         this.weights = new double[size];
         this.classification = classification;
     }
 
-    public void fit(Collection<Prediction> trainingData) {
+    public void fit(Collection<Pair<double[], Double>> trainingData) {
         assert !trainingData.isEmpty() : "cannot fit on an empty dataset";
 
         double lr = 0.01;
         double floss = 1;
         int e = 0;
-        while(floss > 0.1 && e < 15) {
+        while (floss > 0.1 && e < 15) {
             double loss = 0;
             int i = 0;
-            for (Prediction prediction : trainingData) {
-                PredictionInput input = prediction.getInput();
-                PredictionOutput output = prediction.getOutput();
-                double[] doubles = DataUtils.toNumbers(input);
+            for (Pair<double[], Double> sample : trainingData) {
+                double[] doubles = sample.getLeft();
                 double predictedOutput = predict(doubles);
-                double targetOutput = DataUtils.toNumbers(output)[0]; // assume the output has always one element (by previous label encoding construction)
+                double targetOutput = sample.getRight();
                 double diff = checkFinite(targetOutput - predictedOutput);
                 if (diff != 0) { // avoid null updates to save computation
                     loss += Math.abs(diff) / trainingData.size();
@@ -54,11 +46,13 @@ public class LinearModel {
                         }
                         v = checkFinite(v);
                         weights[j] += v;
-                        threshold += lr * diff ;
+                        bias += lr * diff * sampleWeights[i];
                     }
                 }
                 i++;
             }
+            lr *= (1d / (1d + 0.01 * e)); // learning rate decay
+
             floss = loss;
             logger.debug("loss: {}", loss);
             e++;
@@ -73,9 +67,9 @@ public class LinearModel {
     }
 
     private double predict(double[] input) {
-        double linearCombination = IntStream.range(0, input.length).mapToDouble(i -> input[i] * weights[i]).sum();
+        double linearCombination = bias + IntStream.range(0, input.length).mapToDouble(i -> input[i] * weights[i]).sum();
         if (classification) {
-            linearCombination = linearCombination > 0 ? 1 : 0;
+            linearCombination = linearCombination >= 0 ? 1 : 0;
         }
         return linearCombination;
     }

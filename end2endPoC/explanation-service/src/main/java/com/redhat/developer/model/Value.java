@@ -27,4 +27,11 @@ public class Value<S> {
     public S getUnderlyingObject() {
         return underlyingObject;
     }
+
+    @Override
+    public String toString() {
+        return "Value{" +
+                "underlyingObject=" + underlyingObject +
+                '}';
+    }
 }

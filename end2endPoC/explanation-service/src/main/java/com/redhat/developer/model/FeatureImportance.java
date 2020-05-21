@@ -17,4 +17,12 @@ public class FeatureImportance {
     public double getScore() {
         return score;
     }
+
+    @Override
+    public String toString() {
+        return "FeatureImportance{" +
+                "feature=" + feature +
+                ", score=" + score +
+                '}';
+    }
 }

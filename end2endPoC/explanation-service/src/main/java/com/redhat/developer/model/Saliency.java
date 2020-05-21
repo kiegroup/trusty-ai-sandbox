@@ -24,5 +24,15 @@ public class Saliency {
         return perFeatureImportance.stream().sorted((f0, f1) -> Double.compare(
                 Math.abs(f1.getScore()), Math.abs(f0.getScore()))).limit(k).collect(Collectors.toList());
     }
+
+    public List<FeatureImportance> getPositiveFeatures(int k) {
+        return perFeatureImportance.stream().sorted((f0, f1) -> Double.compare(
+                Math.abs(f1.getScore()), Math.abs(f0.getScore()))).filter(f -> f.getScore() >= 0).limit(k).collect(Collectors.toList());
+    }
+
+    public List<FeatureImportance> getNegativeFeatures(int k) {
+        return perFeatureImportance.stream().sorted((f0, f1) -> Double.compare(
+                Math.abs(f1.getScore()), Math.abs(f0.getScore()))).filter(f -> f.getScore() < 0).limit(k).collect(Collectors.toList());
+    }
 }
 
