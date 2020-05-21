@@ -25,6 +25,7 @@ import com.redhat.developer.model.Type;
 import com.redhat.developer.model.Value;
 import com.redhat.developer.requests.TypedData;
 import com.redhat.developer.utils.DataUtils;
+import com.redhat.developer.utils.ExplainabilityUtils;
 import com.redhat.developer.utils.HttpHelper;
 import com.redhat.developer.utils.LinearModel;
 import org.apache.commons.lang3.tuple.Pair;
@@ -129,6 +130,8 @@ public class LIMEishSaliencyExplanationProvider {
         }
         long end = System.currentTimeMillis();
         logger.info("explanation time: {}ms", (end - start));
+        logger.info("quantified explainability measure: {}",
+                    ExplainabilityUtils.quantifyExplainability(noOfFeatures, saliencies.size(), 0));
         return new Saliency(saliencies);
     }
 

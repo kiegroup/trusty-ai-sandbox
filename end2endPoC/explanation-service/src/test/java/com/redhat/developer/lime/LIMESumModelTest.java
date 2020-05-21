@@ -16,7 +16,6 @@ import com.redhat.developer.requests.TypedData;
 import com.redhat.developer.utils.DataUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

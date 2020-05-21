@@ -3,9 +3,6 @@ package com.redhat.developer.utils;
 import java.util.Collection;
 import java.util.stream.IntStream;
 
-import com.redhat.developer.model.Prediction;
-import com.redhat.developer.model.PredictionInput;
-import com.redhat.developer.model.PredictionOutput;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
