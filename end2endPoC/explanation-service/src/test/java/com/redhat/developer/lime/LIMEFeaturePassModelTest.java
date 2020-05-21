@@ -15,15 +15,13 @@ import com.redhat.developer.model.Value;
 import com.redhat.developer.requests.TypedData;
 import com.redhat.developer.utils.DataUtils;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * Tests for {@link LIMEishSaliencyExplanationProvider}
- */
 public class LIMEFeaturePassModelTest {
 
     @BeforeAll
@@ -31,7 +29,7 @@ public class LIMEFeaturePassModelTest {
         DataUtils.seed(4);
     }
 
-    @Test
+    @RepeatedTest(10)
     public void testMapOneFeatureToOutputRegressionExplanation() {
         TypedData predictionInput = new TypedData();
         List<TypedData> inputs = new LinkedList<>();

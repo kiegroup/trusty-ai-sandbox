@@ -9,6 +9,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
@@ -20,6 +21,8 @@ import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.PredictionOutput;
 import com.redhat.developer.model.Type;
 import com.redhat.developer.model.Value;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class DataUtils {
 
@@ -168,7 +171,7 @@ public class DataUtils {
         List<Feature> originalFeatures = input.getFeatures();
         List<Feature> newFeatures = new ArrayList<>(originalFeatures);
         PredictionInput perturbedInput = new PredictionInput(newFeatures);
-        int perturbationSize = Math.min(noOfPerturbations, originalFeatures.size()); // perturb up to 2 features at once
+        int perturbationSize = Math.min(noOfPerturbations, originalFeatures.size());
         int[] indexesToBePerturbed = random.ints(0, perturbedInput.getFeatures().size()).distinct().limit(perturbationSize).toArray();
         for (int value : indexesToBePerturbed) {
             perturbedInput.getFeatures().set(value, featureDrop(
@@ -177,23 +180,27 @@ public class DataUtils {
         return perturbedInput;
     }
 
-    public static void encodeFeatures(Collection<Prediction> trainingData, Prediction original) {
-        Prediction firstItem = trainingData.stream().findFirst().get();
+    public static Collection<Pair<double[], Double>> encodeTrainingSet(Collection<Prediction> predictions, Prediction original) {
+        Collection<Pair<double[], Double>> trainingSet = new LinkedList<>();
+        Prediction firstItem = predictions.stream().findFirst().get();
         List<Type> featureTypes = firstItem.getInput().getFeatures().stream().map(Feature::getType).collect(Collectors.toList());
+
+        List<List<Double>> columnData = new LinkedList<>();
 
         for (int t = 0; t < featureTypes.size(); t++) {
             if (!Type.NUMBER.equals(featureTypes.get(t))) {
                 // convert values for this feature into a number
                 switch (featureTypes.get(t)) {
                     case STRING:
-                        for (Prediction p : trainingData) {
+                        List<Double> featureValues = new LinkedList<>();
+                        for (Prediction p : predictions) {
                             Feature originalFeature = original.getInput().getFeatures().get(t);
                             String originalString = originalFeature.getValue().asString();
                             String perturbedString = p.getInput().getFeatures().get(t).getValue().asString();
-                            Feature newFeature = new Feature(originalFeature.getName(), Type.NUMBER,
-                                                             new Value<>(originalString.equals(perturbedString) ? 1 : 0));
-                            p.getInput().getFeatures().set(t, newFeature);
+                            double featureValue = originalString.equals(perturbedString) ? 1 : 0;
+                            featureValues.add(featureValue);
                         }
+                        columnData.add(featureValues);
                         break;
                     case BINARY:
                         break;
@@ -216,28 +223,35 @@ public class DataUtils {
                 }
             } else {
                 // max - min scaling
-                double[] doubles = new double[trainingData.size()];
+                double[] doubles = new double[predictions.size()];
                 int i = 0;
-                for (Prediction p : trainingData) {
+                for (Prediction p : predictions) {
                     Feature feature = p.getInput().getFeatures().get(t);
                     doubles[i] = feature.getValue().asNumber();
                     i++;
                 }
                 double min = DoubleStream.of(doubles).min().getAsDouble();
                 double max = DoubleStream.of(doubles).max().getAsDouble();
-                doubles = DoubleStream.of(doubles).map(d -> (d - min) / (max - min)).map(d -> Double.isNaN(d) ? 1 : d).toArray();
-
-                int j = 0;
-                for (Prediction p : trainingData) {
-                    Feature originalFeature = original.getInput().getFeatures().get(t);
-                    double perturbedNumber = doubles[j]; // no binning, the feature is left perturbed
-                    Feature newFeature = new Feature(originalFeature.getName(), Type.NUMBER,
-                                                     new Value<>(perturbedNumber));
-                    p.getInput().getFeatures().set(t, newFeature);
-                    j++;
-                }
+                List<Double> featureValues = DoubleStream.of(doubles).map(d -> (d - min) / (max - min))
+                        .map(d -> Double.isNaN(d) ? 1 : d).boxed().collect(Collectors.toList());
+                columnData.add(featureValues);
             }
         }
+
+        int pi = 0;
+        for (Prediction p : predictions) {
+            double[] x = new double[featureTypes.size()];
+            int i = 0;
+            for (List<Double> column : columnData) {
+                x[i] = column.get(pi);
+                i++;
+            }
+            Pair<double[], Double> sample = new ImmutablePair<>(x, toNumbers(p.getOutput())[0]);
+            trainingSet.add(sample);
+
+            pi++;
+        }
+        return trainingSet;
     }
 
     private static Feature featureDrop(Feature feature, int noOfSamples) {
@@ -293,15 +307,6 @@ public class DataUtils {
                 break;
         }
         return new Feature(feature.getName(), feature.getType(), value);
-    }
-
-    public static Output labelEncodeOutputValue(List<Output> actualOutputs, int o, List<PredictionOutput> predictionOutputs, int i) {
-        PredictionOutput generatedOutput = predictionOutputs.get(i);
-        Output predictedOutput = generatedOutput.getOutputs().get(o);
-        Object target = actualOutputs.get(o).getValue().getUnderlyingObject();
-        Object observed = predictedOutput.getValue().getUnderlyingObject();
-        Value<Integer> predictedValue = new Value<>(target.equals(observed) ? 1 : 0);
-        return new Output("target", Type.NUMBER, predictedValue, predictedOutput.getScore());
     }
 
     public static double hamming(double[] x, double[] y) {

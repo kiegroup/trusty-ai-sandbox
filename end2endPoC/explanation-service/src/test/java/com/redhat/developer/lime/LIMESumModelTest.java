@@ -15,15 +15,13 @@ import com.redhat.developer.model.Value;
 import com.redhat.developer.requests.TypedData;
 import com.redhat.developer.utils.DataUtils;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * Tests for {@link LIMEishSaliencyExplanationProvider}
- */
 public class LIMESumModelTest {
 
     @BeforeAll
@@ -31,7 +29,7 @@ public class LIMESumModelTest {
         DataUtils.seed(4);
     }
 
-    @Test
+    @RepeatedTest(10)
     public void testUnusedFeature() {
         // explain a model that takes 2 out of 3 features and returns their sum
         TypedData predictionInput = new TypedData();

@@ -6,6 +6,7 @@ import java.util.stream.IntStream;
 import com.redhat.developer.model.Prediction;
 import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.PredictionOutput;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +26,7 @@ public class LinearModel {
         this.classification = classification;
     }
 
-    public void fit(Collection<Prediction> trainingData) {
+    public void fit(Collection<Pair<double[], Double>> trainingData) {
         assert !trainingData.isEmpty() : "cannot fit on an empty dataset";
 
         double lr = 0.01;
@@ -34,12 +35,10 @@ public class LinearModel {
         while (floss > 0.1 && e < 15) {
             double loss = 0;
             int i = 0;
-            for (Prediction prediction : trainingData) {
-                PredictionInput input = prediction.getInput();
-                PredictionOutput output = prediction.getOutput();
-                double[] doubles = DataUtils.toNumbers(input);
+            for (Pair<double[], Double> sample : trainingData) {
+                double[] doubles = sample.getLeft();
                 double predictedOutput = predict(doubles);
-                double targetOutput = DataUtils.toNumbers(output)[0]; // assume the output has always one element (by previous label encoding construction)
+                double targetOutput = sample.getRight();
                 double diff = checkFinite(targetOutput - predictedOutput);
                 if (diff != 0) { // avoid null updates to save computation
                     loss += Math.abs(diff) / trainingData.size();
@@ -58,7 +57,7 @@ public class LinearModel {
             lr *= (1d / (1d + 0.01 * e)); // learning rate decay
 
             floss = loss;
-            logger.info("loss: {}", loss);
+            logger.debug("loss: {}", loss);
             e++;
         }
     }

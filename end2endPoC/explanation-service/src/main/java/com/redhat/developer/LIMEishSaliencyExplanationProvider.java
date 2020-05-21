@@ -27,6 +27,7 @@ import com.redhat.developer.requests.TypedData;
 import com.redhat.developer.utils.DataUtils;
 import com.redhat.developer.utils.HttpHelper;
 import com.redhat.developer.utils.LinearModel;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,12 +112,12 @@ public class LIMEishSaliencyExplanationProvider {
                 training.add(perturbedDataPrediction);
             }
 
-            DataUtils.encodeFeatures(training, prediction);
+            Collection<Pair<double[], Double>> trainingSet = DataUtils.encodeTrainingSet(training, prediction);
 
-            double[] sampleWeights = getSampleWeights(prediction, noOfFeatures, training);
+            double[] sampleWeights = getSampleWeights(prediction, noOfFeatures, trainingSet);
 
             LinearModel linearModel = new LinearModel(noOfFeatures, classification, sampleWeights);
-            linearModel.fit(training);
+            linearModel.fit(trainingSet);
             for (int i = 0; i < weights.length; i++) {
                 weights[i] += linearModel.getWeights()[i] / (double) outputs.size();
             }
@@ -140,11 +141,11 @@ public class LIMEishSaliencyExplanationProvider {
         return perturbedInputs;
     }
 
-    private double[] getSampleWeights(Prediction prediction, int noOfFeatures, Collection<Prediction> training) {
+    private double[] getSampleWeights(Prediction prediction, int noOfFeatures, Collection<Pair<double[], Double>> training) {
         double[] x = new double[noOfFeatures];
         Arrays.fill(x, 1);
 
-        return training.stream().map(Prediction::getInput).map(DataUtils::toNumbers).map(
+        return training.stream().map(Pair::getLeft).map(
                 d -> DataUtils.euclidean(x, d)).map(d -> DataUtils.exponentialSmoothingKernel(d, 0.75 *
                 Math.sqrt(noOfFeatures))).mapToDouble(Double::doubleValue).toArray();
     }
