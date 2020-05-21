@@ -164,15 +164,15 @@ public class DataUtils {
         return new Feature(String.valueOf(d), Type.NUMBER, new Value<>(d));
     }
 
-    public static PredictionInput perturbDrop(PredictionInput input, int noOfSamples) {
+    public static PredictionInput perturbDrop(PredictionInput input, int noOfSamples, int noOfPerturbations) {
         List<Feature> originalFeatures = input.getFeatures();
         List<Feature> newFeatures = new ArrayList<>(originalFeatures);
         PredictionInput perturbedInput = new PredictionInput(newFeatures);
-        int perturbationSize = Math.min(2, originalFeatures.size()); // perturb up to 2 features at once
+        int perturbationSize = Math.min(noOfPerturbations, originalFeatures.size()); // perturb up to 2 features at once
         int[] indexesToBePerturbed = random.ints(0, perturbedInput.getFeatures().size()).distinct().limit(perturbationSize).toArray();
-        for (int i = 0; i < indexesToBePerturbed.length; i++) {
-            perturbedInput.getFeatures().set(indexesToBePerturbed[i], featureDrop(
-                    perturbedInput.getFeatures().get(indexesToBePerturbed[i]), noOfSamples));
+        for (int value : indexesToBePerturbed) {
+            perturbedInput.getFeatures().set(value, featureDrop(
+                    perturbedInput.getFeatures().get(value), noOfSamples));
         }
         return perturbedInput;
     }

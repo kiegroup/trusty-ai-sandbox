@@ -31,7 +31,7 @@ public class LinearModel {
         double lr = 0.01;
         double floss = 1;
         int e = 0;
-        while(floss > 0.1 && e < 15) {
+        while (floss > 0.1 && e < 15) {
             double loss = 0;
             int i = 0;
             for (Prediction prediction : trainingData) {
@@ -50,7 +50,7 @@ public class LinearModel {
                         }
                         v = checkFinite(v);
                         weights[j] += v;
-                        bias += lr * diff * sampleWeights[i] ;
+                        bias += lr * diff * sampleWeights[i];
                     }
                 }
                 i++;
@@ -58,7 +58,7 @@ public class LinearModel {
             lr *= (1d / (1d + 0.01 * e)); // learning rate decay
 
             floss = loss;
-            logger.debug("loss: {}", loss);
+            logger.info("loss: {}", loss);
             e++;
         }
     }

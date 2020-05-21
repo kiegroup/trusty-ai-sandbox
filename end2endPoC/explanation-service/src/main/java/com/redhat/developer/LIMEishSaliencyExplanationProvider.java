@@ -42,12 +42,22 @@ public class LIMEishSaliencyExplanationProvider {
      */
     private final int noOfSamples;
 
-    public LIMEishSaliencyExplanationProvider(int noOfSamples) {
+    /**
+     * no. of perturbations to perform on a prediction
+     */
+    private final int noOfPerturbations;
+
+    public LIMEishSaliencyExplanationProvider(int noOfSamples, int noOfPerturbations) {
         this.noOfSamples = noOfSamples;
+        this.noOfPerturbations = noOfPerturbations;
+    }
+
+    public LIMEishSaliencyExplanationProvider(int noOfSamples) {
+        this(noOfSamples, 1);
     }
 
     public LIMEishSaliencyExplanationProvider() {
-        this(100);
+        this(100, 1);
     }
 
     public Saliency explain(List<TypedData> inputs, List<TypedData> outputs, String modelName) {
@@ -125,7 +135,7 @@ public class LIMEishSaliencyExplanationProvider {
         List<PredictionInput> perturbedInputs = new LinkedList<>();
         double perturbedDataSize = Math.max(noOfSamples, Math.pow(2, noOfFeatures));
         for (int i = 0; i < perturbedDataSize; i++) {
-            perturbedInputs.add(DataUtils.perturbDrop(predictionInput, noOfSamples));
+            perturbedInputs.add(DataUtils.perturbDrop(predictionInput, noOfSamples, this.noOfPerturbations));
         }
         return perturbedInputs;
     }
