@@ -36,7 +36,6 @@ const DatePicker = (props: DatePickerProps) => {
       onDateUpdate(dateStr);
     };
     if (datePicker && datePicker.current) {
-      console.log("init " + id);
       calendar = flatpickr(datePicker.current, {
         dateFormat: "Y-m-d",
         altInput: true,

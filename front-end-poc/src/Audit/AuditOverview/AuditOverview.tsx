@@ -59,15 +59,18 @@ const prepareExecutionTableRows = (rowData: IExecution[]) => {
   rowData.forEach((item) => {
     let row: IRow = {};
     let cells = [];
-    cells.push("#" + item.executionId);
+    cells.push({
+      title: (
+        <Link to={`/audit/${item.executionType.toLocaleLowerCase()}/${item.executionId}`}>
+          {"#" + item.executionId}
+        </Link>
+      ),
+    });
     cells.push(item.executedModelName);
     cells.push(item.executorName);
     cells.push(new Date(item.executionDate).toLocaleString());
     cells.push({
       title: <ExecutionStatus result={item.executionSucceeded} />,
-    });
-    cells.push({
-      title: <Link to={`/audit/${item.executionType.toLocaleLowerCase()}/${item.executionId}`}>View Detail</Link>,
     });
     row.cells = cells;
     row.decisionKey = "key-" + item.executionId;
@@ -77,7 +80,7 @@ const prepareExecutionTableRows = (rowData: IExecution[]) => {
 };
 
 const AuditOverview = () => {
-  const columns = ["ID", "Description", "Executor", "Date", "Execution Status", ""];
+  const columns = ["ID", "Description", "Executor", "Date", "Execution Status"];
   const oneMonthAgo = new Date();
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
   const [rows, setRows] = useState<IRow[]>([]);
