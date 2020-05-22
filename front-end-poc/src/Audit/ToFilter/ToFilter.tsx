@@ -1,21 +1,19 @@
-import React from 'react';
-import {InputGroup, TextInput} from "@patternfly/react-core";
+import React, { useCallback } from "react";
+import DatePicker from "../../Shared/components/DatePicker/DatePicker";
 
-const ToFilter = (props: {toDate: string, minDate: string, onToDateUpdate: (date: string) => void }) => {
-    const { toDate, minDate, onToDateUpdate } = props;
+type ToFilterProps = {
+  toDate: string;
+  minDate: string;
+  onToDateUpdate: (date: string) => void;
+};
 
-    return (
-        <InputGroup>
-            <TextInput
-                name="date-to"
-                id="date-to"
-                type="date"
-                min={minDate}
-                aria-label="set starting date"
-                value={toDate}
-                onChange={onToDateUpdate} />
-        </InputGroup>
-    );
+const ToFilter = (props: ToFilterProps) => {
+  const { toDate, minDate, onToDateUpdate } = props;
+  const updateToDate = useCallback((date: string) => onToDateUpdate(date), [onToDateUpdate]);
+
+  return (
+    <DatePicker value={toDate} minDate={minDate} onDateUpdate={updateToDate} id="audit-to-date" label="Ending date" />
+  );
 };
 
 export default ToFilter;

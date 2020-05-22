@@ -1,22 +1,26 @@
-import React from 'react';
-import {InputGroup, TextInput} from "@patternfly/react-core";
+import React, { useCallback } from "react";
+import DatePicker from "../../Shared/components/DatePicker/DatePicker";
 
-const FromFilter = (props: { fromDate: string, maxDate: string, onFromDateUpdate: (date: string) => void }) => {
-    const { fromDate, maxDate } = props;
-    const updateFromDate = (date: string) => props.onFromDateUpdate(date);
+type FromFilterProps = {
+  fromDate: string;
+  maxDate: string;
+  onFromDateUpdate: (date: string) => void;
+};
 
-    return (
-        <InputGroup>
-            <TextInput
-                name="date-from"
-                id="date-from"
-                type="date"
-                aria-label="set starting date"
-                value={fromDate}
-                max={maxDate}
-                onChange={updateFromDate}/>
-        </InputGroup>
-    );
+const FromFilter = (props: FromFilterProps) => {
+  const { fromDate, maxDate, onFromDateUpdate } = props;
+  const updateFromDate = useCallback((date: string) => onFromDateUpdate(date), [onFromDateUpdate]);
+
+  return (
+    <DatePicker
+      fromDate={fromDate}
+      maxDate={maxDate}
+      value={fromDate}
+      label="Starting date"
+      id="audit-from-date"
+      onDateUpdate={updateFromDate}
+    />
+  );
 };
 
 export default FromFilter;
