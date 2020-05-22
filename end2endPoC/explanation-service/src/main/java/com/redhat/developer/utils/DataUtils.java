@@ -16,7 +16,6 @@ import java.util.stream.DoubleStream;
 
 import com.redhat.developer.model.Feature;
 import com.redhat.developer.model.Output;
-import com.redhat.developer.model.Prediction;
 import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.PredictionOutput;
 import com.redhat.developer.model.Type;
@@ -72,10 +71,6 @@ public class DataUtils {
         for (int i = 0; i < size; i++) {
             data[i] += mean - m1;
         }
-        double actualMean = getMean(data);
-        assert actualMean < mean + 1e-5 && actualMean > mean - 1e-5 : "mean is not " + mean + " but " + actualMean;
-        double actualStdDev = getStdDev(data, actualMean);
-        assert actualStdDev < stdDeviation + 1e-5 && actualStdDev > stdDeviation - 1e-5 : "stdDeviation is not " + stdDeviation + " but " + actualStdDev;
         return data;
     }
 
@@ -180,76 +175,86 @@ public class DataUtils {
         return perturbedInput;
     }
 
-    public static Collection<Pair<double[], Double>> encodeTrainingSet(Collection<Prediction> predictions, Prediction original) {
+    public static Collection<Pair<double[], Double>> encodeTrainingSet(List<PredictionInput> predictionInputs,
+                                                                       List<Output> predictedOutputs,
+                                                                       PredictionInput originalInputs,
+                                                                       Output originalOutput) {
         Collection<Pair<double[], Double>> trainingSet = new LinkedList<>();
-        Prediction firstItem = predictions.stream().findFirst().get();
-        List<Type> featureTypes = firstItem.getInput().getFeatures().stream().map(Feature::getType).collect(Collectors.toList());
+        if (!predictionInputs.isEmpty() && !predictedOutputs.isEmpty() && !originalInputs.getFeatures().isEmpty() && originalOutput != null) {
+            List<Type> featureTypes = predictionInputs.stream().findFirst().get().getFeatures().stream().map(Feature::getType).collect(Collectors.toList());
 
-        List<List<Double>> columnData = new LinkedList<>();
+            List<List<Double>> columnData = new LinkedList<>();
 
-        for (int t = 0; t < featureTypes.size(); t++) {
-            if (!Type.NUMBER.equals(featureTypes.get(t))) {
-                // convert values for this feature into a number
-                switch (featureTypes.get(t)) {
-                    case STRING:
-                        List<Double> featureValues = new LinkedList<>();
-                        for (Prediction p : predictions) {
-                            Feature originalFeature = original.getInput().getFeatures().get(t);
-                            String originalString = originalFeature.getValue().asString();
-                            String perturbedString = p.getInput().getFeatures().get(t).getValue().asString();
-                            double featureValue = originalString.equals(perturbedString) ? 1 : 0;
-                            featureValues.add(featureValue);
-                        }
-                        columnData.add(featureValues);
-                        break;
-                    case BINARY:
-                        break;
-                    case BOOLEAN:
-                        break;
-                    case DATE:
-                        break;
-                    case URI:
-                        break;
-                    case TIME:
-                        break;
-                    case DURATION:
-                        break;
-                    case VECTOR:
-                        break;
-                    case UNDEFINED:
-                        break;
-                    case CURRENCY:
-                        break;
+            for (int t = 0; t < featureTypes.size(); t++) {
+                if (!Type.NUMBER.equals(featureTypes.get(t))) {
+                    // convert values for this feature into a number
+                    switch (featureTypes.get(t)) {
+                        case STRING:
+                            List<Double> featureValues = new LinkedList<>();
+                            for (PredictionInput pi : predictionInputs) {
+                                Feature originalFeature = originalInputs.getFeatures().get(t);
+                                String originalString = originalFeature.getValue().asString();
+                                String perturbedString = pi.getFeatures().get(t).getValue().asString();
+                                double featureValue = originalString.equals(perturbedString) ? 1 : 0;
+                                featureValues.add(featureValue);
+                            }
+                            columnData.add(featureValues);
+                            break;
+                        case BINARY:
+                            break;
+                        case BOOLEAN:
+                            break;
+                        case DATE:
+                            break;
+                        case URI:
+                            break;
+                        case TIME:
+                            break;
+                        case DURATION:
+                            break;
+                        case VECTOR:
+                            break;
+                        case UNDEFINED:
+                            break;
+                        case CURRENCY:
+                            break;
+                    }
+                } else {
+                    // max - min scaling
+                    double[] doubles = new double[predictionInputs.size()];
+                    int i = 0;
+                    for (PredictionInput pi : predictionInputs) {
+                        Feature feature = pi.getFeatures().get(t);
+                        doubles[i] = feature.getValue().asNumber();
+                        i++;
+                    }
+                    double min = DoubleStream.of(doubles).min().getAsDouble();
+                    double max = DoubleStream.of(doubles).max().getAsDouble();
+                    List<Double> featureValues = DoubleStream.of(doubles).map(d -> (d - min) / (max - min))
+                            .map(d -> Double.isNaN(d) ? 1 : d).boxed().collect(Collectors.toList());
+                    columnData.add(featureValues);
                 }
-            } else {
-                // max - min scaling
-                double[] doubles = new double[predictions.size()];
+            }
+
+            int pi = 0;
+            for (Output o : predictedOutputs) {
+                double[] x = new double[featureTypes.size()];
                 int i = 0;
-                for (Prediction p : predictions) {
-                    Feature feature = p.getInput().getFeatures().get(t);
-                    doubles[i] = feature.getValue().asNumber();
+                for (List<Double> column : columnData) {
+                    x[i] = column.get(pi);
                     i++;
                 }
-                double min = DoubleStream.of(doubles).min().getAsDouble();
-                double max = DoubleStream.of(doubles).max().getAsDouble();
-                List<Double> featureValues = DoubleStream.of(doubles).map(d -> (d - min) / (max - min))
-                        .map(d -> Double.isNaN(d) ? 1 : d).boxed().collect(Collectors.toList());
-                columnData.add(featureValues);
-            }
-        }
+                double y;
+                if (Type.NUMBER.equals(originalOutput.getType()) || Type.BOOLEAN.equals(originalOutput.getType())) {
+                    y = o.getValue().asNumber();
+                } else {
+                    y = originalOutput.getValue().getUnderlyingObject().equals(o.getValue().getUnderlyingObject()) ? 1d : 0d;
+                }
+                Pair<double[], Double> sample = new ImmutablePair<>(x, y);
+                trainingSet.add(sample);
 
-        int pi = 0;
-        for (Prediction p : predictions) {
-            double[] x = new double[featureTypes.size()];
-            int i = 0;
-            for (List<Double> column : columnData) {
-                x[i] = column.get(pi);
-                i++;
+                pi++;
             }
-            Pair<double[], Double> sample = new ImmutablePair<>(x, toNumbers(p.getOutput())[0]);
-            trainingSet.add(sample);
-
-            pi++;
         }
         return trainingSet;
     }
@@ -309,7 +314,7 @@ public class DataUtils {
         return new Feature(feature.getName(), feature.getType(), value);
     }
 
-    public static double hamming(double[] x, double[] y) {
+    public static double hammingDistance(double[] x, double[] y) {
         int h = 0;
         for (int i = 0; i < Math.min(x.length, y.length); i++) {
             if (x[i] != y[i]) {
@@ -319,7 +324,7 @@ public class DataUtils {
         return h + (x.length - y.length);
     }
 
-    public static double euclidean(double[] x, double[] y) {
+    public static double euclideanDistance(double[] x, double[] y) {
         double e = 0;
         for (int i = 0; i < Math.min(x.length, y.length); i++) {
             e += Math.pow(x[i] - y[i], 2);
@@ -327,8 +332,8 @@ public class DataUtils {
         return Math.sqrt(e);
     }
 
-    public static double gower(double[] x, double[] y, double lambda) {
-        return euclidean(x, y) + lambda * hamming(x, y);
+    public static double gowerDistance(double[] x, double[] y, double lambda) {
+        return euclideanDistance(x, y) + lambda * hammingDistance(x, y);
     }
 
     public static double gaussianKernel(double x) {

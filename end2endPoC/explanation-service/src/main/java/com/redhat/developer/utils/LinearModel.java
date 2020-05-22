@@ -60,8 +60,8 @@ public class LinearModel {
                 lr *= (1d / (1d + 0.01 * e)); // learning rate decay
 
                 floss = loss;
-                logger.debug("loss: {}", loss);
                 e++;
+                logger.debug("epoch {}, loss: {}", e, loss);
             }
         }
         return floss;

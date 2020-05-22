@@ -73,7 +73,6 @@ public class LIMEishSaliencyExplanationProvider {
         int noOfFeatures = features.size();
         double[] weights = new double[noOfFeatures];
         for (int o = 0; o < actualOutputs.size(); o++) {
-            Collection<Prediction> training = new LinkedList<>();
             boolean separableDataset = false;
 
             List<PredictionInput> perturbedInputs = new LinkedList<>();
@@ -107,13 +106,15 @@ public class LIMEishSaliencyExplanationProvider {
             if (!separableDataset) {
                 logger.warn("the perturbed inputs / outputs dataset is not (easily) separable: {}", rawClassesBalance);
             }
+            List<Output> predictedOutputs = new LinkedList<>();
             for (int i = 0; i < perturbedInputs.size(); i++) {
                 Output output = predictionOutputs.get(i).getOutputs().get(o);
-                Prediction perturbedDataPrediction = new Prediction(perturbedInputs.get(i), new PredictionOutput(List.of(output)));
-                training.add(perturbedDataPrediction);
+                predictedOutputs.add(output);
             }
 
-            Collection<Pair<double[], Double>> trainingSet = DataUtils.encodeTrainingSet(training, prediction);
+            Collection<Pair<double[], Double>> trainingSet = DataUtils.encodeTrainingSet(perturbedInputs, predictedOutputs,
+                                                                                         prediction.getInput(),
+                                                                                         prediction.getOutput().getOutputs().get(o));
 
             double[] sampleWeights = getSampleWeights(prediction, noOfFeatures, trainingSet);
 
@@ -139,7 +140,7 @@ public class LIMEishSaliencyExplanationProvider {
         List<PredictionInput> perturbedInputs = new LinkedList<>();
         double perturbedDataSize = Math.max(noOfSamples, Math.pow(2, noOfFeatures));
         for (int i = 0; i < perturbedDataSize; i++) {
-            perturbedInputs.add(DataUtils.perturbDrop(predictionInput, noOfSamples, this.noOfPerturbations));
+            perturbedInputs.add(DataUtils.perturbDrop(predictionInput, noOfSamples, noOfPerturbations));
         }
         return perturbedInputs;
     }
@@ -149,7 +150,7 @@ public class LIMEishSaliencyExplanationProvider {
         Arrays.fill(x, 1);
 
         return training.stream().map(Pair::getLeft).map(
-                d -> DataUtils.euclidean(x, d)).map(d -> DataUtils.exponentialSmoothingKernel(d, 0.75 *
+                d -> DataUtils.euclideanDistance(x, d)).map(d -> DataUtils.exponentialSmoothingKernel(d, 0.75 *
                 Math.sqrt(noOfFeatures))).mapToDouble(Double::doubleValue).toArray();
     }
 
