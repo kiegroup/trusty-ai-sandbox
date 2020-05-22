@@ -1,5 +1,6 @@
 package com.redhat.developer.utils;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.IntStream;
 
@@ -12,51 +13,58 @@ public class LinearModel {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final double[] weights;
-    private final double[] sampleWeights;
     private final boolean classification;
     private double bias;
 
-    public LinearModel(int size, boolean classification, double[] sampleWeights) {
-        this.sampleWeights = sampleWeights;
+    public LinearModel(int size, boolean classification) {
         this.bias = 0;
         this.weights = new double[size];
         this.classification = classification;
     }
 
-    public void fit(Collection<Pair<double[], Double>> trainingData) {
-        assert !trainingData.isEmpty() : "cannot fit on an empty dataset";
+    public double fit(Collection<Pair<double[], Double>> trainingSet) {
+        double[] sampleWeights = new double[trainingSet.size()];
+        Arrays.fill(sampleWeights, 1);
+        return fit(trainingSet, sampleWeights);
+    }
 
-        double lr = 0.01;
-        double floss = 1;
-        int e = 0;
-        while (floss > 0.1 && e < 15) {
-            double loss = 0;
-            int i = 0;
-            for (Pair<double[], Double> sample : trainingData) {
-                double[] doubles = sample.getLeft();
-                double predictedOutput = predict(doubles);
-                double targetOutput = sample.getRight();
-                double diff = checkFinite(targetOutput - predictedOutput);
-                if (diff != 0) { // avoid null updates to save computation
-                    loss += Math.abs(diff) / trainingData.size();
-                    for (int j = 0; j < weights.length; j++) {
-                        double v = lr * diff * doubles[j];
-                        if (trainingData.size() == sampleWeights.length) {
-                            v *= sampleWeights[i];
+    public double fit(Collection<Pair<double[], Double>> trainingSet, double[] sampleWeights) {
+        double floss = 1d;
+        if (trainingSet.isEmpty()) {
+            logger.warn("fitting an empty training set");
+        } else {
+            double lr = 0.01;
+            int e = 0;
+            while (floss > 0.1 && e < 15) {
+                double loss = 0;
+                int i = 0;
+                for (Pair<double[], Double> sample : trainingSet) {
+                    double[] doubles = sample.getLeft();
+                    double predictedOutput = predict(doubles);
+                    double targetOutput = sample.getRight();
+                    double diff = checkFinite(targetOutput - predictedOutput);
+                    if (diff != 0) { // avoid null updates to save computation
+                        loss += Math.abs(diff) / trainingSet.size();
+                        for (int j = 0; j < weights.length; j++) {
+                            double v = lr * diff * doubles[j];
+                            if (trainingSet.size() == sampleWeights.length) {
+                                v *= sampleWeights[i];
+                            }
+                            v = checkFinite(v);
+                            weights[j] += v;
+                            bias += lr * diff * sampleWeights[i];
                         }
-                        v = checkFinite(v);
-                        weights[j] += v;
-                        bias += lr * diff * sampleWeights[i];
                     }
+                    i++;
                 }
-                i++;
-            }
-            lr *= (1d / (1d + 0.01 * e)); // learning rate decay
+                lr *= (1d / (1d + 0.01 * e)); // learning rate decay
 
-            floss = loss;
-            logger.debug("loss: {}", loss);
-            e++;
+                floss = loss;
+                logger.debug("loss: {}", loss);
+                e++;
+            }
         }
+        return floss;
     }
 
     private double checkFinite(double diff) {

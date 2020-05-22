@@ -10,7 +10,7 @@ public class ExplainabilityUtils {
      *                              explanation (e.g. the no. of explanation inputs)
      * @param outputCognitiveChunks the no. of cognitive chunks generated within the explanation itself
      * @param interactionRatio the ratio of interaction (between 0 and 1) required by the explanation
-     * @return the explainability measure
+     * @return the quantitative explainability measure
      */
     public static double quantifyExplainability(int inputCognitiveChunks, int outputCognitiveChunks, double interactionRatio) {
         return inputCognitiveChunks + outputCognitiveChunks > 0 ? 0.333 / (double) inputCognitiveChunks

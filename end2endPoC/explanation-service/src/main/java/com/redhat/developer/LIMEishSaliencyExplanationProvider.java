@@ -117,8 +117,8 @@ public class LIMEishSaliencyExplanationProvider {
 
             double[] sampleWeights = getSampleWeights(prediction, noOfFeatures, trainingSet);
 
-            LinearModel linearModel = new LinearModel(noOfFeatures, classification, sampleWeights);
-            linearModel.fit(trainingSet);
+            LinearModel linearModel = new LinearModel(noOfFeatures, classification);
+            linearModel.fit(trainingSet, sampleWeights);
             for (int i = 0; i < weights.length; i++) {
                 weights[i] += linearModel.getWeights()[i] / (double) outputs.size();
             }
