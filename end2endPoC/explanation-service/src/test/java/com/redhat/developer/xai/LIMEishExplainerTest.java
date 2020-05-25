@@ -14,6 +14,7 @@ import com.redhat.developer.model.Type;
 import com.redhat.developer.model.Value;
 import com.redhat.developer.utils.DataUtils;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.RepeatedTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,7 +29,7 @@ public class LIMEishExplainerTest {
     }
 
     @RepeatedTest(10)
-    public void testMapOneFeatureToOutputRegressionExplanation() {
+    public void testMapOneFeatureToOutputRegression() {
         int idx = 1;
         List<Feature> features = new LinkedList<>();
         features.add(new Feature("f1", Type.NUMBER, new Value<>(100)));
@@ -50,7 +51,7 @@ public class LIMEishExplainerTest {
     }
 
     @RepeatedTest(10)
-    public void testUnusedFeature() {
+    public void testUnusedFeatureRegression() {
         int idx = 2;
         List<Feature> features = new LinkedList<>();
         features.add(new Feature("f1", Type.NUMBER, new Value<>(100)));
@@ -70,5 +71,44 @@ public class LIMEishExplainerTest {
         assertTrue(perFeatureImportance.get(0).getScore() > 0);
         assertTrue(perFeatureImportance.get(1).getScore() > 0);
         assertEquals(features.get(idx).getName(), perFeatureImportance.get(2).getFeature().getName());
+    }
+
+    @RepeatedTest(10)
+    public void testMapOneFeatureToOutputClassification() {
+        int idx = 1;
+        List<Feature> features = new LinkedList<>();
+        features.add(new Feature("f1", Type.NUMBER, new Value<>(3)));
+        features.add(new Feature("f2", Type.NUMBER, new Value<>(2)));
+        features.add(new Feature("f3", Type.NUMBER, new Value<>(7)));
+        PredictionInput input = new PredictionInput(features);
+        Model model = ExplanationTestUtils.getEvenFeatureModel(idx);
+        List<PredictionOutput> outputs = model.predict(List.of(input));
+        Prediction prediction = new Prediction(input, outputs.get(0));
+
+        LIMEishExplainer limEishExplainer = new LIMEishExplainer(1000, 1);
+        Saliency saliency = limEishExplainer.explain(prediction, model);
+
+        assertNotNull(saliency);
+        List<FeatureImportance> topFeatures = saliency.getTopFeatures(1);
+        assertEquals(features.get(idx).getName(), topFeatures.get(0).getFeature().getName());
+    }
+
+    @Disabled
+    public void testUnusedFeatureClassification() {
+        int idx = 2;
+        List<Feature> features = new LinkedList<>();
+        features.add(new Feature("f1", Type.NUMBER, new Value<>(6)));
+        features.add(new Feature("f2", Type.NUMBER, new Value<>(3)));
+        features.add(new Feature("f3", Type.NUMBER, new Value<>(5)));
+        Model model = ExplanationTestUtils.getEvenSumModel(idx);
+        PredictionInput input = new PredictionInput(features);
+        List<PredictionOutput> outputs = model.predict(List.of(input));
+        Prediction prediction = new Prediction(input, outputs.get(0));
+        LIMEishExplainer limEishExplainer = new LIMEishExplainer(100, 1);
+        Saliency saliency = limEishExplainer.explain(prediction, model);
+
+        assertNotNull(saliency);
+        List<FeatureImportance> perFeatureImportance = saliency.getTopFeatures(3);
+        assertEquals(features.get(idx).getName(), perFeatureImportance.get(perFeatureImportance.size() - 1).getFeature().getName());
     }
 }
