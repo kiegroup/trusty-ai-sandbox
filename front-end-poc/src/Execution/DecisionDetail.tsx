@@ -20,7 +20,7 @@ type AuditDetailOverviewProps = {
   model: IExecutionModelResponse;
 };
 
-const AuditDetailOverview = (props: AuditDetailOverviewProps) => {
+const DecisionDetail = (props: AuditDetailOverviewProps) => {
   const { executionData, model } = props;
   return (
     <PageSection isFilled={true}>
@@ -56,4 +56,4 @@ const AuditDetailOverview = (props: AuditDetailOverviewProps) => {
   );
 };
 
-export default AuditDetailOverview;
+export default DecisionDetail;

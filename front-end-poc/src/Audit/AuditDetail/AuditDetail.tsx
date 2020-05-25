@@ -10,15 +10,15 @@ import {
 } from "@patternfly/react-core";
 import React, { useEffect, useState } from "react";
 import { Link, Redirect, Route, Switch, useLocation, useParams, useRouteMatch } from "react-router-dom";
-import { IExecutionModelResponse } from "./types";
-import AuditDetailOverview from "../AuditOverview/AuditDetailOverview";
-import ExplanationView from "../Explanation/ExplanationView/ExplanationView";
-import InputData from "../InputData/InputData";
-import ModelLookup from "../ModelLookup/ModelLookup";
-import { ExecutionType, getExecution } from "../Shared/api/audit.api";
-import SkeletonInlineStripe from "../Shared/skeletons/SkeletonInlineStripe";
-import { IExecution, IExecutionRouteParams } from "./types";
-import { getModelDetail } from "../Shared/api/audit.api";
+import { IExecutionModelResponse } from "../types";
+import DecisionDetail from "../../Execution/DecisionDetail";
+import ExplanationView from "../../Explanation/ExplanationView/ExplanationView";
+import InputData from "../../InputData/InputData";
+import ModelLookup from "../../ModelLookup/ModelLookup";
+import { ExecutionType, getExecution } from "../../Shared/api/audit.api";
+import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
+import { IExecution, IExecutionRouteParams } from "../types";
+import { getModelDetail } from "../../Shared/api/audit.api";
 
 const AuditDetail = () => {
   let { path, url } = useRouteMatch();
@@ -104,7 +104,7 @@ const AuditDetail = () => {
       </PageSection>
       <Switch>
         <Route path={`${path}/overview`}>
-          <AuditDetailOverview model={model} executionData={executionData} />
+          <DecisionDetail model={model} executionData={executionData} />
         </Route>
         <Route path={`${path}/input-data`}>
           <InputData />

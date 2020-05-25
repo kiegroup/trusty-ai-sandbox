@@ -3,7 +3,7 @@ import "./App.scss";
 import { Avatar, Brand, Nav, NavList, Page, PageHeader, PageSidebar, NavItem } from "@patternfly/react-core";
 import { Switch, Route, NavLink, Redirect, useLocation } from "react-router-dom";
 import AuditOverview from "./Audit/AuditOverview/AuditOverview";
-import AuditDetail from "./Audit/AuditDetail";
+import AuditDetail from "./Audit/AuditDetail/AuditDetail";
 import ScrollToTop from "./Shared/ScrollToTop";
 import AppBreadcrumbs from "./Shared/components/AppBreadcrumbs";
 const imgBrand =
