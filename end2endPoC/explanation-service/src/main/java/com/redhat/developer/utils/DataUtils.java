@@ -221,17 +221,21 @@ public class DataUtils {
                     }
                 } else {
                     // max - min scaling
-                    double[] doubles = new double[predictionInputs.size()];
+                    double[] doubles = new double[predictionInputs.size() + 1];
                     int i = 0;
                     for (PredictionInput pi : predictionInputs) {
                         Feature feature = pi.getFeatures().get(t);
                         doubles[i] = feature.getValue().asNumber();
                         i++;
                     }
+                    double originalValue = originalInputs.getFeatures().get(t).getValue().asNumber();
+                    doubles[i] = originalValue;
                     double min = DoubleStream.of(doubles).min().getAsDouble();
                     double max = DoubleStream.of(doubles).max().getAsDouble();
+                    double threshold = gaussianKernel((originalValue - min) / (max - min));
                     List<Double> featureValues = DoubleStream.of(doubles).map(d -> (d - min) / (max - min))
-                            .map(d -> Double.isNaN(d) ? 1 : d).boxed().collect(Collectors.toList());
+                            .map(d -> Double.isNaN(d) ? 1 : d).boxed().map(DataUtils::gaussianKernel)
+                            .map(d -> (d - threshold < 1e-3) ? 1d : 0d).collect(Collectors.toList());
                     columnData.add(featureValues);
                 }
             }

@@ -1,6 +1,5 @@
 package com.redhat.developer.api;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -11,10 +10,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.redhat.developer.LIMEishSaliencyExplanationProvider;
+import com.redhat.developer.LocalSaliencyExplanationProvider;
 import com.redhat.developer.model.Saliency;
 import com.redhat.developer.requests.LocalExplanationRequest;
-import com.redhat.developer.requests.TypedData;
 import com.redhat.developer.responses.FeatureImportanceResponse;
 import com.redhat.developer.responses.SaliencyResponse;
 
@@ -22,7 +20,7 @@ import com.redhat.developer.responses.SaliencyResponse;
 public class ExplainResource {
 
     @Inject
-    LIMEishSaliencyExplanationProvider explanationProvider;
+    LocalSaliencyExplanationProvider explanationProvider;
 
     @POST
     @Path("/saliency/lime")
