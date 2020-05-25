@@ -3,7 +3,7 @@ package com.redhat.developer.lime;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.redhat.developer.LIMEishSaliencyExplanationProvider;
+import com.redhat.developer.LocalSaliencyExplanationProvider;
 import com.redhat.developer.model.Feature;
 import com.redhat.developer.model.FeatureImportance;
 import com.redhat.developer.model.Output;
@@ -68,10 +68,10 @@ public class LIMESumModelTest {
 
         String modelName = "sum";
 
-        LIMEishSaliencyExplanationProvider lime = new LIMEishSaliencyExplanationProvider(1000) {
+        LocalSaliencyExplanationProvider lime = new LocalSaliencyExplanationProvider(1000) {
             @Override
-            protected List<PredictionOutput> predict(List<PredictionInput> perturbedInputs, List<TypedData> originalInput,
-                                                     List<TypedData> originalOutputs, String modelName) {
+            protected List<PredictionOutput> runDMN(List<PredictionInput> perturbedInputs, List<TypedData> originalInput,
+                                                    List<TypedData> originalOutputs, String modelName) {
                 return LIMESumModelTest.this.predict(perturbedInputs, idx);
             }
         };
