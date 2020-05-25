@@ -1,15 +1,6 @@
 import React, { useState } from "react";
 import "./App.scss";
-import {
-  Avatar,
-  Brand,
-  Nav,
-  NavList,
-  Page,
-  PageHeader,
-  PageSidebar,
-  NavItem,
-} from "@patternfly/react-core";
+import { Avatar, Brand, Nav, NavList, Page, PageHeader, PageSidebar, NavItem } from "@patternfly/react-core";
 import { Switch, Route, NavLink, Redirect, useLocation } from "react-router-dom";
 import AuditOverview from "./Audit/AuditOverview/AuditOverview";
 import AuditDetail from "./Audit/AuditDetail";
@@ -49,24 +40,20 @@ const App = () => {
         <NavItem isActive={location.pathname.startsWith("/audit")}>
           <NavLink to="/audit">Audit Investigation</NavLink>
         </NavItem>
-        <NavItem to="http://localhost:3001/" target="_blank" isActive={location.pathname === "/dashboard"}>
+        <NavItem to="http://localhost:3001/" target="_blank">
           Business Monitoring
         </NavItem>
-        <NavItem to="http://localhost:3001/" target="_blank" isActive={location.pathname === "/op-dashboard"}>
+        <NavItem to="http://localhost:3001/" target="_blank">
           Operational Monitoring
         </NavItem>
       </NavList>
     </Nav>
   );
 
-  const logoProps = {
-    href: '#/'
-  };
-
   const Header = (
     <PageHeader
       logo={<Brand src={imgBrand} alt="Kogito TrustyAI" className="trusty-logo" />}
-      logoProps={logoProps}
+      logoProps={{ href: "#/" }}
       avatar={<Avatar src={imgAvatar} alt="Avatar image" />}
       showNavToggle
       onNavToggle={isMobileView ? onNavToggleMobile : onNavToggleDesktop}

@@ -10,7 +10,7 @@ import {
 } from "@patternfly/react-core";
 import React, { useEffect, useState } from "react";
 import { Link, Redirect, Route, Switch, useLocation, useParams, useRouteMatch } from "react-router-dom";
-import { IExecutionModelResponse } from "../Audit/types";
+import { IExecutionModelResponse } from "./types";
 import AuditDetailOverview from "../AuditOverview/AuditDetailOverview";
 import ExplanationView from "../Explanation/ExplanationView/ExplanationView";
 import InputData from "../InputData/InputData";
@@ -104,7 +104,7 @@ const AuditDetail = () => {
       </PageSection>
       <Switch>
         <Route path={`${path}/overview`}>
-          <AuditDetailOverview model={model} />
+          <AuditDetailOverview model={model} executionData={executionData} />
         </Route>
         <Route path={`${path}/input-data`}>
           <InputData />
@@ -115,7 +115,7 @@ const AuditDetail = () => {
         <Route path={`${path}/model-lookup`}>
           <ModelLookup model={model} />
         </Route>
-        <Route render={() => <Redirect to={`${location.pathname}/overview`} />} />
+        <Redirect exact from={path} to={`${location.pathname}/overview`} />} />
       </Switch>
     </>
   );

@@ -1,28 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Card, CardBody, CardHeader, Grid, GridItem, Title } from "@patternfly/react-core";
-import { useParams } from "react-router-dom";
-import { ExecutionType, getExecution } from "../Shared/api/audit.api";
-import { IExecution, IExecutionRouteParams } from "../Audit/types";
+import { IExecution } from "../Audit/types";
 import SkeletonGrid from "../Shared/skeletons/SkeletonGrid";
 
-const ExecutionSummary = () => {
-  const { executionId, executionType } = useParams<IExecutionRouteParams>();
-  const [executionData, setExecutionData] = useState<IExecution | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+type ExecutionSummaryProps = {
+  executionData: IExecution | null;
+};
 
-  useEffect(() => {
-    getExecution(executionType as ExecutionType, executionId)
-      .then((response) => {
-        setIsLoading(false);
-        let execution = {
-          ...response.data,
-          executionDate: new Date(response.data.executionDate).toLocaleString(),
-          executionSucceeded: response.data.executionSucceeded ? "Completed" : "Failed",
-        };
-        setExecutionData(execution);
-      })
-      .catch(() => {});
-  }, [executionType, executionId]);
+const ExecutionSummary = (props: ExecutionSummaryProps) => {
+  const { executionData } = props;
 
   return (
     <Card>
@@ -32,24 +18,24 @@ const ExecutionSummary = () => {
         </Title>
       </CardHeader>
       <CardBody>
-        {isLoading && <SkeletonGrid rowsNumber={2} colsNumber={2} gutterSize="md" />}
-        {!isLoading && (
+        {executionData === null && <SkeletonGrid rowsNumber={2} colsNumber={2} gutterSize="md" />}
+        {executionData !== null && (
           <Grid gutter="md" className={"data"}>
             <GridItem span={6}>
               <label className={"data__label"}>Execution ID</label>
-              <span>#{executionData && executionData.executionId}</span>
+              <span>#{executionData.executionId}</span>
             </GridItem>
             <GridItem span={6}>
               <label className={"data__label"}>Execution Status</label>
-              <span>{executionData && executionData.executionSucceeded}</span>
+              <span>{executionData.executionSucceeded ? "Completed" : "Failed"}</span>
             </GridItem>
             <GridItem span={6}>
               <label className={"data__label"}>Executor Name</label>
-              <span>{executionData && executionData.executorName}</span>
+              <span>{executionData.executorName}</span>
             </GridItem>
             <GridItem span={6}>
               <label className={"data__label"}>Date</label>
-              <span>{executionData && executionData.executionDate}</span>
+              <span>{new Date(executionData.executionDate).toLocaleString()}</span>
             </GridItem>
           </Grid>
         )}

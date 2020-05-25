@@ -4,12 +4,11 @@ import flatpickr from "flatpickr";
 import { Instance as flatpickrInstance } from "flatpickr/dist/types/instance";
 import "./DatePicker.scss";
 
-flatpickr!.l10ns!.en!.weekdays.shorthand.forEach((day, index) => {
-  const currentDay = flatpickr!.l10ns!.en!.weekdays.shorthand;
-  if (currentDay[index] === "Thu" || currentDay[index] === "Th") {
-    currentDay[index] = "Th";
+flatpickr?.l10ns?.en?.weekdays.shorthand.forEach((day, index, daysArray) => {
+  if (daysArray[index] === "Thu" || daysArray[index] === "Th") {
+    daysArray[index] = "Th";
   } else {
-    currentDay[index] = currentDay[index].charAt(0);
+    daysArray[index] = daysArray[index].charAt(0);
   }
 });
 
