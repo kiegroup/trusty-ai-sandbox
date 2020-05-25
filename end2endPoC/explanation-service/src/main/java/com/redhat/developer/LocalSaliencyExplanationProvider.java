@@ -43,6 +43,10 @@ public class LocalSaliencyExplanationProvider {
      */
     private final int noOfPerturbations;
 
+    public LocalSaliencyExplanationProvider() {
+        this(100, 1);
+    }
+
     public LocalSaliencyExplanationProvider(int noOfSamples, int noOfPerturbations) {
         this.noOfSamples = noOfSamples;
         this.noOfPerturbations = noOfPerturbations;
