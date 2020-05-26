@@ -40,6 +40,6 @@ public class ExecutionHeaderResponse {
     }
 
     public static ExecutionHeaderResponse fromDMNResultModel(DMNResultModel result) {
-        return new ExecutionHeaderResponse(result.executionId, result.executionDate, !result.decisions.stream().anyMatch(y -> y.hasErrors), "testUser", result.modelName);
+        return new ExecutionHeaderResponse(result.executionId, new Date(result.executionTimestamp), !result.decisions.stream().anyMatch(y -> y.hasErrors), "testUser", result.modelName);
     }
 }

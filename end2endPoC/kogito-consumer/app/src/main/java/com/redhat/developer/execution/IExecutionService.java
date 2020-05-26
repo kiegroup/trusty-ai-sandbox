@@ -18,5 +18,5 @@ public interface IExecutionService {
 
     List<DMNResultModel> getEventsByMatchingId(String key);
 
-    List<DMNResultModel> getDecisions(String from, String to, String prefix);
+    List<DMNResultModel> getDecisions(Long from, Long to, String prefix);
 }

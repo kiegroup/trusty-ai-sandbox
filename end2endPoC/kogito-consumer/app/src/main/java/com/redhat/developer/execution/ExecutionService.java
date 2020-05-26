@@ -79,7 +79,7 @@ public class ExecutionService implements IExecutionService {
     }
 
     @Override
-    public List<DMNResultModel> getDecisions(String from, String to, String prefix) {
+    public List<DMNResultModel> getDecisions(Long from, Long to, String prefix) {
         return storageExtension.getDecisions(from, to, prefix);
     }
 

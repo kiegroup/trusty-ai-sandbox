@@ -34,7 +34,6 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
-import org.kie.dmn.api.core.DMNModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +74,7 @@ public class DecisionsApi {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode(), String.format("Multiple events have been retrieved with this ID.", key)).build();
         }
 
-        System.out.println(event.get(0).executionDate);
+        System.out.println(event.get(0).executionTimestamp);
         return Response.ok(ExecutionHeaderResponse.fromDMNResultModel(event.get(0))).build();
     }
 
