@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -14,9 +13,8 @@ public class DMNResultModel {
     @JsonProperty("executionId")
     public String executionId;
 
-    @JsonProperty("executionDate")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    public Date executionDate;
+    @JsonProperty("executionTimestamp")
+    public Long executionTimestamp;
 
     @JsonProperty("decisions")
     public List<OutcomeModel> decisions;
@@ -33,8 +31,8 @@ public class DMNResultModel {
     @JsonProperty("modelId")
     public String modelId;
 
-    public Date getExecutionDate() {
-        return executionDate;
+    public Long getExecutionTimestamp() {
+        return executionTimestamp;
     }
 }
 

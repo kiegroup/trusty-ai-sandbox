@@ -48,12 +48,12 @@ public class ExecutionsStorageExtension implements IExecutionsStorageExtension {
     }
 
     @Override
-    public List<DMNResultModel> getDecisions(String from, String to, String prefix) {
+    public List<DMNResultModel> getDecisions(Long from, Long to, String prefix) {
         TrustyStorageQuery query = new TrustyStorageQuery();
         if (!prefix.equals("")) {
             query.where("executionId", StringOperator.PREFIX, prefix);
         }
-        query.where("executionDate", DateOperator.GTE, from).where("executionDate", DateOperator.LTE, to);
+        query.where("executionTimestamp", DateOperator.GTE, from).where("executionTimestamp", DateOperator.LTE, to);
 
         return storageManager.search(query, INDEX, DMNResultModel.class);
     }

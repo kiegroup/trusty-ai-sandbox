@@ -43,7 +43,7 @@ public class MongoQueryFactory {
 //        SimpleDateFormat formatterIn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 //        SimpleDateFormat formatterOut = new SimpleDateFormat("yyyyMMddHHmmssSSS"); // infinispan specific, look here https://github.com/infinispan/infinispan/blob/0cbb18f426c803a3b769047da10d520b8e8b5fea/object-filter/src/main/java/org/infinispan/objectfilter/impl/util/DateHelper.java#L13
 
-        for (TrustyStorageQuery.InternalWhereDecision<DateOperator, String> condition : query.dateOperations) {
+        for (TrustyStorageQuery.InternalWhereDecision<DateOperator, Long> condition : query.dateOperations) {
             switch (condition.operator) {
                 case GTE:
                     conditions.add(gte(condition.property, condition.value));
