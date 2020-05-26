@@ -13,7 +13,7 @@ public class TrustyStorageQuery {
 
     public List<InternalWhereDecision<IntegerOperator, Integer>> integerOperations = new ArrayList<>();
 
-    public List<InternalWhereDecision<DateOperator, String>> dateOperations = new ArrayList<>();
+    public List<InternalWhereDecision<DateOperator, Long>> dateOperations = new ArrayList<>();
 
     public TrustyStorageQuery() {
     }
@@ -28,7 +28,7 @@ public class TrustyStorageQuery {
         return this;
     }
 
-    public TrustyStorageQuery where(String property, DateOperator operator, String value) {
+    public TrustyStorageQuery where(String property, DateOperator operator, Long value) {
         System.out.println(value);
         dateOperations.add(new InternalWhereDecision(property, operator, value));
         return this;

@@ -44,7 +44,7 @@ public class ElasticQueryFactory {
             }
         }
 
-        for (TrustyStorageQuery.InternalWhereDecision<DateOperator, String> condition : query.dateOperations) {
+        for (TrustyStorageQuery.InternalWhereDecision<DateOperator, Long> condition : query.dateOperations) {
             switch (condition.operator) {
                 case GTE:
                     conditions.add("{\"range\" : {\"" + condition.property + "\" : { \"gte\" : \"" + condition.value + "\"}}}");

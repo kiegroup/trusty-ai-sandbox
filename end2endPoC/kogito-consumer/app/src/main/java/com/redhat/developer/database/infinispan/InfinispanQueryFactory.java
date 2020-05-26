@@ -42,16 +42,9 @@ public class InfinispanQueryFactory {
         LOGGER.info(qq);
 
         conditions = new ArrayList<>();
-        SimpleDateFormat formatterIn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-        for (TrustyStorageQuery.InternalWhereDecision<DateOperator, String> condition : query.dateOperations) {
-            Long dd = null;
-            try {
-                dd = formatterIn.parse(condition.value).toInstant().toEpochMilli();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            conditions.add("b." + condition.property + InfinispanOperatorFactory.convert(condition.operator) + dd );
+        for (TrustyStorageQuery.InternalWhereDecision<DateOperator, Long> condition : query.dateOperations) {
+            conditions.add("b." + condition.property + InfinispanOperatorFactory.convert(condition.operator) + condition.value );
         }
         qq += String.join(" and ", conditions);
 

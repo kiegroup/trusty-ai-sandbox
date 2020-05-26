@@ -21,7 +21,7 @@ public class ModelFactory {
         DMNResultModel resultModel = new DMNResultModel();
         resultModel.modelNamespace = resultDto.modelNamespace;
         resultModel.modelName = resultDto.modelName;
-        resultModel.executionDate = resultDto.evaluationDate;
+        resultModel.executionTimestamp = resultDto.evaluationTimestamp;
         resultModel.executionId = resultDto.evaluationId;
         resultModel.context = resultDto.context;
         resultModel.decisions = resultDto.decisions.stream().map(x -> fromDecisionDto(x)).collect(Collectors.toList());
