@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Button,
   Divider,
@@ -12,7 +12,7 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { HelpIcon } from "@patternfly/react-icons";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory, useLocation } from "react-router-dom";
 import { IExecutionRouteParams } from "../../Audit/types";
 import { IOutcome } from "../../Outcome/types";
 import { getDecisionFeatureScores, getDecisionOutcome, getDecisionOutcomeDetail } from "../../Shared/api/audit.api";
@@ -25,6 +25,7 @@ import { orderBy } from "lodash";
 import "./ExplanationView.scss";
 import SkeletonTornadoChart from "../../Shared/skeletons/SkeletonTornadoChart/SkeletonTornadoChart";
 import FeaturesScoreTable from "../FeatureScoreTable/FeaturesScoreTable";
+import queryString from "query-string";
 
 export interface IFeatureScores {
   featureName: string;
@@ -42,6 +43,23 @@ const ExplanationView = () => {
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
   };
+  let history = useHistory();
+  let location = useLocation();
+
+  const updateQueryString = useCallback(
+    (updateOutcomeId: string): void => {
+      if (outcomeId === null) {
+        history.replace({
+          search: `outcomeId=${updateOutcomeId}`,
+        });
+      } else {
+        history.push({
+          search: `outcomeId=${updateOutcomeId}`,
+        });
+      }
+    },
+    [history, outcomeId]
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -51,11 +69,12 @@ const ExplanationView = () => {
           if (response.data && response.data.outcomes) {
             setOutcomeData(response.data.outcomes.slice(0, 1));
             let defaultOutcome = response.data.outcomes[0];
-            setOutcomeId(defaultOutcome.outcomeId);
+            updateQueryString(defaultOutcome.outcomeId);
           }
         }
       })
       .catch(() => {});
+
     getDecisionFeatureScores(executionId)
       .then((response) => {
         if (response.data && response.data.featureImportance) {
@@ -72,7 +91,14 @@ const ExplanationView = () => {
     return () => {
       isMounted = false;
     };
-  }, [executionId]);
+  }, [executionId, updateQueryString]);
+
+  useEffect(() => {
+    let query = queryString.parse(location.search);
+    if (query.outcomeId && query.outcomeId.length) {
+      setOutcomeId(query.outcomeId as string);
+    }
+  }, [location.search]);
 
   useEffect(() => {
     let isMounted = true;
@@ -80,7 +106,7 @@ const ExplanationView = () => {
       getDecisionOutcomeDetail(executionId, outcomeId)
         .then((response) => {
           if (isMounted) {
-            if (response.data && response.data && response.data.outcomeInputs) {
+            if (response && response.data && response.data.outcomeInputs) {
               setOutcomeDetail(response.data.outcomeInputs);
             }
           }

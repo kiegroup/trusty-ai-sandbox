@@ -44,7 +44,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "gh-pages -d build",
-    "mock-api": "json-server --watch api-mock/db.js --routes api-mock/routes.json --port 1336 --delay 1500 --id executionId"
+    "mock-api": "json-server --watch api-mock/db.js --routes api-mock/routes.json --port 1336 --delay 1500 --id executionId --middlewares api-mock/filterSingular.js"
   },
   "eslintConfig": {
     "extends": "react-app"
