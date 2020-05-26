@@ -9,8 +9,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
@@ -175,94 +177,6 @@ public class DataUtils {
         return perturbedInput;
     }
 
-    public static Collection<Pair<double[], Double>> encodeTrainingSet(List<PredictionInput> predictionInputs,
-                                                                       List<Output> predictedOutputs,
-                                                                       PredictionInput originalInputs,
-                                                                       Output originalOutput) {
-        Collection<Pair<double[], Double>> trainingSet = new LinkedList<>();
-        if (!predictionInputs.isEmpty() && !predictedOutputs.isEmpty() && !originalInputs.getFeatures().isEmpty() && originalOutput != null) {
-            List<Type> featureTypes = predictionInputs.stream().findFirst().get().getFeatures().stream().map(Feature::getType).collect(Collectors.toList());
-
-            List<List<Double>> columnData = new LinkedList<>();
-
-            for (int t = 0; t < featureTypes.size(); t++) {
-                if (!Type.NUMBER.equals(featureTypes.get(t))) {
-                    // convert values for this feature into a number
-                    switch (featureTypes.get(t)) {
-                        case STRING:
-                            List<Double> featureValues = new LinkedList<>();
-                            for (PredictionInput pi : predictionInputs) {
-                                Feature originalFeature = originalInputs.getFeatures().get(t);
-                                String originalString = originalFeature.getValue().asString();
-                                String perturbedString = pi.getFeatures().get(t).getValue().asString();
-                                double featureValue = originalString.equals(perturbedString) ? 1 : 0;
-                                featureValues.add(featureValue);
-                            }
-                            columnData.add(featureValues);
-                            break;
-                        case BINARY:
-                            break;
-                        case BOOLEAN:
-                            break;
-                        case DATE:
-                            break;
-                        case URI:
-                            break;
-                        case TIME:
-                            break;
-                        case DURATION:
-                            break;
-                        case VECTOR:
-                            break;
-                        case UNDEFINED:
-                            break;
-                        case CURRENCY:
-                            break;
-                    }
-                } else {
-                    // max - min scaling
-                    double[] doubles = new double[predictionInputs.size() + 1];
-                    int i = 0;
-                    for (PredictionInput pi : predictionInputs) {
-                        Feature feature = pi.getFeatures().get(t);
-                        doubles[i] = feature.getValue().asNumber();
-                        i++;
-                    }
-                    double originalValue = originalInputs.getFeatures().get(t).getValue().asNumber();
-                    doubles[i] = originalValue;
-                    double min = DoubleStream.of(doubles).min().getAsDouble();
-                    double max = DoubleStream.of(doubles).max().getAsDouble();
-                    double threshold = gaussianKernel((originalValue - min) / (max - min));
-                    List<Double> featureValues = DoubleStream.of(doubles).map(d -> (d - min) / (max - min))
-                            .map(d -> Double.isNaN(d) ? 1 : d).boxed().map(DataUtils::gaussianKernel)
-                            .map(d -> (d - threshold < 1e-3) ? 1d : 0d).collect(Collectors.toList());
-                    columnData.add(featureValues);
-                }
-            }
-
-            int pi = 0;
-            for (Output o : predictedOutputs) {
-                double[] x = new double[featureTypes.size()];
-                int i = 0;
-                for (List<Double> column : columnData) {
-                    x[i] = column.get(pi);
-                    i++;
-                }
-                double y;
-                if (Type.NUMBER.equals(originalOutput.getType()) || Type.BOOLEAN.equals(originalOutput.getType())) {
-                    y = o.getValue().asNumber();
-                } else {
-                    y = originalOutput.getValue().getUnderlyingObject().equals(o.getValue().getUnderlyingObject()) ? 1d : 0d;
-                }
-                Pair<double[], Double> sample = new ImmutablePair<>(x, y);
-                trainingSet.add(sample);
-
-                pi++;
-            }
-        }
-        return trainingSet;
-    }
-
     private static Feature featureDrop(Feature feature, int noOfSamples) {
         Value<?> value = null;
         Type type = feature.getType();
@@ -272,7 +186,7 @@ public class DataUtils {
                 if (random.nextBoolean()) {
                     String stringValue = feature.getValue().asString();
                     if (stringValue.indexOf(' ') != -1) {
-                        List<String> words = new ArrayList(Arrays.asList(stringValue.split(" ")));
+                        List<String> words = new ArrayList<>(Arrays.asList(stringValue.split(" ")));
                         int featuresToDrop = random.nextInt(Math.min(2, words.size() / 2));
                         for (int i = 0; i < 1 + featuresToDrop; i++) {
                             int dropIdx = random.nextInt(words.size());

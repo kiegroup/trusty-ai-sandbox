@@ -2,10 +2,15 @@ package com.redhat.developer.execution.api;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
@@ -22,6 +27,7 @@ import com.redhat.developer.execution.IExecutionService;
 import com.redhat.developer.execution.models.DMNResultModel;
 import com.redhat.developer.execution.responses.execution.ExecutionHeaderResponse;
 import com.redhat.developer.execution.responses.execution.ExecutionResponse;
+import com.redhat.developer.execution.storage.ExecutionsStorageExtension;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -30,9 +36,15 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.jboss.resteasy.annotations.jaxrs.QueryParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Path("/executions")
 public class ExecutionsApi {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExecutionsApi.class);
+
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Inject
     IExecutionService executionService;
@@ -79,24 +91,29 @@ public class ExecutionsApi {
                     schema = @Schema(implementation = String.class)
             ) @DefaultValue("") @QueryParam("search") String prefix) throws ParseException {
 
+        Long fromTimestamp;
         if (from.equals("yesterday")) {
-            from = java.time.LocalDateTime.now().minusDays(1).toString();
+            fromTimestamp = LocalDate.now().atStartOfDay().minusDays(1).toInstant(ZoneOffset.UTC).toEpochMilli();
         }
+        else{
+            fromTimestamp = LocalDate.parse(from, formatter).atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli();
+        }
+
+        Long toTimestamp;
         if (to.equals("now")) {
-            to = java.time.LocalDateTime.now().plusDays(1).toString();
+            toTimestamp = LocalDate.now().atStartOfDay().plusDays(1).toInstant(ZoneOffset.UTC).toEpochMilli();
         } else {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(dateFormat.parse(to));
-            cal.add(Calendar.DATE, 1);
-            to = cal.toString();
+            toTimestamp = LocalDate.parse(to, formatter).atStartOfDay().plusDays(1).toInstant(ZoneOffset.UTC).toEpochMilli();
         }
+
+        LOGGER.info("From: " + fromTimestamp);
+        LOGGER.info("To: " + toTimestamp);
 
         List<DMNResultModel> results;
 
         try {
-            results = executionService.getDecisions(from, to, prefix);
-            results.sort(Comparator.comparing(DMNResultModel::getExecutionDate).reversed());
+            results = executionService.getDecisions(fromTimestamp, toTimestamp, prefix);
+            results.sort(Comparator.comparing(DMNResultModel::getExecutionTimestamp).reversed());
         } catch (RuntimeException e) {
             e.printStackTrace();
             return Response.status(400, String.format("Bad request: {}", e.getMessage())).build();
@@ -238,7 +255,7 @@ public class ExecutionsApi {
 
         int totalResults = results.size();
         if (totalResults >= limit) {
-            results.sort(Comparator.comparing(DMNResultModel::getExecutionDate));
+            results.sort(Comparator.comparing(DMNResultModel::getExecutionTimestamp));
             results = results.subList(offset, Math.min(results.size(), offset + limit));
         }
 

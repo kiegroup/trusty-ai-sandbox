@@ -12,9 +12,8 @@ public class DMNResultDto {
     @JsonProperty("evaluationId")
     public String evaluationId;
 
-    @JsonProperty("evaluationDate")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    public Date evaluationDate;
+    @JsonProperty("evaluationTimestamp")
+    public Long evaluationTimestamp;
 
     @JsonProperty("decisions")
     public List<DecisionResultDto> decisions;

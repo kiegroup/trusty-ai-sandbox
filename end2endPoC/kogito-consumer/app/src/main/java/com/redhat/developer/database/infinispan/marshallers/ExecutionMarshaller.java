@@ -23,7 +23,7 @@ public class ExecutionMarshaller extends AbstractMarshaller implements MessageMa
         DMNResultModel result =  new DMNResultModel();
 
         result.executionId = reader.readString("executionId");
-        result.executionDate = new Date(reader.readLong("executionDate"));
+        result.executionTimestamp = reader.readLong("executionTimestamp");
         result.modelId = reader.readString("modelId");
         result.modelName = reader.readString("modelName");
         result.modelNamespace = reader.readString("modelNamespace");
@@ -35,7 +35,7 @@ public class ExecutionMarshaller extends AbstractMarshaller implements MessageMa
     @Override
     public void writeTo(ProtoStreamWriter writer, DMNResultModel result) throws IOException {
         writer.writeString("executionId", result.executionId );
-        writer.writeLong("executionDate", result.executionDate.toInstant().toEpochMilli() );
+        writer.writeLong("executionTimestamp", result.executionTimestamp );
         writer.writeString("modelId", result.modelId );
         writer.writeString("modelNamespace", result.modelNamespace );
         writer.writeString("modelName", result.modelName );

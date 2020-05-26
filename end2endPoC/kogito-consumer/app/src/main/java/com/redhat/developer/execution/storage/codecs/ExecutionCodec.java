@@ -15,6 +15,7 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.CollectibleCodec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.json.JsonWriterSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +26,10 @@ public class ExecutionCodec implements CollectibleCodec<DMNResultModel> {
     private final Codec<Document> documentCodec;
 
     private static final ObjectMapper mapper = new ObjectMapper();
+
+    JsonWriterSettings settings = JsonWriterSettings.builder()
+            .int64Converter((value, writer) -> writer.writeNumber(value.toString()))
+            .build();
 
     public ExecutionCodec() {
         this.documentCodec = MongoClientSettings.getDefaultCodecRegistry().get(Document.class);
@@ -68,7 +73,7 @@ public class ExecutionCodec implements CollectibleCodec<DMNResultModel> {
         Document document = documentCodec.decode(reader, decoderContext);
 
         try {
-            return mapper.readValue(document.toJson(), DMNResultModel.class);
+            return mapper.readValue(document.toJson(settings), DMNResultModel.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
