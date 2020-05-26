@@ -1,5 +1,6 @@
 package com.redhat.developer.xai;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -78,6 +79,28 @@ public class ExplanationTestUtils {
                 predictionOutputs.add(predictionOutput);
             }
             return predictionOutputs;
+        };
+    }
+
+    public static Model getTextClassifier() {
+        return inputs -> {
+            List<PredictionOutput> outputs = new LinkedList<>();
+            for (PredictionInput input : inputs) {
+                boolean spam = false;
+                for (Feature f : input.getFeatures()) {
+                    if (!spam && Type.STRING.equals(f.getType())) {
+                        String s = f.getValue().asString();
+                        String[] words = s.split(" ");
+                        Arrays.sort(words);
+                        if (Arrays.binarySearch(words, "money") >= 0) {
+                            spam = true;
+                        }
+                    }
+                }
+                Output output = new Output("spam-classification", Type.BOOLEAN, new Value<>(spam), 1d);
+                outputs.add(new PredictionOutput(List.of(output)));
+            }
+            return outputs;
         };
     }
 }

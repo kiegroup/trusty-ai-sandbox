@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 
 import com.redhat.developer.model.Feature;
 import com.redhat.developer.model.FeatureImportance;
@@ -16,9 +17,12 @@ import com.redhat.developer.model.Prediction;
 import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.PredictionOutput;
 import com.redhat.developer.model.Saliency;
+import com.redhat.developer.model.Type;
+import com.redhat.developer.model.Value;
 import com.redhat.developer.utils.DataUtils;
 import com.redhat.developer.utils.ExplainabilityUtils;
 import com.redhat.developer.utils.LinearModel;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,10 +53,13 @@ public class LIMEishExplainer implements Explainer<Saliency> {
 
         List<FeatureImportance> saliencies = new LinkedList<>();
         PredictionInput predictionInput = prediction.getInput();
-        List<Feature> features = predictionInput.getFeatures();
+        List<Feature> inputFeatures = predictionInput.getFeatures();
+        List<Feature> outputFeatures = getOutputFeatures(inputFeatures);
         List<Output> actualOutputs = prediction.getOutput().getOutputs();
-        int noOfFeatures = features.size();
-        double[] weights = new double[noOfFeatures];
+        int noOfInputFeatures = inputFeatures.size();
+        int noOfOutputFeatures = outputFeatures.size();
+        double[] weights = new double[noOfOutputFeatures];
+
         for (int o = 0; o < actualOutputs.size(); o++) {
             boolean separableDataset = false;
 
@@ -64,7 +71,7 @@ public class LIMEishExplainer implements Explainer<Saliency> {
             int tries = 3;
             Map<Double, Long> rawClassesBalance = new HashMap<>();
             while (!separableDataset && tries > 0) {
-                List<PredictionInput> perturbed = getPerturbedInputs(predictionInput, noOfFeatures, sampleSize);
+                List<PredictionInput> perturbed = getPerturbedInputs(predictionInput, noOfInputFeatures, sampleSize);
                 List<PredictionOutput> perturbedOutputs = model.predict(perturbed);
 
                 rawClassesBalance = perturbedOutputs.stream().map(p -> p.getOutputs().get(0).getValue()
@@ -95,13 +102,11 @@ public class LIMEishExplainer implements Explainer<Saliency> {
 
             Output originalOutput = prediction.getOutput().getOutputs().get(o);
 
-            Collection<Pair<double[], Double>> trainingSet = DataUtils.encodeTrainingSet(perturbedInputs, predictedOutputs,
-                                                                                         prediction.getInput(),
-                                                                                         originalOutput);
+            Collection<Pair<double[], Double>> trainingSet = encodeTrainingSet(perturbedInputs, predictedOutputs, predictionInput, originalOutput);
 
-            double[] sampleWeights = getSampleWeights(prediction, noOfFeatures, trainingSet);
+            double[] sampleWeights = getSampleWeights(prediction, noOfInputFeatures, trainingSet);
 
-            LinearModel linearModel = new LinearModel(noOfFeatures, classification);
+            LinearModel linearModel = new LinearModel(outputFeatures.size(), classification);
             linearModel.fit(trainingSet, sampleWeights);
             for (int i = 0; i < weights.length; i++) {
                 weights[i] += linearModel.getWeights()[i] / (double) actualOutputs.size();
@@ -109,14 +114,127 @@ public class LIMEishExplainer implements Explainer<Saliency> {
             logger.debug("weights updated for output {}", actualOutputs.get(o).getValue());
         }
         for (int i = 0; i < weights.length; i++) {
-            FeatureImportance featureImportance = new FeatureImportance(features.get(i), weights[i]);
+            FeatureImportance featureImportance = new FeatureImportance(outputFeatures.get(i), weights[i]);
             saliencies.add(featureImportance);
         }
         long end = System.currentTimeMillis();
         logger.info("explanation time: {}ms", (end - start));
         logger.info("quantified explainability measure: {}",
-                    ExplainabilityUtils.quantifyExplainability(noOfFeatures, saliencies.size(), 0));
+                    ExplainabilityUtils.quantifyExplainability(noOfInputFeatures, saliencies.size(), 0));
         return new Saliency(saliencies);
+    }
+
+    static Collection<Pair<double[], Double>> encodeTrainingSet(List<PredictionInput> perturbedInputs, List<Output> predictedOutputs, PredictionInput predictionInput, Output originalOutput) {
+        Collection<Pair<double[], Double>> trainingSet = new LinkedList<>();
+        List<List<Double>> columnData;
+        if (!perturbedInputs.isEmpty() && !predictedOutputs.isEmpty() && !predictionInput.getFeatures().isEmpty() && originalOutput != null) {
+            columnData = getColumnData(perturbedInputs, predictionInput);
+
+            int pi = 0;
+            for (Output output : predictedOutputs) {
+                double[] x = new double[columnData.size()];
+                int i = 0;
+                for (List<Double> column : columnData) {
+                    x[i] = column.get(pi);
+                    i++;
+                }
+                double y;
+                if (Type.NUMBER.equals(originalOutput.getType()) || Type.BOOLEAN.equals(originalOutput.getType())) {
+                    y = output.getValue().asNumber();
+                } else {
+                    y = originalOutput.getValue().getUnderlyingObject().equals(output.getValue().getUnderlyingObject()) ? 1d : 0d;
+                }
+                Pair<double[], Double> sample = new ImmutablePair<>(x, y);
+                trainingSet.add(sample);
+
+                pi++;
+            }
+        }
+        return trainingSet;
+    }
+
+    private List<Feature> getOutputFeatures(List<Feature> inputFeatures) {
+        List<Feature> outputFeatures = new LinkedList<>();
+        for (Feature f : inputFeatures) {
+            if (Type.STRING.equals(f.getType())) {
+                for (String w : f.getValue().asString().split(" ")) {
+                    Feature outputFeature = new Feature(w + " (" + f.getName() + ")", Type.STRING, new Value<>(w));
+                    outputFeatures.add(outputFeature);
+                }
+            } else {
+                Feature outputFeature = new Feature(f.getName(), f.getType(), new Value<>(f.getValue().getUnderlyingObject()));
+                outputFeatures.add(outputFeature);
+            }
+        }
+        return outputFeatures;
+    }
+
+    static List<List<Double>> getColumnData(List<PredictionInput> predictionInputs, PredictionInput originalInputs) {
+        List<Type> featureTypes = predictionInputs.stream().findFirst().get().getFeatures().stream().map(Feature::getType).collect(Collectors.toList());
+        List<List<Double>> columnData = new LinkedList<>();
+
+        for (int t = 0; t < featureTypes.size(); t++) {
+            if (!Type.NUMBER.equals(featureTypes.get(t))) {
+                // convert values for this feature into numbers
+                switch (featureTypes.get(t)) {
+                    case STRING:
+                        Feature originalFeature = originalInputs.getFeatures().get(t);
+                        String originalString = originalFeature.getValue().asString();
+                        String[] words = originalString.split(" ");
+                        for (String word : words) {
+                            String featureName = word + "(" + originalFeature.getName() + ")";
+                            List<Double> featureValues = new LinkedList<>();
+                            for (PredictionInput pi : predictionInputs) {
+                                String perturbedString = pi.getFeatures().get(t).getValue().asString();
+                                String[] perturbedWords = perturbedString.split(" ");
+                                Arrays.sort(perturbedWords);
+                                double featureValue = Arrays.binarySearch(perturbedWords, word) >= 0 ? 1d : 0d;
+                                featureValues.add(featureValue);
+                            }
+                            columnData.add(featureValues);
+                        }
+                        break;
+                    case BINARY:
+                        break;
+                    case BOOLEAN:
+                        break;
+                    case DATE:
+                        break;
+                    case URI:
+                        break;
+                    case TIME:
+                        break;
+                    case DURATION:
+                        break;
+                    case VECTOR:
+                        break;
+                    case UNDEFINED:
+                        break;
+                    case CURRENCY:
+                        break;
+                }
+            } else {
+                // max - min scaling
+                double[] doubles = new double[predictionInputs.size() + 1];
+                int i = 0;
+                for (PredictionInput pi : predictionInputs) {
+                    Feature feature = pi.getFeatures().get(t);
+                    doubles[i] = feature.getValue().asNumber();
+                    i++;
+                }
+                Feature feature = originalInputs.getFeatures().get(t);
+                double originalValue = feature.getValue().asNumber();
+                doubles[i] = originalValue;
+                double min = DoubleStream.of(doubles).min().getAsDouble();
+                double max = DoubleStream.of(doubles).max().getAsDouble();
+                double threshold = DataUtils.gaussianKernel((originalValue - min) / (max - min));
+                List<Double> featureValues = DoubleStream.of(doubles).map(d -> (d - min) / (max - min))
+                        .map(d -> Double.isNaN(d) ? 1 : d).boxed().map(DataUtils::gaussianKernel)
+                        .map(d -> (d - threshold < 1e-3) ? 1d : 0d).collect(Collectors.toList());
+                columnData.add(featureValues);
+            }
+        }
+        return columnData;
     }
 
     private List<PredictionInput> getPerturbedInputs(PredictionInput predictionInput, int noOfFeatures, int noOfSamples) {
