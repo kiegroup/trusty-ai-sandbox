@@ -6,10 +6,15 @@ import {
   DataListItem,
   DataListItemCells,
   DataListItemRow,
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateIcon,
+  EmptyStateVariant,
   Grid,
   GridItem,
   Split,
   SplitItem,
+  Title,
 } from "@patternfly/react-core";
 
 import "./inputDataBrowser.scss";
@@ -20,6 +25,7 @@ import SkeletonDataList from "../Shared/skeletons/SkeletonDataList";
 import { IInputRow, IItemObject, isIItemObjectArray, isIItemObjectMultiArray } from "./types";
 import FormattedValue from "../Shared/components/FormattedValue/FormattedValue";
 import { v4 as uuid } from "uuid";
+import { OutlinedMehIcon } from "@patternfly/react-icons";
 
 const ItemsSubList = (props: { itemsList: IItemObject[] }) => {
   const { itemsList } = props;
@@ -207,7 +213,7 @@ const InputDataBrowser = (props: { inputData: IItemObject[] | null }) => {
   };
 
   useEffect(() => {
-    if (inputData) {
+    if (inputData && inputData.length > 0) {
       const items: IItemObject[] = [];
       const categories = [];
       const rootSection: IItemObject = {
@@ -239,9 +245,13 @@ const InputDataBrowser = (props: { inputData: IItemObject[] | null }) => {
 
   return (
     <div className="input-browser">
-      <div className="input-browser__section-list">
-        {!inputData && <SkeletonStripes stripesNumber={6} stripesWidth={100} stripesHeight={1.5} />}
-        {inputData && (
+      {inputData === null && (
+        <div className="input-browser__section-list">
+          <SkeletonStripes stripesNumber={6} stripesWidth={100} stripesHeight={1.5} />
+        </div>
+      )}
+      {inputData !== null && inputData.length > 0 && (
+        <div className="input-browser__section-list">
           <Split>
             <SplitItem>
               <span className="input-browser__section-list__label">Browse Sections</span>
@@ -259,10 +269,10 @@ const InputDataBrowser = (props: { inputData: IItemObject[] | null }) => {
               ))}
             </SplitItem>
           </Split>
-        )}
-      </div>
-      {!inputData && <SkeletonDataList rowsNumber={4} colsNumber={6} hasHeader={true} />}
-      {inputData && (
+        </div>
+      )}
+      {inputData === null && <SkeletonDataList rowsNumber={4} colsNumber={6} hasHeader={true} />}
+      {inputData !== null && inputData.length > 0 && (
         <DataList aria-label="Input Data">
           <DataListItem aria-labelledby="header" key="header" className="input-browser__header">
             <DataListItemRow>
@@ -283,6 +293,15 @@ const InputDataBrowser = (props: { inputData: IItemObject[] | null }) => {
           </DataListItem>
           {inputs && renderItem(inputs[viewSection])}
         </DataList>
+      )}
+      {inputData && inputData.length === 0 && (
+        <EmptyState variant={EmptyStateVariant.full}>
+          <EmptyStateIcon icon={OutlinedMehIcon} />
+          <Title headingLevel="h5" size="lg">
+            No input data
+          </Title>
+          <EmptyStateBody>No inputs are present in this node (or model)</EmptyStateBody>
+        </EmptyState>
       )}
     </div>
   );

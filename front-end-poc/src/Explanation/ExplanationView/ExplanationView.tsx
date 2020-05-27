@@ -26,6 +26,7 @@ import "./ExplanationView.scss";
 import SkeletonTornadoChart from "../../Shared/skeletons/SkeletonTornadoChart/SkeletonTornadoChart";
 import FeaturesScoreTable from "../FeatureScoreTable/FeaturesScoreTable";
 import queryString from "query-string";
+import ExplanationSelector from "../ExplanationSelector/ExplanationSelector";
 
 export interface IFeatureScores {
   featureName: string;
@@ -34,7 +35,8 @@ export interface IFeatureScores {
 
 const ExplanationView = () => {
   const { executionId } = useParams<IExecutionRouteParams>();
-  const [outcomeData, setOutcomeData] = useState<IOutcome[] | null>(null);
+  const [outcomeData, setOutcomeData] = useState<IOutcome | null>(null);
+  const [outcomesList, setOutcomesList] = useState<IOutcome[] | null>(null);
   const [outcomeId, setOutcomeId] = useState<string | null>(null);
   const [outcomeDetail, setOutcomeDetail] = useState(null);
   const [featuresScores, setFeaturesScores] = useState<IFeatureScores[] | null>(null);
@@ -43,22 +45,16 @@ const ExplanationView = () => {
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
   };
-  let history = useHistory();
-  let location = useLocation();
+  const history = useHistory();
+  const location = useLocation();
 
-  const updateQueryString = useCallback(
-    (updateOutcomeId: string): void => {
-      if (outcomeId === null) {
-        history.replace({
-          search: `outcomeId=${updateOutcomeId}`,
-        });
-      } else {
-        history.push({
-          search: `outcomeId=${updateOutcomeId}`,
-        });
-      }
+  const switchExplanation = useCallback(
+    (outcomeId: string) => {
+      history.push({
+        search: `outcomeId=${outcomeId}`,
+      });
     },
-    [history, outcomeId]
+    [history]
   );
 
   useEffect(() => {
@@ -67,9 +63,15 @@ const ExplanationView = () => {
       .then((response) => {
         if (isMounted) {
           if (response.data && response.data.outcomes) {
-            setOutcomeData(response.data.outcomes.slice(0, 1));
             let defaultOutcome = response.data.outcomes[0];
-            updateQueryString(defaultOutcome.outcomeId);
+            //setOutcomeData(defaultOutcome);
+            //updateQueryString();
+            setOutcomesList(response.data.outcomes);
+            if (!outcomeId) {
+              history.replace({
+                search: `outcomeId=${defaultOutcome.outcomeId}`,
+              });
+            }
           }
         }
       })
@@ -91,14 +93,18 @@ const ExplanationView = () => {
     return () => {
       isMounted = false;
     };
-  }, [executionId, updateQueryString]);
+  }, [executionId, outcomeId, history]);
 
   useEffect(() => {
     let query = queryString.parse(location.search);
     if (query.outcomeId && query.outcomeId.length) {
       setOutcomeId(query.outcomeId as string);
+      if (outcomesList) {
+        let outcome = outcomesList.find((item) => item.outcomeId === query.outcomeId);
+        setOutcomeData(outcome as IOutcome);
+      }
     }
-  }, [location.search]);
+  }, [location.search, outcomesList]);
 
   useEffect(() => {
     let isMounted = true;
@@ -124,7 +130,14 @@ const ExplanationView = () => {
         <div className="container">
           <Title headingLevel="h2" size="3xl">
             <span className="explanation-view__title">Decision Explanation: </span>
-            {outcomeData === null ? <SkeletonInlineStripe /> : <span>{outcomeData[0].outcomeName}</span>}
+            {outcomeData === null ? <SkeletonInlineStripe /> : <span>{outcomeData.outcomeName}</span>}
+            {outcomeId !== null && outcomesList !== null && outcomesList.length && (
+              <ExplanationSelector
+                outcomesList={outcomesList}
+                onDecisionSelection={switchExplanation}
+                currentExplanation={outcomeId}
+              />
+            )}
           </Title>
         </div>
       </PageSection>
@@ -143,7 +156,7 @@ const ExplanationView = () => {
               {outcomeData === null ? (
                 <SkeletonGrid rowsNumber={6} colsNumber={2} gutterSize="md" />
               ) : (
-                <OutcomePreview outcomeData={outcomeData} compact={false} />
+                <OutcomePreview outcomeData={[outcomeData]} compact={false} />
               )}
             </StackItem>
           </Stack>
