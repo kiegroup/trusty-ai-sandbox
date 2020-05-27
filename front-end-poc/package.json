@@ -5,7 +5,7 @@
   "homepage": "https://kelvah.github.io/xai-poc",
   "dependencies": {
     "@patternfly/react-charts": "^5.3.21",
-    "@patternfly/react-core": "3.134.2",
+    "@patternfly/react-core": "3.158.1",
     "@patternfly/react-icons": "^3.15.17",
     "@patternfly/react-table": "^2.25.6",
     "@testing-library/jest-dom": "^4.2.4",
