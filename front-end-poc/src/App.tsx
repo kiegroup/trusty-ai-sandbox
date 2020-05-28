@@ -25,9 +25,9 @@ const App = () => {
     setIsNavOpenMobile(!isNavOpenMobile);
   };
 
-  const handlePageResize = (stuff: { windowSize: number; mobileView: boolean }) => {
+  const handlePageResize = (props: { windowSize: number; mobileView: boolean }) => {
     // closing sidebar menu when resolution is < 1200
-    if (stuff.windowSize < 1200) {
+    if (props.windowSize < 1200) {
       if (!isMobileView) setIsMobileView(true);
     } else {
       if (isMobileView) setIsMobileView(false);
