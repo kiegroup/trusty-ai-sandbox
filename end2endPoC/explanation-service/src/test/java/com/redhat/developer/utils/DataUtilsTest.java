@@ -30,10 +30,10 @@ class DataUtilsTest {
     }
 
     @Test
-    public void testGaussianKernelWithRandomPositive() {
-        double x = Math.abs(random.nextDouble());
+    public void testGaussianKernel() {
+        double x = 0.218;
         double k = DataUtils.gaussianKernel(x);
-        assertTrue(x >= 0.5 ? k < x : x < k);
+        assertEquals(0.551, k, 1e-3);
     }
 
     @Test
@@ -61,10 +61,10 @@ class DataUtilsTest {
     }
 
     @Test
-    public void testExponentialSmoothingKernelWithRandomPositive() {
-        double x = Math.abs(random.nextDouble());
+    public void testExponentialSmoothingKernel() {
+        double x = 0.218;
         double k = DataUtils.exponentialSmoothingKernel(x, 2);
-        assertTrue(x >= 1 ? k < x : x < k);
+        assertEquals(0.994, k, 1e-3);
     }
 
     @Test
