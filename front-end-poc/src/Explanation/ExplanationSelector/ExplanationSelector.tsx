@@ -1,28 +1,44 @@
 import React, { useState } from "react";
-import {
-  Button,
-  DataList,
-  DataListCell,
-  DataListItem,
-  DataListItemRow,
-  DataListItemCells,
-  Modal,
-  Label,
-  StackItem,
-  Stack,
-} from "@patternfly/react-core";
-import { evaluationStatus, IOutcome } from "../../Outcome/types";
+import { Button, Modal, Label, StackItem, Stack } from "@patternfly/react-core";
+import { IOutcome } from "../../Outcome/types";
 import "./ExplanationSelector.scss";
+import EvaluationStatus from "../EvaluationStatus/EvaluationStatus";
+import { Table, TableBody, TableHeader } from "@patternfly/react-table";
 
 type ExplanationSelectorProps = {
-  currentExplanation: string;
+  currentExplanationId: string;
   onDecisionSelection: (outcomeId: string) => void;
   outcomesList: IOutcome[];
 };
 
 const ExplanationSelector = (props: ExplanationSelectorProps) => {
-  const { outcomesList, onDecisionSelection, currentExplanation } = props;
+  const { outcomesList, onDecisionSelection, currentExplanationId } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const columns = ["Decision Name", "Evaluation Status"];
+  const rows = outcomesList.map((item) => {
+    return {
+      cells: [
+        {
+          title:
+            item.outcomeId === currentExplanationId ? (
+              <span>
+                <span id={item.outcomeName}>{item.outcomeName}</span>{" "}
+                <Label isCompact className="explanation-currently-viewed">
+                  Currently viewing
+                </Label>
+              </span>
+            ) : (
+              <Button variant="link" isInline onClick={() => decisionSelection(item.outcomeId)}>
+                <span id={item.outcomeName}>{item.outcomeName}</span>
+              </Button>
+            ),
+          colSpan: 3,
+        },
+        { title: <EvaluationStatus status={item.evaluationStatus} /> },
+      ],
+    };
+  });
 
   const decisionSelection = (outcomeId: string) => {
     onDecisionSelection(outcomeId);
@@ -35,12 +51,16 @@ const ExplanationSelector = (props: ExplanationSelectorProps) => {
 
   return (
     <>
-      <Button variant="secondary" onClick={toggleModalOpening} className={"explanation-selector"}>
-        View Another Decision
+      <Button
+        variant="secondary"
+        onClick={toggleModalOpening}
+        className="explanation-selector"
+        title="Select another decision">
+        Switch
       </Button>
       <Modal
         width={"50%"}
-        title="Choose decision explanation"
+        title="Decisions List"
         isOpen={isModalOpen}
         onClose={toggleModalOpening}
         actions={[
@@ -49,50 +69,15 @@ const ExplanationSelector = (props: ExplanationSelectorProps) => {
           </Button>,
         ]}
         isFooterLeftAligned>
-        <Stack gutter="md">
+        <Stack gutter="lg">
           <StackItem>
             <p>Choose which decision of the model you want explained from the list below.</p>
           </StackItem>
           <StackItem>
-            <DataList aria-label="selectable data list example" isCompact>
-              <DataListItem aria-labelledby="decision-name" key="list header">
-                <DataListItemRow>
-                  <DataListItemCells
-                    dataListCells={[
-                      <DataListCell key="decision name" width={3}>
-                        <span id="decision-name">Decision Name</span>
-                      </DataListCell>,
-                      <DataListCell key="decision evaluation status">Evaluation Status</DataListCell>,
-                    ]}
-                  />
-                </DataListItemRow>
-              </DataListItem>
-              {outcomesList.map((item) => (
-                <DataListItem aria-labelledby={item.outcomeName} id={item.outcomeId} key={item.outcomeId}>
-                  <DataListItemRow>
-                    <DataListItemCells
-                      dataListCells={[
-                        <DataListCell key="decision name" width={3}>
-                          {item.outcomeId === currentExplanation ? (
-                            <span>
-                              <span id={item.outcomeName}>{item.outcomeName}</span>{" "}
-                              <Label isCompact>Currently viewing</Label>
-                            </span>
-                          ) : (
-                            <Button variant="link" isInline onClick={() => decisionSelection(item.outcomeId)}>
-                              <span id={item.outcomeName}>{item.outcomeName}</span>
-                            </Button>
-                          )}
-                        </DataListCell>,
-                        <DataListCell key="decision evaluation status">
-                          {evaluationStatus[item.evaluationStatus]}
-                        </DataListCell>,
-                      ]}
-                    />
-                  </DataListItemRow>
-                </DataListItem>
-              ))}
-            </DataList>
+            <Table aria-label="Decisions List" cells={columns} rows={rows}>
+              <TableHeader />
+              <TableBody />
+            </Table>
           </StackItem>
         </Stack>
       </Modal>

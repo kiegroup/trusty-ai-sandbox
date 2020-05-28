@@ -2,7 +2,7 @@
   padding-bottom: var(--pf-global--spacer--xl);
   background-color: var(--pf-c-page__main-section--BackgroundColor);
   &__title {
-    font-weight: 500;
+    font-weight: 300;
   }
   &__section {
     padding-top: var(--pf-global--spacer--2xl);
@@ -12,7 +12,7 @@
     fill: var(--pf-global--info-color--100);
     display: inline-block;
     vertical-align: middle;
-    margin-left: .5em;
+    margin-left: 0.5em;
   }
   .all-features-opener {
     margin-left: var(--pf-global--spacer--md);
@@ -22,7 +22,6 @@
     margin: var(--pf-global--spacer--md) 0;
   }
 }
-
 
 .container {
   margin: 0 auto;

@@ -129,13 +129,17 @@ const ExplanationView = () => {
       <PageSection variant="default" className="explanation-view__section">
         <div className="container">
           <Title headingLevel="h2" size="3xl">
-            <span className="explanation-view__title">Decision Explanation: </span>
-            {outcomeData === null ? <SkeletonInlineStripe /> : <span>{outcomeData.outcomeName}</span>}
-            {outcomeId !== null && outcomesList !== null && outcomesList.length && (
+            <span>Decision: </span>
+            {outcomeData === null ? (
+              <SkeletonInlineStripe />
+            ) : (
+              <span className="explanation-view__title">{outcomeData.outcomeName}</span>
+            )}
+            {outcomeId !== null && outcomesList !== null && outcomesList.length > 1 && (
               <ExplanationSelector
                 outcomesList={outcomesList}
                 onDecisionSelection={switchExplanation}
-                currentExplanation={outcomeId}
+                currentExplanationId={outcomeId}
               />
             )}
           </Title>

@@ -4,11 +4,11 @@ export enum evaluationStatus {
   EVALUATING = "Evaluating",
   FAILED = "Failed",
   NOT_EVALUATED = "Not evaluated",
-  SKIPPED = "skipped",
+  SKIPPED = "Skipped",
   SUCCEEDED = "Succeeded",
 }
 
-type evaluationStatusStrings = keyof typeof evaluationStatus;
+export type evaluationStatusStrings = keyof typeof evaluationStatus;
 
 export interface IOutcome {
   outcomeId: string;
@@ -17,8 +17,4 @@ export interface IOutcome {
   hasErrors: boolean;
   messages: string[];
   outcomeResult: IItemObject;
-}
-
-export interface IOutcomeDetail extends IOutcome {
-  outcomeInputs: IItemObject[];
 }
