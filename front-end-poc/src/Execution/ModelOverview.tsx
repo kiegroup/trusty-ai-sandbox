@@ -9,11 +9,11 @@ const models: Map<string, JSX.Element> = new Map([
   ["fraud-scoring", <FraudScoringDistribution />],
 ]);
 
-interface Props {
+type ModelOverviewProps = {
   model: IExecutionModelResponse;
-}
+};
 
-function ModelOverview(props: Props) {
+function ModelOverview(props: ModelOverviewProps) {
   return (
     <Card>
       <CardHeader>

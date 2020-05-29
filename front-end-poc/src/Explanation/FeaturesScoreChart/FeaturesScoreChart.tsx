@@ -14,11 +14,6 @@ import { maxBy } from "lodash";
 import formattedScore from "../../Shared/components/FormattedScore/formattedScore";
 import "./FeatureScoreChart.scss";
 
-type ownProps = {
-  featuresScore: IFeatureScores[];
-  large?: boolean;
-};
-
 const eventHandlers = [
   {
     target: "data",
@@ -114,7 +109,12 @@ const CustomLabel = (props: any) => {
   );
 };
 
-const FeaturesScoreChart = (props: ownProps) => {
+type FeaturesScoreChartProps = {
+  featuresScore: IFeatureScores[];
+  large?: boolean;
+};
+
+const FeaturesScoreChart = (props: FeaturesScoreChartProps) => {
   const { featuresScore, large = false } = props;
   const width = large ? 1400 : 800;
   const height = large ? 50 * featuresScore.length : 500;

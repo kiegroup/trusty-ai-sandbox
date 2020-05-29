@@ -9,7 +9,11 @@ import {
 } from "@patternfly/react-icons";
 import "./EvaluationStatus.scss";
 
-const EvaluationStatus = (props: { status: evaluationStatusStrings }) => {
+type EvaluationStatusProps = {
+  status: evaluationStatusStrings;
+};
+
+const EvaluationStatus = (props: EvaluationStatusProps) => {
   const { status } = props;
   const label = evaluationStatus[status];
   let icon;

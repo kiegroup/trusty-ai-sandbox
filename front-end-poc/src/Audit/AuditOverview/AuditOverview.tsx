@@ -1,7 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
+  Bullseye,
   Button,
   ButtonVariant,
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateIcon,
   InputGroup,
   List,
   ListItem,
@@ -25,33 +29,12 @@ import {
   DataToolbarItem,
   DataToolbarItemVariant,
 } from "@patternfly/react-core/dist/js/experimental";
-import { SearchIcon, CheckCircleIcon, ErrorCircleOIcon } from "@patternfly/react-icons";
+import { SearchIcon } from "@patternfly/react-icons";
 import FromFilter from "../FromFilter/FromFilter";
 import ToFilter from "../ToFilter/ToFilter";
 import PaginationContainer from "../PaginationContainer/PaginationContainer";
-import NoExecutions from "../NoExecutions/NoExecutions";
 import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
-
-const ExecutionStatus = (props: { result: boolean }) => {
-  let className = "execution-status-badge execution-status-badge--";
-  if (props.result) {
-    className += "success";
-    return (
-      <>
-        <CheckCircleIcon className={className} />
-        <span>Completed</span>
-      </>
-    );
-  } else {
-    className += "error";
-    return (
-      <>
-        <ErrorCircleOIcon className={className} />
-        <span>Error</span>
-      </>
-    );
-  }
-};
+import ExecutionStatus from "../ExecutionStatus/ExecutionStatus";
 
 const prepareExecutionTableRows = (rowData: IExecution[]) => {
   let rows: IRow[] = [];
@@ -79,13 +62,36 @@ const prepareExecutionTableRows = (rowData: IExecution[]) => {
   return rows;
 };
 
+const noExecutions = (colSpan: number) => {
+  return [
+    {
+      heightAuto: true,
+      decisionKey: "no-results",
+      cells: [
+        {
+          props: { colSpan },
+          title: (
+            <Bullseye>
+              <EmptyState>
+                <EmptyStateIcon icon={SearchIcon} />
+                <Title size="lg">No executions found</Title>
+                <EmptyStateBody>No results match the filter criteria. Try removing all filters.</EmptyStateBody>
+              </EmptyState>
+            </Bullseye>
+          ),
+        },
+      ],
+    },
+  ];
+};
+
 const AuditOverview = () => {
   const columns = ["ID", "Description", "Executor", "Date", "Execution Status"];
   const oneMonthAgo = new Date();
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
   const [rows, setRows] = useState<IRow[]>([]);
   const [searchString, setSearchString] = useState("");
-  const [latestSearches, setLatestSearches] = useState<string[]>([]);
+  const [latestSearches, setLatestSearches] = useState<string[] | null>(null);
   const [fromDate, setFromDate] = useState(oneMonthAgo.toISOString().substr(0, 10));
   const [toDate, setToDate] = useState(new Date().toISOString().substr(0, 10));
   const [page, setPage] = useState(1);
@@ -98,7 +104,7 @@ const AuditOverview = () => {
   }, []);
 
   const noResults = useMemo(() => {
-    return NoExecutions(5);
+    return noExecutions(5);
   }, []);
 
   const onSearchSubmit = (): void => {
@@ -119,9 +125,9 @@ const AuditOverview = () => {
           setRows(tableRows);
           setTotal(response.data.total);
           // temporary solution: for demo purposes we display the first 3 executions here
-          if (response.data.total > 0 && latestSearches.length === 0) {
+          if (latestSearches === null) {
             let searches = [];
-            let maxSearches = Math.min(3, response.data.headers.length);
+            let maxSearches = Math.min(3, response.data.total);
             for (let i = 0; i < maxSearches; i++) {
               searches.push(response.data.headers[i].executionId);
             }
@@ -150,8 +156,14 @@ const AuditOverview = () => {
         <div style={{ marginBottom: "var(--pf-global--spacer--lg)" }}>
           <List variant={ListVariant.inline}>
             <ListItem>Last Opened:</ListItem>
-            {latestSearches.length === 0 && <SkeletonInlineStripe customStyle={{ height: "inherit" }} />}
-            {latestSearches.length > 0 &&
+            {latestSearches === null && <SkeletonInlineStripe customStyle={{ height: "inherit" }} />}
+            {latestSearches && latestSearches.length === 0 && (
+              <span>
+                <em>None</em>
+              </span>
+            )}
+            {latestSearches &&
+              latestSearches.length > 0 &&
               latestSearches.map((item, index) => {
                 let latestSearchId;
                 if (item.toString().indexOf("-") > -1) {

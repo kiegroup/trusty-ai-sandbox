@@ -11,12 +11,12 @@ import {
 import "./FeaturesScoreTable.scss";
 import formattedScore from "../../Shared/components/FormattedScore/formattedScore";
 
-type PScoreTable = {
+type ScoreTableProps = {
   name: string;
   featuresScore: IFeatureScores[];
 };
 
-const ScoreTable = (props: PScoreTable) => {
+const ScoreTable = (props: ScoreTableProps) => {
   const { name, featuresScore } = props;
   return (
     <DataList aria-label="Features Scores" className="pf-m-compact score-table">
@@ -56,11 +56,11 @@ const ScoreTable = (props: PScoreTable) => {
   );
 };
 
-type PFeatureScoreTable = {
+type FeatureScoreTableProps = {
   featuresScore: IFeatureScores[];
 };
 
-const FeaturesScoreTable = (props: PFeatureScoreTable) => {
+const FeaturesScoreTable = (props: FeatureScoreTableProps) => {
   const { featuresScore } = props;
   const positiveScores = featuresScore.filter((item) => item.featureScore >= 0).reverse();
   const negativeScores = featuresScore.filter((item) => item.featureScore < 0).reverse();

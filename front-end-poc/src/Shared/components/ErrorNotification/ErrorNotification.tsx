@@ -1,13 +1,13 @@
 import React from "react";
 import { Alert, AlertActionCloseButton } from "@patternfly/react-core";
 
-type TOwnProps = {
+type ErrorNotificationProps = {
   closeToast: any;
   message: string;
   details: string;
 };
 
-const ErrorNotification = (props: TOwnProps) => {
+const ErrorNotification = (props: ErrorNotificationProps) => {
   const { closeToast, message, details } = props;
 
   return (

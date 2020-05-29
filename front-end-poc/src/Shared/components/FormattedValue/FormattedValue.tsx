@@ -2,7 +2,11 @@ import React from "react";
 import { v4 as uuid } from "uuid";
 import "./FormattedValue.scss";
 
-const FormattedList = (props: { valueList: any[] }) => {
+type FormattedListProps = {
+  valueList: any[];
+};
+
+const FormattedList = (props: FormattedListProps) => {
   const { valueList } = props;
 
   if (valueList.length === 0) {
@@ -24,7 +28,11 @@ const FormattedList = (props: { valueList: any[] }) => {
   );
 };
 
-const FormattedValue = (props: { value: any }) => {
+type FormattedValueProps = {
+  value: any;
+};
+
+const FormattedValue = (props: FormattedValueProps) => {
   const { value } = props;
   let formattedValue;
 
