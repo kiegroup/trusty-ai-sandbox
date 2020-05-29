@@ -34,14 +34,14 @@ $danger-color: #f7923d;
     border-radius: 4px;
     padding: 4px 6px;
     font-weight: bold;
-    font-size: (20/16)+rem;
+    font-size: (20/16) + rem;
     text-transform: uppercase;
   }
   &__score {
     display: block;
     position: relative;
     top: -8px;
-    font-size: (20/16)+rem;
+    font-size: (20/16) + rem;
     text-transform: uppercase;
     &__label {
       margin-right: 4px;
@@ -56,7 +56,7 @@ $danger-color: #f7923d;
       width: 100%;
       position: absolute;
       margin-top: 4px;
-      background: linear-gradient(90deg, rgba(251,6,2,1) 0%, rgba(255,209,0,1) 100%);
+      background: linear-gradient(90deg, rgba(251, 6, 2, 1) 0%, rgba(255, 209, 0, 1) 100%);
       &__indicator {
         width: 2px;
         height: 100%;
@@ -109,10 +109,10 @@ $danger-color: #f7923d;
     width: 30px;
     font-size: 1.25em;
     &__effect {
-      color: var(--pf-global--info-color--100)
+      color: var(--pf-global--info-color--100);
     }
     &__no-effect {
-      color: lighten(#72767B, 40%)
+      color: lighten(#72767b, 40%);
     }
     &--hidden {
       visibility: hidden;
@@ -146,7 +146,7 @@ $danger-color: #f7923d;
     &__item {
       padding: 4px;
       margin: 10px -4px 10px -4px;
-      background-color: lighten(#73BCF7, 20%);
+      background-color: lighten(#73bcf7, 20%);
       &.pf-c-data-list {
         --pf-c-data-list--BorderTopWidth: 0;
       }
@@ -159,8 +159,8 @@ $danger-color: #f7923d;
 
 .data {
   &__label {
-    font-size: (15/16)+rem;
+    font-size: (15/16) + rem;
     display: block;
-    color: var(--pf-global--Color--200)
+    color: var(--pf-global--Color--200);
   }
 }

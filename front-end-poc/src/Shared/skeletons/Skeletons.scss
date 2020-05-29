@@ -4,11 +4,7 @@
     height: 1.5em;
     display: block;
     background: #f6f7f8;
-    background: linear-gradient(
-                    to right,
-                    #dddddd 8%,
-                    #eeeeee 18%,
-                    #dddddd 33%);
+    background: linear-gradient(to right, #dddddd 8%, #eeeeee 18%, #dddddd 33%);
     background-size: 800px 104px;
     animation: linear 1.3s placeHolderShimmer infinite;
     &--md {

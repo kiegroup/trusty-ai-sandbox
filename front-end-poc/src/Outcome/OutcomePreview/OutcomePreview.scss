@@ -41,7 +41,7 @@
   }
   & > .outcome-list {
     font-size: 1.125rem;
-    padding: (10/18)+em 0;
+    padding: (10/18) + em 0;
     border-bottom: 1px solid lightgray;
     &:last-child {
       border-bottom: none;
@@ -70,7 +70,7 @@
     }
   }
   &__card {
-    transition: box-shadow .15s;
+    transition: box-shadow 0.15s;
     &__title {
       color: var(--pf-global--info-color--200);
     }
