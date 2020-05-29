@@ -17,7 +17,7 @@ import { IExecutionRouteParams } from "../../Audit/types";
 import { IOutcome } from "../../Outcome/types";
 import { getDecisionFeatureScores, getDecisionOutcome, getDecisionOutcomeDetail } from "../../Shared/api/audit.api";
 import OutcomePreview from "../../Outcome/OutcomePreview/OutcomePreview";
-import InputDataBrowser from "../../InputData/InputDataBrowser";
+import InputDataBrowser from "../../InputData/InputDataBrowser/InputDataBrowser";
 import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
 import SkeletonGrid from "../../Shared/skeletons/SkeletonGrid";
 import FeaturesScoreChart from "../FeaturesScoreChart/FeaturesScoreChart";

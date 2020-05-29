@@ -18,17 +18,17 @@ import {
 } from "@patternfly/react-core";
 
 import "./inputDataBrowser.scss";
-import FeatureDistributionBoxPlot from "./FeatureDistributionBoxPlot";
-import FeatureDistributionStackedChart from "./FeatureDistributionStackedChart";
-import SkeletonStripes from "../Shared/skeletons/SkeletonStripes";
-import SkeletonDataList from "../Shared/skeletons/SkeletonDataList";
-import { IInputRow, IItemObject, isIItemObjectArray, isIItemObjectMultiArray } from "./types";
-import FormattedValue from "../Shared/components/FormattedValue/FormattedValue";
+import FeatureDistributionBoxPlot from "../FeatureDistributionBoxPlot";
+import FeatureDistributionStackedChart from "../FeatureDistributionStackedChart";
+import SkeletonStripes from "../../Shared/skeletons/SkeletonStripes";
+import SkeletonDataList from "../../Shared/skeletons/SkeletonDataList";
+import { IInputRow, IItemObject, isIItemObjectArray, isIItemObjectMultiArray } from "../types";
+import FormattedValue from "../../Shared/components/FormattedValue/FormattedValue";
 import { v4 as uuid } from "uuid";
 import { OutlinedMehIcon } from "@patternfly/react-icons";
 
-const ItemsSubList = (props: { itemsList: IItemObject[] }) => {
-  const { itemsList } = props;
+const ItemsSubList = (props: { itemsList: IItemObject[]; itemCategory: string }) => {
+  const { itemsList, itemCategory } = props;
 
   return (
     <DataListItem aria-labelledby="" className={"category__sublist"}>
@@ -157,49 +157,52 @@ const InputValue = (props: IInputRow) => {
   );
 };
 
-let itemCategory = "";
-
 const renderItem = (item: IItemObject, category?: string): JSX.Element => {
   let renderItems: JSX.Element[] = [];
+  let itemCategory = "";
 
-  if (item.value !== null) {
-    return (
-      <InputValue
-        inputLabel={item.name}
-        inputValue={item.value}
-        hasEffect={item.impact}
-        score={item.score}
-        category={itemCategory}
-        key={item.name}
-      />
-    );
-  }
-
-  if (item.components.length) {
-    itemCategory = category ? `${itemCategory} / ${category}` : item.name;
-    let categoryLabel = itemCategory.length > 0 ? `${itemCategory}` : item.name;
-
-    if (item.components) {
-      if (isIItemObjectArray(item.components)) {
-        for (let subItem of item.components) {
-          renderItems.push(renderItem(subItem, subItem.name));
-        }
-      } else if (isIItemObjectMultiArray(item.components)) {
-        for (let subItem of item.components) {
-          renderItems.push(<ItemsSubList itemsList={subItem} key={uuid()} />);
-        }
-      }
+  const elaborateRender = (item: IItemObject, category?: string): JSX.Element => {
+    if (item.value !== null) {
       return (
-        <React.Fragment key={categoryLabel}>
-          <div className="category">
-            <CategoryLine categoryLabel={categoryLabel} key={`category-${categoryLabel}`} />
-          </div>
-          {renderItems.map((item: JSX.Element) => item)}
-        </React.Fragment>
+        <InputValue
+          inputLabel={item.name}
+          inputValue={item.value}
+          hasEffect={item.impact}
+          score={item.score}
+          category={itemCategory}
+          key={item.name}
+        />
       );
     }
-  }
-  return <></>;
+
+    if (item.components.length) {
+      itemCategory = category ? `${itemCategory} / ${category}` : item.name;
+      let categoryLabel = itemCategory.length > 0 ? `${itemCategory}` : item.name;
+
+      if (item.components) {
+        if (isIItemObjectArray(item.components)) {
+          for (let subItem of item.components) {
+            renderItems.push(elaborateRender(subItem, subItem.name));
+          }
+        } else if (isIItemObjectMultiArray(item.components)) {
+          for (let subItem of item.components) {
+            renderItems.push(<ItemsSubList itemsList={subItem} key={uuid()} itemCategory={itemCategory} />);
+          }
+        }
+        return (
+          <React.Fragment key={categoryLabel}>
+            <div className="category">
+              <CategoryLine categoryLabel={categoryLabel} key={`category-${categoryLabel}`} />
+            </div>
+            {renderItems.map((item) => item)}
+          </React.Fragment>
+        );
+      }
+    }
+    return <></>;
+  };
+
+  return elaborateRender(item, category);
 };
 
 const InputDataBrowser = (props: { inputData: IItemObject[] | null }) => {

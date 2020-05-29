@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import InputDataBrowser from "./InputDataBrowser";
+import InputDataBrowser from "../InputDataBrowser/InputDataBrowser";
 import { PageSection } from "@patternfly/react-core";
-import { getDecisionInput } from "../Shared/api/audit.api";
+import { getDecisionInput } from "../../Shared/api/audit.api";
 import { useParams } from "react-router-dom";
-import { IExecutionRouteParams } from "../Audit/types";
+import { IExecutionRouteParams } from "../../Audit/types";
 
-const InputData = () => {
+const InputDataView = () => {
   const { executionId } = useParams<IExecutionRouteParams>();
   const [inputData, setInputData] = useState(null);
 
@@ -30,4 +30,4 @@ const InputData = () => {
   );
 };
 
-export default InputData;
+export default InputDataView;

@@ -13,7 +13,7 @@ import { Link, Redirect, Route, Switch, useLocation, useParams, useRouteMatch } 
 import { IExecutionModelResponse } from "../types";
 import DecisionDetail from "../../Execution/DecisionDetail";
 import ExplanationView from "../../Explanation/ExplanationView/ExplanationView";
-import InputData from "../../InputData/InputData";
+import InputDataView from "../../InputData/InputDataView/InputDataView";
 import ModelLookup from "../../ModelLookup/ModelLookup";
 import { ExecutionType, getExecution } from "../../Shared/api/audit.api";
 import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
@@ -107,7 +107,7 @@ const AuditDetail = () => {
           <DecisionDetail model={model} executionData={executionData} />
         </Route>
         <Route path={`${path}/input-data`}>
-          <InputData />
+          <InputDataView />
         </Route>
         <Route path={`${path}/explanation`}>
           <ExplanationView />
