@@ -39,8 +39,6 @@ const FormattedValue = (props: FormattedValueProps) => {
   switch (typeof value) {
     case "number":
     case "bigint":
-      formattedValue = value;
-      break;
     case "string":
       formattedValue = value;
       break;
@@ -57,7 +55,7 @@ const FormattedValue = (props: FormattedValueProps) => {
       break;
   }
 
-  return <span>{formattedValue}</span>;
+  return <span className="formatted-value">{formattedValue}</span>;
 };
 
 export default FormattedValue;
