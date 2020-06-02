@@ -47,7 +47,7 @@
     "cxsd": "cxsd",
     "generate-cxsd": "cxsd --out-js ./src/ModelLookup/pmml/generated --out-ts ./src/ModelLookup/pmml/generated http://dmg.org/pmml/v4-4/pmml-4-4.xsd",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && mvn clean package -B -nsu",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "gh-pages -d build",

@@ -11,6 +11,17 @@
 # production
 /build
 
+# unpacked editor files
+/public/gwt-editors
+/public/envelope
+/unpacked
+/target
+
+# eclipse settings
+.classpath
+.project
+.settings/
+
 # misc
 .DS_Store
 .env.local
