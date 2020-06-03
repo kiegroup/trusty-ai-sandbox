@@ -52,10 +52,6 @@ public class LocalSaliencyExplanationProvider {
         this.noOfPerturbations = noOfPerturbations;
     }
 
-    public LocalSaliencyExplanationProvider(int noOfSamples) {
-        this(noOfSamples, 1);
-    }
-
     public Saliency explain(List<TypedData> dmnInputs, List<TypedData> dmnOutputs, String modelName) {
         Prediction prediction = convert(dmnInputs, dmnOutputs);
         LIMEishExplainer limEishExplainer = new LIMEishExplainer(noOfSamples, noOfPerturbations);
@@ -74,7 +70,7 @@ public class LocalSaliencyExplanationProvider {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            logger.info(request);
+            logger.debug(request);
             Map<String, Object> outcome = null;
             try {
                 outcome = new ObjectMapper().readValue(response, new HashMap<String, Object>().getClass());

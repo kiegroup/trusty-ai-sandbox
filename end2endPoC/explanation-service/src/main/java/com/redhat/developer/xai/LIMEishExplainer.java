@@ -82,13 +82,18 @@ public class LIMEishExplainer implements Explainer<Saliency> {
                     Long max = rawClassesBalance.values().stream().max(Long::compareTo).get();
                     if ((double) max / (double) perturbed.size() < 0.9) {
                         separableDataset = true;
-                        perturbedInputs.addAll(perturbed);
-                        predictionOutputs.addAll(perturbedOutputs);
                         classification = rawClassesBalance.size() == 2;
+                    } else {
+                        sampleSize *= 2;
+                        tries--;
                     }
                 } else {
                     sampleSize *= 2;
                     tries--;
+                }
+                if (tries == 0 || separableDataset) {
+                    perturbedInputs.addAll(perturbed);
+                    predictionOutputs.addAll(perturbedOutputs);
                 }
             }
             if (!separableDataset) {

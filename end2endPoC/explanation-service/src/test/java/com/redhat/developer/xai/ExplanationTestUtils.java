@@ -92,7 +92,8 @@ public class ExplanationTestUtils {
                         String s = f.getValue().asString();
                         String[] words = s.split(" ");
                         Arrays.sort(words);
-                        if (Arrays.binarySearch(words, "money") >= 0) {
+                        if (Arrays.binarySearch(words, "money") >= 0 || Arrays.binarySearch(words, "$") >= 0 ||
+                                Arrays.binarySearch(words, "loan") >= 0) {
                             spam = true;
                         }
                     }
