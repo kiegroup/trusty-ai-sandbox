@@ -1,12 +1,9 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Bullseye,
-  Button,
-  ButtonVariant,
   EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
-  InputGroup,
   List,
   ListItem,
   ListVariant,
@@ -14,7 +11,6 @@ import {
   PageSectionVariants,
   Text,
   TextContent,
-  TextInput,
   Title,
 } from "@patternfly/react-core";
 import { Link } from "react-router-dom";
@@ -30,11 +26,10 @@ import {
   DataToolbarItemVariant,
 } from "@patternfly/react-core/dist/js/experimental";
 import { SearchIcon } from "@patternfly/react-icons";
-import FromFilter from "../FromFilter/FromFilter";
-import ToFilter from "../ToFilter/ToFilter";
 import PaginationContainer from "../PaginationContainer/PaginationContainer";
 import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
 import ExecutionStatus from "../ExecutionStatus/ExecutionStatus";
+import AuditToolbar from "../AuditToolbar/AuditToolbar";
 
 const prepareExecutionTableRows = (rowData: IExecution[]) => {
   let rows: IRow[] = [];
@@ -97,7 +92,6 @@ const AuditOverview = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
-  const searchField = useRef<HTMLInputElement>(null);
 
   const skeletons = useMemo(() => {
     return SkeletonRows(5, 8, "decisionKey");
@@ -107,14 +101,6 @@ const AuditOverview = () => {
     return noExecutions(5);
   }, []);
 
-  const onSearchSubmit = (): void => {
-    if (searchField && searchField.current) setSearchString(searchField.current.value);
-  };
-  const onSearchEnter = (event: React.KeyboardEvent): void => {
-    if (searchField && searchField.current && event.key === "Enter") {
-      setSearchString(searchField.current.value);
-    }
-  };
   useEffect(() => {
     let didMount = true;
     setRows(skeletons);
@@ -178,48 +164,18 @@ const AuditOverview = () => {
               })}
           </List>
         </div>
-        <DataToolbar id="audit-list-top-toolbar" style={{ marginBottom: "var(--pf-global--spacer--lg)" }}>
-          <DataToolbarContent>
-            <DataToolbarItem variant="label">Search</DataToolbarItem>
-            <DataToolbarItem>
-              <InputGroup>
-                <TextInput
-                  name="search"
-                  ref={searchField}
-                  id="search"
-                  type="search"
-                  aria-label="search executions"
-                  onKeyDown={onSearchEnter}
-                />
-                <Button
-                  variant={ButtonVariant.control}
-                  aria-label="search button for search input"
-                  onClick={onSearchSubmit}>
-                  <SearchIcon />
-                </Button>
-              </InputGroup>
-            </DataToolbarItem>
-            <DataToolbarItem variant="label">From</DataToolbarItem>
-            <DataToolbarItem>
-              <FromFilter fromDate={fromDate} onFromDateUpdate={setFromDate} maxDate={toDate} />
-            </DataToolbarItem>
-            <DataToolbarItem variant="label">To</DataToolbarItem>
-            <DataToolbarItem>
-              <ToFilter toDate={toDate} onToDateUpdate={setToDate} minDate={fromDate} />
-            </DataToolbarItem>
-            <DataToolbarItem variant={DataToolbarItemVariant.pagination}>
-              <PaginationContainer
-                total={total}
-                page={page}
-                pageSize={pageSize}
-                onSetPage={setPage}
-                onSetPageSize={setPageSize}
-                paginationId="audit-list-top-pagination"
-              />
-            </DataToolbarItem>
-          </DataToolbarContent>
-        </DataToolbar>
-
+        <AuditToolbar
+          setSearchString={setSearchString}
+          fromDate={fromDate}
+          setFromDate={setFromDate}
+          toDate={toDate}
+          setToDate={setToDate}
+          total={total}
+          pageSize={pageSize}
+          page={page}
+          setPage={setPage}
+          setPageSize={setPageSize}
+        />
         <Table cells={columns} rows={rows} aria-label="Executions list">
           <TableHeader />
           <TableBody rowKey="decisionKey" />

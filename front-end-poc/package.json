@@ -77,7 +77,7 @@
   },
   "jest": {
     "snapshotSerializers": [
-      "enzyme-to-json"
+      "enzyme-to-json/serializer"
     ]
   }
 }
