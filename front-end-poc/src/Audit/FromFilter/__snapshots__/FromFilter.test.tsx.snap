@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`From filter renders 1`] = `
+<DatePicker
+  fromDate="2020-01-01"
+  id="audit-from-date"
+  label="Starting date"
+  maxDate="2020-02-29"
+  onDateUpdate={[Function]}
+  value="2020-01-01"
+/>
+`;
