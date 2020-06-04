@@ -90,7 +90,7 @@ class LocalSaliencyExplanationProviderTest {
 
     private List<TypedData> getTypedData(int depth) {
         List<TypedData> list = new LinkedList<>();
-        int size = 1 + random.nextInt(5);
+        int size = 1 + random.nextInt(3);
         for (int i = 0; i < size; i++) {
             TypedData typedData = new TypedData();
             typedData.inputName = RandomStringUtils.random(1);

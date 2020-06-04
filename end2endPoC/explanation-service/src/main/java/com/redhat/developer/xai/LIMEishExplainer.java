@@ -181,13 +181,12 @@ public class LIMEishExplainer implements Explainer<Saliency> {
         for (int t = 0; t < featureTypes.size(); t++) {
             if (!Type.NUMBER.equals(featureTypes.get(t))) {
                 // convert values for this feature into numbers
+                Feature originalFeature = originalInputs.getFeatures().get(t);
                 switch (featureTypes.get(t)) {
                     case STRING:
-                        Feature originalFeature = originalInputs.getFeatures().get(t);
                         String originalString = originalFeature.getValue().asString();
                         String[] words = originalString.split(" ");
                         for (String word : words) {
-                            String featureName = word + "(" + originalFeature.getName() + ")";
                             List<Double> featureValues = new LinkedList<>();
                             for (PredictionInput pi : predictionInputs) {
                                 String perturbedString = pi.getFeatures().get(t).getValue().asString();
@@ -200,22 +199,35 @@ public class LIMEishExplainer implements Explainer<Saliency> {
                         }
                         break;
                     case BINARY:
+                        encodeEquals(predictionInputs, columnData, t, originalFeature);
                         break;
                     case BOOLEAN:
+                        // boolean are automatically encoded as 1s or 0s
+                        List<Double> featureValues = new LinkedList<>();
+                        for (PredictionInput pi : predictionInputs) {
+                            featureValues.add(pi.getFeatures().get(t).getValue().asNumber());
+                        }
+                        columnData.add(featureValues);
                         break;
                     case DATE:
+                        encodeEquals(predictionInputs, columnData, t, originalFeature);
                         break;
                     case URI:
+                        encodeEquals(predictionInputs, columnData, t, originalFeature);
                         break;
                     case TIME:
+                        encodeEquals(predictionInputs, columnData, t, originalFeature);
                         break;
                     case DURATION:
+                        encodeEquals(predictionInputs, columnData, t, originalFeature);
                         break;
                     case VECTOR:
-                        break;
-                    case UNDEFINED:
+                        encodeEquals(predictionInputs, columnData, t, originalFeature);
                         break;
                     case CURRENCY:
+                        encodeEquals(predictionInputs, columnData, t, originalFeature);
+                        break;
+                    case UNDEFINED:
                         break;
                 }
             } else {
@@ -240,6 +252,16 @@ public class LIMEishExplainer implements Explainer<Saliency> {
             }
         }
         return columnData;
+    }
+
+    private static void encodeEquals(List<PredictionInput> predictionInputs, List<List<Double>> columnData, int t, Feature originalFeature) {
+        Object originalObject = originalFeature.getValue().getUnderlyingObject();
+        List<Double> featureValues = new LinkedList<>();
+        for (PredictionInput pi : predictionInputs) {
+            double featureValue = originalObject.equals(pi.getFeatures().get(t).getValue().getUnderlyingObject()) ? 1d : 0d;
+            featureValues.add(featureValue);
+        }
+        columnData.add(featureValues);
     }
 
     private List<PredictionInput> getPerturbedInputs(PredictionInput predictionInput, int noOfFeatures, int noOfSamples) {
