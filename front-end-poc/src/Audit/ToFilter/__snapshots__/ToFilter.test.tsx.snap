@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`To filter renders 1`] = `
+<DatePicker
+  id="audit-to-date"
+  label="Ending date"
+  minDate="2020-01-01"
+  onDateUpdate={[Function]}
+  value="2020-04-01"
+/>
+`;

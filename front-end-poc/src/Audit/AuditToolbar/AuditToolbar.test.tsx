@@ -14,7 +14,6 @@ describe("Audit toolbar", () => {
     const wrapper = renderAuditToolbar("mount", { setSearchString });
     const searchInput = wrapper.find("input#audit-search-input");
     const searchButton = wrapper.find("button#audit-search");
-    // searchInput.at(0).instance().value = "";
     const inputNode = searchInput.getDOMNode<HTMLInputElement>();
 
     inputNode.value = searchString;
@@ -22,6 +21,44 @@ describe("Audit toolbar", () => {
 
     expect(setSearchString).toBeCalledTimes(1);
     expect(setSearchString).toBeCalledWith(searchString);
+  });
+
+  test("handles from date filter", () => {
+    const setFromDate = jest.fn();
+    const fromDate = "2020-02-01";
+    const wrapper = renderAuditToolbar("mount", { setFromDate });
+
+    wrapper.props().setFromDate(fromDate);
+
+    expect(setFromDate).toBeCalledTimes(1);
+    expect(setFromDate).toBeCalledWith(fromDate);
+  });
+
+  test("handles to date filter", () => {
+    const setToDate = jest.fn();
+    const toDate = "2020-04-01";
+    const wrapper = renderAuditToolbar("mount", { setToDate });
+
+    wrapper.props().setToDate(toDate);
+
+    expect(setToDate).toBeCalledTimes(1);
+    expect(setToDate).toBeCalledWith(toDate);
+  });
+
+  test("handles pagination", () => {
+    const setPage = jest.fn();
+    const setPageSize = jest.fn();
+    const page = 2;
+    const pageSize = 50;
+    const wrapper = renderAuditToolbar("mount", { setPage, setPageSize });
+
+    wrapper.props().setPage(page);
+    wrapper.props().setPageSize(pageSize);
+
+    expect(setPage).toBeCalledTimes(1);
+    expect(setPage).toBeCalledWith(page);
+    expect(setPageSize).toBeCalledTimes(1);
+    expect(setPageSize).toBeCalledWith(pageSize);
   });
 });
 
