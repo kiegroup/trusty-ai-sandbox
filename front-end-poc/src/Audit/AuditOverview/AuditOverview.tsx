@@ -1,9 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Bullseye,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateIcon,
   List,
   ListItem,
   ListVariant,
@@ -14,8 +10,6 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { Link } from "react-router-dom";
-import { IRow, Table, TableBody, TableHeader } from "@patternfly/react-table";
-import SkeletonRows from "../../Shared/skeletons/SkeletonRows";
 import { getExecutions } from "../../Shared/api/audit.api";
 import { IExecution } from "../types";
 import "./AuditOverview.scss";
@@ -25,66 +19,18 @@ import {
   DataToolbarItem,
   DataToolbarItemVariant,
 } from "@patternfly/react-core/dist/js/experimental";
-import { SearchIcon } from "@patternfly/react-icons";
 import PaginationContainer from "../PaginationContainer/PaginationContainer";
 import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
-import ExecutionStatus from "../ExecutionStatus/ExecutionStatus";
 import AuditToolbar from "../AuditToolbar/AuditToolbar";
-
-const prepareExecutionTableRows = (rowData: IExecution[]) => {
-  let rows: IRow[] = [];
-
-  rowData.forEach((item) => {
-    let row: IRow = {};
-    let cells = [];
-    cells.push({
-      title: (
-        <Link to={`/audit/${item.executionType.toLocaleLowerCase()}/${item.executionId}`}>
-          {"#" + item.executionId}
-        </Link>
-      ),
-    });
-    cells.push(item.executedModelName);
-    cells.push(item.executorName);
-    cells.push(new Date(item.executionDate).toLocaleString());
-    cells.push({
-      title: <ExecutionStatus result={item.executionSucceeded} />,
-    });
-    row.cells = cells;
-    row.decisionKey = "key-" + item.executionId;
-    rows.push(row);
-  });
-  return rows;
-};
-
-const noExecutions = (colSpan: number) => {
-  return [
-    {
-      heightAuto: true,
-      decisionKey: "no-results",
-      cells: [
-        {
-          props: { colSpan },
-          title: (
-            <Bullseye>
-              <EmptyState>
-                <EmptyStateIcon icon={SearchIcon} />
-                <Title size="lg">No executions found</Title>
-                <EmptyStateBody>No results match the filter criteria. Try removing all filters.</EmptyStateBody>
-              </EmptyState>
-            </Bullseye>
-          ),
-        },
-      ],
-    },
-  ];
-};
+import ExecutionTable from "../ExecutionTable/ExecutionTable";
+import { RemoteData } from "../../Shared/types";
 
 const AuditOverview = () => {
-  const columns = ["ID", "Description", "Executor", "Date", "Execution Status"];
   const oneMonthAgo = new Date();
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-  const [rows, setRows] = useState<IRow[]>([]);
+  const [data, setData] = useState<RemoteData<Error, IExecution[]>>({
+    status: "NOT_ASKED",
+  });
   const [searchString, setSearchString] = useState("");
   const [latestSearches, setLatestSearches] = useState<string[] | null>(null);
   const [fromDate, setFromDate] = useState(oneMonthAgo.toISOString().substr(0, 10));
@@ -93,22 +39,16 @@ const AuditOverview = () => {
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
 
-  const skeletons = useMemo(() => {
-    return SkeletonRows(5, 8, "decisionKey");
-  }, []);
-
-  const noResults = useMemo(() => {
-    return noExecutions(5);
-  }, []);
-
   useEffect(() => {
     let didMount = true;
-    setRows(skeletons);
+    setData({ status: "LOADING" });
     getExecutions(searchString, fromDate, toDate, pageSize, pageSize * (page - 1))
       .then((response) => {
         if (didMount) {
-          let tableRows = response.data.headers.length ? prepareExecutionTableRows(response.data.headers) : noResults;
-          setRows(tableRows);
+          setData({
+            status: "SUCCESS",
+            data: response.data.headers,
+          });
           setTotal(response.data.total);
           // temporary solution: for demo purposes we display the first 3 executions here
           if (latestSearches === null) {
@@ -121,12 +61,14 @@ const AuditOverview = () => {
           }
         }
       })
-      .catch(() => {});
+      .catch((error) => {
+        setData({ status: "FAILURE", error: error });
+      });
     return () => {
       didMount = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchString, fromDate, toDate, page, pageSize, skeletons, noResults]);
+  }, [searchString, fromDate, toDate, page, pageSize]);
 
   return (
     <>
@@ -176,10 +118,8 @@ const AuditOverview = () => {
           setPage={setPage}
           setPageSize={setPageSize}
         />
-        <Table cells={columns} rows={rows} aria-label="Executions list">
-          <TableHeader />
-          <TableBody rowKey="decisionKey" />
-        </Table>
+
+        <ExecutionTable data={data} />
 
         <DataToolbar id="audit-list-bottom-toolbar" style={{ marginTop: "var(--pf-global--spacer--lg)" }}>
           <DataToolbarContent>

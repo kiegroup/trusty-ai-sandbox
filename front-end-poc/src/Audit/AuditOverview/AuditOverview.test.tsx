@@ -54,6 +54,7 @@ const executions = {
     ],
   },
 };
+const flushPromises = () => new Promise(setImmediate);
 const apiMock = jest.spyOn(api, "getExecutions");
 // @ts-ignore
 apiMock.mockImplementation(() => Promise.resolve(executions));
@@ -61,23 +62,30 @@ apiMock.mockImplementation(() => Promise.resolve(executions));
 describe("Audit overview", () => {
   test("renders", () => {
     const wrapper = shallow(<AuditOverview />);
-
     expect(wrapper).toMatchSnapshot();
   });
 
-  test("renders a list of executions", async () => {
+  test("loads a list of executions from the last month", async () => {
     const wrapper = mount(
       <BrowserRouter>
         <AuditOverview />
       </BrowserRouter>
     );
-    expect(wrapper).toMatchSnapshot("skeletons");
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+    const fromDate = oneMonthAgo.toISOString().substr(0, 10);
+    const toDate = new Date().toISOString().substr(0, 10);
+
     await act(async () => {
       await flushPromises();
       wrapper.update();
     });
-    expect(wrapper).toMatchSnapshot("executions");
+
+    expect(apiMock).toHaveBeenCalledTimes(1);
+    expect(apiMock).toHaveBeenCalledWith("", fromDate, toDate, 10, 0);
+    expect(wrapper.find("ExecutionTable").props().data).toStrictEqual({
+      status: "SUCCESS",
+      data: executions.data.headers,
+    });
   });
 });
-
-const flushPromises = () => new Promise(setImmediate);

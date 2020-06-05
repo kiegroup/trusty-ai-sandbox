@@ -16,6 +16,7 @@ let generateFakeAPIs = () => {
       executionId: id,
       executionDate: executionDate,
       executionType: "DECISION",
+      executedModelName: "fraud-score",
       executionSucceeded: true,
       executorName: "Technical User",
     });
