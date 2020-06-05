@@ -199,6 +199,12 @@ public class LIMEishExplainer implements Explainer<Saliency> {
                         }
                         break;
                     case BINARY:
+                    case TIME:
+                    case URI:
+                    case DATE:
+                    case DURATION:
+                    case VECTOR:
+                    case CURRENCY:
                         encodeEquals(predictionInputs, columnData, t, originalFeature);
                         break;
                     case BOOLEAN:
@@ -209,29 +215,11 @@ public class LIMEishExplainer implements Explainer<Saliency> {
                         }
                         columnData.add(featureValues);
                         break;
-                    case DATE:
-                        encodeEquals(predictionInputs, columnData, t, originalFeature);
-                        break;
-                    case URI:
-                        encodeEquals(predictionInputs, columnData, t, originalFeature);
-                        break;
-                    case TIME:
-                        encodeEquals(predictionInputs, columnData, t, originalFeature);
-                        break;
-                    case DURATION:
-                        encodeEquals(predictionInputs, columnData, t, originalFeature);
-                        break;
-                    case VECTOR:
-                        encodeEquals(predictionInputs, columnData, t, originalFeature);
-                        break;
-                    case CURRENCY:
-                        encodeEquals(predictionInputs, columnData, t, originalFeature);
-                        break;
                     case UNDEFINED:
                         break;
                 }
             } else {
-                // max - min scaling
+                // find maximum and minimum values
                 double[] doubles = new double[predictionInputs.size() + 1];
                 int i = 0;
                 for (PredictionInput pi : predictionInputs) {
@@ -244,6 +232,7 @@ public class LIMEishExplainer implements Explainer<Saliency> {
                 doubles[i] = originalValue;
                 double min = DoubleStream.of(doubles).min().getAsDouble();
                 double max = DoubleStream.of(doubles).max().getAsDouble();
+                // feature scaling + kernel based binning
                 double threshold = DataUtils.gaussianKernel((originalValue - min) / (max - min));
                 List<Double> featureValues = DoubleStream.of(doubles).map(d -> (d - min) / (max - min))
                         .map(d -> Double.isNaN(d) ? 1 : d).boxed().map(DataUtils::gaussianKernel)
