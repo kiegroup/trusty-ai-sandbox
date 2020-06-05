@@ -15,21 +15,6 @@ public class PredictionInput {
         this.features = features;
     }
 
-    public JSONObject toKogitoRequestJson(List<TypedData> inputStructure){
-        JSONObject json = new JSONObject();
-        for (TypedData input : inputStructure){
-            if (input.value != null){ // is a built in type
-                Value value = features.stream().filter(x -> x.getName().equals(input.inputName)).findFirst().get().getValue();
-                json.put(input.inputName, input.typeRef.equals("string") ? value.asString() : value.asNumber());
-            }
-            else{
-                json.put(input.inputName, toKogitoRequestJson(input.components));
-            }
-        }
-        return json;
-    }
-
-
     public List<Feature> getFeatures() {
         return features;
     }

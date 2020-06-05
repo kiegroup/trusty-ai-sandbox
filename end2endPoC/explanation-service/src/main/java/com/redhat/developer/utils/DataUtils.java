@@ -1,6 +1,7 @@
 package com.redhat.developer.utils;
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.security.SecureRandom;
 import java.sql.Date;
 import java.time.Duration;
@@ -227,6 +228,18 @@ public class DataUtils {
             case CURRENCY:
                 // set the currency to 0
                 value = new Value<>("0.0");
+                break;
+            case BINARY:
+                value = new Value<>(new byte[0]);
+                break;
+            case URI:
+                value = new Value<>(URI.create(""));
+                break;
+            case VECTOR:
+                value = new Value<>(new double[0]);
+                break;
+            case UNDEFINED:
+                // do nothing
                 break;
         }
         return new Feature(feature.getName(), feature.getType(), value);

@@ -181,13 +181,12 @@ public class LIMEishExplainer implements Explainer<Saliency> {
         for (int t = 0; t < featureTypes.size(); t++) {
             if (!Type.NUMBER.equals(featureTypes.get(t))) {
                 // convert values for this feature into numbers
+                Feature originalFeature = originalInputs.getFeatures().get(t);
                 switch (featureTypes.get(t)) {
                     case STRING:
-                        Feature originalFeature = originalInputs.getFeatures().get(t);
                         String originalString = originalFeature.getValue().asString();
                         String[] words = originalString.split(" ");
                         for (String word : words) {
-                            String featureName = word + "(" + originalFeature.getName() + ")";
                             List<Double> featureValues = new LinkedList<>();
                             for (PredictionInput pi : predictionInputs) {
                                 String perturbedString = pi.getFeatures().get(t).getValue().asString();
@@ -200,26 +199,27 @@ public class LIMEishExplainer implements Explainer<Saliency> {
                         }
                         break;
                     case BINARY:
+                    case TIME:
+                    case URI:
+                    case DATE:
+                    case DURATION:
+                    case VECTOR:
+                    case CURRENCY:
+                        encodeEquals(predictionInputs, columnData, t, originalFeature);
                         break;
                     case BOOLEAN:
-                        break;
-                    case DATE:
-                        break;
-                    case URI:
-                        break;
-                    case TIME:
-                        break;
-                    case DURATION:
-                        break;
-                    case VECTOR:
+                        // boolean are automatically encoded as 1s or 0s
+                        List<Double> featureValues = new LinkedList<>();
+                        for (PredictionInput pi : predictionInputs) {
+                            featureValues.add(pi.getFeatures().get(t).getValue().asNumber());
+                        }
+                        columnData.add(featureValues);
                         break;
                     case UNDEFINED:
                         break;
-                    case CURRENCY:
-                        break;
                 }
             } else {
-                // max - min scaling
+                // find maximum and minimum values
                 double[] doubles = new double[predictionInputs.size() + 1];
                 int i = 0;
                 for (PredictionInput pi : predictionInputs) {
@@ -232,6 +232,7 @@ public class LIMEishExplainer implements Explainer<Saliency> {
                 doubles[i] = originalValue;
                 double min = DoubleStream.of(doubles).min().getAsDouble();
                 double max = DoubleStream.of(doubles).max().getAsDouble();
+                // feature scaling + kernel based binning
                 double threshold = DataUtils.gaussianKernel((originalValue - min) / (max - min));
                 List<Double> featureValues = DoubleStream.of(doubles).map(d -> (d - min) / (max - min))
                         .map(d -> Double.isNaN(d) ? 1 : d).boxed().map(DataUtils::gaussianKernel)
@@ -240,6 +241,16 @@ public class LIMEishExplainer implements Explainer<Saliency> {
             }
         }
         return columnData;
+    }
+
+    private static void encodeEquals(List<PredictionInput> predictionInputs, List<List<Double>> columnData, int t, Feature originalFeature) {
+        Object originalObject = originalFeature.getValue().getUnderlyingObject();
+        List<Double> featureValues = new LinkedList<>();
+        for (PredictionInput pi : predictionInputs) {
+            double featureValue = originalObject.equals(pi.getFeatures().get(t).getValue().getUnderlyingObject()) ? 1d : 0d;
+            featureValues.add(featureValue);
+        }
+        columnData.add(featureValues);
     }
 
     private List<PredictionInput> getPerturbedInputs(PredictionInput predictionInput, int noOfFeatures, int noOfSamples) {

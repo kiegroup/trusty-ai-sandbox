@@ -4,6 +4,7 @@ import java.security.SecureRandom;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.redhat.developer.model.Model;
 import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.PredictionOutput;
 import com.redhat.developer.model.Saliency;
@@ -32,9 +33,8 @@ class LocalSaliencyExplanationProviderTest {
     public void testDepthZeroInputData() {
         LocalSaliencyExplanationProvider explanationProvider = new LocalSaliencyExplanationProvider() {
             @Override
-            protected List<PredictionOutput> runDMN(List<PredictionInput> perturbedInputs, List<TypedData> originalInput,
-                                                    List<TypedData> originalOutputs, String modelName) {
-                return ExplanationTestUtils.getTextClassifier().predict(perturbedInputs);
+            protected Model getModel(List<TypedData> dmnInputs, List<TypedData> dmnOutputs, String modelName) {
+                return ExplanationTestUtils.getTextClassifier();
             }
         };
         List<TypedData> inputs = getTypedData(0);
@@ -52,9 +52,8 @@ class LocalSaliencyExplanationProviderTest {
     public void testDepthOneInputData() {
         LocalSaliencyExplanationProvider explanationProvider = new LocalSaliencyExplanationProvider() {
             @Override
-            protected List<PredictionOutput> runDMN(List<PredictionInput> perturbedInputs, List<TypedData> originalInput,
-                                                    List<TypedData> originalOutputs, String modelName) {
-                return ExplanationTestUtils.getTextClassifier().predict(perturbedInputs);
+            protected Model getModel(List<TypedData> dmnInputs, List<TypedData> dmnOutputs, String modelName) {
+                return ExplanationTestUtils.getTextClassifier();
             }
         };
         List<TypedData> inputs = getTypedData(1);
@@ -72,9 +71,8 @@ class LocalSaliencyExplanationProviderTest {
     public void testDepthTwoInputData() {
         LocalSaliencyExplanationProvider explanationProvider = new LocalSaliencyExplanationProvider() {
             @Override
-            protected List<PredictionOutput> runDMN(List<PredictionInput> perturbedInputs, List<TypedData> originalInput,
-                                                    List<TypedData> originalOutputs, String modelName) {
-                return ExplanationTestUtils.getTextClassifier().predict(perturbedInputs);
+            protected Model getModel(List<TypedData> dmnInputs, List<TypedData> dmnOutputs, String modelName) {
+                return ExplanationTestUtils.getTextClassifier();
             }
         };
         List<TypedData> inputs = getTypedData(2);
@@ -90,7 +88,7 @@ class LocalSaliencyExplanationProviderTest {
 
     private List<TypedData> getTypedData(int depth) {
         List<TypedData> list = new LinkedList<>();
-        int size = 1 + random.nextInt(5);
+        int size = 1 + random.nextInt(3);
         for (int i = 0; i < size; i++) {
             TypedData typedData = new TypedData();
             typedData.inputName = RandomStringUtils.random(1);
