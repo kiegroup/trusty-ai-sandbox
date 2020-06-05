@@ -15,12 +15,12 @@ import ModelOverview from "./ModelOverview";
 import OutcomeOverview from "./OutcomeOverview";
 import { IExecution, IExecutionModelResponse } from "../Audit/types";
 
-type AuditDetailOverviewProps = {
+type DecisionDetailProps = {
   executionData: IExecution | null;
   model: IExecutionModelResponse;
 };
 
-const DecisionDetail = (props: AuditDetailOverviewProps) => {
+const DecisionDetail = (props: DecisionDetailProps) => {
   const { executionData, model } = props;
   return (
     <PageSection isFilled={true}>
