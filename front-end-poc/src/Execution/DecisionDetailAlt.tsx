@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -30,15 +30,50 @@ import FraudScoringDistribution from "../ModelLookup/FraudScoringDistribution";
 import ExecutionStatus from "../Audit/ExecutionStatus/ExecutionStatus";
 import { LongArrowAltRightIcon } from "@patternfly/react-icons";
 import { Link } from "react-router-dom";
+import OutcomeCards from "./OutcomeCards/OutcomeCards";
+import { getDecisionOutcome } from "../Shared/api/audit.api";
+import { RemoteData } from "../Shared/types";
+import { IOutcome } from "../Outcome/types";
 
 const models: Map<string, JSX.Element> = new Map([
   ["myMortgage", <MortgageDistribution />],
   ["fraud-scoring", <FraudScoringDistribution />],
 ]);
 
+type DecisionDetailAltProps = {
+  executionData: IExecution | null;
+  model: IExecutionModelResponse;
+};
+
 const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
   const { executionData, model } = props;
-  const [demo, setDemo] = useState(1);
+  const [outcomeData, setOutcomeData] = useState<RemoteData<Error, IOutcome[]>>({
+    status: "NOT_ASKED",
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+    setOutcomeData({ status: "LOADING" });
+    if (executionData) {
+      getDecisionOutcome(executionData.executionId)
+        .then((response) => {
+          if (isMounted) {
+            setOutcomeData({
+              status: "SUCCESS",
+              data: response.data.outcomes,
+            });
+          }
+        })
+        .catch((error) => {
+          setOutcomeData({ status: "FAILURE", error: error });
+        });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [executionData]);
+
+  const [demo, setDemo] = useState(0);
   return (
     <section className="decision-detail-view">
       <PageSection variant="default" className="decision-detail-view__section">
@@ -59,6 +94,9 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
               </Button>
               <Button variant="control" onClick={() => setDemo(4)} isActive={demo === 4}>
                 Demo 4
+              </Button>
+              <Button variant="control" onClick={() => setDemo(0)} isActive={demo === 0}>
+                No Demo
               </Button>
             </InputGroup>
           </div>
@@ -1153,6 +1191,59 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
           <Stack gutter="md">
             <StackItem>
               <Title headingLevel="h3" size="2xl">
+                Execution Info
+              </Title>
+            </StackItem>
+            <StackItem>
+              <Card>
+                <CardBody>
+                  {executionData === null && <SkeletonGrid rowsNumber={1} colsNumber={4} gutterSize="md" />}
+                  {executionData !== null && (
+                    <Grid gutter="md" className={"data"}>
+                      <GridItem span={4}>
+                        <label className={"data__label"}>Execution ID</label>
+                        <span>{executionData.executionId}</span>
+                      </GridItem>
+                      <GridItem span={2}>
+                        <label className={"data__label"}>Execution Status</label>
+                        <ExecutionStatus result={executionData.executionSucceeded} />
+                      </GridItem>
+                      <GridItem span={2}>
+                        <label className={"data__label"}>Executor Name</label>
+                        <span>{executionData.executorName}</span>
+                      </GridItem>
+                      <GridItem span={2}>
+                        <label className={"data__label"}>Date</label>
+                        <span>{new Date(executionData.executionDate).toLocaleString()}</span>
+                      </GridItem>
+                    </Grid>
+                  )}
+                </CardBody>
+              </Card>
+            </StackItem>
+          </Stack>
+        </div>
+      </PageSection>
+      <PageSection variant="default" className="decision-detail-view__section">
+        <div className="container">
+          <Stack gutter="md">
+            <StackItem>
+              <Title headingLevel="h3" size="2xl">
+                Outcomes
+              </Title>
+            </StackItem>
+            <StackItem>
+              <OutcomeCards data={outcomeData} />
+            </StackItem>
+          </Stack>
+        </div>
+      </PageSection>
+
+      <PageSection variant="default" className="decision-detail-view__section">
+        <div className="container">
+          <Stack gutter="md">
+            <StackItem>
+              <Title headingLevel="h3" size="2xl">
                 Model Info
               </Title>
             </StackItem>
@@ -1205,11 +1296,6 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
       </PageSection>
     </section>
   );
-};
-
-type DecisionDetailAltProps = {
-  executionData: IExecution | null;
-  model: IExecutionModelResponse;
 };
 
 export default DecisionDetailAlt;

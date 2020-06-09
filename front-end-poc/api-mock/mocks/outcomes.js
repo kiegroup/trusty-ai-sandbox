@@ -10,7 +10,7 @@ const outcome = {
     {
       outcomeId: "432343443",
       outcomeName: "Recommended Loan Products",
-      evaluationStatus: "EVALUATED",
+      evaluationStatus: "SUCCEEDED",
       hasErrors: false,
       messages: [],
       outcomeResult: {
@@ -288,7 +288,7 @@ const outcome = {
     {
       outcomeId: "849849489",
       outcomeName: "Client Ratings",
-      evaluationStatus: "EVALUATED",
+      evaluationStatus: "SUCCEEDED",
       hasErrors: false,
       messages: [],
       outcomeResult: {
