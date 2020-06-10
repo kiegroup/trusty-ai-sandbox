@@ -30,11 +30,10 @@ const OutcomeCards = (props: OutcomeCardsProps) => {
   return (
     <>
       {data.status === "SUCCESS" && (
-        <Gallery
-          className="outcome-cards"
-          gutter={"md"}
-          style={{ gridAutoRows: "1fr", gridTemplateColumns: "1fr 1fr 1fr" }}>
-          {data.data.map((item) => renderOutcome(item.outcomeResult, false, true, item.evaluationStatus))}
+        <Gallery className="outcome-cards" gutter={"md"}>
+          {data.data.map((item) =>
+            renderOutcome(item.outcomeResult, item.outcomeName, false, true, item.evaluationStatus)
+          )}
         </Gallery>
       )}
     </>
@@ -45,19 +44,24 @@ export default OutcomeCards;
 
 const renderOutcome = (
   outcomeData: IItemObject,
+  name: string,
   compact = true,
   rootLevel = false,
   evaluationStatus?: evaluationStatusStrings
 ) => {
   let renderItems: JSX.Element[] = [];
 
+  if (rootLevel && evaluationStatus !== "SUCCEEDED") {
+    return (
+      <CardWrapper condition={!compact && rootLevel} key={uuid()} name={name} evaluationStatus={evaluationStatus}>
+        <span>There were problems</span>
+      </CardWrapper>
+    );
+  }
+
   if (outcomeData.value !== null) {
     return (
-      <CardWrapper
-        condition={!compact && rootLevel}
-        key={uuid()}
-        name={outcomeData.name}
-        evaluationStatus={evaluationStatus}>
+      <CardWrapper condition={!compact && rootLevel} key={uuid()} name={name} evaluationStatus={evaluationStatus}>
         <OutcomeProperty property={outcomeData} key={outcomeData.name} hidePropertyName={rootLevel} />
       </CardWrapper>
     );
@@ -65,16 +69,12 @@ const renderOutcome = (
   if (outcomeData.components.length) {
     if (isIItemObjectArray(outcomeData.components)) {
       renderItems.push(
-        <CardWrapper
-          condition={!compact && rootLevel}
-          key={uuid()}
-          name={outcomeData.name}
-          evaluationStatus={evaluationStatus}>
-          <OutcomeComposed outcome={outcomeData} key={outcomeData.name} compact={compact} />
+        <CardWrapper condition={!compact && rootLevel} key={uuid()} name={name} evaluationStatus={evaluationStatus}>
+          <OutcomeComposed outcome={outcomeData} key={outcomeData.name} compact={compact} name={name} />
         </CardWrapper>
       );
     } else if (isIItemObjectMultiArray(outcomeData.components)) {
-      renderItems.push(<OutcomeSubList subList={outcomeData} key={outcomeData.name} compact={compact} />);
+      renderItems.push(<OutcomeSubList subList={outcomeData} key={name} compact={compact} />);
     }
   }
 
@@ -196,20 +196,20 @@ const OutcomeSubList = (props: { subList: IItemObject; compact: boolean }) => {
     return (
       <>
         {subList.components.map((item) => (
-          <OutcomeSubListItem subListItem={item as IItemObject[]} compact={compact} />
+          <OutcomeSubListItem key={uuid()} subListItem={item as IItemObject[]} compact={compact} />
         ))}
       </>
     );
 };
 
-const OutcomeComposed = (props: { outcome: IItemObject; compact: boolean }) => {
-  const { outcome, compact } = props;
+const OutcomeComposed = (props: { outcome: IItemObject; compact: boolean; name: string }) => {
+  const { outcome, compact, name } = props;
   let renderItems: JSX.Element[] = [];
 
   for (let subItem of outcome.components as IItemObject[]) {
     renderItems.push(
       <div className="outcome-item" key={subItem.name}>
-        {renderOutcome(subItem, compact)}
+        {renderOutcome(subItem, name, compact)}
       </div>
     );
   }
