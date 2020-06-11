@@ -9,22 +9,19 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
+import com.redhat.developer.model.DataDistribution;
 import com.redhat.developer.model.Feature;
+import com.redhat.developer.model.FeatureDistribution;
 import com.redhat.developer.model.Output;
 import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.PredictionOutput;
 import com.redhat.developer.model.Type;
 import com.redhat.developer.model.Value;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 public class DataUtils {
 
@@ -273,5 +270,23 @@ public class DataUtils {
 
     public static double exponentialSmoothingKernel(double x, double sigma) {
         return Math.sqrt(Math.exp(-(Math.pow(x, 2)) / Math.pow(sigma, 2)));
+    }
+
+    public static FeatureDistribution getFeatureDistribution(double[] doubles) {
+        double min = DoubleStream.of(doubles).min().getAsDouble();
+        double max = DoubleStream.of(doubles).max().getAsDouble();
+        double mean = getMean(doubles);
+        double stdDev = getStdDev(doubles, mean);
+        return new FeatureDistribution(min, max, mean, stdDev);
+    }
+
+    public static DataDistribution generateRandomDataDistribution(int size) {
+        List<FeatureDistribution> featureDistributions = new LinkedList<>();
+        for (int i = 0; i < size; i++) {
+            double[] doubles = generateData(random.nextDouble(), random.nextDouble(), 1000);
+            FeatureDistribution featureDistribution = DataUtils.getFeatureDistribution(doubles);
+            featureDistributions.add(featureDistribution);
+        }
+        return new DataDistribution(featureDistributions);
     }
 }
