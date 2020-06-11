@@ -75,11 +75,10 @@ public class LIMEishExplainer implements LocalExplainer<Saliency> {
             List<PredictionOutput> predictionOutputs = new LinkedList<>();
 
             boolean classification = false;
-            int sampleSize = noOfSamples;
             int tries = 3;
             Map<Double, Long> rawClassesBalance = new HashMap<>();
             while (!separableDataset && tries > 0) {
-                List<PredictionInput> perturbed = getPerturbedInputs(predictionInput, noOfInputFeatures, sampleSize);
+                List<PredictionInput> perturbed = getPerturbedInputs(predictionInput, noOfInputFeatures, noOfSamples);
                 List<PredictionOutput> perturbedOutputs = model.predict(perturbed);
 
                 int finalO = o;
@@ -95,11 +94,9 @@ public class LIMEishExplainer implements LocalExplainer<Saliency> {
                         separableDataset = true;
                         classification = rawClassesBalance.size() == 2;
                     } else {
-                        sampleSize *= 2;
                         tries--;
                     }
                 } else {
-                    sampleSize *= 2;
                     tries--;
                 }
                 if (tries == 0 || separableDataset) {

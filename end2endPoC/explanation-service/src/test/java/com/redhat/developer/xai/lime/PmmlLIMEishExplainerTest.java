@@ -19,6 +19,8 @@ import com.redhat.developer.utils.DataUtils;
 import com.redhat.developer.xai.lime.pmml.LogisticRegressionIrisDataExecutor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
 import org.kie.api.pmml.PMML4Result;
 import org.kie.pmml.evaluator.api.executor.PMMLRuntime;
 
@@ -36,7 +38,7 @@ public class PmmlLIMEishExplainerTest {
         localPMMLRuntime = getPMMLRuntime("LogisticRegressionIrisData");
     }
 
-    @Disabled
+    @RepeatedTest(10)
     public void testPMMLRegression() throws IOException {
         LogisticRegressionIrisDataExecutor pmmlModel = new LogisticRegressionIrisDataExecutor(6.9, 3.1, 5.1, 2.3, "virginica");
         PMML4Result result = pmmlModel.execute(localPMMLRuntime);
@@ -86,6 +88,6 @@ public class PmmlLIMEishExplainerTest {
         Saliency saliency = limEishExplainer.explain(prediction, model);
         assertNotNull(saliency);
         List<String> strings = saliency.getPositiveFeatures(2).stream().map(f -> f.getFeature().getName()).collect(Collectors.toList());
-        assertTrue(strings.contains("pizza (text)"));
+        assertTrue(strings.contains("petalWidth"));
     }
 }

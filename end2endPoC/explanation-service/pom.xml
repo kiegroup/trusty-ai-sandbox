@@ -93,7 +93,26 @@
       <version>${org.kie.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>kie-pmml-models-regression-model</artifactId>
+      <version>${org.kie.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>kie-pmml-models-regression-compiler</artifactId>
+      <version>${org.kie.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>kie-pmml-models-regression-evaluator</artifactId>
+      <version>${org.kie.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
+
   <build>
     <plugins>
       <plugin>
