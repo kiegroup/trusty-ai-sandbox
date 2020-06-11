@@ -27,7 +27,7 @@ const PaginationContainer = (props: PaginationContainerProps) => {
       onSetPage={updatePage}
       widgetId={paginationId}
       onPerPageSelect={updatePageSize}
-      variant={PaginationVariant.right}
+      variant={PaginationVariant.top}
     />
   );
 };

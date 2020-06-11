@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 import "./App.scss";
-import { Avatar, Brand, Nav, NavList, Page, PageHeader, PageSidebar, NavItem } from "@patternfly/react-core";
+import {
+  Avatar,
+  Brand,
+  Nav,
+  NavList,
+  Page,
+  PageHeader,
+  PageSidebar,
+  NavItem,
+  PageHeaderTools,
+} from "@patternfly/react-core";
 import { Switch, Route, NavLink, Redirect, useLocation } from "react-router-dom";
 import AuditOverview from "./Audit/AuditOverview/AuditOverview";
 import AuditDetail from "./Audit/AuditDetail/AuditDetail";
@@ -54,7 +64,11 @@ const App = () => {
     <PageHeader
       logo={<Brand src={imgBrand} alt="Kogito TrustyAI" className="trusty-logo" />}
       logoProps={{ href: "#/" }}
-      avatar={<Avatar src={imgAvatar} alt="Avatar image" />}
+      headerTools={
+        <PageHeaderTools>
+          <Avatar src={imgAvatar} alt="Avatar image" />
+        </PageHeaderTools>
+      }
       showNavToggle
       onNavToggle={isMobileView ? onNavToggleMobile : onNavToggleDesktop}
       isNavOpen={isMobileView ? isNavOpenMobile : isNavOpenDesktop}

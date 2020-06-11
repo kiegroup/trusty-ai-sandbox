@@ -8,17 +8,14 @@ import {
   Text,
   TextContent,
   Title,
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem,
 } from "@patternfly/react-core";
 import { Link } from "react-router-dom";
 import { getExecutions } from "../../Shared/api/audit.api";
 import { IExecution } from "../types";
 import "./AuditOverview.scss";
-import {
-  DataToolbar,
-  DataToolbarContent,
-  DataToolbarItem,
-  DataToolbarItemVariant,
-} from "@patternfly/react-core/dist/js/experimental";
 import PaginationContainer from "../PaginationContainer/PaginationContainer";
 import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
 import AuditToolbar from "../AuditToolbar/AuditToolbar";
@@ -121,9 +118,9 @@ const AuditOverview = () => {
 
         <ExecutionTable data={data} />
 
-        <DataToolbar id="audit-list-bottom-toolbar" style={{ marginTop: "var(--pf-global--spacer--lg)" }}>
-          <DataToolbarContent>
-            <DataToolbarItem variant={DataToolbarItemVariant.pagination}>
+        <Toolbar id="audit-list-bottom-toolbar" style={{ marginTop: "var(--pf-global--spacer--lg)" }}>
+          <ToolbarContent>
+            <ToolbarItem variant="pagination">
               <PaginationContainer
                 total={total}
                 page={page}
@@ -132,9 +129,9 @@ const AuditOverview = () => {
                 onSetPageSize={setPageSize}
                 paginationId="audit-list-bottom-pagination"
               />
-            </DataToolbarItem>
-          </DataToolbarContent>
-        </DataToolbar>
+            </ToolbarItem>
+          </ToolbarContent>
+        </Toolbar>
       </PageSection>
     </>
   );

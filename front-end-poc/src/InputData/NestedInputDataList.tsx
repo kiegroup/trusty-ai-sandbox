@@ -10,7 +10,6 @@ import {
   DataListItemRow,
   Flex,
   FlexItem,
-  FlexModifiers,
   Switch,
   Title,
 } from "@patternfly/react-core";
@@ -393,11 +392,7 @@ const NestedInputDataList = (props: { showOnlyAffecting?: boolean }) => {
       </CardHeader>
       <CardBody>
         {!showOnlyAffecting && (
-          <Flex
-            breakpointMods={[
-              { modifier: FlexModifiers["align-items-flex-start"] },
-              { modifier: FlexModifiers["space-items-sm"] },
-            ]}>
+          <Flex alignItems={{ default: "alignItemsFlexStart" }} spaceItems={{ default: "spaceItemsSm" }}>
             <FlexItem>
               <RebalanceIcon style={{ fontSize: 18 / 16 + "em" }} />
             </FlexItem>

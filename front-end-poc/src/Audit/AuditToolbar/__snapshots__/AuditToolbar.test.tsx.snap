@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Audit toolbar renders 1`] = `
-<DataToolbar
+<Toolbar
   id="audit-list-top-toolbar"
   style={
     Object {
@@ -9,18 +9,17 @@ exports[`Audit toolbar renders 1`] = `
     }
   }
 >
-  <DataToolbarContent
-    breakpointMods={Array []}
+  <ToolbarContent
     isExpanded={false}
     showClearFiltersButton={false}
   >
-    <DataToolbarItem
+    <Component
       variant="label"
     >
       Search
-    </DataToolbarItem>
-    <DataToolbarItem>
-      <InputGroup>
+    </Component>
+    <Component>
+      <Component>
         <ForwardRef
           aria-label="search executions"
           id="audit-search-input"
@@ -38,36 +37,35 @@ exports[`Audit toolbar renders 1`] = `
             color="currentColor"
             noVerticalAlign={false}
             size="sm"
-            title={null}
           />
         </Component>
-      </InputGroup>
-    </DataToolbarItem>
-    <DataToolbarItem
+      </Component>
+    </Component>
+    <Component
       variant="label"
     >
       From
-    </DataToolbarItem>
-    <DataToolbarItem>
+    </Component>
+    <Component>
       <FromFilter
         fromDate="2020-01-01"
         maxDate="2020-02-01"
         onFromDateUpdate={[Function]}
       />
-    </DataToolbarItem>
-    <DataToolbarItem
+    </Component>
+    <Component
       variant="label"
     >
       To
-    </DataToolbarItem>
-    <DataToolbarItem>
+    </Component>
+    <Component>
       <ToFilter
         minDate="2020-01-01"
         onToDateUpdate={[Function]}
         toDate="2020-02-01"
       />
-    </DataToolbarItem>
-    <DataToolbarItem
+    </Component>
+    <Component
       variant="pagination"
     >
       <PaginationContainer
@@ -78,7 +76,7 @@ exports[`Audit toolbar renders 1`] = `
         paginationId="audit-list-top-pagination"
         total={20}
       />
-    </DataToolbarItem>
-  </DataToolbarContent>
-</DataToolbar>
+    </Component>
+  </ToolbarContent>
+</Toolbar>
 `;

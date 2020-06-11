@@ -30,7 +30,7 @@ const OutcomeCards = (props: OutcomeCardsProps) => {
   return (
     <>
       {data.status === "SUCCESS" && (
-        <Gallery className="outcome-cards" gutter={"md"}>
+        <Gallery className="outcome-cards" hasGutter>
           {data.data.map((item) =>
             renderOutcome(item.outcomeResult, item.outcomeName, false, true, item.evaluationStatus)
           )}

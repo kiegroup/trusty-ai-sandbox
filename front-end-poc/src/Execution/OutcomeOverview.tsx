@@ -25,7 +25,7 @@ const OutcomeOverview = () => {
 
   return (
     <>
-      {!outcomeData && <SkeletonGrid rowsNumber={8} colsNumber={2} gutterSize="md" />}
+      {!outcomeData && <SkeletonGrid rowsNumber={8} colsNumber={2} />}
       {outcomeData && <OutcomePreview outcomeData={outcomeData} />}
     </>
   );

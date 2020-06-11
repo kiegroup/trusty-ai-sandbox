@@ -22,7 +22,7 @@ function ModelOverview(props: ModelOverviewProps) {
         </Title>
       </CardHeader>
       <CardBody>
-        <Grid gutter="md" className={"data"}>
+        <Grid hasGutter className={"data"}>
           <GridItem span={6}>
             <label className={"data__label"}>Name</label>
             <span>{props.model.name}</span>

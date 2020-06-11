@@ -150,7 +150,7 @@ const ExplanationView = () => {
       </section>
       <PageSection variant="default" className="explanation-view__section">
         <div className="container">
-          <Stack gutter="md">
+          <Stack hasGutter>
             <StackItem>
               <Title headingLevel="h3" size="2xl">
                 Decision Outcome
@@ -158,7 +158,7 @@ const ExplanationView = () => {
             </StackItem>
             <StackItem>
               {outcomeData === null ? (
-                <SkeletonGrid rowsNumber={6} colsNumber={2} gutterSize="md" />
+                <SkeletonGrid rowsNumber={6} colsNumber={2} />
               ) : (
                 <OutcomePreview outcomeData={[outcomeData]} compact={false} />
               )}
@@ -168,7 +168,7 @@ const ExplanationView = () => {
       </PageSection>
       <PageSection variant="light" className="explanation-view__section">
         <div className="container">
-          <Stack gutter="md">
+          <Stack hasGutter>
             <StackItem>
               <Title headingLevel="h3" size="2xl">
                 Explanation
@@ -210,8 +210,7 @@ const ExplanationView = () => {
                             <Button key="close" onClick={handleModalToggle}>
                               Close
                             </Button>,
-                          ]}
-                          isFooterLeftAligned>
+                          ]}>
                           <FeaturesScoreChart featuresScore={featuresScores} large={true} />
                         </Modal>
                       </>
@@ -226,7 +225,7 @@ const ExplanationView = () => {
       </PageSection>
       <PageSection className="explanation-view__section">
         <div className="container">
-          <Stack gutter="md">
+          <Stack hasGutter>
             <StackItem>
               <Title headingLevel="h3" size="2xl">
                 <span>Decision Influencing Inputs</span>

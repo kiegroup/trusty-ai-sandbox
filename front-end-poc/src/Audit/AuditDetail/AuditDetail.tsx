@@ -1,13 +1,4 @@
-import {
-  Nav,
-  NavItem,
-  NavList,
-  NavVariants,
-  PageSection,
-  PageSectionVariants,
-  TextContent,
-  Title,
-} from "@patternfly/react-core";
+import { Nav, NavItem, NavList, PageSection, PageSectionVariants, TextContent, Title } from "@patternfly/react-core";
 import React, { useEffect, useState } from "react";
 import { Link, Redirect, Route, Switch, useLocation, useParams, useRouteMatch } from "react-router-dom";
 import { IExecutionModelResponse } from "../types";
@@ -19,6 +10,7 @@ import { ExecutionType, getExecution } from "../../Shared/api/audit.api";
 import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
 import { IExecution, IExecutionRouteParams } from "../types";
 import { getModelDetail } from "../../Shared/api/audit.api";
+import "./AuditDetail.scss";
 
 const AuditDetail = () => {
   let { path, url } = useRouteMatch();
@@ -77,7 +69,7 @@ const AuditDetail = () => {
     <>
       <PageSection variant={PageSectionVariants.light}>
         <TextContent>
-          <Title size="4xl" headingLevel="h1" style={{ display: "flex", alignItems: "center" }}>
+          <Title size="3xl" headingLevel="h2">
             {<span>Decision Detail —&nbsp;</span>}
             {executionData === null && (
               <>
@@ -92,8 +84,8 @@ const AuditDetail = () => {
             )}
           </Title>
         </TextContent>
-        <Nav>
-          <NavList variant={NavVariants.tertiary}>
+        <Nav className="audit-detail__nav" variant="tertiary">
+          <NavList>
             {thirdLevelNav.map((item, index) => (
               <NavItem key={`sub-nav-${index}`} isActive={location.pathname === url + item.url}>
                 <Link to={url + item.url}>{item.desc}</Link>

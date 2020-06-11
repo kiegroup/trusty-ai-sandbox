@@ -90,7 +90,7 @@ const InputValue = (props: IInputRow) => {
     const high = Math.floor(inputValue + Math.floor(inputValue * Math.random()) * 100) / 100;
     const avg = Math.floor((inputValue - Math.floor((inputValue / 2) * Math.random())) * 100) / 100;
     dataListCells.push(
-      <DataListCell width={5} key="dist 5" style={{ paddingTop: 0 }}>
+      <DataListCell width={5} key="dist 5">
         <Grid className="input-browser__distribution">
           <GridItem span={2} className="input-data__wrap">
             <span>{mean}</span>
@@ -116,7 +116,7 @@ const InputValue = (props: IInputRow) => {
     );
   } else if (typeof inputValue === "string") {
     dataListCells.push(
-      <DataListCell width={5} key="dist 5" style={{ paddingTop: 0 }}>
+      <DataListCell width={5} key="dist 5">
         <Grid className="input-browser__distribution">
           <GridItem span={2} className="input-data__wrap">
             <span>15</span>

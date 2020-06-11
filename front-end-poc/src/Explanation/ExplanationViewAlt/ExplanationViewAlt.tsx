@@ -34,9 +34,9 @@ const ExplanationView = () => {
         <Divider />
       </PageSection>
       <PageSection isFilled={true}>
-        <Grid gutter="md">
+        <Grid hasGutter>
           <GridItem span={6}>
-            <Stack gutter={"md"}>
+            <Stack hasGutter>
               <StackItem>
                 <Card>
                   <CardHeader>
@@ -50,7 +50,7 @@ const ExplanationView = () => {
             </Stack>
           </GridItem>
           <GridItem span={6}>
-            <Stack gutter="md">
+            <Stack hasGutter>
               <StackItem>
                 <Card>
                   <CardHeader>
@@ -74,8 +74,7 @@ const ExplanationView = () => {
                         <Button key="close" onClick={handleModalToggle}>
                           Close
                         </Button>,
-                      ]}
-                      isFooterLeftAligned>
+                      ]}>
                       {/*<FeaturesTornadoChart />*/}
                     </Modal>
                   </CardBody>

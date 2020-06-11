@@ -6,7 +6,7 @@ const FeatureDistributionStackedChart = () => {
     <div
       style={{
         width: "190px",
-        marginTop: 0,
+        marginTop: "-18px",
         paddingTop: 0,
       }}>
       <VictoryStack

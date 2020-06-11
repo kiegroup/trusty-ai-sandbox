@@ -1,11 +1,14 @@
 import React, { useRef } from "react";
 import {
-  DataToolbar,
-  DataToolbarContent,
-  DataToolbarItem,
-  DataToolbarItemVariant,
-} from "@patternfly/react-core/dist/js/experimental";
-import { Button, ButtonVariant, InputGroup, TextInput } from "@patternfly/react-core";
+  Button,
+  ButtonVariant,
+  InputGroup,
+  TextInput,
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem,
+  ToolbarItemVariant,
+} from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
 import FromFilter from "../FromFilter/FromFilter";
 import ToFilter from "../ToFilter/ToFilter";
@@ -48,10 +51,10 @@ const AuditToolbar = (props: AuditToolbarProps) => {
     }
   };
   return (
-    <DataToolbar id="audit-list-top-toolbar" style={{ marginBottom: "var(--pf-global--spacer--lg)" }}>
-      <DataToolbarContent>
-        <DataToolbarItem variant="label">Search</DataToolbarItem>
-        <DataToolbarItem>
+    <Toolbar id="audit-list-top-toolbar" style={{ marginBottom: "var(--pf-global--spacer--lg)" }}>
+      <ToolbarContent>
+        <ToolbarItem variant="label">Search</ToolbarItem>
+        <ToolbarItem>
           <InputGroup>
             <TextInput
               name="audit-search-input"
@@ -69,16 +72,16 @@ const AuditToolbar = (props: AuditToolbarProps) => {
               <SearchIcon />
             </Button>
           </InputGroup>
-        </DataToolbarItem>
-        <DataToolbarItem variant="label">From</DataToolbarItem>
-        <DataToolbarItem>
+        </ToolbarItem>
+        <ToolbarItem variant="label">From</ToolbarItem>
+        <ToolbarItem>
           <FromFilter fromDate={fromDate} onFromDateUpdate={setFromDate} maxDate={toDate} />
-        </DataToolbarItem>
-        <DataToolbarItem variant="label">To</DataToolbarItem>
-        <DataToolbarItem>
+        </ToolbarItem>
+        <ToolbarItem variant="label">To</ToolbarItem>
+        <ToolbarItem>
           <ToFilter toDate={toDate} onToDateUpdate={setToDate} minDate={fromDate} />
-        </DataToolbarItem>
-        <DataToolbarItem variant={DataToolbarItemVariant.pagination}>
+        </ToolbarItem>
+        <ToolbarItem variant={ToolbarItemVariant.pagination}>
           <PaginationContainer
             total={total}
             page={page}
@@ -87,9 +90,9 @@ const AuditToolbar = (props: AuditToolbarProps) => {
             onSetPageSize={setPageSize}
             paginationId="audit-list-top-pagination"
           />
-        </DataToolbarItem>
-      </DataToolbarContent>
-    </DataToolbar>
+        </ToolbarItem>
+      </ToolbarContent>
+    </Toolbar>
   );
 };
 

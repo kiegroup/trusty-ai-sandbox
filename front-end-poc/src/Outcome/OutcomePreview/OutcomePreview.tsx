@@ -108,7 +108,7 @@ const OutcomeSubList = (props: { subList: IItemObject; compact: boolean }) => {
             </>
           }
         </Title>
-        <Gallery gutter="md" className="outcome-cards">
+        <Gallery hasGutter className="outcome-cards">
           {subList.components.map((item, index) => (
             <GalleryItem key={`recommendation-${index}`}>
               <OutcomeSubListItem subListItem={item as IItemObject[]} compact={compact} />

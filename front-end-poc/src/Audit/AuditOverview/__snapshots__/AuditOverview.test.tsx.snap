@@ -2,24 +2,24 @@
 
 exports[`Audit overview renders 1`] = `
 <Fragment>
-  <PageSection
+  <Component
     variant="light"
   >
-    <TextContent>
-      <Title
+    <Component>
+      <Component
         headingLevel="h1"
         size="4xl"
       >
         Audit Investigation
-      </Title>
-      <Text
+      </Component>
+      <Component
         component="p"
       >
         Here you can retrieve all the available information about past cases
-      </Text>
-    </TextContent>
-  </PageSection>
-  <PageSection
+      </Component>
+    </Component>
+  </Component>
+  <Component
     isFilled={true}
     style={
       Object {
@@ -34,12 +34,12 @@ exports[`Audit overview renders 1`] = `
         }
       }
     >
-      <List
+      <Component
         variant="inline"
       >
-        <ListItem>
+        <Component>
           Last Opened:
-        </ListItem>
+        </Component>
         <SkeletonInlineStripe
           customStyle={
             Object {
@@ -47,10 +47,10 @@ exports[`Audit overview renders 1`] = `
             }
           }
         />
-      </List>
+      </Component>
     </div>
     <AuditToolbar
-      fromDate="2020-05-05"
+      fromDate="2020-05-11"
       page={1}
       pageSize={10}
       setFromDate={[Function]}
@@ -58,7 +58,7 @@ exports[`Audit overview renders 1`] = `
       setPageSize={[Function]}
       setSearchString={[Function]}
       setToDate={[Function]}
-      toDate="2020-06-05"
+      toDate="2020-06-11"
       total={0}
     />
     <ExecutionTable
@@ -68,7 +68,7 @@ exports[`Audit overview renders 1`] = `
         }
       }
     />
-    <DataToolbar
+    <Toolbar
       id="audit-list-bottom-toolbar"
       style={
         Object {
@@ -76,12 +76,11 @@ exports[`Audit overview renders 1`] = `
         }
       }
     >
-      <DataToolbarContent
-        breakpointMods={Array []}
+      <ToolbarContent
         isExpanded={false}
         showClearFiltersButton={false}
       >
-        <DataToolbarItem
+        <Component
           variant="pagination"
         >
           <PaginationContainer
@@ -92,9 +91,9 @@ exports[`Audit overview renders 1`] = `
             paginationId="audit-list-bottom-pagination"
             total={0}
           />
-        </DataToolbarItem>
-      </DataToolbarContent>
-    </DataToolbar>
-  </PageSection>
+        </Component>
+      </ToolbarContent>
+    </Toolbar>
+  </Component>
 </Fragment>
 `;

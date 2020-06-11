@@ -11,7 +11,7 @@ const ErrorNotification = (props: ErrorNotificationProps) => {
   const { closeToast, message, details } = props;
 
   return (
-    <Alert variant="danger" title={message} action={<AlertActionCloseButton onClose={closeToast} />}>
+    <Alert variant="danger" title={message} actionClose={<AlertActionCloseButton onClose={closeToast} />}>
       {details}
     </Alert>
   );

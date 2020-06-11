@@ -18,9 +18,9 @@ const ExecutionSummary = (props: ExecutionSummaryProps) => {
         </Title>
       </CardHeader>
       <CardBody>
-        {executionData === null && <SkeletonGrid rowsNumber={2} colsNumber={2} gutterSize="md" />}
+        {executionData === null && <SkeletonGrid rowsNumber={2} colsNumber={2} />}
         {executionData !== null && (
-          <Grid gutter="md" className={"data"}>
+          <Grid hasGutter className={"data"}>
             <GridItem span={6}>
               <label className={"data__label"}>Execution ID</label>
               <span>#{executionData.executionId}</span>

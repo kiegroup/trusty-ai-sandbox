@@ -50,7 +50,9 @@ const noExecutions = (colSpan: number) => {
             <Bullseye>
               <EmptyState>
                 <EmptyStateIcon icon={SearchIcon} />
-                <Title size="lg">No executions found</Title>
+                <Title headingLevel="h5" size="lg">
+                  No executions found
+                </Title>
                 <EmptyStateBody>No results match the filter criteria. Try removing all filters.</EmptyStateBody>
               </EmptyState>
             </Bullseye>

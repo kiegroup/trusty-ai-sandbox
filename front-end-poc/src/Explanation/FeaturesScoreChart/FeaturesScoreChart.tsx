@@ -14,86 +14,6 @@ import { maxBy } from "lodash";
 import formattedScore from "../../Shared/components/FormattedScore/formattedScore";
 import "./FeatureScoreChart.scss";
 
-const eventHandlers = [
-  {
-    target: "data",
-    eventHandlers: {
-      onMouseOver: function (event: React.MouseEvent) {
-        const { x, y } = Selection.getSVGEventCoordinates(event);
-        return [
-          {
-            target: "labels",
-            mutation: () => ({
-              x,
-              y,
-              active: true,
-            }),
-          },
-        ];
-      },
-      onMouseMove: function (event: React.MouseEvent) {
-        const { x, y } = Selection.getSVGEventCoordinates(event);
-        return [
-          {
-            target: "labels",
-            mutation: () => ({
-              x,
-              y,
-              active: true,
-            }),
-          },
-        ];
-      },
-      onTouchMove: function (event: React.MouseEvent) {
-        const { x, y } = Selection.getSVGEventCoordinates(event);
-        return [
-          {
-            target: "labels",
-            mutation: () => ({
-              x,
-              y,
-              active: true,
-            }),
-          },
-        ];
-      },
-      onTouchStart: function (event: React.MouseEvent) {
-        const { x, y } = Selection.getSVGEventCoordinates(event);
-        return [
-          {
-            target: "labels",
-            mutation: () => ({
-              x,
-              y,
-              active: true,
-            }),
-          },
-        ];
-      },
-      onMouseOut: function () {
-        return [
-          {
-            target: "labels",
-            mutation: () => ({
-              active: false,
-            }),
-          },
-        ];
-      },
-      onTouchEnd: function () {
-        return [
-          {
-            target: "labels",
-            mutation: () => ({
-              active: false,
-            }),
-          },
-        ];
-      },
-    },
-  },
-];
-
 const CustomLabel = (props: any) => {
   return (
     <ChartTooltip
@@ -169,7 +89,85 @@ const FeaturesScoreChart = (props: FeaturesScoreChartProps) => {
         labelComponent={<CustomLabel />}
         alignment="middle"
         barWidth={25}
-        events={eventHandlers}
+        events={[
+          {
+            target: "data",
+            eventHandlers: {
+              onMouseOver: (event) => {
+                const { x, y } = Selection.getSVGEventCoordinates(event);
+                return [
+                  {
+                    target: "labels",
+                    mutation: () => ({
+                      x,
+                      y,
+                      active: true,
+                    }),
+                  },
+                ];
+              },
+              onMouseMove: (event) => {
+                const { x, y } = Selection.getSVGEventCoordinates(event);
+                return [
+                  {
+                    target: "labels",
+                    mutation: () => ({
+                      x,
+                      y,
+                      active: true,
+                    }),
+                  },
+                ];
+              },
+              onTouchMove: (event) => {
+                const { x, y } = Selection.getSVGEventCoordinates(event);
+                return [
+                  {
+                    target: "labels",
+                    mutation: () => ({
+                      x,
+                      y,
+                      active: true,
+                    }),
+                  },
+                ];
+              },
+              onTouchStart: (event) => {
+                const { x, y } = Selection.getSVGEventCoordinates(event);
+                return [
+                  {
+                    target: "labels",
+                    mutation: () => ({
+                      x,
+                      y,
+                      active: true,
+                    }),
+                  },
+                ];
+              },
+              onMouseOut: () => {
+                return [
+                  {
+                    target: "labels",
+                    mutation: () => ({
+                      active: false,
+                    }),
+                  },
+                ];
+              },
+              onTouchEnd: () => {
+                return [
+                  {
+                    target: "labels",
+                    mutation: () => ({
+                      active: false,
+                    }),
+                  },
+                ];
+              },
+            },
+          },
+        ]}
         style={{
           data: {
             fill: computeColor,

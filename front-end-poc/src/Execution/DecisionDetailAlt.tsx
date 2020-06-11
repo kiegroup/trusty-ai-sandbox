@@ -109,7 +109,7 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
         <>
           <PageSection variant="default" className="decision-detail-view__section">
             <div className="container">
-              <Stack gutter="md">
+              <Stack hasGutter>
                 <StackItem>
                   <Title headingLevel="h3" size="2xl">
                     Execution Info
@@ -118,9 +118,9 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
                 <StackItem>
                   <Card>
                     <CardBody>
-                      {executionData === null && <SkeletonGrid rowsNumber={1} colsNumber={4} gutterSize="md" />}
+                      {executionData === null && <SkeletonGrid rowsNumber={1} colsNumber={4} />}
                       {executionData !== null && (
-                        <Grid gutter="md" className={"data"}>
+                        <Grid hasGutter className={"data"}>
                           <GridItem span={4}>
                             <label className={"data__label"}>Execution ID</label>
                             <span>{executionData.executionId}</span>
@@ -147,14 +147,14 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
           </PageSection>
           <PageSection variant="default" className="decision-detail-view__section">
             <div className="container">
-              <Stack gutter="md">
+              <Stack hasGutter>
                 <StackItem>
                   <Title headingLevel="h3" size="2xl">
                     Outcomes
                   </Title>
                 </StackItem>
                 <StackItem>
-                  <Gallery gutter="md" className="outcome-cards" style={{ gridAutoRows: "1fr" }}>
+                  <Gallery hasGutter className="outcome-cards" style={{ gridAutoRows: "1fr" }}>
                     <GalleryItem key={"d"}>
                       <Card className="decision-detail-view__outcome-card" isHoverable>
                         <CardHeader>
@@ -360,7 +360,7 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
         <>
           <PageSection variant="default" className="decision-detail-view__section">
             <div className="container">
-              <Stack gutter="md">
+              <Stack hasGutter>
                 <StackItem>
                   <Title headingLevel="h3" size="2xl">
                     Execution Info
@@ -369,9 +369,9 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
                 <StackItem>
                   <Card>
                     <CardBody>
-                      {executionData === null && <SkeletonGrid rowsNumber={2} colsNumber={2} gutterSize="md" />}
+                      {executionData === null && <SkeletonGrid rowsNumber={2} colsNumber={2} />}
                       {executionData !== null && (
-                        <Grid gutter="md" className={"data"}>
+                        <Grid hasGutter className={"data"}>
                           <GridItem span={6}>
                             <label className={"data__label"}>Execution ID</label>
                             <span>#{executionData.executionId}</span>
@@ -398,14 +398,14 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
           </PageSection>
           <PageSection variant="default" className="decision-detail-view__section">
             <div className="container">
-              <Stack gutter="md">
+              <Stack hasGutter>
                 <StackItem>
                   <Title headingLevel="h3" size="2xl">
                     Outcomes
                   </Title>
                 </StackItem>
                 <StackItem>
-                  <Gallery gutter="md" className="outcome-cards" style={{ gridAutoRows: "1fr" }}>
+                  <Gallery hasGutter className="outcome-cards" style={{ gridAutoRows: "1fr" }}>
                     <GalleryItem key={"d"}>
                       <Card className="decision-detail-view__outcome-card" isHoverable>
                         <CardHeader>
@@ -468,7 +468,7 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
         <>
           <PageSection variant="default" className="decision-detail-view__section">
             <div className="container">
-              <Stack gutter="md">
+              <Stack hasGutter>
                 <StackItem>
                   <Title headingLevel="h3" size="2xl">
                     Execution Info
@@ -477,9 +477,9 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
                 <StackItem>
                   <Card>
                     <CardBody>
-                      {executionData === null && <SkeletonGrid rowsNumber={2} colsNumber={2} gutterSize="md" />}
+                      {executionData === null && <SkeletonGrid rowsNumber={2} colsNumber={2} />}
                       {executionData !== null && (
-                        <Grid gutter="md" className={"data"}>
+                        <Grid hasGutter className={"data"}>
                           <GridItem span={6}>
                             <label className={"data__label"}>Execution ID</label>
                             <span>#{executionData.executionId}</span>
@@ -506,14 +506,14 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
           </PageSection>
           <PageSection variant="default" className="decision-detail-view__section">
             <div className="container">
-              <Stack gutter="md">
+              <Stack hasGutter>
                 <StackItem>
                   <Title headingLevel="h3" size="2xl">
                     Outcomes
                   </Title>
                 </StackItem>
                 <StackItem>
-                  <Gallery gutter="md" className="outcome-cards" style={{ gridAutoRows: "1fr" }}>
+                  <Gallery hasGutter className="outcome-cards" style={{ gridAutoRows: "1fr" }}>
                     <GalleryItem key={"d"}>
                       <Card className="decision-detail-view__outcome-card" isHoverable>
                         <CardHeader>
@@ -764,7 +764,7 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
         <>
           <PageSection variant="default" className="decision-detail-view__section">
             <div className="container">
-              <Stack gutter="md">
+              <Stack hasGutter>
                 <StackItem>
                   <Title headingLevel="h3" size="2xl">
                     Execution Info
@@ -773,9 +773,9 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
                 <StackItem>
                   <Card>
                     <CardBody>
-                      {executionData === null && <SkeletonGrid rowsNumber={2} colsNumber={2} gutterSize="md" />}
+                      {executionData === null && <SkeletonGrid rowsNumber={2} colsNumber={2} />}
                       {executionData !== null && (
-                        <Grid gutter="md" className={"data"}>
+                        <Grid hasGutter className={"data"}>
                           <GridItem span={6}>
                             <label className={"data__label"}>Execution ID</label>
                             <span>#{executionData.executionId}</span>
@@ -802,14 +802,14 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
           </PageSection>
           <PageSection variant="default" className="decision-detail-view__section">
             <div className="container">
-              <Stack gutter="md">
+              <Stack hasGutter>
                 <StackItem>
                   <Title headingLevel="h3" size="2xl">
                     Outcomes
                   </Title>
                 </StackItem>
                 <StackItem>
-                  <Gallery gutter="md" className="outcome-cards" style={{ gridAutoRows: "1fr" }}>
+                  <Gallery hasGutter className="outcome-cards" style={{ gridAutoRows: "1fr" }}>
                     <GalleryItem key={"d"}>
                       <Card className="decision-detail-view__outcome-card" isHoverable>
                         <CardHeader>
@@ -1188,7 +1188,7 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
       )}
       <PageSection variant="default" className="decision-detail-view__section">
         <div className="container">
-          <Stack gutter="md">
+          <Stack hasGutter>
             <StackItem>
               <Title headingLevel="h3" size="2xl">
                 Execution Info
@@ -1197,9 +1197,9 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
             <StackItem>
               <Card>
                 <CardBody>
-                  {executionData === null && <SkeletonGrid rowsNumber={1} colsNumber={4} gutterSize="md" />}
+                  {executionData === null && <SkeletonGrid rowsNumber={1} colsNumber={4} />}
                   {executionData !== null && (
-                    <Grid gutter="md" className={"data"}>
+                    <Grid hasGutter className={"data"}>
                       <GridItem span={4}>
                         <label className={"data__label"}>Execution ID</label>
                         <span>{executionData.executionId}</span>
@@ -1226,7 +1226,7 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
       </PageSection>
       <PageSection variant="default" className="decision-detail-view__section">
         <div className="container">
-          <Stack gutter="md">
+          <Stack hasGutter>
             <StackItem>
               <Title headingLevel="h3" size="2xl">
                 Outcomes
@@ -1241,18 +1241,18 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
 
       <PageSection variant="default" className="decision-detail-view__section">
         <div className="container">
-          <Stack gutter="md">
+          <Stack hasGutter>
             <StackItem>
               <Title headingLevel="h3" size="2xl">
                 Model Info
               </Title>
             </StackItem>
             <StackItem>
-              <Grid gutter="md">
+              <Grid hasGutter>
                 <GridItem span={4}>
                   <Card style={{ height: "100%" }}>
                     <CardBody>
-                      <Grid gutter="md" className={"data"}>
+                      <Grid hasGutter className={"data"}>
                         <GridItem span={6}>
                           <label className={"data__label"}>Name</label>
                           <span>{model.name}</span>

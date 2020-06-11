@@ -24,9 +24,7 @@ const ExplanationSelector = (props: ExplanationSelectorProps) => {
             item.outcomeId === currentExplanationId ? (
               <span>
                 <span id={item.outcomeName}>{item.outcomeName}</span>{" "}
-                <Label isCompact className="explanation-currently-viewed">
-                  Currently viewing
-                </Label>
+                <Label className="explanation-currently-viewed">Currently viewing</Label>
               </span>
             ) : (
               <Button variant="link" isInline onClick={() => decisionSelection(item.outcomeId)}>
@@ -67,9 +65,8 @@ const ExplanationSelector = (props: ExplanationSelectorProps) => {
           <Button key="close" variant="tertiary" onClick={toggleModalOpening}>
             Close
           </Button>,
-        ]}
-        isFooterLeftAligned>
-        <Stack gutter="lg">
+        ]}>
+        <Stack hasGutter>
           <StackItem>
             <p>Choose which decision of the model you want explained from the list below.</p>
           </StackItem>

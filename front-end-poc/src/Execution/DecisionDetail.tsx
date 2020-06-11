@@ -24,9 +24,9 @@ const DecisionDetail = (props: DecisionDetailProps) => {
   const { executionData, model } = props;
   return (
     <PageSection isFilled={true}>
-      <Grid gutter="md">
+      <Grid hasGutter>
         <GridItem span={6}>
-          <Stack gutter={"md"}>
+          <Stack hasGutter>
             <StackItem>
               <ExecutionSummary executionData={executionData} />
             </StackItem>
@@ -36,7 +36,7 @@ const DecisionDetail = (props: DecisionDetailProps) => {
           </Stack>
         </GridItem>
         <GridItem span={6}>
-          <Stack gutter="md">
+          <Stack hasGutter>
             <StackItem>
               <Card>
                 <CardHeader>

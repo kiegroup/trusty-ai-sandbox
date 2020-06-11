@@ -4,7 +4,6 @@ import { Grid, GridItem, gridSpans } from "@patternfly/react-core";
 type ownProps = {
   rowsNumber: number;
   colsNumber: number | number[];
-  gutterSize: "sm" | "md" | "lg";
 };
 
 /*
@@ -13,7 +12,7 @@ type ownProps = {
  * is needed or when specific columns size are wanted instead of columns with equally divided size
  * */
 const SkeletonGrid = (props: ownProps) => {
-  const { rowsNumber, colsNumber, gutterSize } = props;
+  const { rowsNumber, colsNumber } = props;
   let colsCount = 0;
   let colList: number[] = [];
 
@@ -38,7 +37,7 @@ const SkeletonGrid = (props: ownProps) => {
       );
     }
   }
-  return <Grid gutter={gutterSize}>{gridRows.map((item) => item)}</Grid>;
+  return <Grid hasGutter>{gridRows.map((item) => item)}</Grid>;
 };
 
 export default SkeletonGrid;
