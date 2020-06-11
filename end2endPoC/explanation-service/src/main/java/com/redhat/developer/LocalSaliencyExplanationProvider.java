@@ -11,7 +11,7 @@ import com.redhat.developer.model.dmn.DMNUtils;
 import com.redhat.developer.model.dmn.RemoteDMNModel;
 import com.redhat.developer.requests.TypedData;
 import com.redhat.developer.utils.HttpHelper;
-import com.redhat.developer.xai.LIMEishExplainer;
+import com.redhat.developer.xai.lime.LIMEishExplainer;
 
 @ApplicationScoped
 public class LocalSaliencyExplanationProvider {

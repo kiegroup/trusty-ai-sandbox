@@ -3,13 +3,17 @@ package com.redhat.developer.model.dmn;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.redhat.developer.model.DataDistribution;
 import com.redhat.developer.model.Feature;
+import com.redhat.developer.model.FeatureDistribution;
 import com.redhat.developer.model.Model;
 import com.redhat.developer.model.Output;
 import com.redhat.developer.model.PredictionInput;
@@ -17,6 +21,7 @@ import com.redhat.developer.model.PredictionOutput;
 import com.redhat.developer.model.Type;
 import com.redhat.developer.model.Value;
 import com.redhat.developer.requests.TypedData;
+import com.redhat.developer.utils.DataUtils;
 import com.redhat.developer.utils.HttpHelper;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -72,6 +77,31 @@ public class RemoteDMNModel implements Model {
             result.add(new PredictionOutput(flattenDmnResult(outcome, outputStructure.stream().map(x -> x.inputName).collect(Collectors.toList()))));
         }
         return result;
+    }
+
+    @Override
+    public DataDistribution getDataDistribution() {
+        List<FeatureDistribution> featureDistributions = new LinkedList<>();
+        PredictionInput inputShape = getInputShape();
+        for (Feature f : inputShape.getFeatures()) {
+            if (Type.NUMBER.equals(f.getType()) || Type.BOOLEAN.equals(f.getType())) {
+                double v = f.getValue().asNumber();
+                double[] doubles = DoubleStream.of(DataUtils.generateData(0, 1, 1000)).map(d -> d * v + v).toArray();
+                FeatureDistribution featureDistribution = DataUtils.getFeatureDistribution(doubles);
+                featureDistributions.add(featureDistribution);
+            }
+        }
+        return new DataDistribution(featureDistributions);
+    }
+
+    @Override
+    public PredictionInput getInputShape() {
+        return new PredictionInput(DMNUtils.extractInputFeatures(this.inputStructure));
+    }
+
+    @Override
+    public PredictionOutput getOutputShape() {
+        return new PredictionOutput(DMNUtils.extractOutputs(this.outputStructure));
     }
 
     private List<Output> flattenDmnResult(Map<String, Object> dmnResult, List<String> validOutcomeNames) {
