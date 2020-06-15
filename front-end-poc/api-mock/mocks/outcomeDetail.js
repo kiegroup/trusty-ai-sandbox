@@ -208,7 +208,7 @@
 // };
 const outcomeDetail = [
   {
-    evaluationStatus: "EVALUATED",
+    evaluationStatus: "SUCCEEDED",
     hasErrors: false,
     messages: [],
     outcomeId: "432343443",
@@ -617,7 +617,7 @@ const outcomeDetail = [
     ],
   },
   {
-    evaluationStatus: "EVALUATED",
+    evaluationStatus: "SUCCEEDED",
     hasErrors: false,
     messages: [],
     outcomeId: "849849489",
@@ -692,6 +692,199 @@ const outcomeDetail = [
         },
       ],
     },
+    outcomeInputs: [
+      {
+        name: "Asset Score",
+        typeRef: "number",
+        value: 738,
+        components: [],
+      },
+      {
+        name: "Asset Amount",
+        typeRef: "number",
+        value: 70000,
+        components: [],
+      },
+    ],
+  },
+  {
+    evaluationStatus: "SUCCEEDED",
+    hasErrors: false,
+    messages: [],
+    outcomeId: "_c6e56793-68d0-4683-b34b-5e9d69e7d0d4",
+    outcomeName: "Risk Score",
+    outcomeResult: { name: "Risk Score", typeRef: "number", value: 1, components: null },
+    outcomeInputs: [
+      {
+        name: "Asset Score",
+        typeRef: "number",
+        value: 738,
+        components: [],
+      },
+      {
+        name: "Asset Amount",
+        typeRef: "number",
+        value: 70000,
+        components: [],
+      },
+    ],
+  },
+  {
+    evaluationStatus: "SUCCEEDED",
+    hasErrors: false,
+    messages: [],
+    outcomeId: "_859bea4f-dfc4-480e-96f2-1a756d54b84b",
+    outcomeName: "Total Amount from Last 24 hours Transactions",
+    outcomeResult: {
+      name: "Total Amount from Last 24 hours Transactions",
+      typeRef: "number",
+      value: 0,
+      components: null,
+    },
+    outcomeInputs: [
+      {
+        name: "Asset Score",
+        typeRef: "number",
+        value: 738,
+        components: [],
+      },
+      {
+        name: "Asset Amount",
+        typeRef: "number",
+        value: 70000,
+        components: [],
+      },
+    ],
+  },
+  {
+    evaluationStatus: "SUCCEEDED",
+    hasErrors: false,
+    messages: [],
+    outcomeId: "_d361c79e-8c06-4504-bdb2-d6b90b915166",
+    outcomeName: "Last Transaction",
+    outcomeResult: {
+      name: "Last Transaction",
+      typeRef: "tTransaction",
+      value: null,
+      components: [
+        {
+          name: "Auth Code",
+          typeRef: "tAuthCode",
+          value: "Authorized",
+          components: null,
+        },
+        { name: "Amount", typeRef: "number", value: 10000, components: null },
+        {
+          name: "Card Type",
+          typeRef: "tCardType",
+          value: "Debit",
+          components: null,
+        },
+        { name: "Location", typeRef: "tLocation", value: "Local", components: null },
+      ],
+    },
+    outcomeInputs: [
+      {
+        name: "Asset Score",
+        typeRef: "number",
+        value: 738,
+        components: [],
+      },
+      {
+        name: "Asset Amount",
+        typeRef: "number",
+        value: 70000,
+        components: [],
+      },
+    ],
+  },
+  {
+    evaluationStatus: "SUCCEEDED",
+    hasErrors: false,
+    messages: [],
+    outcomeId: "_ff34378e-fe90-4c58-9f7f-b9ce5767a415",
+    outcomeName: "Merchant Blacklist",
+    outcomeResult: {
+      name: "Merchant Blacklist",
+      typeRef: "string",
+      value: [
+        "ILLICITCORP",
+        "SLIMSHADY",
+        "TAINTEDTHINGS",
+        "UNSCRUPULOUS",
+        "UNETHICALBIZ",
+        "WECORRUPT",
+        "WICKEDSTUFF",
+        "VERYBADTHING",
+      ],
+      components: null,
+    },
+    outcomeInputs: [
+      {
+        name: "Asset Score",
+        typeRef: "number",
+        value: 738,
+        components: [],
+      },
+      {
+        name: "Asset Amount",
+        typeRef: "number",
+        value: 70000,
+        components: [],
+      },
+    ],
+  },
+  {
+    evaluationStatus: "SUCCEEDED",
+    hasErrors: false,
+    messages: [],
+    outcomeId: "_12268B68-94A1-4960-B4C8-0B6071AFDE58",
+    outcomeName: "Mortgage Approval",
+    outcomeResult: { name: "Mortgage Approval", typeRef: "boolean", value: true, components: null },
+    outcomeInputs: [
+      {
+        name: "Asset Score",
+        typeRef: "number",
+        value: 738,
+        components: [],
+      },
+      {
+        name: "Asset Amount",
+        typeRef: "number",
+        value: 70000,
+        components: [],
+      },
+    ],
+  },
+  {
+    evaluationStatus: "SUCCEEDED",
+    hasErrors: false,
+    messages: [],
+    outcomeId: "_9CFF8C35-4EB3-451E-874C-DB27A5A424C0",
+    outcomeName: "Risk Score",
+    outcomeResult: { name: "Risk Score", typeRef: "number", value: 21.7031851958099, components: null },
+    outcomeInputs: [
+      {
+        name: "Asset Score",
+        typeRef: "number",
+        value: 738,
+        components: [],
+      },
+      {
+        name: "Asset Amount",
+        typeRef: "number",
+        value: 70000,
+        components: [],
+      },
+    ],
+  },
+  {
+    evaluationStatus: "SKIPPED",
+    hasErrors: false,
+    messages: [],
+    outcomeId: "_1CFF8C35-4EB2-351E-874C-DB27A2A424C0",
+    outcomeName: "Bank Score",
+    outcomeResult: null,
     outcomeInputs: [
       {
         name: "Asset Score",

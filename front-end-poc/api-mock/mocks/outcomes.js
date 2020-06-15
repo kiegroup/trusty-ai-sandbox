@@ -502,7 +502,7 @@ const outcome = [
         hasErrors: false,
       },
       {
-        outcomeId: "_9CFF8C35-4EB3-451E-874C-DB27A5A424C0",
+        outcomeId: "_1CFF8C35-4EB2-351E-874C-DB27A2A424C0",
         outcomeName: "Bank Score",
         evaluationStatus: "SKIPPED",
         outcomeResult: null,
