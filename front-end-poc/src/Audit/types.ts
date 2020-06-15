@@ -14,6 +14,10 @@ export interface IExecutionRouteParams {
   executionType: ExecutionType;
 }
 
+export interface IOutcomeRouteParams extends IExecutionRouteParams {
+  outcomeId: string;
+}
+
 export interface IServiceIdentifier {
   groupId?: string;
   artifactId?: string;

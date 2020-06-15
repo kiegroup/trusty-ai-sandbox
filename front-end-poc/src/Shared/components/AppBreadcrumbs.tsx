@@ -10,7 +10,7 @@ const routes = [
   { path: "/audit", breadcrumb: "Audit Investigation" },
   { path: "/audit/:executionType/:id/model-lookup", breadcrumb: "Model Lookup" },
   { path: "/audit/:executionType/:id/input-data", breadcrumb: "Input Data" },
-  { path: "/audit/:executionType/:id", breadcrumb: "Decision Detail" },
+  { path: "/audit/:executionType/:id", breadcrumb: "Execution Detail" },
 ];
 const excludePaths = ["/audit/:executionType"];
 

@@ -5,8 +5,8 @@
     font-weight: 300;
   }
   &__section {
-    padding-top: var(--pf-global--spacer--xl);
-    padding-bottom: var(--pf-global--spacer--xl);
+    //padding-top: var(--pf-global--spacer--xl);
+    //padding-bottom: var(--pf-global--spacer--xl);
   }
   &__input-help {
     fill: var(--pf-global--info-color--100);
@@ -46,31 +46,4 @@
   .outcome-cards {
     grid-template-columns: 1fr 1fr 1fr;
   }
-}
-
-.container {
-  margin: 0 auto;
-  position: relative;
-}
-
-@media (min-width: 768px) {
-  .container {
-    max-width: 750px;
-  }
-}
-@media (min-width: 992px) {
-  .container {
-    max-width: 970px;
-  }
-}
-@media (min-width: 1300px) {
-  .container {
-    max-width: 1270px;
-  }
-}
-
-.demo-switch {
-  position: absolute;
-  top: 0;
-  right: 1em;
 }

@@ -22,17 +22,26 @@ import "./OutcomeCards.scss";
 
 type OutcomeCardsProps = {
   data: RemoteData<Error, IOutcome[]>;
+  onExplanationClick: (outcomeId: string) => void;
 };
 
 const OutcomeCards = (props: OutcomeCardsProps) => {
-  const { data } = props;
+  const { data, onExplanationClick } = props;
 
   return (
     <>
       {data.status === "SUCCESS" && (
         <Gallery className="outcome-cards" hasGutter>
           {data.data.map((item) =>
-            renderOutcome(item.outcomeResult, item.outcomeName, false, true, item.evaluationStatus)
+            renderOutcome(
+              item.outcomeResult,
+              item.outcomeName,
+              false,
+              true,
+              item.evaluationStatus,
+              item.outcomeId,
+              onExplanationClick
+            )
           )}
         </Gallery>
       )}
@@ -47,13 +56,21 @@ const renderOutcome = (
   name: string,
   compact = true,
   rootLevel = false,
-  evaluationStatus?: evaluationStatusStrings
+  evaluationStatus?: evaluationStatusStrings,
+  outcomeId?: string,
+  onExplanationClick?: (outcomeId: string) => void
 ) => {
   let renderItems: JSX.Element[] = [];
 
   if (rootLevel && evaluationStatus !== "SUCCEEDED") {
     return (
-      <CardWrapper condition={!compact && rootLevel} key={uuid()} name={name} evaluationStatus={evaluationStatus}>
+      <CardWrapper
+        condition={!compact && rootLevel}
+        key={uuid()}
+        name={name}
+        evaluationStatus={evaluationStatus}
+        outcomeId={outcomeId}
+        onExplanationClick={onExplanationClick}>
         <span>There were problems</span>
       </CardWrapper>
     );
@@ -61,7 +78,13 @@ const renderOutcome = (
 
   if (outcomeData.value !== null) {
     return (
-      <CardWrapper condition={!compact && rootLevel} key={uuid()} name={name} evaluationStatus={evaluationStatus}>
+      <CardWrapper
+        condition={!compact && rootLevel}
+        key={uuid()}
+        name={name}
+        evaluationStatus={evaluationStatus}
+        outcomeId={outcomeId}
+        onExplanationClick={onExplanationClick}>
         <OutcomeProperty property={outcomeData} key={outcomeData.name} hidePropertyName={rootLevel} />
       </CardWrapper>
     );
@@ -69,7 +92,13 @@ const renderOutcome = (
   if (outcomeData.components.length) {
     if (isIItemObjectArray(outcomeData.components)) {
       renderItems.push(
-        <CardWrapper condition={!compact && rootLevel} key={uuid()} name={name} evaluationStatus={evaluationStatus}>
+        <CardWrapper
+          condition={!compact && rootLevel}
+          key={uuid()}
+          name={name}
+          evaluationStatus={evaluationStatus}
+          outcomeId={outcomeId}
+          onExplanationClick={onExplanationClick}>
           <OutcomeComposed outcome={outcomeData} key={outcomeData.name} compact={compact} name={name} />
         </CardWrapper>
       );
@@ -86,8 +115,10 @@ const CardWrapper = (props: {
   children: React.ReactNode;
   name?: string;
   evaluationStatus?: evaluationStatusStrings;
+  outcomeId?: string;
+  onExplanationClick?: (outcomeId: string) => void;
 }) => {
-  const { condition, children, name, evaluationStatus } = props;
+  const { condition, children, name, evaluationStatus, outcomeId, onExplanationClick } = props;
   if (condition)
     return (
       <GalleryItem key={uuid()}>
@@ -105,11 +136,19 @@ const CardWrapper = (props: {
                   <EvaluationStatus status={evaluationStatus} />
                 </SplitItem>
               )}
-              <SplitItem>
-                <Button variant="link" isInline className="outcome-cards__card__explanation-link">
-                  View Explanation <LongArrowAltRightIcon />
-                </Button>
-              </SplitItem>
+              {outcomeId && onExplanationClick && (
+                <SplitItem>
+                  <Button
+                    variant="link"
+                    isInline
+                    className="outcome-cards__card__explanation-link"
+                    onClick={() => {
+                      onExplanationClick(outcomeId);
+                    }}>
+                    View Explanation <LongArrowAltRightIcon />
+                  </Button>
+                </SplitItem>
+              )}
             </Split>
           </CardFooter>
         </Card>

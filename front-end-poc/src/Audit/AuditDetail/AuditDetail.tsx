@@ -2,7 +2,7 @@ import { Nav, NavItem, NavList, PageSection, PageSectionVariants, TextContent, T
 import React, { useEffect, useState } from "react";
 import { Link, Redirect, Route, Switch, useLocation, useParams, useRouteMatch } from "react-router-dom";
 import { IExecutionModelResponse } from "../types";
-import DecisionDetail from "../../Execution/DecisionDetail";
+//import DecisionDetail from "../../Execution/DecisionDetail";
 import ExplanationView from "../../Explanation/ExplanationView/ExplanationView";
 import InputDataView from "../../InputData/InputDataView/InputDataView";
 import ModelLookup from "../../ModelLookup/ModelLookup";
@@ -11,12 +11,13 @@ import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
 import { IExecution, IExecutionRouteParams } from "../types";
 import { getModelDetail } from "../../Shared/api/audit.api";
 import "./AuditDetail.scss";
+import DecisionDetailAlt from "../../Execution/DecisionDetailAlt";
 
 const AuditDetail = () => {
   let { path, url } = useRouteMatch();
   let location = useLocation();
   let thirdLevelNav = [
-    { url: "/overview", desc: "Overview" },
+    { url: "/outcomes", desc: "Outcomes" },
     { url: "/explanation", desc: "Explanation" },
     { url: "/input-data", desc: "Input Data" },
     { url: "/model-lookup", desc: "Model Lookup" },
@@ -70,7 +71,7 @@ const AuditDetail = () => {
       <PageSection variant={PageSectionVariants.light}>
         <TextContent>
           <Title size="3xl" headingLevel="h2">
-            {<span>Decision Detail —&nbsp;</span>}
+            {<span>Execution Detail —&nbsp;</span>}
             {executionData === null && (
               <>
                 <SkeletonInlineStripe customStyle={{ height: "0.9em", verticalAlign: "baseline" }} />
@@ -95,19 +96,19 @@ const AuditDetail = () => {
         </Nav>
       </PageSection>
       <Switch>
-        <Route path={`${path}/overview`}>
-          <DecisionDetail model={model} executionData={executionData} />
+        <Route path={`${path}/outcomes/:outcomeId`}>
+          <ExplanationView />
+        </Route>
+        <Route path={`${path}/outcomes`}>
+          <DecisionDetailAlt model={model} executionData={executionData} />
         </Route>
         <Route path={`${path}/input-data`}>
           <InputDataView />
         </Route>
-        <Route path={`${path}/explanation`}>
-          <ExplanationView />
-        </Route>
         <Route path={`${path}/model-lookup`}>
           <ModelLookup model={model} />
         </Route>
-        <Redirect exact from={path} to={`${location.pathname}/overview`} />} />
+        <Redirect exact from={path} to={`${location.pathname}/outcomes`} />} />
       </Switch>
     </>
   );
