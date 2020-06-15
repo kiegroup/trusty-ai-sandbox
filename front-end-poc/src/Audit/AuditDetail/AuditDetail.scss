@@ -10,4 +10,17 @@
       }
     }
   }
+  &__executor {
+    &__icon {
+      margin-right: 0.5em;
+      fill: var(--pf-global--Color--200);
+    }
+  }
+  &__executor,
+  &__execution-time {
+    padding: 0 1em;
+    .pf-c-title {
+      font-weight: 400;
+    }
+  }
 }

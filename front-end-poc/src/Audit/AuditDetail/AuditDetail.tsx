@@ -1,4 +1,14 @@
-import { Nav, NavItem, NavList, PageSection, PageSectionVariants, TextContent, Title } from "@patternfly/react-core";
+import {
+  Flex,
+  FlexItem,
+  Nav,
+  NavItem,
+  NavList,
+  PageSection,
+  PageSectionVariants,
+  TextContent,
+  Title,
+} from "@patternfly/react-core";
 import React, { useEffect, useState } from "react";
 import { Link, Redirect, Route, Switch, useLocation, useParams, useRouteMatch } from "react-router-dom";
 import { IExecutionModelResponse } from "../types";
@@ -10,8 +20,10 @@ import { ExecutionType, getExecution } from "../../Shared/api/audit.api";
 import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
 import { IExecution, IExecutionRouteParams } from "../types";
 import { getModelDetail } from "../../Shared/api/audit.api";
-import "./AuditDetail.scss";
 import DecisionDetailAlt from "../../Execution/DecisionDetailAlt";
+import ExecutionStatus from "../ExecutionStatus/ExecutionStatus";
+import { UserIcon } from "@patternfly/react-icons";
+import "./AuditDetail.scss";
 
 const AuditDetail = () => {
   let { path, url } = useRouteMatch();
@@ -69,20 +81,41 @@ const AuditDetail = () => {
     <>
       <PageSection variant={PageSectionVariants.light}>
         <TextContent>
-          <Title size="3xl" headingLevel="h2">
-            {<span>Execution Detail —&nbsp;</span>}
-            {executionData === null && (
-              <>
-                <SkeletonInlineStripe customStyle={{ height: "0.9em", verticalAlign: "baseline" }} />
-                <SkeletonInlineStripe customStyle={{ height: "0.9em", verticalAlign: "baseline" }} />
-              </>
-            )}
-            {executionData !== null && (
-              <span>
-                {formatDate(executionData.executionDate)} by {executionData.executorName}
-              </span>
-            )}
-          </Title>
+          <Flex>
+            <Flex grow={{ default: "grow" }}>
+              <FlexItem>
+                <Title size="3xl" headingLevel="h2">
+                  <span>Execution Detail</span>
+                </Title>
+              </FlexItem>
+            </Flex>
+            <Flex>
+              <FlexItem className="audit-detail__execution-time">
+                {executionData === null && (
+                  <SkeletonInlineStripe customStyle={{ height: "1.5em", verticalAlign: "baseline" }} />
+                )}
+                {executionData !== null && (
+                  <Title size="xl" headingLevel="h3">
+                    <ExecutionStatus result={executionData.executionSucceeded} /> on{" "}
+                    {formatDate(executionData.executionDate)}
+                  </Title>
+                )}
+              </FlexItem>
+              <FlexItem className="audit-detail__executor">
+                {executionData === null && (
+                  <SkeletonInlineStripe customStyle={{ height: "1.5em", verticalAlign: "baseline" }} />
+                )}
+                <Title size="xl" headingLevel="h3">
+                  {executionData !== null && (
+                    <span>
+                      <UserIcon className="audit-detail__executor__icon" />
+                      Executed by {executionData.executorName}
+                    </span>
+                  )}
+                </Title>
+              </FlexItem>
+            </Flex>
+          </Flex>
         </TextContent>
         <Nav className="audit-detail__nav" variant="tertiary">
           <NavList>
