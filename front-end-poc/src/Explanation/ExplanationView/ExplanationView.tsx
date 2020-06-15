@@ -126,7 +126,7 @@ const ExplanationView = () => {
             </StackItem>
             <StackItem>
               {outcomeData === null ? (
-                <SkeletonGrid rowsNumber={6} colsNumber={2} />
+                <SkeletonGrid rowsNumber={4} colsNumber={2} />
               ) : (
                 <OutcomePreview outcomeData={[outcomeData]} compact={false} />
               )}
