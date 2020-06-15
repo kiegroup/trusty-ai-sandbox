@@ -31,7 +31,7 @@ const ScoreTable = (props: ScoreTableProps) => {
               </DataListCell>,
               <DataListCell key="secondary heading">
                 <Title headingLevel="h6" size="md" id="scores">
-                  Scores
+                  Score
                 </Title>
               </DataListCell>,
             ]}
@@ -67,8 +67,8 @@ const FeaturesScoreTable = (props: FeatureScoreTableProps) => {
 
   return (
     <section className="feature-score-table">
-      {positiveScores && <ScoreTable name="Features with Positive Weight" featuresScore={positiveScores} />}
-      {negativeScores && <ScoreTable name="Features with Negative Weight" featuresScore={negativeScores} />}
+      {positiveScores && <ScoreTable name="Positive Weight" featuresScore={positiveScores} />}
+      {negativeScores && <ScoreTable name="Negative Weight" featuresScore={negativeScores} />}
     </section>
   );
 };

@@ -145,7 +145,7 @@ const CardWrapper = (props: {
                     onClick={() => {
                       onExplanationClick(outcomeId);
                     }}>
-                    View Explanation <LongArrowAltRightIcon />
+                    View Details <LongArrowAltRightIcon />
                   </Button>
                 </SplitItem>
               )}

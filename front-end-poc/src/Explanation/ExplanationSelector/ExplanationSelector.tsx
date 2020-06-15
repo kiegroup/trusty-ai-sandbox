@@ -54,7 +54,7 @@ const ExplanationSelector = (props: ExplanationSelectorProps) => {
         onClick={toggleModalOpening}
         className="explanation-selector"
         title="Select another decision">
-        Switch
+        Switch Outcome
       </Button>
       <Modal
         width={"50%"}

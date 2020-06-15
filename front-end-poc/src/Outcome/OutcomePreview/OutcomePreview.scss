@@ -1,6 +1,9 @@
 .outcomes-preview {
   .outcome {
     margin-bottom: var(--pf-global--spacer--md);
+    &:last-child {
+      margin-bottom: 0;
+    }
     &__title {
       margin-bottom: var(--pf-global--spacer--md);
     }

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { PageSection, Title } from "@patternfly/react-core";
+import { PageSection, Stack, StackItem, Title } from "@patternfly/react-core";
 import { IExecution, IExecutionModelResponse } from "../Audit/types";
 import OutcomeCards from "./OutcomeCards/OutcomeCards";
 import { getDecisionOutcome } from "../Shared/api/audit.api";
@@ -54,10 +54,16 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
   return (
     <section className="decision-detail-view">
       <PageSection variant="default" className="decision-detail-view__section">
-        <Title headingLevel="h4" size="xl" style={{ marginBottom: "var(--pf-global--spacer--md)" }}>
-          Outcomes
-        </Title>
-        <OutcomeCards data={outcomeData} onExplanationClick={goToExplanation} />
+        <Stack hasGutter>
+          <StackItem>
+            <Title headingLevel="h3" size="2xl">
+              Outcomes
+            </Title>
+          </StackItem>
+          <StackItem>
+            <OutcomeCards data={outcomeData} onExplanationClick={goToExplanation} />
+          </StackItem>
+        </Stack>
       </PageSection>
     </section>
   );

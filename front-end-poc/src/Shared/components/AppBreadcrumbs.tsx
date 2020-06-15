@@ -8,6 +8,7 @@ const routes = [
   { path: "/dashboard", breadcrumb: "Domain Monitoring Dashboard" },
   { path: "/op-dashboard", breadcrumb: "Operational Monitoring Dashboard" },
   { path: "/audit", breadcrumb: "Audit Investigation" },
+  { path: "/audit/:executionType/:id/outcomes/:outcomeId", breadcrumb: "Outcome Detail" },
   { path: "/audit/:executionType/:id/model-lookup", breadcrumb: "Model Lookup" },
   { path: "/audit/:executionType/:id/input-data", breadcrumb: "Input Data" },
   { path: "/audit/:executionType/:id", breadcrumb: "Execution Detail" },

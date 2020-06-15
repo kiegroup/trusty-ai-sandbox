@@ -18,7 +18,6 @@ const AuditDetail = () => {
   let location = useLocation();
   let thirdLevelNav = [
     { url: "/outcomes", desc: "Outcomes" },
-    { url: "/explanation", desc: "Explanation" },
     { url: "/input-data", desc: "Input Data" },
     { url: "/model-lookup", desc: "Model Lookup" },
   ];

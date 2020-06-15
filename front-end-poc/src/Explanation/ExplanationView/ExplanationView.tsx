@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Button,
-  Divider,
+  Card,
+  CardBody,
+  CardHeader,
   Grid,
   GridItem,
   Modal,
@@ -18,7 +20,6 @@ import { IOutcome } from "../../Outcome/types";
 import { getDecisionFeatureScores, getDecisionOutcome, getDecisionOutcomeDetail } from "../../Shared/api/audit.api";
 import OutcomePreview from "../../Outcome/OutcomePreview/OutcomePreview";
 import InputDataBrowser from "../../InputData/InputDataBrowser/InputDataBrowser";
-import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
 import SkeletonGrid from "../../Shared/skeletons/SkeletonGrid";
 import FeaturesScoreChart from "../FeaturesScoreChart/FeaturesScoreChart";
 import { orderBy } from "lodash";
@@ -38,7 +39,7 @@ const ExplanationView = () => {
   const [outcomesList, setOutcomesList] = useState<IOutcome[] | null>(null);
   const [outcomeDetail, setOutcomeDetail] = useState(null);
   const [featuresScores, setFeaturesScores] = useState<IFeatureScores[] | null>(null);
-  const [topFeatures, setTopFeatures] = useState(false);
+  const [topFeatures, setTopFeatures] = useState<IFeatureScores[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
@@ -71,7 +72,7 @@ const ExplanationView = () => {
           if (isMounted) {
             setFeaturesScores(sortedFeatures);
             if (sortedFeatures.length > 10) {
-              setTopFeatures(true);
+              setTopFeatures(sortedFeatures.slice(sortedFeatures.length - 10));
             }
           }
         }
@@ -110,32 +111,17 @@ const ExplanationView = () => {
     <section className="explanation-view">
       <PageSection variant="default" className="explanation-view__section">
         <div className="container">
-          <Title headingLevel="h2" size="3xl">
-            <span>Decision: </span>
-            {outcomeData === null ? (
-              <SkeletonInlineStripe />
-            ) : (
-              <span className="explanation-view__title">{outcomeData.outcomeName}</span>
-            )}
-            {outcomeId !== null && outcomesList !== null && outcomesList.length > 1 && (
-              <ExplanationSelector
-                outcomesList={outcomesList}
-                onDecisionSelection={switchExplanation}
-                currentExplanationId={outcomeId}
-              />
-            )}
-          </Title>
-        </div>
-      </PageSection>
-      <section className="container">
-        <Divider />
-      </section>
-      <PageSection variant="default" className="explanation-view__section">
-        <div className="container">
           <Stack hasGutter>
             <StackItem>
               <Title headingLevel="h3" size="2xl">
-                Decision Outcome
+                <span>Outcome Details</span>
+                {outcomeId !== null && outcomesList !== null && outcomesList.length > 1 && (
+                  <ExplanationSelector
+                    outcomesList={outcomesList}
+                    onDecisionSelection={switchExplanation}
+                    currentExplanationId={outcomeId}
+                  />
+                )}
               </Title>
             </StackItem>
             <StackItem>
@@ -148,7 +134,7 @@ const ExplanationView = () => {
           </Stack>
         </div>
       </PageSection>
-      <PageSection variant="light" className="explanation-view__section">
+      <PageSection className="explanation-view__section">
         <div className="container">
           <Stack hasGutter>
             <StackItem>
@@ -157,49 +143,65 @@ const ExplanationView = () => {
               </Title>
             </StackItem>
             <StackItem>
-              {topFeatures ? (
-                <Title headingLevel="h4" size="xl">
-                  Top Features Score Chart
-                </Title>
-              ) : (
-                <Title headingLevel="h4" size="xl">
-                  Features Score Chart
-                </Title>
-              )}
-              <Grid>
-                <GridItem span={9}>
-                  <div className="explanation-view__chart">
-                    {featuresScores === null ? (
-                      <SkeletonTornadoChart valuesCount={10} height={400} />
-                    ) : (
-                      <FeaturesScoreChart featuresScore={featuresScores} />
-                    )}
-                    {topFeatures && featuresScores !== null && (
-                      <>
-                        <Button
-                          variant="secondary"
-                          type="button"
-                          className="all-features-opener"
-                          onClick={handleModalToggle}>
-                          View Complete Chart
-                        </Button>
-                        <Modal
-                          width={"80%"}
-                          title="All Features Score Chart"
-                          isOpen={isModalOpen}
-                          onClose={handleModalToggle}
-                          actions={[
-                            <Button key="close" onClick={handleModalToggle}>
-                              Close
-                            </Button>,
-                          ]}>
-                          <FeaturesScoreChart featuresScore={featuresScores} large={true} />
-                        </Modal>
-                      </>
-                    )}
-                  </div>
+              <Grid hasGutter>
+                <GridItem span={8}>
+                  <Card>
+                    <CardHeader>
+                      {topFeatures ? (
+                        <Title headingLevel="h4" size="xl">
+                          Top Features Score Chart
+                        </Title>
+                      ) : (
+                        <Title headingLevel="h4" size="xl">
+                          Features Score Chart
+                        </Title>
+                      )}
+                    </CardHeader>
+
+                    <CardBody>
+                      <div className="explanation-view__chart">
+                        {featuresScores === null && <SkeletonTornadoChart valuesCount={10} height={400} />}
+                        {featuresScores !== null && topFeatures.length === 0 && (
+                          <FeaturesScoreChart featuresScore={featuresScores} />
+                        )}
+                        {featuresScores !== null && topFeatures.length && (
+                          <>
+                            <FeaturesScoreChart featuresScore={topFeatures} />
+                            <Button
+                              variant="secondary"
+                              type="button"
+                              className="all-features-opener"
+                              onClick={handleModalToggle}>
+                              View Complete Chart
+                            </Button>
+                            <Modal
+                              width={"80%"}
+                              title="All Features Score Chart"
+                              isOpen={isModalOpen}
+                              onClose={handleModalToggle}
+                              actions={[
+                                <Button key="close" onClick={handleModalToggle}>
+                                  Close
+                                </Button>,
+                              ]}>
+                              <FeaturesScoreChart featuresScore={featuresScores} large={true} />
+                            </Modal>
+                          </>
+                        )}
+                      </div>
+                    </CardBody>
+                  </Card>
                 </GridItem>
-                <GridItem span={3}>{featuresScores && <FeaturesScoreTable featuresScore={featuresScores} />}</GridItem>
+                <GridItem span={4}>
+                  <Card>
+                    <CardHeader>
+                      <Title headingLevel={"h4"} size={"lg"}>
+                        Features Weight
+                      </Title>
+                    </CardHeader>
+                    <CardBody>{featuresScores && <FeaturesScoreTable featuresScore={featuresScores} />}</CardBody>
+                  </Card>
+                </GridItem>
               </Grid>
             </StackItem>
           </Stack>
@@ -210,7 +212,7 @@ const ExplanationView = () => {
           <Stack hasGutter>
             <StackItem>
               <Title headingLevel="h3" size="2xl">
-                <span>Decision Influencing Inputs</span>
+                <span>Outcome Influencing Inputs</span>
                 <Tooltip
                   position="auto"
                   content={
