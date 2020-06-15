@@ -7,6 +7,7 @@ import { RemoteData } from "../Shared/types";
 import { IOutcome } from "../Outcome/types";
 import { useHistory } from "react-router-dom";
 import "./DecisionDetailAlt.scss";
+import SkeletonCards from "../Shared/skeletons/SkeletonCards/SkeletonCards";
 
 type DecisionDetailAltProps = {
   executionData: IExecution | null;
@@ -19,9 +20,7 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
     status: "NOT_ASKED",
   });
   const history = useHistory();
-
   console.log(model.name);
-
   const goToExplanation = useCallback(
     (outcomeId: string) => {
       history.push(`outcomes/${outcomeId}`);
@@ -61,7 +60,10 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
             </Title>
           </StackItem>
           <StackItem>
-            <OutcomeCards data={outcomeData} onExplanationClick={goToExplanation} />
+            {outcomeData.status === "LOADING" && <SkeletonCards quantity={2} />}
+            {outcomeData.status === "SUCCESS" && (
+              <OutcomeCards data={outcomeData.data} onExplanationClick={goToExplanation} />
+            )}
           </StackItem>
         </Stack>
       </PageSection>

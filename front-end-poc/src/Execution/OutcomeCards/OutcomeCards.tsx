@@ -15,13 +15,12 @@ import { v4 as uuid } from "uuid";
 import FormattedValue from "../../Shared/components/FormattedValue/FormattedValue";
 import EvaluationStatus from "../../Explanation/EvaluationStatus/EvaluationStatus";
 import { LongArrowAltRightIcon } from "@patternfly/react-icons";
-import { RemoteData } from "../../Shared/types";
 import { IItemObject, isIItemObjectArray, isIItemObjectMultiArray } from "../../InputData/types";
 import { evaluationStatusStrings, IOutcome } from "../../Outcome/types";
 import "./OutcomeCards.scss";
 
 type OutcomeCardsProps = {
-  data: RemoteData<Error, IOutcome[]>;
+  data: IOutcome[];
   onExplanationClick: (outcomeId: string) => void;
 };
 
@@ -30,9 +29,9 @@ const OutcomeCards = (props: OutcomeCardsProps) => {
 
   return (
     <>
-      {data.status === "SUCCESS" && (
+      {data.length && (
         <Gallery className="outcome-cards" hasGutter>
-          {data.data.map((item) =>
+          {data.map((item) =>
             renderOutcome(
               item.outcomeResult,
               item.outcomeName,
