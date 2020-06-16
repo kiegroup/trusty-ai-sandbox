@@ -1115,57 +1115,6 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@kogito-tooling/core-api@0.5.0", "@kogito-tooling/core-api@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@kogito-tooling/core-api/-/core-api-0.5.0.tgz#2b508939660698012c47d8213686e89280a48e2f"
-  integrity sha512-W22Hym7KXZo5dnUk8rx6nJDg/gC60Q++SzAdhZ2n7QpMt4rSD365gm6fpUpUcPd4DyY9vgxl9sGB6tXP9VFjug==
-  dependencies:
-    react "16.12.0"
-    react-dom "16.12.0"
-
-"@kogito-tooling/embedded-editor@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@kogito-tooling/embedded-editor/-/embedded-editor-0.5.0.tgz#3aa0d6b74101ab4f02f6b8324e726e94f3157c41"
-  integrity sha512-U6HTZ1kbZswDdQuNOHbwSsYEJchv7akoaANC0KNckZHrDcrvTW5ghy4ILXZ2Y+MwW/nKCc4X3XYt7x6+aY81gw==
-  dependencies:
-    "@kogito-tooling/core-api" "0.5.0"
-    "@kogito-tooling/kie-bc-editors" "0.5.0"
-    "@kogito-tooling/microeditor-envelope" "0.5.0"
-    "@kogito-tooling/microeditor-envelope-protocol" "0.5.0"
-
-"@kogito-tooling/kie-bc-editors@0.5.0", "@kogito-tooling/kie-bc-editors@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@kogito-tooling/kie-bc-editors/-/kie-bc-editors-0.5.0.tgz#3c41987c94f8a4eaca7f84454d12b98aae21ba5b"
-  integrity sha512-Zw4iY44pPUOLj7GQu8fLB6ARdidYlszGEtDd6xPn8+ccu7/NFcNenNKp1pl0DspwjKJ8uVxa+ln4qKGeLzUVjg==
-  dependencies:
-    "@kogito-tooling/core-api" "0.5.0"
-    "@kogito-tooling/microeditor-envelope" "0.5.0"
-
-"@kogito-tooling/microeditor-envelope-protocol@0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@kogito-tooling/microeditor-envelope-protocol/-/microeditor-envelope-protocol-0.5.0.tgz#53ddaacf3fe986e798c8b5f9cff203f7a3408b81"
-  integrity sha512-89QSVOYiYN+WOKEJeZ3Rypt390Y6VSEp+k5wI/N/OhSyA58tRpAEDXTPUXuzQFfUzCDY6S2j5O78Vl6S8smWqQ==
-  dependencies:
-    "@kogito-tooling/core-api" "0.5.0"
-
-"@kogito-tooling/microeditor-envelope@0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@kogito-tooling/microeditor-envelope/-/microeditor-envelope-0.5.0.tgz#4bb782bf32d176b475d6acd4f9da155632f0ac2a"
-  integrity sha512-7ja41VOVl7WkJoaZgBLTlMt2tGJVmPmOwkNH04EsHkzkrNXxvwnvTvzs4tAxGiy2ZpOThL6iAETYf8TCXXjVYw==
-  dependencies:
-    "@kogito-tooling/core-api" "0.5.0"
-    "@kogito-tooling/microeditor-envelope-protocol" "0.5.0"
-    "@kogito-tooling/patternfly-base" "0.5.0"
-
-"@kogito-tooling/patternfly-base@0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@kogito-tooling/patternfly-base/-/patternfly-base-0.5.0.tgz#e9934f3906c87cb420a531da0f0e6c34bee4f62a"
-  integrity sha512-DLv583NJvIp/ApPxNCB2t/PfcUd+tA2cKED5XuA+4hd48Myg+JLon929JFDOsfjwO/c3GyisayDl/7LT1FEE7g==
-  dependencies:
-    "@patternfly/patternfly" "2.71.5"
-    "@patternfly/react-core" "3.153.13"
-    "@patternfly/react-icons" "3.15.16"
-
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -10036,7 +9985,7 @@ react-dev-utils@^10.1.0:
     strip-ansi "6.0.0"
     text-table "0.2.0"
 
-react-dom@16.12.0, react-dom@^16.12.0:
+react-dom@^16.12.0:
   version "16.12.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.12.0.tgz#0da4b714b8d13c2038c9396b54a92baea633fe11"
   integrity sha512-LMxFfAGrcS3kETtQaCkTKjMiifahaMySFDn71fZUNpPHZQEzmk/GiAeIT8JSOrHB23fnuCOMruL2a8NYlw+8Gw==
@@ -10212,7 +10161,7 @@ react-transition-group@^4.4.1:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react@16.12.0, react@^16.12.0:
+react@^16.12.0:
   version "16.12.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.12.0.tgz#0c0a9c6a142429e3614834d5a778e18aa78a0b83"
   integrity sha512-fglqy3k5E+81pA8s+7K0/T3DBCF0ZDOher1elBFzF7O6arXJgzyu/FW+COxFvAWXJoJN9KIZbT2LXlukwphYTA==
