@@ -6,6 +6,8 @@ import {
   NavList,
   PageSection,
   PageSectionVariants,
+  Stack,
+  StackItem,
   TextContent,
   Title,
 } from "@patternfly/react-core";
@@ -16,7 +18,7 @@ import { IExecutionModelResponse } from "../types";
 import ExplanationView from "../../Explanation/ExplanationView/ExplanationView";
 import InputDataView from "../../InputData/InputDataView/InputDataView";
 import ModelLookup from "../../ModelLookup/ModelLookup";
-import { ExecutionType, getExecution } from "../../Shared/api/audit.api";
+import { ExecutionType, getDecisionOutcome, getExecution } from "../../Shared/api/audit.api";
 import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
 import { IExecution, IExecutionRouteParams } from "../types";
 import { getModelDetail } from "../../Shared/api/audit.api";
@@ -24,17 +26,20 @@ import DecisionDetailAlt from "../../Execution/DecisionDetailAlt";
 import ExecutionStatus from "../ExecutionStatus/ExecutionStatus";
 import { UserIcon } from "@patternfly/react-icons";
 import "./AuditDetail.scss";
+import { RemoteData } from "../../Shared/types";
+import { IOutcome } from "../../Outcome/types";
+import SkeletonStripes from "../../Shared/skeletons/SkeletonStripes";
+import SkeletonCards from "../../Shared/skeletons/SkeletonCards/SkeletonCards";
 
 const AuditDetail = () => {
   let { path, url } = useRouteMatch();
   let location = useLocation();
-  let thirdLevelNav = [
-    { url: "/outcomes", desc: "Outcomes" },
-    { url: "/input-data", desc: "Input Data" },
-    { url: "/model-lookup", desc: "Model Lookup" },
-  ];
   const { executionId, executionType } = useParams<IExecutionRouteParams>();
   const [executionData, setExecutionData] = useState<IExecution | null>(null);
+  const [outcome, setOutcome] = useState<RemoteData<Error, IOutcome[]>>({
+    status: "NOT_ASKED",
+  });
+  const [thirdLevelNav, setThirdLevelNav] = useState<{ url: string; desc: string }[]>([]);
 
   const formatDate = (date: string) => {
     const d = new Date(date);
@@ -77,6 +82,45 @@ const AuditDetail = () => {
     };
   }, [executionId]);
 
+  useEffect(() => {
+    let isMounted = true;
+    setOutcome({ status: "LOADING" });
+    if (executionId) {
+      getDecisionOutcome(executionId)
+        .then((response) => {
+          if (isMounted) {
+            setOutcome({
+              status: "SUCCESS",
+              data: response.data.outcomes,
+            });
+          }
+        })
+        .catch((error) => {
+          setOutcome({ status: "FAILURE", error: error });
+        });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [executionId]);
+
+  useEffect(() => {
+    if (outcome.status === "SUCCESS") {
+      const newNav = [];
+      if (outcome.data.length === 1) {
+        newNav.push({
+          url: `/outcome-details/${outcome.data[0].outcomeId}`,
+          desc: "Outcome Details",
+        });
+      } else {
+        newNav.push({ url: "/outcomes", desc: "Outcomes" });
+      }
+      newNav.push({ url: "/input-data", desc: "Input Data" });
+      newNav.push({ url: "/model-lookup", desc: "Model Lookup" });
+      setThirdLevelNav(newNav);
+    }
+  }, [outcome]);
+
   return (
     <>
       <PageSection variant={PageSectionVariants.light}>
@@ -105,42 +149,78 @@ const AuditDetail = () => {
                 {executionData === null && (
                   <SkeletonInlineStripe customStyle={{ height: "1.5em", verticalAlign: "baseline" }} />
                 )}
-                <Title size="xl" headingLevel="h3">
-                  {executionData !== null && (
+
+                {executionData !== null && (
+                  <Title size="xl" headingLevel="h3">
                     <span>
                       <UserIcon className="audit-detail__executor__icon" />
                       Executed by {executionData.executorName}
                     </span>
-                  )}
-                </Title>
+                  </Title>
+                )}
               </FlexItem>
             </Flex>
           </Flex>
         </TextContent>
-        <Nav className="audit-detail__nav" variant="tertiary">
-          <NavList>
-            {thirdLevelNav.map((item, index) => (
-              <NavItem key={`sub-nav-${index}`} isActive={location.pathname === url + item.url}>
-                <Link to={url + item.url}>{item.desc}</Link>
-              </NavItem>
-            ))}
-          </NavList>
-        </Nav>
+
+        {thirdLevelNav.length === 0 && (
+          <div className="audit-detail__nav">
+            <SkeletonStripes stripesNumber={3} stripesHeight={1.5} stripesWidth={120} isPadded={false} />
+          </div>
+        )}
+        {thirdLevelNav.length > 0 && (
+          <Nav className="audit-detail__nav" variant="tertiary">
+            <NavList>
+              {thirdLevelNav.map((item, index) => (
+                <NavItem key={`sub-nav-${index}`} isActive={location.pathname === url + item.url}>
+                  <Link to={url + item.url}>{item.desc}</Link>
+                </NavItem>
+              ))}
+            </NavList>
+          </Nav>
+        )}
       </PageSection>
+
       <Switch>
+        <Route path={`${path}/outcome-details/:outcomeId`}>
+          <ExplanationView />
+        </Route>
+
         <Route path={`${path}/outcomes/:outcomeId`}>
           <ExplanationView />
         </Route>
         <Route path={`${path}/outcomes`}>
           <DecisionDetailAlt model={model} executionData={executionData} />
         </Route>
+
         <Route path={`${path}/input-data`}>
           <InputDataView />
         </Route>
         <Route path={`${path}/model-lookup`}>
           <ModelLookup model={model} />
         </Route>
-        <Redirect exact from={path} to={`${location.pathname}/outcomes`} />} />
+        <Route exact path={`${path}/`}>
+          {outcome.status === "SUCCESS" && outcome.data.length === 1 && (
+            <Redirect exact from={path} to={`${location.pathname}/outcome-details/${outcome.data[0].outcomeId}`} />
+          )}
+          {outcome.status === "SUCCESS" && outcome.data.length > 1 && (
+            <Redirect exact from={path} to={`${location.pathname}/outcomes`} />
+          )}
+          {outcome.status === "LOADING" && (
+            <>
+              <PageSection>
+                <Stack hasGutter>
+                  <StackItem>
+                    <SkeletonInlineStripe customStyle={{ height: "1.5em" }} />
+                  </StackItem>
+                  <StackItem>
+                    <SkeletonCards quantity={2} />
+                  </StackItem>
+                </Stack>
+              </PageSection>
+            </>
+          )}
+        </Route>
       </Switch>
     </>
   );

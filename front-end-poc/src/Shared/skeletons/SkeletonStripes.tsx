@@ -5,15 +5,17 @@ type ownProps = {
   stripesNumber: number;
   stripesWidth: number;
   stripesHeight: number;
+  isPadded?: boolean;
 };
 
 const SkeletonStripes = (props: ownProps) => {
-  const { stripesNumber, stripesWidth, stripesHeight } = props;
+  const { stripesNumber, stripesWidth, stripesHeight, isPadded = true } = props;
   const stripes = [];
   const stripeStyle = {
     width: stripesWidth,
     height: stripesHeight + "em",
   };
+  const className = isPadded ? "skeleton skeleton--padded" : "skeleton";
   for (let i = 0; i < stripesNumber; i++) {
     stripes.push(
       <FlexItem key={`skeleton-${i}`}>
@@ -21,7 +23,7 @@ const SkeletonStripes = (props: ownProps) => {
       </FlexItem>
     );
   }
-  return <Flex className="skeleton skeleton--padded">{stripes}</Flex>;
+  return <Flex className={className}>{stripes}</Flex>;
 };
 
 export default SkeletonStripes;

@@ -519,7 +519,16 @@ const outcome = [
       executionType: "DECISION",
       executorName: "Technical User",
     },
-    outcomes: twoSimpleOutcomes,
+    outcomes: [
+      {
+        outcomeId: "_9CFF8C35-4EB3-451E-874C-DB27A5A424C0",
+        outcomeName: "Risk Score",
+        evaluationStatus: "SUCCEEDED",
+        outcomeResult: { name: "Risk Score", typeRef: "number", value: 21.7031851958099, components: null },
+        messages: [],
+        hasErrors: false,
+      },
+    ],
   },
   {
     header: {

@@ -8,12 +8,14 @@ const routes = [
   { path: "/dashboard", breadcrumb: "Domain Monitoring Dashboard" },
   { path: "/op-dashboard", breadcrumb: "Operational Monitoring Dashboard" },
   { path: "/audit", breadcrumb: "Audit Investigation" },
-  { path: "/audit/:executionType/:id/outcomes/:outcomeId", breadcrumb: "Outcome Detail" },
+  { path: "/audit/:executionType/:id/outcomes/:outcomeId", breadcrumb: "Outcome Details" },
+  // the following route is needed to display a dedicated breadcrumb path for executions with only 1 outcome
+  { path: "/audit/:executionType/:id/outcome-details/:outcomeId", breadcrumb: "Outcome Details" },
   { path: "/audit/:executionType/:id/model-lookup", breadcrumb: "Model Lookup" },
   { path: "/audit/:executionType/:id/input-data", breadcrumb: "Input Data" },
   { path: "/audit/:executionType/:id", breadcrumb: "Execution Detail" },
 ];
-const excludePaths = ["/audit/:executionType"];
+const excludePaths = ["/audit/:executionType", "/audit/:executionType/:id/outcome-details/"];
 
 const BreadcrumbList = withBreadcrumbs(routes, { excludePaths })(({ breadcrumbs }) => {
   return (
