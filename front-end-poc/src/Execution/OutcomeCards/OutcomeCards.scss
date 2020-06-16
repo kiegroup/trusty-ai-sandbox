@@ -8,14 +8,6 @@
       @extend .outcome-cards__card;
       background-color: #f3f3f3;
     }
-    &__explanation-link {
-      visibility: hidden;
-    }
-    &:hover {
-      .outcome-cards__card__explanation-link {
-        visibility: visible;
-      }
-    }
   }
   .outcome {
     margin-bottom: var(--pf-global--spacer--md);

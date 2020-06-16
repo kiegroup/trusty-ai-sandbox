@@ -8,6 +8,7 @@ import {
   FastForwardIcon,
 } from "@patternfly/react-icons";
 import "./EvaluationStatus.scss";
+import { Label } from "@patternfly/react-core";
 
 type EvaluationStatusProps = {
   status: evaluationStatusStrings;
@@ -16,30 +17,40 @@ type EvaluationStatusProps = {
 const EvaluationStatus = (props: EvaluationStatusProps) => {
   const { status } = props;
   const label = evaluationStatus[status];
-  let icon;
   switch (status) {
     case "EVALUATING":
-      icon = <HourglassHalfIcon className="evaluation-status-badge--pending" />;
-      break;
+      return (
+        <Label color="orange" icon={<HourglassHalfIcon />}>
+          {label}
+        </Label>
+      );
     case "FAILED":
-      icon = <ErrorCircleOIcon className="evaluation-status-badge--failure" />;
-      break;
+      return (
+        <Label color="red" icon={<ErrorCircleOIcon />}>
+          {label}
+        </Label>
+      );
     case "SKIPPED":
-      icon = <FastForwardIcon className="evaluation-status-badge--failure" />;
-      break;
+      return (
+        <Label color="red" icon={<FastForwardIcon />}>
+          {label}
+        </Label>
+      );
     case "NOT_EVALUATED":
-      icon = <MinusCircleIcon className="evaluation-status-badge--failure" />;
-      break;
+      return (
+        <Label color="red" icon={<MinusCircleIcon />}>
+          {label}
+        </Label>
+      );
     case "SUCCEEDED":
-      icon = <CheckCircleIcon className="evaluation-status-badge--success" />;
-      break;
+      return (
+        <Label color="green" icon={<CheckCircleIcon />}>
+          {label}
+        </Label>
+      );
+    default:
+      return <span>{label}</span>;
   }
-  return (
-    <span>
-      {icon}
-      <span>{label}</span>
-    </span>
-  );
 };
 
 export default EvaluationStatus;

@@ -70,7 +70,7 @@ const renderOutcome = (
         evaluationStatus={evaluationStatus}
         outcomeId={outcomeId}
         onExplanationClick={onExplanationClick}>
-        <span>There were problems</span>
+        <span />
       </CardWrapper>
     );
   }
@@ -127,28 +127,26 @@ const CardWrapper = (props: {
               {name}
             </Title>
           </CardHeader>
-          <CardBody>{children}</CardBody>
+          <CardBody>
+            {evaluationStatus !== undefined && evaluationStatus !== "SUCCEEDED" && (
+              <div>
+                <EvaluationStatus status={evaluationStatus} />
+              </div>
+            )}
+            <div>{children}</div>
+          </CardBody>
           <CardFooter>
-            <Split>
-              {evaluationStatus !== undefined && (
-                <SplitItem isFilled>
-                  <EvaluationStatus status={evaluationStatus} />
-                </SplitItem>
-              )}
-              {outcomeId && onExplanationClick && (
-                <SplitItem>
-                  <Button
-                    variant="link"
-                    isInline
-                    className="outcome-cards__card__explanation-link"
-                    onClick={() => {
-                      onExplanationClick(outcomeId);
-                    }}>
-                    View Details <LongArrowAltRightIcon />
-                  </Button>
-                </SplitItem>
-              )}
-            </Split>
+            {outcomeId && onExplanationClick && (
+              <Button
+                variant="link"
+                isInline
+                className="outcome-cards__card__explanation-link"
+                onClick={() => {
+                  onExplanationClick(outcomeId);
+                }}>
+                View Details <LongArrowAltRightIcon />
+              </Button>
+            )}
           </CardFooter>
         </Card>
       </GalleryItem>
