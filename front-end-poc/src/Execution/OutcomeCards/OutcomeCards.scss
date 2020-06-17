@@ -21,6 +21,11 @@
         font-weight: 600;
         padding-right: 1em;
       }
+      &__value {
+        &--bigger {
+          font-size: 2em;
+        }
+      }
     }
   }
   .outcome .outcome {
