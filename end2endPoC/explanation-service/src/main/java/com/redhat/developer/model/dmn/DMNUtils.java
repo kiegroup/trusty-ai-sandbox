@@ -41,7 +41,7 @@ public class DMNUtils {
     public static List<Output> getFlatBuiltInOutputs(TypedData input) {
         List<Output> features = new ArrayList<>();
         if (input.typeRef.equals("string")) {
-            features.add(new Output(input.inputName, Type.STRING, new Value<>((String) input.value), 0));
+            features.add(new Output(input.inputName, Type.TEXT, new Value<>((String) input.value), 0));
             return features;
         }
         if (input.typeRef.equals("number")) {
@@ -60,7 +60,7 @@ public class DMNUtils {
     public static List<Feature> getFlatBuiltInInput(TypedData input) {
         List<Feature> features = new ArrayList<>();
         if (input.typeRef.equals("string")) {
-            features.add(new Feature(input.inputName, Type.STRING, new Value<>((String) input.value)));
+            features.add(new Feature(input.inputName, Type.TEXT, new Value<>((String) input.value)));
             return features;
         }
         if (input.typeRef.equals("number")) {

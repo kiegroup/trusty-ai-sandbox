@@ -111,6 +111,12 @@
       <version>${org.kie.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>kie-pmml-models-drools-common</artifactId>
+      <version>${org.kie.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

@@ -180,7 +180,7 @@ public class ExplanationTestUtils {
                 for (PredictionInput input : inputs) {
                     boolean spam = false;
                     for (Feature f : input.getFeatures()) {
-                        if (!spam && Type.STRING.equals(f.getType())) {
+                        if (!spam && Type.TEXT.equals(f.getType())) {
                             String s = f.getValue().asString();
                             String[] words = s.split(" ");
                             Arrays.sort(words);
@@ -204,9 +204,9 @@ public class ExplanationTestUtils {
             @Override
             public PredictionInput getInputShape() {
                 List<Feature> features = new LinkedList<>();
-                features.add(new Feature("f1", Type.STRING, new Value<>(Double.NaN)));
-                features.add(new Feature("f2", Type.STRING, new Value<>(Double.NaN)));
-                features.add(new Feature("f3", Type.STRING, new Value<>(Double.NaN)));
+                features.add(new Feature("f1", Type.TEXT, new Value<>(Double.NaN)));
+                features.add(new Feature("f2", Type.TEXT, new Value<>(Double.NaN)));
+                features.add(new Feature("f3", Type.TEXT, new Value<>(Double.NaN)));
                 return new PredictionInput(features);
             }
 

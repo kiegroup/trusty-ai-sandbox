@@ -179,7 +179,7 @@ public class DataUtils {
         Value<?> value = null;
         Type type = feature.getType();
         switch (type) {
-            case STRING:
+            case TEXT:
                 // randomly drop entire string or parts of it
                 if (random.nextBoolean()) {
                     String stringValue = feature.getValue().asString();

@@ -169,9 +169,9 @@ public class LIMEishExplainer implements LocalExplainer<Saliency> {
     private List<Feature> getOutputFeatures(List<Feature> inputFeatures) {
         List<Feature> outputFeatures = new LinkedList<>();
         for (Feature f : inputFeatures) {
-            if (Type.STRING.equals(f.getType())) {
+            if (Type.TEXT.equals(f.getType())) {
                 for (String w : f.getValue().asString().split(" ")) {
-                    Feature outputFeature = new Feature(w + " (" + f.getName() + ")", Type.STRING, new Value<>(w));
+                    Feature outputFeature = new Feature(w + " (" + f.getName() + ")", Type.TEXT, new Value<>(w));
                     outputFeatures.add(outputFeature);
                 }
             } else {
@@ -191,7 +191,7 @@ public class LIMEishExplainer implements LocalExplainer<Saliency> {
                 // convert values for this feature into numbers
                 Feature originalFeature = originalInputs.getFeatures().get(t);
                 switch (featureTypes.get(t)) {
-                    case STRING:
+                    case TEXT:
                         String originalString = originalFeature.getValue().asString();
                         String[] words = originalString.split(" ");
                         for (String word : words) {

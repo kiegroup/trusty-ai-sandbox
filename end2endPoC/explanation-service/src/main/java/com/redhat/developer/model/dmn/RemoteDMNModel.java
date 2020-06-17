@@ -129,7 +129,7 @@ public class RemoteDMNModel implements Model {
         }
 
         if (value instanceof String) {
-            result.add(new Output(key, Type.STRING, new Value<>((String) value), 0));
+            result.add(new Output(key, Type.TEXT, new Value<>((String) value), 0));
             return result;
         }
 

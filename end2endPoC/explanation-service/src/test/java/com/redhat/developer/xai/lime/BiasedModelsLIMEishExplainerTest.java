@@ -1,14 +1,12 @@
 package com.redhat.developer.xai.lime;
 
 import java.security.SecureRandom;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.redhat.developer.model.Feature;
 import com.redhat.developer.model.FeatureImportance;
 import com.redhat.developer.model.Model;
-import com.redhat.developer.model.Output;
 import com.redhat.developer.model.Prediction;
 import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.PredictionOutput;
@@ -17,11 +15,9 @@ import com.redhat.developer.model.Type;
 import com.redhat.developer.model.Value;
 import com.redhat.developer.utils.DataUtils;
 import com.redhat.developer.xai.ExplanationTestUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -104,9 +100,9 @@ public class BiasedModelsLIMEishExplainerTest {
     @RepeatedTest(10)
     public void testTextSpamClassification() {
         List<Feature> features = new LinkedList<>();
-        features.add(new Feature("f1", Type.STRING, new Value<>("we go here and there")));
-        features.add(new Feature("f2", Type.STRING, new Value<>("please give me some money")));
-        features.add(new Feature("f3", Type.STRING, new Value<>("dear friend, please reply")));
+        features.add(new Feature("f1", Type.TEXT, new Value<>("we go here and there")));
+        features.add(new Feature("f2", Type.TEXT, new Value<>("please give me some money")));
+        features.add(new Feature("f3", Type.TEXT, new Value<>("dear friend, please reply")));
         PredictionInput input = new PredictionInput(features);
         Model model = ExplanationTestUtils.getTextClassifier();
         List<PredictionOutput> outputs = model.predict(List.of(input));

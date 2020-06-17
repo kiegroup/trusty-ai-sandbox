@@ -4,5 +4,8 @@
   <kbase name="LogisticRegressionIrisData" packages="logisticregressionirisdata">
     <ksession name="LogisticRegressionIrisDataSession" type="stateless" />
   </kbase>
+  <kbase name="categoricalVariables_Model" packages="categoricalvariablesregression">
+    <ksession name="categoricalVariables_ModelSession" type="stateless" />
+  </kbase>
 
 </kmodule>

@@ -2,7 +2,9 @@ package com.redhat.developer.model;
 
 public enum Type {
 
-    STRING("string"),
+    TEXT("text"),
+
+    CATEGORICAL("categorical"),
 
     BINARY("binary"),
 
