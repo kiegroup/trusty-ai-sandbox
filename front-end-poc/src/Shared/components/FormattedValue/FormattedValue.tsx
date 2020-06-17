@@ -35,6 +35,7 @@ type FormattedValueProps = {
 const FormattedValue = (props: FormattedValueProps) => {
   const { value } = props;
   let formattedValue;
+  let className = "formatted-value";
 
   switch (typeof value) {
     case "number":
@@ -44,6 +45,7 @@ const FormattedValue = (props: FormattedValueProps) => {
       break;
     case "boolean":
       formattedValue = value.toString();
+      className += " formatted-value--capitalize";
       break;
     case "object":
       if (Array.isArray(value)) {
@@ -55,7 +57,7 @@ const FormattedValue = (props: FormattedValueProps) => {
       break;
   }
 
-  return <span className="formatted-value">{formattedValue}</span>;
+  return <span className={className}>{formattedValue}</span>;
 };
 
 export default FormattedValue;

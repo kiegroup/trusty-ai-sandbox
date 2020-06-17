@@ -84,7 +84,12 @@ const renderOutcome = (
         evaluationStatus={evaluationStatus}
         outcomeId={outcomeId}
         onExplanationClick={onExplanationClick}>
-        <OutcomeProperty property={outcomeData} key={outcomeData.name} hidePropertyName={rootLevel} />
+        <OutcomeProperty
+          property={outcomeData}
+          key={outcomeData.name}
+          hidePropertyName={rootLevel}
+          bigOutcome={rootLevel}
+        />
       </CardWrapper>
     );
   }
@@ -256,11 +261,18 @@ const OutcomeComposed = (props: { outcome: IItemObject; compact: boolean; name: 
   );
 };
 
-const OutcomeProperty = (props: { property: IItemObject; hidePropertyName?: boolean }) => {
-  const { property, hidePropertyName = false } = props;
+const OutcomeProperty = (props: { property: IItemObject; hidePropertyName?: boolean; bigOutcome?: boolean }) => {
+  const { property, hidePropertyName = false, bigOutcome = false } = props;
+  const basicTypes = ["string", "number", "boolean"];
 
-  return (
-    <>
+  if (basicTypes.includes(typeof property.value) && bigOutcome)
+    return (
+      <div className="outcome__property__value--bigger">
+        <FormattedValue value={property.value} />
+      </div>
+    );
+  else
+    return (
       <Split key={uuid()} className="outcome__property">
         <SplitItem className="outcome__property__name" key="property-name">
           {hidePropertyName ? "Result" : property.name}:
@@ -269,6 +281,5 @@ const OutcomeProperty = (props: { property: IItemObject; hidePropertyName?: bool
           <FormattedValue value={property.value} />
         </SplitItem>
       </Split>
-    </>
-  );
+    );
 };

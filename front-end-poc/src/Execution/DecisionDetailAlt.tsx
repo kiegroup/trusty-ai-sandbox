@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback } from "react";
 import { PageSection, Stack, StackItem, Title } from "@patternfly/react-core";
 import { IExecution, IExecutionModelResponse } from "../Audit/types";
 import OutcomeCards from "./OutcomeCards/OutcomeCards";
-import { getDecisionOutcome } from "../Shared/api/audit.api";
 import { RemoteData } from "../Shared/types";
 import { IOutcome } from "../Outcome/types";
 import { useHistory } from "react-router-dom";
@@ -10,45 +9,22 @@ import "./DecisionDetailAlt.scss";
 import SkeletonCards from "../Shared/skeletons/SkeletonCards/SkeletonCards";
 
 type DecisionDetailAltProps = {
-  executionData: IExecution | null;
+  execution: RemoteData<Error, IExecution>;
+  outcome: RemoteData<Error, IOutcome[]>;
   model: IExecutionModelResponse;
 };
 
 const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
-  const { executionData, model } = props;
-  const [outcomeData, setOutcomeData] = useState<RemoteData<Error, IOutcome[]>>({
-    status: "NOT_ASKED",
-  });
+  const { execution, model, outcome } = props;
+
   const history = useHistory();
-  console.log(model.name);
+  console.log(model.name, execution);
   const goToExplanation = useCallback(
     (outcomeId: string) => {
       history.push(`outcomes/${outcomeId}`);
     },
     [history]
   );
-
-  useEffect(() => {
-    let isMounted = true;
-    setOutcomeData({ status: "LOADING" });
-    if (executionData) {
-      getDecisionOutcome(executionData.executionId)
-        .then((response) => {
-          if (isMounted) {
-            setOutcomeData({
-              status: "SUCCESS",
-              data: response.data.outcomes,
-            });
-          }
-        })
-        .catch((error) => {
-          setOutcomeData({ status: "FAILURE", error: error });
-        });
-    }
-    return () => {
-      isMounted = false;
-    };
-  }, [executionData]);
 
   return (
     <section className="decision-detail-view">
@@ -60,10 +36,8 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
             </Title>
           </StackItem>
           <StackItem>
-            {outcomeData.status === "LOADING" && <SkeletonCards quantity={2} />}
-            {outcomeData.status === "SUCCESS" && (
-              <OutcomeCards data={outcomeData.data} onExplanationClick={goToExplanation} />
-            )}
+            {outcome.status === "LOADING" && <SkeletonCards quantity={2} />}
+            {outcome.status === "SUCCESS" && <OutcomeCards data={outcome.data} onExplanationClick={goToExplanation} />}
           </StackItem>
         </Stack>
       </PageSection>
