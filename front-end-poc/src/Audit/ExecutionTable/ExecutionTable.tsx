@@ -1,10 +1,11 @@
 import React from "react";
-import { IRow, Table, TableBody, TableHeader } from "@patternfly/react-table";
 import { Link } from "react-router-dom";
+import { IRow, Table, TableBody, TableHeader } from "@patternfly/react-table";
 import { Bullseye, EmptyState, EmptyStateBody, EmptyStateIcon, Title } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
 import ExecutionStatus from "../ExecutionStatus/ExecutionStatus";
 import SkeletonRows from "../../Shared/skeletons/SkeletonRows";
+import FormattedDate from "../../Shared/components/FormattedDate/FormattedDate";
 import { IExecution } from "../types";
 import { RemoteData } from "../../Shared/types";
 
@@ -27,7 +28,9 @@ const prepareExecutionTableRows = (rowData: IExecution[]) => {
     });
     cells.push(item.executedModelName);
     cells.push(item.executorName);
-    cells.push(new Date(item.executionDate).toLocaleString());
+    cells.push({
+      title: <FormattedDate date={item.executionDate} />,
+    });
     cells.push({
       title: <ExecutionStatus result={item.executionSucceeded} />,
     });

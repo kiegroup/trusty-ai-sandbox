@@ -9,7 +9,16 @@ const featureImportance = require("./mocks/featureImportance");
 let generateFakeAPIs = () => {
   let decisionsList = [];
 
-  for (let id = 1000; id < 1010; id++) {
+  decisionsList.push({
+    executionId: 1000,
+    executionDate: faker.date.recent(),
+    executionType: "DECISION",
+    executedModelName: "fraud-score",
+    executionSucceeded: true,
+    executorName: "Technical User",
+  });
+
+  for (let id = 1001; id < 1010; id++) {
     let executionDate = faker.date.past();
 
     decisionsList.push({

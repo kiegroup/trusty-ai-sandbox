@@ -13,44 +13,36 @@ import {
 } from "@patternfly/react-core";
 import React, { useEffect, useState } from "react";
 import { Link, Redirect, Route, Switch, useLocation, useParams, useRouteMatch } from "react-router-dom";
+import { ExecutionType, getDecisionOutcome, getExecution } from "../../Shared/api/audit.api";
+import { getModelDetail } from "../../Shared/api/audit.api";
 import { IExecutionModelResponse } from "../types";
+import { IExecution, IExecutionRouteParams } from "../types";
+import { RemoteData } from "../../Shared/types";
+import { IOutcome } from "../../Outcome/types";
 //import DecisionDetail from "../../Execution/DecisionDetail";
 import ExplanationView from "../../Explanation/ExplanationView/ExplanationView";
 import InputDataView from "../../InputData/InputDataView/InputDataView";
 import ModelLookup from "../../ModelLookup/ModelLookup";
-import { ExecutionType, getDecisionOutcome, getExecution } from "../../Shared/api/audit.api";
 import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
-import { IExecution, IExecutionRouteParams } from "../types";
-import { getModelDetail } from "../../Shared/api/audit.api";
 import DecisionDetailAlt from "../../Execution/DecisionDetailAlt";
 import ExecutionStatus from "../ExecutionStatus/ExecutionStatus";
 import { UserIcon } from "@patternfly/react-icons";
-import "./AuditDetail.scss";
-import { RemoteData } from "../../Shared/types";
-import { IOutcome } from "../../Outcome/types";
 import SkeletonStripes from "../../Shared/skeletons/SkeletonStripes";
 import SkeletonCards from "../../Shared/skeletons/SkeletonCards/SkeletonCards";
+import FormattedDate from "../../Shared/components/FormattedDate/FormattedDate";
+import "./AuditDetail.scss";
 
 const AuditDetail = () => {
   let { path, url } = useRouteMatch();
   let location = useLocation();
   const { executionId, executionType } = useParams<IExecutionRouteParams>();
-  const [executionData, setExecutionData] = useState<IExecution | null>(null);
+  const [execution, setExecution] = useState<RemoteData<Error, IExecution>>({
+    status: "NOT_ASKED",
+  });
   const [outcome, setOutcome] = useState<RemoteData<Error, IOutcome[]>>({
     status: "NOT_ASKED",
   });
   const [thirdLevelNav, setThirdLevelNav] = useState<{ url: string; desc: string }[]>([]);
-
-  const formatDate = (date: string) => {
-    const d = new Date(date);
-    const y = d.getFullYear();
-    const mm = d.getMonth() + 1;
-    const dd = d.getDate();
-    const h = d.getHours();
-    const m = (d.getMinutes() < 10 ? "0" : "") + d.getMinutes();
-    return `${mm}/${dd}/${y}, ${h}:${m}`;
-  };
-
   const [model, setModel] = useState<IExecutionModelResponse>({
     name: "",
     namespace: "",
@@ -60,11 +52,20 @@ const AuditDetail = () => {
   });
 
   useEffect(() => {
+    let isMounted = true;
+    setExecution({ status: "LOADING" });
     getExecution(executionType as ExecutionType, executionId)
       .then((response) => {
-        setExecutionData(response.data);
+        if (isMounted) {
+          setExecution({ status: "SUCCESS", data: response.data });
+        }
       })
-      .catch(() => {});
+      .catch((error) => {
+        setExecution({ status: "FAILURE", error: error });
+      });
+    return () => {
+      isMounted = false;
+    };
   }, [executionType, executionId]);
 
   useEffect(() => {
@@ -135,26 +136,28 @@ const AuditDetail = () => {
             </Flex>
             <Flex>
               <FlexItem className="audit-detail__execution-time">
-                {executionData === null && (
+                {execution.status === "LOADING" && (
                   <SkeletonInlineStripe customStyle={{ height: "1.5em", verticalAlign: "baseline" }} />
                 )}
-                {executionData !== null && (
+                {execution.status === "SUCCESS" && (
                   <Title size="xl" headingLevel="h3">
-                    <ExecutionStatus result={executionData.executionSucceeded} /> on{" "}
-                    {formatDate(executionData.executionDate)}
+                    <ExecutionStatus result={execution.data.executionSucceeded} />
+                    <span> </span>
+                    <FormattedDate date={execution.data.executionDate} preposition={true} />
+                    {/*{formatDate(execution.data.executionDate)}*/}
                   </Title>
                 )}
               </FlexItem>
               <FlexItem className="audit-detail__executor">
-                {executionData === null && (
+                {execution.status === "LOADING" && (
                   <SkeletonInlineStripe customStyle={{ height: "1.5em", verticalAlign: "baseline" }} />
                 )}
 
-                {executionData !== null && (
+                {execution.status === "SUCCESS" && (
                   <Title size="xl" headingLevel="h3">
                     <span>
                       <UserIcon className="audit-detail__executor__icon" />
-                      Executed by {executionData.executorName}
+                      Executed by {execution.data.executorName}
                     </span>
                   </Title>
                 )}
@@ -190,7 +193,7 @@ const AuditDetail = () => {
           <ExplanationView />
         </Route>
         <Route path={`${path}/outcomes`}>
-          <DecisionDetailAlt model={model} executionData={executionData} />
+          <DecisionDetailAlt model={model} execution={execution} outcome={outcome} />
         </Route>
 
         <Route path={`${path}/input-data`}>
@@ -207,18 +210,16 @@ const AuditDetail = () => {
             <Redirect exact from={path} to={`${location.pathname}/outcomes`} />
           )}
           {outcome.status === "LOADING" && (
-            <>
-              <PageSection>
-                <Stack hasGutter>
-                  <StackItem>
-                    <SkeletonInlineStripe customStyle={{ height: "1.5em" }} />
-                  </StackItem>
-                  <StackItem>
-                    <SkeletonCards quantity={2} />
-                  </StackItem>
-                </Stack>
-              </PageSection>
-            </>
+            <PageSection>
+              <Stack hasGutter>
+                <StackItem>
+                  <SkeletonInlineStripe customStyle={{ height: "1.5em" }} />
+                </StackItem>
+                <StackItem>
+                  <SkeletonCards quantity={2} />
+                </StackItem>
+              </Stack>
+            </PageSection>
           )}
         </Route>
       </Switch>

@@ -24,6 +24,7 @@
     "@types/uuid": "^7.0.3",
     "@wikipathways/cxml": "^0.2.14",
     "axios": "^0.19.2",
+    "date-fns": "^2.14.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "enzyme-to-json": "^3.5.0",
