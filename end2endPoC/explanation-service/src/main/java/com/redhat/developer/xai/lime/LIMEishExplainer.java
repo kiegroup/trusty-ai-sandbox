@@ -155,7 +155,13 @@ public class LIMEishExplainer implements LocalExplainer<Saliency> {
                 if (Type.NUMBER.equals(originalOutput.getType()) || Type.BOOLEAN.equals(originalOutput.getType())) {
                     y = output.getValue().asNumber();
                 } else {
-                    y = originalOutput.getValue().getUnderlyingObject().equals(output.getValue().getUnderlyingObject()) ? 1d : 0d;
+                    Object originalObject = originalOutput.getValue().getUnderlyingObject();
+                    Object outputObject = output.getValue().getUnderlyingObject();
+                    if (originalObject == null || outputObject == null) {
+                        y = originalObject == outputObject ? 1d : 0d;
+                    } else {
+                        y = originalObject.equals(outputObject) ? 1d : 0d;
+                    }
                 }
                 Pair<double[], Double> sample = new ImmutablePair<>(x, y);
                 trainingSet.add(sample);

@@ -117,6 +117,24 @@
       <version>${org.kie.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>kie-pmml-models-drools-scorecard-model</artifactId>
+      <version>${org.kie.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>kie-pmml-models-drools-scorecard-compiler</artifactId>
+      <version>${org.kie.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>kie-pmml-models-drools-scorecard-evaluator</artifactId>
+      <version>${org.kie.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
