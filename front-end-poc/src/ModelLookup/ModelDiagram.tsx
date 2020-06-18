@@ -1,16 +1,15 @@
-import React from "react";
+import { ChannelType } from "@kogito-tooling/core-api";
+import { EditorType, EmbeddedEditorRouter, EmbeddedViewer, File } from "@kogito-tooling/embedded-editor";
+import { GwtEditorRoutes } from "@kogito-tooling/kie-bc-editors";
+import React, { useMemo } from "react";
 import { IExecutionModelResponse } from "../Audit/types";
 import { LinearRegressionViewer } from "./pmml/LinearRegressionViewer";
-import { File, EmbeddedViewer, EditorType, EmbeddedEditorRouter } from "@kogito-tooling/embedded-editor";
-import { ChannelType } from "@kogito-tooling/core-api";
-import { GwtEditorRoutes } from "@kogito-tooling/kie-bc-editors"
-import { useMemo } from "react";
 
 const DMN1_2: string = "http://www.omg.org/spec/DMN/20151101/dmn.xsd";
 const PMML4_4: string = "http://www.dmg.org/PMML-4_4";
 
-interface Props {
-  model: IExecutionModelResponse;
+type ModelDiagramProps = {
+  model: IExecutionModelResponse
 }
 
 function makeUnknownModel(): JSX.Element {
@@ -41,7 +40,7 @@ function makePMMLEditor(model: IExecutionModelResponse): JSX.Element {
 
 const DEFAULT: JSX.Element = makeUnknownModel();
 
-const ModelDiagram = (props: Props) => {
+const ModelDiagram = (props: ModelDiagramProps) => {
   const { model } = props;
   const type: string = model.type;
 

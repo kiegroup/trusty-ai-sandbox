@@ -49,20 +49,38 @@
     </dependencies>
     <build>
         <plugins>
+
+            <!-- CLEAN-UP -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>3.1.0</version>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>${project.basedir}/public/gwt-editors</directory>
-                        </fileset>
-                        <fileset>
-                            <directory>${project.basedir}/public/envelope</directory>
-                        </fileset>
-                    </filesets>
-                </configuration>
+                <executions>
+                    <execution>
+                        <id>Delete existing resources</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>${project.basedir}/public/gwt-editors</directory>
+                                </fileset>
+                                <fileset>
+                                    <directory>${project.basedir}/public/envelope</directory>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>Delete temporary resources created during yarn install</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- UNPACK -->
