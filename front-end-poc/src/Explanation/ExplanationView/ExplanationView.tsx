@@ -13,8 +13,8 @@ import {
   Title,
   Tooltip,
 } from "@patternfly/react-core";
-import { HelpIcon } from "@patternfly/react-icons";
-import { useParams, useHistory } from "react-router-dom";
+import { HelpIcon, LongArrowAltLeftIcon } from "@patternfly/react-icons";
+import { useParams, useHistory, Link } from "react-router-dom";
 import { IOutcomeRouteParams } from "../../Audit/types";
 import { IOutcome } from "../../Outcome/types";
 import { getDecisionFeatureScores, getDecisionOutcome, getDecisionOutcomeDetail } from "../../Shared/api/audit.api";
@@ -112,6 +112,13 @@ const ExplanationView = () => {
       <PageSection variant="default" className="explanation-view__section">
         <div className="container">
           <Stack hasGutter>
+            {outcomesList && outcomesList.length > 1 && (
+              <StackItem>
+                <Link to="../outcomes">
+                  <LongArrowAltLeftIcon /> Back to Outcome
+                </Link>
+              </StackItem>
+            )}
             <StackItem>
               <Title headingLevel="h3" size="2xl">
                 <span>Outcome Details</span>

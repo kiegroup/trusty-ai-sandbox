@@ -8,6 +8,7 @@ const routes = [
   { path: "/dashboard", breadcrumb: "Domain Monitoring Dashboard" },
   { path: "/op-dashboard", breadcrumb: "Operational Monitoring Dashboard" },
   { path: "/audit", breadcrumb: "Audit Investigation" },
+  { path: "/audit/:executionType/:id/outcomes", breadcrumb: "Outcome" },
   { path: "/audit/:executionType/:id/outcomes/:outcomeId", breadcrumb: "Outcome Details" },
   // the following route is needed to display a dedicated breadcrumb path for executions with only 1 outcome
   { path: "/audit/:executionType/:id/outcome-details/:outcomeId", breadcrumb: "Outcome Details" },

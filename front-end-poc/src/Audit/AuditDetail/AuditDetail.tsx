@@ -111,10 +111,10 @@ const AuditDetail = () => {
       if (outcome.data.length === 1) {
         newNav.push({
           url: `/outcome-details/${outcome.data[0].outcomeId}`,
-          desc: "Outcome Details",
+          desc: "Outcome",
         });
       } else {
-        newNav.push({ url: "/outcomes", desc: "Outcomes" });
+        newNav.push({ url: "/outcomes", desc: "Outcome" });
       }
       newNav.push({ url: "/input-data", desc: "Input Data" });
       newNav.push({ url: "/model-lookup", desc: "Model Lookup" });

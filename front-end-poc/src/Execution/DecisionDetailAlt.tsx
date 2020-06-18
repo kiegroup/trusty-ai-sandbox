@@ -32,7 +32,7 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
         <Stack hasGutter>
           <StackItem>
             <Title headingLevel="h3" size="2xl">
-              Outcomes
+              Outcome
             </Title>
           </StackItem>
           <StackItem>
