@@ -166,47 +166,57 @@ const ExplanationView = () => {
                     </CardHeader>
 
                     <CardBody>
-                      <div className="explanation-view__chart">
-                        {featuresScores === null && <SkeletonTornadoChart valuesCount={10} height={400} />}
-                        {featuresScores !== null && topFeatures.length === 0 && (
+                      {featuresScores === null && <SkeletonTornadoChart valuesCount={10} height={400} />}
+                      {featuresScores !== null && topFeatures.length === 0 && (
+                        <div className="explanation-view__chart">
                           <FeaturesScoreChart featuresScore={featuresScores} />
-                        )}
-                        {featuresScores !== null && topFeatures.length && (
-                          <>
+                        </div>
+                      )}
+                      {featuresScores !== null && topFeatures.length && (
+                        <>
+                          <div className="explanation-view__chart">
                             <FeaturesScoreChart featuresScore={topFeatures} />
-                            <Button
-                              variant="secondary"
-                              type="button"
-                              className="all-features-opener"
-                              onClick={handleModalToggle}>
-                              View Complete Chart
-                            </Button>
-                            <Modal
-                              width={"80%"}
-                              title="All Features Score Chart"
-                              isOpen={isModalOpen}
-                              onClose={handleModalToggle}
-                              actions={[
-                                <Button key="close" onClick={handleModalToggle}>
-                                  Close
-                                </Button>,
-                              ]}>
-                              <FeaturesScoreChart featuresScore={featuresScores} large={true} />
-                            </Modal>
-                          </>
-                        )}
-                      </div>
+                          </div>
+                          <Button
+                            variant="secondary"
+                            type="button"
+                            className="all-features-opener"
+                            onClick={handleModalToggle}>
+                            View Complete Chart
+                          </Button>
+                          <Modal
+                            width={"80%"}
+                            title="All Features Score Chart"
+                            isOpen={isModalOpen}
+                            onClose={handleModalToggle}
+                            actions={[
+                              <Button key="close" onClick={handleModalToggle}>
+                                Close
+                              </Button>,
+                            ]}>
+                            <FeaturesScoreChart featuresScore={featuresScores} large={true} />
+                          </Modal>
+                        </>
+                      )}
                     </CardBody>
                   </Card>
                 </GridItem>
                 <GridItem span={4}>
-                  <Card>
+                  <Card className="explanation-view__score-table">
                     <CardHeader>
                       <Title headingLevel={"h4"} size={"lg"}>
                         Features Weight
                       </Title>
                     </CardHeader>
-                    <CardBody>{featuresScores && <FeaturesScoreTable featuresScore={featuresScores} />}</CardBody>
+                    <CardBody>
+                      {featuresScores === null && <SkeletonGrid colsNumber={2} rowsNumber={4} />}
+                      {featuresScores !== null && topFeatures.length === 0 && (
+                        <FeaturesScoreTable featuresScore={featuresScores} />
+                      )}
+                      {featuresScores !== null && topFeatures.length && (
+                        <FeaturesScoreTable featuresScore={topFeatures} />
+                      )}
+                    </CardBody>
                   </Card>
                 </GridItem>
               </Grid>
