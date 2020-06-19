@@ -1,37 +1,37 @@
-import React from "react";
+import { ChannelType } from "@kogito-tooling/core-api";
+import { EditorType, EmbeddedEditorRouter, EmbeddedViewer, File } from "@kogito-tooling/embedded-editor";
+import { GwtEditorRoutes } from "@kogito-tooling/kie-bc-editors";
+import React, { useMemo } from "react";
 import { IExecutionModelResponse } from "../Audit/types";
 import { LinearRegressionViewer } from "./pmml/LinearRegressionViewer";
 
 const DMN1_2: string = "http://www.omg.org/spec/DMN/20151101/dmn.xsd";
 const PMML4_4: string = "http://www.dmg.org/PMML-4_4";
 
-const model1Url: string =
-  "https://raw.githubusercontent.com/kiegroup/trusty-ai-sandbox/FAI-133-demo/end2endPoC/modelLookup/myMortgage.dmn";
-const model2Url: string =
-  "https://raw.githubusercontent.com/kiegroup/trusty-ai-sandbox/FAI-133-demo/end2endPoC/modelLookup/fraud.dmn";
-const defaultModelUrl: string =
-  "https://raw.githubusercontent.com/kiegroup/kogito-tooling/master/packages/online-editor/static/samples/sample.dmn";
-
-const models: Map<string, string> = new Map([
-  ["myMortgage", model1Url],
-  ["fraud-scoring", model2Url],
-]);
-
-interface Props {
-  model: IExecutionModelResponse;
+type ModelDiagramProps = {
+  model: IExecutionModelResponse
 }
 
 function makeUnknownModel(): JSX.Element {
   return <div>Unknown model type</div>;
 }
 
-function makeDMNEditor(model: IExecutionModelResponse): JSX.Element {
-  const modelUrl: string = models.get(model.name) ?? defaultModelUrl;
-  const editorUrl = `https://kiegroup.github.io/kogito-online/?file=${modelUrl}#/editor/dmn`;
-  const kogitoIframe = () => {
-    return { __html: `<iframe src=${editorUrl}"></iframe>` };
+function makeDMNEditor(model: IExecutionModelResponse,
+  router: EmbeddedEditorRouter): JSX.Element {
+
+  const file: File = {
+    fileName: model.name,
+    editorType: EditorType.DMN,
+    getFileContents: () => Promise.resolve(model.model),
+    isReadOnly: true
   };
-  return <div className="model-diagram__iframe" dangerouslySetInnerHTML={kogitoIframe()} />;
+
+  return (
+    <EmbeddedViewer
+      file={file}
+      router={router}
+      channelType={ChannelType.EMBEDDED}
+    />);
 }
 
 function makePMMLEditor(model: IExecutionModelResponse): JSX.Element {
@@ -40,13 +40,25 @@ function makePMMLEditor(model: IExecutionModelResponse): JSX.Element {
 
 const DEFAULT: JSX.Element = makeUnknownModel();
 
-const ModelDiagram = (props: Props) => {
+const ModelDiagram = (props: ModelDiagramProps) => {
   const { model } = props;
   const type: string = model.type;
 
+  const router: EmbeddedEditorRouter = useMemo(
+    () =>
+      new EmbeddedEditorRouter(
+        new GwtEditorRoutes({
+          dmnPath: "gwt-editors/dmn",
+          bpmnPath: "gwt-editors/bpmn",
+          scesimPath: "gwt-editors/scesim"
+        })
+      ),
+    []
+  );
+
   switch (type) {
     case DMN1_2:
-      return makeDMNEditor(model);
+      return makeDMNEditor(model, router);
     case PMML4_4:
       return makePMMLEditor(model);
   }

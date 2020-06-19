@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.redhat.developer.model.Feature;
+import com.redhat.developer.model.FeatureFactory;
 import com.redhat.developer.model.Output;
 import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.Type;
@@ -46,7 +47,7 @@ public class LIMEishExplainerTest {
         for (int i = 0; i < 10; i++) {
             List<Feature> inputFeatures = new LinkedList<>();
             for (int j = 0; j < 3; j++) {
-                inputFeatures.add(new Feature("f" + random.nextInt(), Type.NUMBER, new Value<>(random.nextInt())));
+                inputFeatures.add(FeatureFactory.newNumericalFeature("f" + random.nextInt(), random.nextInt()));
             }
             perturbedInputs.add(new PredictionInput(inputFeatures));
         }
@@ -56,7 +57,7 @@ public class LIMEishExplainerTest {
         }
         List<Feature> features = new LinkedList<>();
         for (int i = 0; i < 3; i++) {
-            features.add(new Feature("f" + random.nextInt(), Type.NUMBER, new Value<>(random.nextInt())));
+            features.add(FeatureFactory.newNumericalFeature("f" + random.nextInt(), random.nextInt()));
         }
         PredictionInput originalInput = new PredictionInput(features);
         Output originalOutput = new Output("o", Type.BOOLEAN, new Value<>(random.nextBoolean()), 1d);

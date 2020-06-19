@@ -7,7 +7,7 @@ public class TabularData {
     private final Feature feature;
 
     public TabularData(Feature feature, double[] x, double[] y) {
-        assert x.length == y.length : "x and y lenghts do not match";
+        assert x.length == y.length : "x and y lengths do not match";
         this.feature = feature;
         this.x = x;
         this.y = y;

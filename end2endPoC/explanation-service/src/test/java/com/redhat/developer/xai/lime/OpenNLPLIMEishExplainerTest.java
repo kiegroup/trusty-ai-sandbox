@@ -2,15 +2,13 @@ package com.redhat.developer.xai.lime;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.SecureRandom;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.redhat.developer.model.DataDistribution;
 import com.redhat.developer.model.Feature;
-import com.redhat.developer.model.FeatureImportance;
+import com.redhat.developer.model.FeatureFactory;
 import com.redhat.developer.model.Model;
 import com.redhat.developer.model.Output;
 import com.redhat.developer.model.Prediction;
@@ -20,18 +18,13 @@ import com.redhat.developer.model.Saliency;
 import com.redhat.developer.model.Type;
 import com.redhat.developer.model.Value;
 import com.redhat.developer.utils.DataUtils;
-import com.redhat.developer.xai.ExplanationTestUtils;
 import opennlp.tools.langdetect.Language;
 import opennlp.tools.langdetect.LanguageDetector;
 import opennlp.tools.langdetect.LanguageDetectorME;
 import opennlp.tools.langdetect.LanguageDetectorModel;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -51,9 +44,9 @@ public class OpenNLPLIMEishExplainerTest {
         Language bestLanguage = languageDetector.predictLanguage(inputText);
 
         List<Feature> features = new LinkedList<>();
-        features.add(new Feature("text", Type.STRING, new Value<>(inputText)));
+        features.add(FeatureFactory.newTextFeature("text", inputText));
         PredictionInput input = new PredictionInput(features);
-        PredictionOutput output = new PredictionOutput(List.of(new Output("lang", Type.STRING, new Value<>(bestLanguage.getLang()),
+        PredictionOutput output = new PredictionOutput(List.of(new Output("lang", Type.TEXT, new Value<>(bestLanguage.getLang()),
                                                                           bestLanguage.getConfidence())));
         Prediction prediction = new Prediction(input, output);
 
@@ -65,7 +58,7 @@ public class OpenNLPLIMEishExplainerTest {
                 for (PredictionInput predictionInput : inputs) {
                     StringBuilder builder = new StringBuilder();
                     for (Feature f : predictionInput.getFeatures()) {
-                        if (Type.STRING.equals(f.getType())) {
+                        if (Type.TEXT.equals(f.getType())) {
                             if (builder.length() > 0) {
                                 builder.append(' ');
                             }
@@ -73,7 +66,7 @@ public class OpenNLPLIMEishExplainerTest {
                         }
                     }
                     Language language = languageDetector.predictLanguage(builder.toString());
-                    PredictionOutput predictionOutput = new PredictionOutput(List.of(new Output("lang", Type.STRING, new Value<>(language.getLang()), language.getConfidence())));
+                    PredictionOutput predictionOutput = new PredictionOutput(List.of(new Output("lang", Type.TEXT, new Value<>(language.getLang()), language.getConfidence())));
                     results.add(predictionOutput);
                 }
                 return results;

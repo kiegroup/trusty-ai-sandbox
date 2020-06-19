@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
 import com.redhat.developer.model.Feature;
+import com.redhat.developer.model.FeatureFactory;
 import com.redhat.developer.model.FeatureImportance;
 import com.redhat.developer.model.Model;
 import com.redhat.developer.model.Output;
@@ -155,7 +156,13 @@ public class LIMEishExplainer implements LocalExplainer<Saliency> {
                 if (Type.NUMBER.equals(originalOutput.getType()) || Type.BOOLEAN.equals(originalOutput.getType())) {
                     y = output.getValue().asNumber();
                 } else {
-                    y = originalOutput.getValue().getUnderlyingObject().equals(output.getValue().getUnderlyingObject()) ? 1d : 0d;
+                    Object originalObject = originalOutput.getValue().getUnderlyingObject();
+                    Object outputObject = output.getValue().getUnderlyingObject();
+                    if (originalObject == null || outputObject == null) {
+                        y = originalObject == outputObject ? 1d : 0d;
+                    } else {
+                        y = originalObject.equals(outputObject) ? 1d : 0d;
+                    }
                 }
                 Pair<double[], Double> sample = new ImmutablePair<>(x, y);
                 trainingSet.add(sample);
@@ -169,13 +176,13 @@ public class LIMEishExplainer implements LocalExplainer<Saliency> {
     private List<Feature> getOutputFeatures(List<Feature> inputFeatures) {
         List<Feature> outputFeatures = new LinkedList<>();
         for (Feature f : inputFeatures) {
-            if (Type.STRING.equals(f.getType())) {
+            if (Type.TEXT.equals(f.getType())) {
                 for (String w : f.getValue().asString().split(" ")) {
-                    Feature outputFeature = new Feature(w + " (" + f.getName() + ")", Type.STRING, new Value<>(w));
+                    Feature outputFeature = FeatureFactory.newTextFeature(w + " (" + f.getName() + ")", w);
                     outputFeatures.add(outputFeature);
                 }
             } else {
-                Feature outputFeature = new Feature(f.getName(), f.getType(), new Value<>(f.getValue().getUnderlyingObject()));
+                Feature outputFeature = FeatureFactory.newObjectFeature(f.getName(), f.getValue().getUnderlyingObject());
                 outputFeatures.add(outputFeature);
             }
         }
@@ -191,7 +198,7 @@ public class LIMEishExplainer implements LocalExplainer<Saliency> {
                 // convert values for this feature into numbers
                 Feature originalFeature = originalInputs.getFeatures().get(t);
                 switch (featureTypes.get(t)) {
-                    case STRING:
+                    case TEXT:
                         String originalString = originalFeature.getValue().asString();
                         String[] words = originalString.split(" ");
                         for (String word : words) {

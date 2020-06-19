@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://kelvah.github.io/xai-poc",
   "dependencies": {
+    "@kogito-tooling/embedded-editor": "^0.5.1",
     "@patternfly/react-charts": "^6.3.9",
     "@patternfly/react-core": "4.18.5",
     "@patternfly/react-icons": "^4.3.5",
@@ -46,6 +47,7 @@
   "scripts": {
     "cxsd": "cxsd",
     "generate-cxsd": "cxsd --out-js ./src/ModelLookup/pmml/generated --out-ts ./src/ModelLookup/pmml/generated http://dmg.org/pmml/v4-4/pmml-4-4.xsd",
+    "prepare": "mvn clean compile -B -nsu",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

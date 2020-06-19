@@ -1,12 +1,15 @@
 package com.redhat.developer.model;
 
+/**
+ * A feature represents fixed portions of an input, having a name, a {@link Type} and an associated {@link Value}.
+ */
 public class Feature {
 
     private final String name;
     private final Type type;
     private final Value value;
 
-    public Feature(String name, Type type, Value value) {
+    Feature(String name, Type type, Value value) {
         this.name = name;
         this.type = type;
         this.value = value;

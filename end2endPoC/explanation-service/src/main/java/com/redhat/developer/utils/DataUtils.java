@@ -2,6 +2,7 @@ package com.redhat.developer.utils;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.sql.Date;
 import java.time.Duration;
@@ -9,14 +10,18 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Currency;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.spi.CurrencyNameProvider;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
 import com.redhat.developer.model.DataDistribution;
 import com.redhat.developer.model.Feature;
 import com.redhat.developer.model.FeatureDistribution;
+import com.redhat.developer.model.FeatureFactory;
 import com.redhat.developer.model.Output;
 import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.PredictionOutput;
@@ -124,7 +129,7 @@ public class DataUtils {
     public static PredictionInput inputFrom(double[] doubles) {
         List<Feature> features = new ArrayList<>(doubles.length);
         for (double d : doubles) {
-            Feature f = new Feature("", Type.NUMBER, new Value<>(d));
+            Feature f = FeatureFactory.newNumericalFeature("", d);
             features.add(f);
         }
         return new PredictionInput(features);
@@ -159,7 +164,7 @@ public class DataUtils {
     }
 
     public static Feature doubleToFeature(double d) {
-        return new Feature(String.valueOf(d), Type.NUMBER, new Value<>(d));
+        return FeatureFactory.newNumericalFeature(String.valueOf(d), d);
     }
 
     public static PredictionInput perturbDrop(PredictionInput input, int noOfSamples, int noOfPerturbations) {
@@ -176,10 +181,12 @@ public class DataUtils {
     }
 
     private static Feature featureDrop(Feature feature, int noOfSamples) {
-        Value<?> value = null;
         Type type = feature.getType();
+        Feature f;
+        String featureName = feature.getName();
         switch (type) {
-            case STRING:
+            case TEXT:
+                String newStringValue;
                 // randomly drop entire string or parts of it
                 if (random.nextBoolean()) {
                     String stringValue = feature.getValue().asString();
@@ -190,56 +197,81 @@ public class DataUtils {
                             int dropIdx = random.nextInt(words.size());
                             words.remove(dropIdx);
                         }
-                        String newStringValue = String.join(" ", words);
-                        value = new Value<>(newStringValue);
+                        newStringValue = String.join(" ", words);
                     } else {
-                        value = new Value<>("");
+                        newStringValue = "";
                     }
                 } else {
-                    value = new Value<>("");
+                    newStringValue = "";
                 }
+                f = FeatureFactory.newTextFeature(featureName, newStringValue);
                 break;
             case NUMBER:
                 double ov = feature.getValue().asNumber();
                 // sample from normal distribution and center around feature value
                 int pickIdx = random.nextInt(noOfSamples - 1);
                 double v = DataUtils.generateData(0, 1, noOfSamples)[pickIdx] * ov + ov;
-                value = new Value<>(v);
+                f = FeatureFactory.newNumericalFeature(featureName, v);
                 break;
             case BOOLEAN:
                 // flip the boolean value
-                value = new Value<>(!Boolean.getBoolean(feature.getValue().asString()));
+                f = FeatureFactory.newBooleanFeature(featureName, !Boolean.getBoolean(feature.getValue().asString()));
                 break;
             case DATE:
                 // set to initial value of Java date in the current TZ
-                value = new Value<>(new Date(0).toLocalDate().toString());
+                f = FeatureFactory.newDateFeature(featureName, new Date(0));
                 break;
             case TIME:
                 // set to midnight
-                value = new Value<>(LocalTime.MIDNIGHT.toString());
+                f = FeatureFactory.newTimeFeature(featureName, LocalTime.MIDNIGHT);
                 break;
             case DURATION:
                 // set the duration to 0
-                value = new Value<>(Duration.of(0, ChronoUnit.SECONDS).toString());
+                f = FeatureFactory.newDurationFeature(featureName, Duration.of(0, ChronoUnit.SECONDS));
                 break;
             case CURRENCY:
-                // set the currency to 0
-                value = new Value<>("0.0");
+                // set the currency to EUR
+                f = FeatureFactory.newCurrencyFeature(featureName, Currency.getInstance(Locale.getDefault()));
+                break;
+            case CATEGORICAL:
+                String category = feature.getValue().asString();
+                if (!"0".equals(category)) {
+                    category = "0";
+                } else {
+                    category = "1";
+                }
+                f = FeatureFactory.newCategoricalFeature(featureName, category);
                 break;
             case BINARY:
-                value = new Value<>(new byte[0]);
+                // set an empty buffer
+                ByteBuffer byteBuffer = ByteBuffer.allocate(0);
+                f = FeatureFactory.newBinaryFeature(featureName, byteBuffer);
                 break;
             case URI:
-                value = new Value<>(URI.create(""));
+                // set an empty URI
+                f = FeatureFactory.newURIFeature(featureName, URI.create(""));
                 break;
             case VECTOR:
-                value = new Value<>(new double[0]);
+                // randomly set a non zero value to zero (or decrease it by 1)
+                double[] values = feature.getValue().asVector();
+                if (values.length > 0) {
+                    int idx = random.nextInt(values.length - 1);
+                    if (values[idx] != 0) {
+                        values[idx] = 0;
+                    } else {
+                        values[idx]--;
+                    }
+                }
+                f = FeatureFactory.newVectorFeature(featureName, values);
                 break;
             case UNDEFINED:
                 // do nothing
+                f = FeatureFactory.newObjectFeature(featureName, feature.getValue());
                 break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + type);
         }
-        return new Feature(feature.getName(), feature.getType(), value);
+        return f;
     }
 
     public static double hammingDistance(double[] x, double[] y) {

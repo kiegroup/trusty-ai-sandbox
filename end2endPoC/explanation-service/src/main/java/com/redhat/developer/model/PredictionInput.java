@@ -1,17 +1,16 @@
 package com.redhat.developer.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import com.redhat.developer.requests.TypedData;
-import org.json.JSONObject;
-
+/**
+ * The inputs to a {@link Model}.
+ * A prediction input is composed by one or more {@link Feature}s.
+ */
 public class PredictionInput {
 
     private final List<Feature> features;
 
-    public PredictionInput( List<Feature> features) {
+    public PredictionInput(List<Feature> features) {
         this.features = features;
     }
 

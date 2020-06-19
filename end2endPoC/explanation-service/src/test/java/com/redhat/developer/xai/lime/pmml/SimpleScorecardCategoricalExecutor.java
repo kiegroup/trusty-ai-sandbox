@@ -22,30 +22,26 @@ import java.util.Map;
 import org.kie.api.pmml.PMML4Result;
 import org.kie.pmml.evaluator.api.executor.PMMLRuntime;
 
-public class LogisticRegressionIrisDataExecutor extends AbstractPMMLExecutor {
+public class SimpleScorecardCategoricalExecutor extends AbstractPMMLExecutor {
 
-    public static final String MODEL_NAME = "LogisticRegressionIrisData";
+    private static final String MODEL_NAME = "SimpleScorecardCategorical";
+    public static final String TARGET_FIELD = "Score";
+    public static final String REASON_CODE1_FIELD = "Reason Code 1";
+    public static final String REASON_CODE2_FIELD = "Reason Code 2";
 
-    private final double sepalLength;
-    private final double sepalWidth;
-    private final double petalLength;
-    private final double petalWidth;
+    private String input1;
+    private String input2;
 
-    public LogisticRegressionIrisDataExecutor(double sepalLength, double sepalWidth, double petalLength,
-                                              double petalWidth) {
-        this.sepalLength = sepalLength;
-        this.sepalWidth = sepalWidth;
-        this.petalLength = petalLength;
-        this.petalWidth = petalWidth;
+    public SimpleScorecardCategoricalExecutor(String input1, String input2) {
+        this.input1 = input1;
+        this.input2 = input2;
     }
 
+    @Override
     public PMML4Result execute(final PMMLRuntime pmmlRuntime) {
         final Map<String, Object> inputData = new HashMap<>();
-        inputData.put("Sepal.Length", sepalLength);
-        inputData.put("Sepal.Width", sepalWidth);
-        inputData.put("Petal.Length", petalLength);
-        inputData.put("Petal.Width", petalWidth);
+        inputData.put("input1", input1);
+        inputData.put("input2", input2);
         return evaluate(pmmlRuntime, inputData, MODEL_NAME);
     }
-
 }

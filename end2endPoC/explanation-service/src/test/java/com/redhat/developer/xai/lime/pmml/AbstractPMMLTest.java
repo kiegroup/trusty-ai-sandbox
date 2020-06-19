@@ -16,10 +16,8 @@
 
 package com.redhat.developer.xai.lime.pmml;
 
-import org.drools.compiler.kproject.ReleaseIdImpl;
 import org.kie.api.KieBase;
 import org.kie.api.KieServices;
-import org.kie.api.builder.ReleaseId;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieRuntimeFactory;
 import org.kie.pmml.evaluator.api.executor.PMMLRuntime;
@@ -34,11 +32,9 @@ public abstract class AbstractPMMLTest {
 
     static {
         final KieServices kieServices = KieServices.get();
-        ReleaseId releaseId = new ReleaseIdImpl(GROUP_ID, ARTIFACT_ID, VERSION);
         kieContainer = kieServices.newKieClasspathContainer();
     }
 
-    protected AbstractPMMLExecutor abstractPMMLExecutor;
     protected PMMLRuntime pmmlRuntime;
 
     public AbstractPMMLTest(PMMLRuntime pmmlRuntime) {
@@ -50,5 +46,4 @@ public abstract class AbstractPMMLTest {
         final KieRuntimeFactory kieRuntimeFactory = KieRuntimeFactory.of(kieBase);
         return kieRuntimeFactory.get(PMMLRuntime.class);
     }
-
 }
