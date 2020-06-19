@@ -4,11 +4,11 @@ import { IExecutionModelResponse } from "../Audit/types";
 import ModelDiagram from "./ModelDiagram";
 import "./ModelLookup.scss";
 
-interface Props {
-  model: IExecutionModelResponse;
+type ModelLookupProps = {
+  model: IExecutionModelResponse
 }
 
-const ModelLookup = (props: Props) => {
+const ModelLookup = (props: ModelLookupProps) => {
   return (
     <>
       <PageSection variant={PageSectionVariants.light} style={{ paddingTop: 0, paddingBottom: 0 }}>
