@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.DoubleStream;
 
 import com.redhat.developer.model.Feature;
+import com.redhat.developer.model.FeatureFactory;
 import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.Type;
 import com.redhat.developer.model.Value;
@@ -70,7 +71,7 @@ class DataUtilsTest {
     public void testPerturbDrop() {
         List<Feature> features = new LinkedList<>();
         for (int i = 0; i < 3; i++) {
-            features.add(new Feature("f" + random.nextInt(), Type.NUMBER, new Value<>(random.nextInt())));
+            features.add(FeatureFactory.newNumericalFeature("f" + random.nextInt(), random.nextInt()));
         }
         PredictionInput input = new PredictionInput(features);
         int noOfPerturbations = random.nextInt(3);

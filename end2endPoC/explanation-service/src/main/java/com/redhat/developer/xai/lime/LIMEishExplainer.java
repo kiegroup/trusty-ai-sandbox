@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
 import com.redhat.developer.model.Feature;
+import com.redhat.developer.model.FeatureFactory;
 import com.redhat.developer.model.FeatureImportance;
 import com.redhat.developer.model.Model;
 import com.redhat.developer.model.Output;
@@ -177,11 +178,11 @@ public class LIMEishExplainer implements LocalExplainer<Saliency> {
         for (Feature f : inputFeatures) {
             if (Type.TEXT.equals(f.getType())) {
                 for (String w : f.getValue().asString().split(" ")) {
-                    Feature outputFeature = new Feature(w + " (" + f.getName() + ")", Type.TEXT, new Value<>(w));
+                    Feature outputFeature = FeatureFactory.newTextFeature(w + " (" + f.getName() + ")", w);
                     outputFeatures.add(outputFeature);
                 }
             } else {
-                Feature outputFeature = new Feature(f.getName(), f.getType(), new Value<>(f.getValue().getUnderlyingObject()));
+                Feature outputFeature = FeatureFactory.newObjectFeature(f.getName(), f.getValue().getUnderlyingObject());
                 outputFeatures.add(outputFeature);
             }
         }

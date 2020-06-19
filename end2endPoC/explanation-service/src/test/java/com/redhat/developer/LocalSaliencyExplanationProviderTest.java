@@ -98,7 +98,7 @@ class LocalSaliencyExplanationProviderTest {
                     typedData.value = String.valueOf(random.nextDouble());
                 } else {
                     typedData.typeRef = "string";
-                    typedData.value = RandomStringUtils.random(random.nextInt(5));
+                    typedData.value = RandomStringUtils.random(random.nextInt(3));
                 }
             } else {
                 typedData.components = getTypedData(depth - 1);

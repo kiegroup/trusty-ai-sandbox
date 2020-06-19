@@ -34,22 +34,6 @@ public class CategoricalVariablesRegressionExecutor extends AbstractPMMLExecutor
         this.y = y;
     }
 
-    private static double regressionFunction(String x, String y) {
-        final Map<String, Double> categoriesMapX = new HashMap<>();
-        categoriesMapX.put("red", 5.5);
-        categoriesMapX.put("green", 15.0);
-        categoriesMapX.put("blue", 12.0);
-        categoriesMapX.put("orange", 5.5);
-        categoriesMapX.put("yellow", -100.25);
-
-        final Map<String, Double> categoriesMapY = new HashMap<>();
-        categoriesMapY.put("classA", 0.0);
-        categoriesMapY.put("classB", 20.0);
-        categoriesMapY.put("classC", 40.0);
-
-        return categoriesMapX.get(x) + categoriesMapY.get(y) - 22.1;
-    }
-
     @Override
     public PMML4Result execute(final PMMLRuntime pmmlRuntime) {
         final Map<String, Object> inputData = new HashMap<>();

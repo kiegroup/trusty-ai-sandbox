@@ -31,9 +31,6 @@ public class SimpleScorecardCategoricalExecutor extends AbstractPMMLExecutor {
 
     private String input1;
     private String input2;
-    private double score;
-    private String reasonCode1;
-    private String reasonCode2;
 
     public SimpleScorecardCategoricalExecutor(String input1, String input2) {
         this.input1 = input1;

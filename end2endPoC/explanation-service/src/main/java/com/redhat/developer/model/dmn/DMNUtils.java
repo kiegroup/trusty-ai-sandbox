@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.redhat.developer.model.Feature;
+import com.redhat.developer.model.FeatureFactory;
 import com.redhat.developer.model.Output;
 import com.redhat.developer.model.Prediction;
 import com.redhat.developer.model.PredictionInput;
@@ -12,6 +13,9 @@ import com.redhat.developer.model.Type;
 import com.redhat.developer.model.Value;
 import com.redhat.developer.requests.TypedData;
 
+/**
+ * Utility class to handle DMN types for input and output.
+ */
 public class DMNUtils {
 
     public static Prediction convert(List<TypedData> inputs, List<TypedData> outputs) {
@@ -60,15 +64,14 @@ public class DMNUtils {
     public static List<Feature> getFlatBuiltInInput(TypedData input) {
         List<Feature> features = new ArrayList<>();
         if (input.typeRef.equals("string")) {
-            features.add(new Feature(input.inputName, Type.TEXT, new Value<>((String) input.value)));
+            features.add(FeatureFactory.newTextFeature(input.inputName, (String) input.value));
             return features;
         }
         if (input.typeRef.equals("number")) {
-            features.add(new Feature(input.inputName, Type.NUMBER, new Value<>(Double.valueOf(String.valueOf(input.value)))));
+            features.add(FeatureFactory.newNumericalFeature(input.inputName, Double.valueOf(String.valueOf(input.value))));
             return features;
         }
         input.components.forEach(x -> features.addAll(getFlatBuiltInInput(x)));
         return features;
     }
-    
 }

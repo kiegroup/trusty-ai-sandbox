@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.redhat.developer.model.DataDistribution;
 import com.redhat.developer.model.Feature;
+import com.redhat.developer.model.FeatureFactory;
 import com.redhat.developer.model.Model;
 import com.redhat.developer.model.Output;
 import com.redhat.developer.model.PredictionInput;
@@ -40,9 +41,9 @@ public class ExplanationTestUtils {
             @Override
             public PredictionInput getInputShape() {
                 List<Feature> features = new LinkedList<>();
-                features.add(new Feature("f1", Type.NUMBER, new Value<>(Double.NaN)));
-                features.add(new Feature("f2", Type.NUMBER, new Value<>(Double.NaN)));
-                features.add(new Feature("f3", Type.NUMBER, new Value<>(Double.NaN)));
+                features.add(FeatureFactory.newNumericalFeature("f1", Double.NaN));
+                features.add(FeatureFactory.newNumericalFeature("f2", Double.NaN));
+                features.add(FeatureFactory.newNumericalFeature("f3", Double.NaN));
                 return new PredictionInput(features);
             }
 
@@ -81,9 +82,9 @@ public class ExplanationTestUtils {
             @Override
             public PredictionInput getInputShape() {
                 List<Feature> features = new LinkedList<>();
-                features.add(new Feature("f1", Type.NUMBER, new Value<>(Double.NaN)));
-                features.add(new Feature("f2", Type.NUMBER, new Value<>(Double.NaN)));
-                features.add(new Feature("f3", Type.NUMBER, new Value<>(Double.NaN)));
+                features.add(FeatureFactory.newNumericalFeature("f1", Double.NaN));
+                features.add(FeatureFactory.newNumericalFeature("f2", Double.NaN));
+                features.add(FeatureFactory.newNumericalFeature("f3", Double.NaN));
                 return new PredictionInput(features);
             }
 
@@ -118,9 +119,9 @@ public class ExplanationTestUtils {
             @Override
             public PredictionInput getInputShape() {
                 List<Feature> features = new LinkedList<>();
-                features.add(new Feature("f1", Type.NUMBER, new Value<>(Double.NaN)));
-                features.add(new Feature("f2", Type.NUMBER, new Value<>(Double.NaN)));
-                features.add(new Feature("f3", Type.NUMBER, new Value<>(Double.NaN)));
+                features.add(FeatureFactory.newNumericalFeature("f1", Double.NaN));
+                features.add(FeatureFactory.newNumericalFeature("f2", Double.NaN));
+                features.add(FeatureFactory.newNumericalFeature("f3", Double.NaN));
                 return new PredictionInput(features);
             }
 
@@ -159,9 +160,9 @@ public class ExplanationTestUtils {
             @Override
             public PredictionInput getInputShape() {
                 List<Feature> features = new LinkedList<>();
-                features.add(new Feature("f1", Type.NUMBER, new Value<>(Double.NaN)));
-                features.add(new Feature("f2", Type.NUMBER, new Value<>(Double.NaN)));
-                features.add(new Feature("f3", Type.NUMBER, new Value<>(Double.NaN)));
+                features.add(FeatureFactory.newNumericalFeature("f1", Double.NaN));
+                features.add(FeatureFactory.newNumericalFeature("f2", Double.NaN));
+                features.add(FeatureFactory.newNumericalFeature("f3", Double.NaN));
                 return new PredictionInput(features);
             }
 
@@ -204,9 +205,9 @@ public class ExplanationTestUtils {
             @Override
             public PredictionInput getInputShape() {
                 List<Feature> features = new LinkedList<>();
-                features.add(new Feature("f1", Type.TEXT, new Value<>(Double.NaN)));
-                features.add(new Feature("f2", Type.TEXT, new Value<>(Double.NaN)));
-                features.add(new Feature("f3", Type.TEXT, new Value<>(Double.NaN)));
+                features.add(FeatureFactory.newNumericalFeature("f1", Double.NaN));
+                features.add(FeatureFactory.newNumericalFeature("f2", Double.NaN));
+                features.add(FeatureFactory.newNumericalFeature("f3", Double.NaN));
                 return new PredictionInput(features);
             }
 

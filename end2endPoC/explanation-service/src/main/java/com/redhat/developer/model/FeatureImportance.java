@@ -1,5 +1,9 @@
 package com.redhat.developer.model;
 
+/**
+ * The importance associated to a given {@link Feature}.
+ * This is usually the output of an explanation algorithm (local or global).
+ */
 public class FeatureImportance {
 
     private final Feature feature;

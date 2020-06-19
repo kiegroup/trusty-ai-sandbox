@@ -29,8 +29,8 @@ public class CompoundNestedPredicateScorecardExecutor extends AbstractPMMLExecut
     public static final String REASON_CODE1_FIELD = "Reason Code 1";
     public static final String REASON_CODE2_FIELD = "Reason Code 2";
 
-    private double input1;
-    private String input2;
+    private final double input1;
+    private final String input2;
 
     public CompoundNestedPredicateScorecardExecutor(double input1, String input2) {
         this.input1 = input1;

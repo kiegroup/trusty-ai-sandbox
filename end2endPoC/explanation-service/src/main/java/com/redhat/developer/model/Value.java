@@ -1,5 +1,7 @@
 package com.redhat.developer.model;
 
+import java.util.Arrays;
+
 public class Value<S> {
 
     private final S underlyingObject;
@@ -33,5 +35,27 @@ public class Value<S> {
         return "Value{" +
                 "underlyingObject=" + underlyingObject +
                 '}';
+    }
+
+    public double[] asVector() {
+        double[] doubles;
+        try {
+            doubles = (double[]) underlyingObject;
+        } catch (ClassCastException cce) {
+            if (underlyingObject instanceof String) {
+                int noOfWords = ((String)underlyingObject).split(" ").length;
+                doubles = new double[noOfWords];
+                Arrays.fill(doubles, 1);
+            } else {
+                try {
+                    double v = asNumber();
+                    doubles = new double[1];
+                    doubles[0] = v;
+                } catch (Exception e) {
+                    doubles = new double[0];
+                }
+            }
+        }
+        return doubles;
     }
 }

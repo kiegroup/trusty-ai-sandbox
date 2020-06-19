@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import com.redhat.developer.model.DataDistribution;
 import com.redhat.developer.model.Feature;
+import com.redhat.developer.model.FeatureFactory;
 import com.redhat.developer.model.Model;
 import com.redhat.developer.model.Output;
 import com.redhat.developer.model.Prediction;
@@ -43,7 +44,7 @@ public class OpenNLPLIMEishExplainerTest {
         Language bestLanguage = languageDetector.predictLanguage(inputText);
 
         List<Feature> features = new LinkedList<>();
-        features.add(new Feature("text", Type.TEXT, new Value<>(inputText)));
+        features.add(FeatureFactory.newTextFeature("text", inputText));
         PredictionInput input = new PredictionInput(features);
         PredictionOutput output = new PredictionOutput(List.of(new Output("lang", Type.TEXT, new Value<>(bestLanguage.getLang()),
                                                                           bestLanguage.getConfidence())));

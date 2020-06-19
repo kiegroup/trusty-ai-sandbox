@@ -27,6 +27,9 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * {@link Model} implementation of a remote (HTTP/HTTPS) DMN service.
+ */
 public class RemoteDMNModel implements Model {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

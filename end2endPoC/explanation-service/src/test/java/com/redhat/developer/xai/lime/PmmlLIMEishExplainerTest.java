@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.redhat.developer.model.DataDistribution;
 import com.redhat.developer.model.Feature;
+import com.redhat.developer.model.FeatureFactory;
 import com.redhat.developer.model.Model;
 import com.redhat.developer.model.Output;
 import com.redhat.developer.model.Prediction;
@@ -47,10 +48,10 @@ public class PmmlLIMEishExplainerTest {
     @RepeatedTest(10)
     public void testPMMLRegression() {
         List<Feature> features = new LinkedList<>();
-        features.add(new Feature("sepalLength", Type.NUMBER, new Value<>(6.9)));
-        features.add(new Feature("sepalWidth", Type.NUMBER, new Value<>(3.1)));
-        features.add(new Feature("petalLength", Type.NUMBER, new Value<>(5.1)));
-        features.add(new Feature("petalWidth", Type.NUMBER, new Value<>(2.3)));
+        features.add(FeatureFactory.newNumericalFeature("sepalLength", 6.9));
+        features.add(FeatureFactory.newNumericalFeature("sepalWidth", 3.1));
+        features.add(FeatureFactory.newNumericalFeature("petalLength", 5.1));
+        features.add(FeatureFactory.newNumericalFeature("petalWidth", 2.3));
         PredictionInput input = new PredictionInput(features);
         PredictionOutput output = new PredictionOutput(List.of(new Output("result", Type.TEXT, new Value<>("virginica"), 1d)));
         Prediction prediction = new Prediction(input, output);
@@ -97,8 +98,8 @@ public class PmmlLIMEishExplainerTest {
     @RepeatedTest(10)
     public void testPMMLRegressionCategorical() {
         List<Feature> features = new LinkedList<>();
-        features.add(new Feature("mapX", Type.TEXT, new Value<>("red")));
-        features.add(new Feature("mapY", Type.TEXT, new Value<>("classB")));
+        features.add(FeatureFactory.newTextFeature("mapX", "red"));
+        features.add(FeatureFactory.newTextFeature("mapY", "classB"));
         PredictionInput input = new PredictionInput(features);
         PredictionOutput output = new PredictionOutput(List.of(new Output("result", Type.NUMBER, new Value<>(3.4d), 1d)));
         Prediction prediction = new Prediction(input, output);
@@ -144,8 +145,8 @@ public class PmmlLIMEishExplainerTest {
     @RepeatedTest(10)
     public void testPMMLScorecardCategorical() {
         List<Feature> features = new LinkedList<>();
-        features.add(new Feature("input1", Type.TEXT, new Value<>("classA")));
-        features.add(new Feature("input2", Type.TEXT, new Value<>("classB")));
+        features.add(FeatureFactory.newTextFeature("input1", "classA"));
+        features.add(FeatureFactory.newTextFeature("input2", "classB"));
         PredictionInput input = new PredictionInput(features);
         List<Output> outputs = List.of(new Output("score", Type.TEXT, new Value<>(25), 1d),
                                        new Output("reason1", Type.TEXT, new Value<>("Input1ReasonCode"),1d),
@@ -200,8 +201,8 @@ public class PmmlLIMEishExplainerTest {
     @RepeatedTest(10)
     public void testPMMLCompoundScorecard() {
         List<Feature> features = new LinkedList<>();
-        features.add(new Feature("input1", Type.NUMBER, new Value<>(-50)));
-        features.add(new Feature("input2", Type.TEXT, new Value<>("classB")));
+        features.add(FeatureFactory.newNumericalFeature("input1", -50));
+        features.add(FeatureFactory.newTextFeature("input2", "classB"));
         PredictionInput input = new PredictionInput(features);
         List<Output> outputs = List.of(new Output("score", Type.TEXT, new Value<>(-8), 1d),
                                        new Output("reason1", Type.TEXT, new Value<>("characteristic2ReasonCode"),1d),
