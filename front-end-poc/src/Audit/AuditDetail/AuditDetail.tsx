@@ -1,22 +1,8 @@
-import {
-  Flex,
-  FlexItem,
-  Nav,
-  NavItem,
-  NavList,
-  PageSection,
-  PageSectionVariants,
-  Stack,
-  StackItem,
-  TextContent,
-  Title,
-} from "@patternfly/react-core";
 import React, { useEffect, useState } from "react";
+import { Nav, NavItem, NavList, PageSection, PageSectionVariants, Stack, StackItem } from "@patternfly/react-core";
 import { Link, Redirect, Route, Switch, useLocation, useParams, useRouteMatch } from "react-router-dom";
-import { ExecutionType, getDecisionOutcome, getExecution } from "../../Shared/api/audit.api";
-import { getModelDetail } from "../../Shared/api/audit.api";
-import { IExecutionModelResponse } from "../types";
-import { IExecution, IExecutionRouteParams } from "../types";
+import { ExecutionType, getDecisionOutcome, getModelDetail } from "../../Shared/api/audit.api";
+import { IExecutionModelResponse, IExecutionRouteParams } from "../types";
 import { RemoteData } from "../../Shared/types";
 import { IOutcome } from "../../Outcome/types";
 //import DecisionDetail from "../../Execution/DecisionDetail";
@@ -25,20 +11,17 @@ import InputDataView from "../../InputData/InputDataView/InputDataView";
 import ModelLookup from "../../ModelLookup/ModelLookup";
 import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
 import DecisionDetailAlt from "../../Execution/DecisionDetailAlt";
-import ExecutionStatus from "../ExecutionStatus/ExecutionStatus";
-import { UserIcon } from "@patternfly/react-icons";
 import SkeletonStripes from "../../Shared/skeletons/SkeletonStripes";
 import SkeletonCards from "../../Shared/skeletons/SkeletonCards/SkeletonCards";
-import FormattedDate from "../../Shared/components/FormattedDate/FormattedDate";
+import useExecutionInfo from "../../Shared/hooks/useExecutionInfo";
 import "./AuditDetail.scss";
+import ExecutionHeader from "../ExecutionHeader/ExecutionHeader";
 
 const AuditDetail = () => {
-  let { path, url } = useRouteMatch();
-  let location = useLocation();
+  const { path, url } = useRouteMatch();
+  const location = useLocation();
   const { executionId, executionType } = useParams<IExecutionRouteParams>();
-  const [execution, setExecution] = useState<RemoteData<Error, IExecution>>({
-    status: "NOT_ASKED",
-  });
+  const execution = useExecutionInfo(executionType as ExecutionType, executionId);
   const [outcome, setOutcome] = useState<RemoteData<Error, IOutcome[]>>({
     status: "NOT_ASKED",
   });
@@ -50,23 +33,6 @@ const AuditDetail = () => {
     model: "",
     serviceIdentifier: {},
   });
-
-  useEffect(() => {
-    let isMounted = true;
-    setExecution({ status: "LOADING" });
-    getExecution(executionType as ExecutionType, executionId)
-      .then((response) => {
-        if (isMounted) {
-          setExecution({ status: "SUCCESS", data: response.data });
-        }
-      })
-      .catch((error) => {
-        setExecution({ status: "FAILURE", error: error });
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, [executionType, executionId]);
 
   useEffect(() => {
     let didMount = true;
@@ -125,46 +91,7 @@ const AuditDetail = () => {
   return (
     <>
       <PageSection variant={PageSectionVariants.light}>
-        <TextContent>
-          <Flex>
-            <Flex grow={{ default: "grow" }}>
-              <FlexItem>
-                <Title size="3xl" headingLevel="h2">
-                  <span>Execution Detail</span>
-                </Title>
-              </FlexItem>
-            </Flex>
-            <Flex>
-              <FlexItem className="audit-detail__execution-time">
-                {execution.status === "LOADING" && (
-                  <SkeletonInlineStripe customStyle={{ height: "1.5em", verticalAlign: "baseline" }} />
-                )}
-                {execution.status === "SUCCESS" && (
-                  <Title size="xl" headingLevel="h3">
-                    <ExecutionStatus result={execution.data.executionSucceeded} />
-                    <span> </span>
-                    <FormattedDate date={execution.data.executionDate} preposition={true} />
-                    {/*{formatDate(execution.data.executionDate)}*/}
-                  </Title>
-                )}
-              </FlexItem>
-              <FlexItem className="audit-detail__executor">
-                {execution.status === "LOADING" && (
-                  <SkeletonInlineStripe customStyle={{ height: "1.5em", verticalAlign: "baseline" }} />
-                )}
-
-                {execution.status === "SUCCESS" && (
-                  <Title size="xl" headingLevel="h3">
-                    <span>
-                      <UserIcon className="audit-detail__executor__icon" />
-                      Executed by {execution.data.executorName}
-                    </span>
-                  </Title>
-                )}
-              </FlexItem>
-            </Flex>
-          </Flex>
-        </TextContent>
+        <ExecutionHeader execution={execution} title="Execution" />
 
         {thirdLevelNav.length === 0 && (
           <div className="audit-detail__nav">
@@ -188,14 +115,9 @@ const AuditDetail = () => {
         <Route path={`${path}/outcome-details/:outcomeId`}>
           <ExplanationView />
         </Route>
-
-        <Route path={`${path}/outcomes/:outcomeId`}>
-          <ExplanationView />
-        </Route>
         <Route path={`${path}/outcomes`}>
           <DecisionDetailAlt model={model} execution={execution} outcome={outcome} />
         </Route>
-
         <Route path={`${path}/input-data`}>
           <InputDataView />
         </Route>

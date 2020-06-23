@@ -9,12 +9,12 @@ const routes = [
   { path: "/op-dashboard", breadcrumb: "Operational Monitoring Dashboard" },
   { path: "/audit", breadcrumb: "Audit Investigation" },
   { path: "/audit/:executionType/:id/outcomes", breadcrumb: "Outcome" },
-  { path: "/audit/:executionType/:id/outcomes/:outcomeId", breadcrumb: "Outcome Details" },
+  { path: "/audit/:executionType/:id/outcomes/:outcomeId", breadcrumb: "Outcome Detail" },
   // the following route is needed to display a dedicated breadcrumb path for executions with only 1 outcome
-  { path: "/audit/:executionType/:id/outcome-details/:outcomeId", breadcrumb: "Outcome Details" },
+  { path: "/audit/:executionType/:id/outcome-details/:outcomeId", breadcrumb: "Outcome" },
   { path: "/audit/:executionType/:id/model-lookup", breadcrumb: "Model Lookup" },
   { path: "/audit/:executionType/:id/input-data", breadcrumb: "Input Data" },
-  { path: "/audit/:executionType/:id", breadcrumb: "Execution Detail" },
+  { path: "/audit/:executionType/:id", breadcrumb: "Execution" },
 ];
 const excludePaths = ["/audit/:executionType", "/audit/:executionType/:id/outcome-details/"];
 

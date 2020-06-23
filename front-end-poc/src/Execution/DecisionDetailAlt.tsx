@@ -5,8 +5,8 @@ import OutcomeCards from "./OutcomeCards/OutcomeCards";
 import { RemoteData } from "../Shared/types";
 import { IOutcome } from "../Outcome/types";
 import { useHistory } from "react-router-dom";
-import "./DecisionDetailAlt.scss";
 import SkeletonCards from "../Shared/skeletons/SkeletonCards/SkeletonCards";
+import "./DecisionDetailAlt.scss";
 
 type DecisionDetailAltProps = {
   execution: RemoteData<Error, IExecution>;
@@ -16,7 +16,6 @@ type DecisionDetailAltProps = {
 
 const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
   const { execution, model, outcome } = props;
-
   const history = useHistory();
   console.log(model.name, execution);
   const goToExplanation = useCallback(

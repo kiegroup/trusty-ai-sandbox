@@ -22,7 +22,7 @@ const prepareExecutionTableRows = (rowData: IExecution[]) => {
     cells.push({
       title: (
         <Link to={`/audit/${item.executionType.toLocaleLowerCase()}/${item.executionId}`}>
-          {"#" + item.executionId}
+          {"#" + item.executionId.toUpperCase()}
         </Link>
       ),
     });

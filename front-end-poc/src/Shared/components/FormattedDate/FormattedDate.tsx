@@ -21,7 +21,7 @@ const FormattedDate = (props: FormattedDateProps) => {
   }
 
   return (
-    <Tooltip content={fullFormattedDate} entryDelay={200} exitDelay={100} distance={5}>
+    <Tooltip content={fullFormattedDate} entryDelay={200} exitDelay={100} distance={5} position="bottom">
       <span>{formattedDate}</span>
     </Tooltip>
   );
