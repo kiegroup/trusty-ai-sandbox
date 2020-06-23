@@ -5,12 +5,13 @@ const outcomeData = require("./mocks/outcomes");
 const outcomeDetailData = require("./mocks/outcomeDetail");
 const modelData = require("./mocks/modelData");
 const featureImportance = require("./mocks/featureImportance");
+const executionIdBase = require("./mocks/executionIdBase");
 
 let generateFakeAPIs = () => {
   let decisionsList = [];
 
   decisionsList.push({
-    executionId: 1000,
+    executionId: executionIdBase + 1000,
     executionDate: faker.date.recent(),
     executionType: "DECISION",
     executedModelName: "fraud-score",
@@ -22,7 +23,7 @@ let generateFakeAPIs = () => {
     let executionDate = faker.date.past();
 
     decisionsList.push({
-      executionId: id,
+      executionId: executionIdBase + id,
       executionDate: executionDate,
       executionType: "DECISION",
       executedModelName: "fraud-score",
