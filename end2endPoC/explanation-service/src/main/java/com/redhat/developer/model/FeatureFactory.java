@@ -6,6 +6,9 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.Currency;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Factory class for {@link Feature}s
@@ -60,6 +63,42 @@ public class FeatureFactory {
     }
 
     public static Feature newObjectFeature(String name, Object object) {
-        return new Feature(name, Type.UNDEFINED, new Value<>(object));
+        return new Feature(name, Type.NESTED, new Value<>(object));
+    }
+
+    public static Feature newCompositeFeature(String name, Map<String, Object> map) {
+        List<Feature> features = new LinkedList<>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            Object value = entry.getValue();
+            String featureName = entry.getKey();
+            Feature feature;
+            if (value instanceof Map) {
+                feature = newCompositeFeature(featureName, (Map<String, Object>) value);
+            } else if (value instanceof double[]) {
+                feature = newVectorFeature(featureName, (double[]) value);
+            } else if (value instanceof LocalTime) {
+                feature = newTimeFeature(featureName, (LocalTime) value);
+            } else if (value instanceof Duration) {
+                feature = newDurationFeature(featureName, (Duration) value);
+            } else if (value instanceof URI) {
+                feature = newURIFeature(featureName, (URI) value);
+            } else if (value instanceof ByteBuffer) {
+                feature = newBinaryFeature(featureName, (ByteBuffer) value);
+            } else if (value instanceof Currency) {
+                feature = newCurrencyFeature(featureName, (Currency) value);
+            } else if (value instanceof Date) {
+                feature = newDateFeature(featureName, (Date) value);
+            } else if (value instanceof Boolean) {
+                feature = newBooleanFeature(featureName, (Boolean) value);
+            } else if (value instanceof Number) {
+                feature = newNumericalFeature(featureName, (Number) value);
+            } else if (value instanceof String) {
+                feature = newTextFeature(featureName, (String) value);
+            } else {
+                feature = newObjectFeature(featureName, value);
+            }
+            features.add(feature);
+        }
+        return new Feature(name, Type.COMPOSITE, new Value<>(features));
     }
 }

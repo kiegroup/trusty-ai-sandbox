@@ -11,10 +11,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Currency;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.spi.CurrencyNameProvider;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
@@ -26,7 +27,6 @@ import com.redhat.developer.model.Output;
 import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.PredictionOutput;
 import com.redhat.developer.model.Type;
-import com.redhat.developer.model.Value;
 
 public class DataUtils {
 
@@ -185,6 +185,18 @@ public class DataUtils {
         Feature f;
         String featureName = feature.getName();
         switch (type) {
+            case COMPOSITE:
+                List<Feature> composite = (List<Feature>) feature.getValue().getUnderlyingObject();
+                Map<String, Object> featuresMap = new HashMap<>();
+                for (Feature cf : composite) {
+                    if (random.nextBoolean()) {
+                        featuresMap.put(cf.getName(), featureDrop(cf, noOfSamples));
+                    } else {
+                        featuresMap.put(cf.getName(), cf);
+                    }
+                }
+                f = FeatureFactory.newCompositeFeature(featureName, featuresMap);
+                break;
             case TEXT:
                 String newStringValue;
                 // randomly drop entire string or parts of it
@@ -264,7 +276,7 @@ public class DataUtils {
                 }
                 f = FeatureFactory.newVectorFeature(featureName, values);
                 break;
-            case UNDEFINED:
+            case NESTED:
                 // do nothing
                 f = FeatureFactory.newObjectFeature(featureName, feature.getValue());
                 break;

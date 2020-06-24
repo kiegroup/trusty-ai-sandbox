@@ -24,10 +24,6 @@ import org.kie.pmml.evaluator.api.executor.PMMLRuntime;
 
 public abstract class AbstractPMMLTest {
 
-    public static final String GROUP_ID = "org.kie";
-    public static final String ARTIFACT_ID = "kie-maven-plugin-test-kjar-12";
-    public static final String VERSION = "1.0.0.Final";
-
     public static KieContainer kieContainer;
 
     static {

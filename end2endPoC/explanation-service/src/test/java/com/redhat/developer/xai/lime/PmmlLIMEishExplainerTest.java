@@ -21,6 +21,7 @@ import com.redhat.developer.xai.lime.pmml.CompoundNestedPredicateScorecardExecut
 import com.redhat.developer.xai.lime.pmml.LogisticRegressionIrisDataExecutor;
 import com.redhat.developer.xai.lime.pmml.SimpleScorecardCategoricalExecutor;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.RepeatedTest;
 import org.kie.api.pmml.PMML4Result;
 import org.kie.pmml.evaluator.api.executor.PMMLRuntime;
@@ -29,6 +30,7 @@ import static com.redhat.developer.xai.lime.pmml.AbstractPMMLTest.getPMMLRuntime
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Disabled
 public class PmmlLIMEishExplainerTest {
 
     private static PMMLRuntime logisticRegressionIris;
@@ -149,8 +151,8 @@ public class PmmlLIMEishExplainerTest {
         features.add(FeatureFactory.newTextFeature("input2", "classB"));
         PredictionInput input = new PredictionInput(features);
         List<Output> outputs = List.of(new Output("score", Type.TEXT, new Value<>(25), 1d),
-                                       new Output("reason1", Type.TEXT, new Value<>("Input1ReasonCode"),1d),
-                                       new Output("reason2", Type.TEXT, new Value<>("null"),1d));
+                                       new Output("reason1", Type.TEXT, new Value<>("Input1ReasonCode"), 1d),
+                                       new Output("reason2", Type.TEXT, new Value<>("null"), 1d));
         PredictionOutput output = new PredictionOutput(outputs);
         Prediction prediction = new Prediction(input, output);
 
@@ -164,9 +166,9 @@ public class PmmlLIMEishExplainerTest {
                     SimpleScorecardCategoricalExecutor pmmlModel = new SimpleScorecardCategoricalExecutor(
                             features.get(0).getValue().asString(), features.get(1).getValue().asString());
                     PMML4Result result = pmmlModel.execute(scorecardCategorical);
-                    String score = ""+result.getResultVariables().get(SimpleScorecardCategoricalExecutor.TARGET_FIELD);
-                    String reason1 = ""+result.getResultVariables().get(SimpleScorecardCategoricalExecutor.REASON_CODE1_FIELD);
-                    String reason2 = ""+result.getResultVariables().get(SimpleScorecardCategoricalExecutor.REASON_CODE2_FIELD);
+                    String score = "" + result.getResultVariables().get(SimpleScorecardCategoricalExecutor.TARGET_FIELD);
+                    String reason1 = "" + result.getResultVariables().get(SimpleScorecardCategoricalExecutor.REASON_CODE1_FIELD);
+                    String reason2 = "" + result.getResultVariables().get(SimpleScorecardCategoricalExecutor.REASON_CODE2_FIELD);
                     PredictionOutput predictionOutput = new PredictionOutput(List.of(
                             new Output("score", Type.TEXT, new Value<>(score), 1d),
                             new Output("reason1", Type.TEXT, new Value<>(reason1), 1d),
@@ -205,8 +207,8 @@ public class PmmlLIMEishExplainerTest {
         features.add(FeatureFactory.newTextFeature("input2", "classB"));
         PredictionInput input = new PredictionInput(features);
         List<Output> outputs = List.of(new Output("score", Type.TEXT, new Value<>(-8), 1d),
-                                       new Output("reason1", Type.TEXT, new Value<>("characteristic2ReasonCode"),1d),
-                                       new Output("reason2", Type.TEXT, new Value<>("null"),1d));
+                                       new Output("reason1", Type.TEXT, new Value<>("characteristic2ReasonCode"), 1d),
+                                       new Output("reason2", Type.TEXT, new Value<>("null"), 1d));
         PredictionOutput output = new PredictionOutput(outputs);
         Prediction prediction = new Prediction(input, output);
 
@@ -220,9 +222,9 @@ public class PmmlLIMEishExplainerTest {
                     CompoundNestedPredicateScorecardExecutor pmmlModel = new CompoundNestedPredicateScorecardExecutor(
                             features.get(0).getValue().asNumber(), features.get(1).getValue().asString());
                     PMML4Result result = pmmlModel.execute(compoundScoreCard);
-                    String score = ""+result.getResultVariables().get(CompoundNestedPredicateScorecardExecutor.TARGET_FIELD);
-                    String reason1 = ""+result.getResultVariables().get(CompoundNestedPredicateScorecardExecutor.REASON_CODE1_FIELD);
-                    String reason2 = ""+result.getResultVariables().get(CompoundNestedPredicateScorecardExecutor.REASON_CODE2_FIELD);
+                    String score = "" + result.getResultVariables().get(CompoundNestedPredicateScorecardExecutor.TARGET_FIELD);
+                    String reason1 = "" + result.getResultVariables().get(CompoundNestedPredicateScorecardExecutor.REASON_CODE1_FIELD);
+                    String reason2 = "" + result.getResultVariables().get(CompoundNestedPredicateScorecardExecutor.REASON_CODE2_FIELD);
                     PredictionOutput predictionOutput = new PredictionOutput(List.of(
                             new Output("score", Type.TEXT, new Value<>(score), 1d),
                             new Output("reason1", Type.TEXT, new Value<>(reason1), 1d),

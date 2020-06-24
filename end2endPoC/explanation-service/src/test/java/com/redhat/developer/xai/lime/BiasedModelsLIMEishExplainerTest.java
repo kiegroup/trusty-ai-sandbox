@@ -26,8 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BiasedModelsLIMEishExplainerTest {
 
-    private final static SecureRandom random = new SecureRandom();
-
     @BeforeAll
     public static void setUpBefore() {
         DataUtils.seed(4);

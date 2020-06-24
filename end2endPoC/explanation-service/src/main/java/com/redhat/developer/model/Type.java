@@ -22,7 +22,9 @@ public enum Type {
 
     VECTOR("vector"),
 
-    UNDEFINED("undefined"),
+    NESTED("undefined"),
+
+    COMPOSITE("composite"),
 
     CURRENCY("currency");
 
