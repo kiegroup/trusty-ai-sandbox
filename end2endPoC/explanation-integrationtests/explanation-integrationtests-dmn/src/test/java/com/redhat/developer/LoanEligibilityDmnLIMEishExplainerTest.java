@@ -28,30 +28,31 @@ import org.kie.kogito.decision.DecisionModel;
 import org.kie.kogito.dmn.DMNKogito;
 import org.kie.kogito.dmn.DmnDecisionModel;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DmnLIMEishExplainerTest {
+public class LoanEligibilityDmnLIMEishExplainerTest {
 
     @RepeatedTest(10)
-    public void testDMNExplanation() {
-        DMNRuntime dmnRuntime = DMNKogito.createGenericDMNRuntime(new InputStreamReader(getClass().getResourceAsStream("/dmn/TrafficViolation.dmn")));
+    public void testLoanEligibilityDMNExplanation() {
+        DMNRuntime dmnRuntime = DMNKogito.createGenericDMNRuntime(new InputStreamReader(getClass().getResourceAsStream("/dmn/LoanEligibility.dmn")));
         assertEquals(1, dmnRuntime.getModels().size());
 
-        final String TRAFFIC_VIOLATION_NS = "https://github.com/kiegroup/drools/kie-dmn/_A4BCA8B8-CF08-433F-93B2-A2598F19ECFF";
-        final String TRAFFIC_VIOLATION_NAME = "Traffic Violation";
-        DecisionModel decisionModel = new DmnDecisionModel(dmnRuntime, TRAFFIC_VIOLATION_NS, TRAFFIC_VIOLATION_NAME);
-        final Map<String, Object> driver = new HashMap<>();
-        driver.put("Points", 10);
-        final Map<String, Object> violation = new HashMap<>();
-        violation.put("Type", "speed");
-        violation.put("Actual Speed", 105);
-        violation.put("Speed Limit", 100);
+        final String FRAUD_NS = "https://github.com/kiegroup/kogito-examples/dmn-quarkus-listener-example";
+        final String FRAUD_NAME = "LoanEligibility";
+        DecisionModel decisionModel = new DmnDecisionModel(dmnRuntime, FRAUD_NS, FRAUD_NAME);
+
+        final Map<String, Object> client = new HashMap<>();
+        client.put("age", 43);
+        client.put("salary", 1950);
+        client.put("existing payments", 100);
+        final Map<String, Object> loan = new HashMap<>();
+        loan.put("duration", 15);
+        loan.put("installment", 100);
         final Map<String, Object> contextVariables = new HashMap<>();
-        contextVariables.put("Driver", driver);
-        contextVariables.put("Violation", violation);
+        contextVariables.put("client", client);
+        contextVariables.put("loan", loan);
 
         final DMNContext context = decisionModel.newContext(contextVariables);
         DMNResult dmnResult = decisionModel.evaluateAll(context);
@@ -70,7 +71,7 @@ public class DmnLIMEishExplainerTest {
         Saliency saliency = limEishExplainer.explain(prediction, model);
 
         assertNotNull(saliency);
-        List<String> strings = saliency.getTopFeatures(2).stream().map(f -> f.getFeature().getName()).collect(Collectors.toList());
-        assertTrue(strings.contains("Actual Speed") || strings.contains("Speed Limit"));
+        List<String> strings = saliency.getTopFeatures(3).stream().map(f -> f.getFeature().getName()).collect(Collectors.toList());
+        assertTrue(strings.contains("installment") || strings.contains("duration"));
     }
 }
