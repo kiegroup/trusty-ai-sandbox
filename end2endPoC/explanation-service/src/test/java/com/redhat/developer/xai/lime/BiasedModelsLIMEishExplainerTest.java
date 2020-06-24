@@ -1,6 +1,5 @@
 package com.redhat.developer.xai.lime;
 
-import java.security.SecureRandom;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,8 +11,6 @@ import com.redhat.developer.model.Prediction;
 import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.PredictionOutput;
 import com.redhat.developer.model.Saliency;
-import com.redhat.developer.model.Type;
-import com.redhat.developer.model.Value;
 import com.redhat.developer.utils.DataUtils;
 import com.redhat.developer.xai.ExplanationTestUtils;
 import org.junit.jupiter.api.BeforeAll;

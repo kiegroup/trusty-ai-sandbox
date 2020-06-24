@@ -1,4 +1,4 @@
-package com.redhat.developer.xai.lime;
+package com.redhat.developer;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,22 +15,22 @@ import com.redhat.developer.model.PredictionOutput;
 import com.redhat.developer.model.Saliency;
 import com.redhat.developer.model.Type;
 import com.redhat.developer.model.Value;
+import com.redhat.developer.pmml.CategoricalVariablesRegressionExecutor;
+import com.redhat.developer.pmml.CompoundNestedPredicateScorecardExecutor;
+import com.redhat.developer.pmml.LogisticRegressionIrisDataExecutor;
+import com.redhat.developer.pmml.SimpleScorecardCategoricalExecutor;
 import com.redhat.developer.utils.DataUtils;
-import com.redhat.developer.xai.lime.pmml.CategoricalVariablesRegressionExecutor;
-import com.redhat.developer.xai.lime.pmml.CompoundNestedPredicateScorecardExecutor;
-import com.redhat.developer.xai.lime.pmml.LogisticRegressionIrisDataExecutor;
-import com.redhat.developer.xai.lime.pmml.SimpleScorecardCategoricalExecutor;
+import com.redhat.developer.xai.lime.LIMEishExplainer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.RepeatedTest;
 import org.kie.api.pmml.PMML4Result;
 import org.kie.pmml.evaluator.api.executor.PMMLRuntime;
 
-import static com.redhat.developer.xai.lime.pmml.AbstractPMMLTest.getPMMLRuntime;
+import static com.redhat.developer.pmml.AbstractPMMLTest.getPMMLRuntime;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Disabled
 public class PmmlLIMEishExplainerTest {
 
     private static PMMLRuntime logisticRegressionIris;

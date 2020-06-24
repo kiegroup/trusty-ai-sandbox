@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.redhat.developer.xai.lime.pmml;
+package com.redhat.developer.pmml;
 
 import org.kie.api.KieBase;
 import org.kie.api.KieServices;

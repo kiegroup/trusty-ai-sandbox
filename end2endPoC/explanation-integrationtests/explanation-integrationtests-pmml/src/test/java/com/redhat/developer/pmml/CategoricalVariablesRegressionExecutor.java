@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.redhat.developer.xai.lime.pmml;
+package com.redhat.developer.pmml;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,30 +22,23 @@ import java.util.Map;
 import org.kie.api.pmml.PMML4Result;
 import org.kie.pmml.evaluator.api.executor.PMMLRuntime;
 
-public class LogisticRegressionIrisDataExecutor extends AbstractPMMLExecutor {
+public class CategoricalVariablesRegressionExecutor extends AbstractPMMLExecutor {
 
-    public static final String MODEL_NAME = "LogisticRegressionIrisData";
+    private static final String MODEL_NAME = "categoricalVariables_Model";
 
-    private final double sepalLength;
-    private final double sepalWidth;
-    private final double petalLength;
-    private final double petalWidth;
+    private final String x;
+    private final String y;
 
-    public LogisticRegressionIrisDataExecutor(double sepalLength, double sepalWidth, double petalLength,
-                                              double petalWidth) {
-        this.sepalLength = sepalLength;
-        this.sepalWidth = sepalWidth;
-        this.petalLength = petalLength;
-        this.petalWidth = petalWidth;
+    public CategoricalVariablesRegressionExecutor(String x, String y) {
+        this.x = x;
+        this.y = y;
     }
 
+    @Override
     public PMML4Result execute(final PMMLRuntime pmmlRuntime) {
         final Map<String, Object> inputData = new HashMap<>();
-        inputData.put("Sepal.Length", sepalLength);
-        inputData.put("Sepal.Width", sepalWidth);
-        inputData.put("Petal.Length", petalLength);
-        inputData.put("Petal.Width", petalWidth);
+        inputData.put("x", x);
+        inputData.put("y", y);
         return evaluate(pmmlRuntime, inputData, MODEL_NAME);
     }
-
 }
