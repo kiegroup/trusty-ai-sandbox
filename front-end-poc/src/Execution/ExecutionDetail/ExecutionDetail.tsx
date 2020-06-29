@@ -1,20 +1,20 @@
 import React, { useCallback } from "react";
-import { PageSection, Stack, StackItem, Title } from "@patternfly/react-core";
-import { IExecution, IExecutionModelResponse } from "../Audit/types";
-import OutcomeCards from "./OutcomeCards/OutcomeCards";
-import { RemoteData } from "../Shared/types";
-import { IOutcome } from "../Outcome/types";
 import { useHistory } from "react-router-dom";
-import SkeletonCards from "../Shared/skeletons/SkeletonCards/SkeletonCards";
-import "./DecisionDetailAlt.scss";
+import { PageSection, Stack, StackItem, Title } from "@patternfly/react-core";
+import { IExecution, IExecutionModelResponse } from "../../Audit/types";
+import OutcomeCards from "../OutcomeCards/OutcomeCards";
+import { RemoteData } from "../../Shared/types";
+import { IOutcome } from "../../Outcome/types";
+import SkeletonCards from "../../Shared/skeletons/SkeletonCards/SkeletonCards";
+import "./ExecutionDetail.scss";
 
-type DecisionDetailAltProps = {
+type ExecutionDetailProps = {
   execution: RemoteData<Error, IExecution>;
   outcome: RemoteData<Error, IOutcome[]>;
   model: IExecutionModelResponse;
 };
 
-const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
+const ExecutionDetail = (props: ExecutionDetailProps) => {
   const { execution, model, outcome } = props;
   const history = useHistory();
   console.log(model.name, execution);
@@ -47,4 +47,4 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
   );
 };
 
-export default DecisionDetailAlt;
+export default ExecutionDetail;

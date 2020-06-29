@@ -5,16 +5,15 @@ import { ExecutionType, getDecisionOutcome, getModelDetail } from "../../Shared/
 import { IExecutionModelResponse, IExecutionRouteParams } from "../types";
 import { RemoteData } from "../../Shared/types";
 import { IOutcome } from "../../Outcome/types";
-//import DecisionDetail from "../../Execution/DecisionDetail";
 import ExplanationView from "../../Explanation/ExplanationView/ExplanationView";
 import InputDataView from "../../InputData/InputDataView/InputDataView";
 import ModelLookup from "../../ModelLookup/ModelLookup";
 import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
-import DecisionDetailAlt from "../../Execution/DecisionDetailAlt";
 import SkeletonStripes from "../../Shared/skeletons/SkeletonStripes";
 import SkeletonCards from "../../Shared/skeletons/SkeletonCards/SkeletonCards";
 import useExecutionInfo from "../../Shared/hooks/useExecutionInfo";
 import ExecutionHeader from "../ExecutionHeader/ExecutionHeader";
+import ExecutionDetail from "../../Execution/ExecutionDetail/ExecutionDetail";
 import "./AuditDetail.scss";
 
 const AuditDetail = () => {
@@ -117,7 +116,7 @@ const AuditDetail = () => {
           <ExplanationView />
         </Route>
         <Route path={`${path}/overview`}>
-          <DecisionDetailAlt model={model} execution={execution} outcome={outcome} />
+          <ExecutionDetail model={model} execution={execution} outcome={outcome} />
         </Route>
         <Route path={`${path}/outcomes-analysis`}>
           <ExplanationView />
