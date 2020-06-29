@@ -1,0 +1,7 @@
+.data-with-label {
+  &__label {
+    font-size: (15/16) + rem;
+    display: block;
+    color: var(--pf-global--Color--200);
+  }
+}
