@@ -20,7 +20,10 @@ const DecisionDetailAlt = (props: DecisionDetailAltProps) => {
   console.log(model.name, execution);
   const goToExplanation = useCallback(
     (outcomeId: string) => {
-      history.push(`outcomes/${outcomeId}`);
+      history.push({
+        pathname: "outcomes-analysis",
+        search: `?outcomeId=${outcomeId}`,
+      });
     },
     [history]
   );

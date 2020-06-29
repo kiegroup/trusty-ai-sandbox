@@ -14,8 +14,8 @@ import DecisionDetailAlt from "../../Execution/DecisionDetailAlt";
 import SkeletonStripes from "../../Shared/skeletons/SkeletonStripes";
 import SkeletonCards from "../../Shared/skeletons/SkeletonCards/SkeletonCards";
 import useExecutionInfo from "../../Shared/hooks/useExecutionInfo";
-import "./AuditDetail.scss";
 import ExecutionHeader from "../ExecutionHeader/ExecutionHeader";
+import "./AuditDetail.scss";
 
 const AuditDetail = () => {
   const { path, url } = useRouteMatch();
@@ -80,7 +80,8 @@ const AuditDetail = () => {
           desc: "Outcome",
         });
       } else {
-        newNav.push({ url: "/outcomes", desc: "Outcome" });
+        newNav.push({ url: "/overview", desc: "Overview" });
+        newNav.push({ url: "/outcomes-analysis", desc: "Outcomes Analysis" });
       }
       newNav.push({ url: "/input-data", desc: "Input Data" });
       newNav.push({ url: "/model-lookup", desc: "Model Lookup" });
@@ -115,8 +116,11 @@ const AuditDetail = () => {
         <Route path={`${path}/outcome-details/:outcomeId`}>
           <ExplanationView />
         </Route>
-        <Route path={`${path}/outcomes`}>
+        <Route path={`${path}/overview`}>
           <DecisionDetailAlt model={model} execution={execution} outcome={outcome} />
+        </Route>
+        <Route path={`${path}/outcomes-analysis`}>
+          <ExplanationView />
         </Route>
         <Route path={`${path}/input-data`}>
           <InputDataView />
@@ -129,7 +133,7 @@ const AuditDetail = () => {
             <Redirect exact from={path} to={`${location.pathname}/outcome-details/${outcome.data[0].outcomeId}`} />
           )}
           {outcome.status === "SUCCESS" && outcome.data.length > 1 && (
-            <Redirect exact from={path} to={`${location.pathname}/outcomes`} />
+            <Redirect exact from={path} to={`${location.pathname}/overview`} />
           )}
           {outcome.status === "LOADING" && (
             <PageSection>

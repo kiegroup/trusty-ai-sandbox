@@ -14,8 +14,8 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import { HelpIcon } from "@patternfly/react-icons";
-import { useParams, useHistory } from "react-router-dom";
-import { IOutcomeRouteParams } from "../../Audit/types";
+import { useParams, useHistory, useLocation } from "react-router-dom";
+import { IExecutionRouteParams } from "../../Audit/types";
 import { IOutcome } from "../../Outcome/types";
 import { getDecisionFeatureScores, getDecisionOutcome, getDecisionOutcomeDetail } from "../../Shared/api/audit.api";
 import OutcomePreview from "../../Outcome/OutcomePreview/OutcomePreview";
@@ -25,6 +25,7 @@ import FeaturesScoreChart from "../FeaturesScoreChart/FeaturesScoreChart";
 import { orderBy } from "lodash";
 import SkeletonTornadoChart from "../../Shared/skeletons/SkeletonTornadoChart/SkeletonTornadoChart";
 import FeaturesScoreTable from "../FeatureScoreTable/FeaturesScoreTable";
+import queryString from "query-string";
 import ExplanationSelector from "../ExplanationSelector/ExplanationSelector";
 import "./ExplanationView.scss";
 
@@ -34,9 +35,10 @@ export interface IFeatureScores {
 }
 
 const ExplanationView = () => {
-  const { executionId, outcomeId } = useParams<IOutcomeRouteParams>();
+  const { executionId } = useParams<IExecutionRouteParams>();
   const [outcomeData, setOutcomeData] = useState<IOutcome | null>(null);
   const [outcomesList, setOutcomesList] = useState<IOutcome[] | null>(null);
+  const [outcomeId, setOutcomeId] = useState<string | null>(null);
   const [outcomeDetail, setOutcomeDetail] = useState(null);
   const [featuresScores, setFeaturesScores] = useState<IFeatureScores[] | null>(null);
   const [topFeatures, setTopFeatures] = useState<IFeatureScores[]>([]);
@@ -45,10 +47,13 @@ const ExplanationView = () => {
     setIsModalOpen(!isModalOpen);
   };
   const history = useHistory();
+  const location = useLocation();
 
   const switchExplanation = useCallback(
     (outcomeId: string) => {
-      history.push(outcomeId);
+      history.push({
+        search: `outcomeId=${outcomeId}`,
+      });
     },
     [history]
   );
@@ -59,7 +64,13 @@ const ExplanationView = () => {
       .then((response) => {
         if (isMounted) {
           if (response.data && response.data.outcomes) {
+            let defaultOutcome = response.data.outcomes[0];
             setOutcomesList(response.data.outcomes);
+            if (!outcomeId) {
+              history.replace({
+                search: `outcomeId=${defaultOutcome.outcomeId}`,
+              });
+            }
           }
         }
       })
@@ -81,27 +92,32 @@ const ExplanationView = () => {
     return () => {
       isMounted = false;
     };
-  }, [executionId, history]);
+  }, [executionId, outcomeId, history]);
 
   useEffect(() => {
-    if (outcomesList) {
-      let outcome = outcomesList.find((item) => item.outcomeId === outcomeId);
-      setOutcomeData(outcome as IOutcome);
+    let query = queryString.parse(location.search);
+    if (query.outcomeId && query.outcomeId.length) {
+      setOutcomeId(query.outcomeId as string);
+      if (outcomesList) {
+        let outcome = outcomesList.find((item) => item.outcomeId === query.outcomeId);
+        setOutcomeData(outcome as IOutcome);
+      }
     }
-  }, [outcomeId, outcomesList]);
+  }, [location.search, outcomesList]);
 
   useEffect(() => {
     let isMounted = true;
-    getDecisionOutcomeDetail(executionId, outcomeId)
-      .then((response) => {
-        if (isMounted) {
-          if (response && response.data && response.data.outcomeInputs) {
-            setOutcomeDetail(response.data.outcomeInputs);
+    if (outcomeId !== null) {
+      getDecisionOutcomeDetail(executionId, outcomeId)
+        .then((response) => {
+          if (isMounted) {
+            if (response && response.data && response.data.outcomeInputs) {
+              setOutcomeDetail(response.data.outcomeInputs);
+            }
           }
-        }
-      })
-      .catch(() => {});
-
+        })
+        .catch(() => {});
+    }
     return () => {
       isMounted = false;
     };
