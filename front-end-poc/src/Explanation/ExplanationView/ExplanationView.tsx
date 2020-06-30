@@ -181,7 +181,7 @@ const ExplanationView = () => {
                           <FeaturesScoreChart featuresScore={featuresScores} />
                         </div>
                       )}
-                      {featuresScores !== null && topFeatures.length && (
+                      {featuresScores !== null && topFeatures.length > 0 && (
                         <>
                           <div className="explanation-view__chart">
                             <FeaturesScoreChart featuresScore={topFeatures} />
@@ -222,7 +222,7 @@ const ExplanationView = () => {
                       {featuresScores !== null && topFeatures.length === 0 && (
                         <FeaturesScoreTable featuresScore={featuresScores} />
                       )}
-                      {featuresScores !== null && topFeatures.length && (
+                      {featuresScores !== null && topFeatures.length > 0 && (
                         <FeaturesScoreTable featuresScore={topFeatures} />
                       )}
                     </CardBody>
