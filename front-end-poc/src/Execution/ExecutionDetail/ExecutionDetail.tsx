@@ -22,7 +22,7 @@ const ExecutionDetail = (props: ExecutionDetailProps) => {
   const goToExplanation = useCallback(
     (outcomeId: string) => {
       history.push({
-        pathname: "outcomes-analysis",
+        pathname: "outcomes-details",
         search: `?outcomeId=${outcomeId}`,
       });
     },
