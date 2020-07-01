@@ -2,6 +2,8 @@ package com.redhat.developer.utils;
 
 import java.security.SecureRandom;
 
+import com.redhat.developer.model.Model;
+import com.redhat.developer.xai.ExplanationTestUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

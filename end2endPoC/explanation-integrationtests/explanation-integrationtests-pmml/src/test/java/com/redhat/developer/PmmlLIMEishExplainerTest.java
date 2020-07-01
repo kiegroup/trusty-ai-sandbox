@@ -20,6 +20,7 @@ import com.redhat.developer.pmml.CompoundNestedPredicateScorecardExecutor;
 import com.redhat.developer.pmml.LogisticRegressionIrisDataExecutor;
 import com.redhat.developer.pmml.SimpleScorecardCategoricalExecutor;
 import com.redhat.developer.utils.DataUtils;
+import com.redhat.developer.utils.ExplainabilityUtils;
 import com.redhat.developer.xai.lime.LIMEishExplainer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
@@ -95,6 +96,8 @@ public class PmmlLIMEishExplainerTest {
         assertNotNull(saliency);
         List<String> strings = saliency.getPositiveFeatures(2).stream().map(f -> f.getFeature().getName()).collect(Collectors.toList());
         assertTrue(strings.contains("petalWidth"));
+        double v = ExplainabilityUtils.saliencyImpact(model, prediction, saliency, 2);
+        assertTrue(v > 0);
     }
 
     @RepeatedTest(10)
@@ -254,5 +257,7 @@ public class PmmlLIMEishExplainerTest {
         assertNotNull(saliency);
         List<String> strings = saliency.getPositiveFeatures(1).stream().map(f -> f.getFeature().getName()).collect(Collectors.toList());
         assertTrue(strings.contains("input1"));
+        double v = ExplainabilityUtils.saliencyImpact(model, prediction, saliency, 1);
+        assertTrue(v > 0);
     }
 }

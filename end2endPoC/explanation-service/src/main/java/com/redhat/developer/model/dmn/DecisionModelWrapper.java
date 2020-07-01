@@ -37,6 +37,9 @@ public class DecisionModelWrapper implements Model {
         List<PredictionOutput> predictionOutputs = new LinkedList<>();
         for (PredictionInput input : inputs) {
             Map<String, Object> contextVariables = toMap(input.getFeatures());
+            if (contextVariables.containsKey("context")) {
+                contextVariables = (Map<String, Object>) contextVariables.get("context");
+            }
             final DMNContext context = decisionModel.newContext(contextVariables);
             DMNResult dmnResult = decisionModel.evaluateAll(context);
             List<Output> outputs = new LinkedList<>();
@@ -54,7 +57,13 @@ public class DecisionModelWrapper implements Model {
         Map<String, Object> map = new HashMap<>();
         for (Feature f : features) {
             if (Type.COMPOSITE.equals(f.getType())) {
-                return toMap((List<Feature>) f.getValue().getUnderlyingObject());
+                List<Feature> compositeFeatures = (List<Feature>) f.getValue().getUnderlyingObject();
+                Map<String, Object> maps = new HashMap<>();
+                for (Feature cf : compositeFeatures) {
+                    Map<String, Object> compositeFeatureMap = toMap(List.of(cf));
+                    maps.putAll(compositeFeatureMap);
+                }
+                map.put(f.getName(), maps);
             } else {
                 if (Type.NESTED.equals(f.getType())) {
                     Feature underlyingFeature = (Feature) f.getValue().getUnderlyingObject();

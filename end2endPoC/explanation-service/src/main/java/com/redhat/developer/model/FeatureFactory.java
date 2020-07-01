@@ -94,6 +94,8 @@ public class FeatureFactory {
                 feature = newNumericalFeature(featureName, (Number) value);
             } else if (value instanceof String) {
                 feature = newTextFeature(featureName, (String) value);
+            } else if (value instanceof Feature) {
+                feature = (Feature) value;
             } else {
                 feature = newObjectFeature(featureName, value);
             }

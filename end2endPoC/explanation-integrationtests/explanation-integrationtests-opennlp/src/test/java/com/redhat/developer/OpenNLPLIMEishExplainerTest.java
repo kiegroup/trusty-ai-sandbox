@@ -18,6 +18,7 @@ import com.redhat.developer.model.Saliency;
 import com.redhat.developer.model.Type;
 import com.redhat.developer.model.Value;
 import com.redhat.developer.utils.DataUtils;
+import com.redhat.developer.utils.ExplainabilityUtils;
 import com.redhat.developer.xai.lime.LIMEishExplainer;
 import opennlp.tools.langdetect.Language;
 import opennlp.tools.langdetect.LanguageDetector;
@@ -90,7 +91,13 @@ public class OpenNLPLIMEishExplainerTest {
         };
         Saliency saliency = limEishExplainer.explain(prediction, model);
         assertNotNull(saliency);
-        List<String> strings = saliency.getPositiveFeatures(2).stream().map(f -> f.getFeature().getName()).collect(Collectors.toList());
-        assertTrue(strings.contains("pizza (text)"));
+        double i1 = ExplainabilityUtils.saliencyImpact(model, prediction, saliency, 1);
+        assertTrue(i1 > 0);
+        double i2 = ExplainabilityUtils.saliencyImpact(model, prediction, saliency, 2);
+        assertTrue(i2 > 0);
+        assertTrue(i2 <= i1 * 1.5);
+        double i3 = ExplainabilityUtils.saliencyImpact(model, prediction, saliency, 3);
+        assertTrue(i3 > 0);
+        assertTrue(i3 <= i2 * 1.5);
     }
 }

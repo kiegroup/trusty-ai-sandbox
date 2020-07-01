@@ -12,6 +12,7 @@ import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.PredictionOutput;
 import com.redhat.developer.model.Saliency;
 import com.redhat.developer.utils.DataUtils;
+import com.redhat.developer.utils.ExplainabilityUtils;
 import com.redhat.developer.xai.ExplanationTestUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
@@ -48,6 +49,8 @@ public class BiasedModelsLIMEishExplainerTest {
         assertEquals(topFeatures.get(0).getFeature().getName(), features.get(idx).getName());
         assertTrue(topFeatures.get(1).getScore() < topFeatures.get(0).getScore() * 10);
         assertTrue(topFeatures.get(2).getScore() < topFeatures.get(0).getScore() * 10);
+        double v = ExplainabilityUtils.saliencyImpact(model, prediction, saliency, 1);
+        assertTrue(v > 0);
     }
 
     @RepeatedTest(10)
@@ -71,6 +74,8 @@ public class BiasedModelsLIMEishExplainerTest {
         assertTrue(perFeatureImportance.get(0).getScore() > 0);
         assertTrue(perFeatureImportance.get(1).getScore() > 0);
         assertEquals(features.get(idx).getName(), perFeatureImportance.get(2).getFeature().getName());
+        double v = ExplainabilityUtils.saliencyImpact(model, prediction, saliency, 1);
+        assertTrue(v > 0);
     }
 
     @RepeatedTest(10)
@@ -110,6 +115,8 @@ public class BiasedModelsLIMEishExplainerTest {
         assertNotNull(saliency);
         List<FeatureImportance> topFeatures = saliency.getPositiveFeatures(1);
         assertEquals("money (f2)", topFeatures.get(0).getFeature().getName());
+        double v = ExplainabilityUtils.saliencyImpact(model, prediction, saliency, 1);
+        assertTrue(v > 0);
     }
 
     @Disabled

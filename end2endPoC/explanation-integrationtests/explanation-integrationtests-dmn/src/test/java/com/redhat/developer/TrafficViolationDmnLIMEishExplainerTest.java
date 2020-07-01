@@ -53,19 +53,13 @@ public class TrafficViolationDmnLIMEishExplainerTest {
         contextVariables.put("Driver", driver);
         contextVariables.put("Violation", violation);
 
-        final DMNContext context = decisionModel.newContext(contextVariables);
-        DMNResult dmnResult = decisionModel.evaluateAll(context);
-        List<Output> outputs = new LinkedList<>();
-        for (DMNDecisionResult decisionResult : dmnResult.getDecisionResults()) {
-            Output output = new Output(decisionResult.getDecisionName(), Type.TEXT, new Value<>(decisionResult.getResult()), 1d);
-            outputs.add(output);
-        }
-        PredictionOutput predictionOutput = new PredictionOutput(outputs);
+
         Model model = new DecisionModelWrapper(decisionModel);
         List<Feature> features = new LinkedList<>();
         features.add(FeatureFactory.newCompositeFeature("context", contextVariables));
         PredictionInput predictionInput = new PredictionInput(features);
-        Prediction prediction = new Prediction(predictionInput, predictionOutput);
+        List<PredictionOutput> predictionOutputs = model.predict(List.of(predictionInput));
+        Prediction prediction = new Prediction(predictionInput, predictionOutputs.get(0));
         LIMEishExplainer limEishExplainer = new LIMEishExplainer(100, 1);
         Saliency saliency = limEishExplainer.explain(prediction, model);
 

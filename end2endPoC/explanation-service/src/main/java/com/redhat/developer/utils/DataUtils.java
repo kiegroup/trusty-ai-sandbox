@@ -174,13 +174,13 @@ public class DataUtils {
         int perturbationSize = Math.min(noOfPerturbations, originalFeatures.size());
         int[] indexesToBePerturbed = random.ints(0, perturbedInput.getFeatures().size()).distinct().limit(perturbationSize).toArray();
         for (int value : indexesToBePerturbed) {
-            perturbedInput.getFeatures().set(value, featureDrop(
+            perturbedInput.getFeatures().set(value, perturbFeature(
                     perturbedInput.getFeatures().get(value), noOfSamples));
         }
         return perturbedInput;
     }
 
-    private static Feature featureDrop(Feature feature, int noOfSamples) {
+    private static Feature perturbFeature(Feature feature, int noOfSamples) {
         Type type = feature.getType();
         Feature f;
         String featureName = feature.getName();
@@ -190,7 +190,7 @@ public class DataUtils {
                 Map<String, Object> featuresMap = new HashMap<>();
                 for (Feature cf : composite) {
                     if (random.nextBoolean()) {
-                        featuresMap.put(cf.getName(), featureDrop(cf, noOfSamples));
+                        featuresMap.put(cf.getName(), perturbFeature(cf, noOfSamples));
                     } else {
                         featuresMap.put(cf.getName(), cf);
                     }
@@ -278,7 +278,123 @@ public class DataUtils {
                 break;
             case NESTED:
                 // do nothing
-                f = FeatureFactory.newObjectFeature(featureName, feature.getValue());
+                f = perturbFeature((Feature) feature.getValue().getUnderlyingObject(), noOfSamples);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + type);
+        }
+        return f;
+    }
+
+    public static Feature dropFeature(Feature feature, String... names) {
+        Arrays.sort(names);
+        Type type = feature.getType();
+        Feature f = feature;
+        String featureName = feature.getName();
+        switch (type) {
+            case COMPOSITE:
+                List<Feature> composite = (List<Feature>) feature.getValue().getUnderlyingObject();
+                Map<String, Object> featuresMap = new HashMap<>();
+                for (Feature cf : composite) {
+                    featuresMap.put(cf.getName(), dropFeature(cf, names));
+                }
+                f = FeatureFactory.newCompositeFeature(featureName, featuresMap);
+                break;
+            case TEXT:
+                if (Arrays.binarySearch(names, feature.getName()) >= 0) {
+                    f = FeatureFactory.newTextFeature(featureName, "");
+                } else {
+                    String stringValue = feature.getValue().asString();
+                    if (stringValue.indexOf(' ') != -1) {
+                        List<String> words = new ArrayList<>(Arrays.asList(stringValue.split(" ")));
+                        List<String> matchingWords = Arrays.stream(names).map(n -> n.contains(" (") ? n.substring(0, n.indexOf(" (")) : "").filter(words::contains).collect(Collectors.toList());
+                        if (words.removeAll(matchingWords)) {
+                            stringValue = String.join(" ", words);
+                        }
+                    }
+                    f = FeatureFactory.newTextFeature(featureName, stringValue);
+                }
+                break;
+            case NUMBER:
+                if (Arrays.binarySearch(names, feature.getName()) >= 0) {
+                    if (feature.getValue().asNumber() == 0) {
+                        f = FeatureFactory.newNumericalFeature(featureName, Double.NaN);
+                    } else {
+                        f = FeatureFactory.newNumericalFeature(featureName, 0);
+                    }
+                }
+                break;
+            case BOOLEAN:
+                if (Arrays.binarySearch(names, feature.getName()) >= 0) {
+                    // flip the boolean value
+                    f = FeatureFactory.newBooleanFeature(featureName, !Boolean.getBoolean(feature.getValue().asString()));
+                }
+                break;
+            case DATE:
+                if (Arrays.binarySearch(names, feature.getName()) >= 0) {
+                    // set to initial value of Java date in the current TZ
+                    f = FeatureFactory.newDateFeature(featureName, new Date(0));
+                }
+                break;
+            case TIME:
+                if (Arrays.binarySearch(names, feature.getName()) >= 0) {
+                    // set to midnight
+                    f = FeatureFactory.newTimeFeature(featureName, LocalTime.MIDNIGHT);
+                }
+                break;
+            case DURATION:
+                if (Arrays.binarySearch(names, feature.getName()) >= 0) {
+                    // set the duration to 0
+                    f = FeatureFactory.newDurationFeature(featureName, Duration.of(0, ChronoUnit.SECONDS));
+                }
+                break;
+            case CURRENCY:
+                if (Arrays.binarySearch(names, feature.getName()) >= 0) {
+                    // set the currency to EUR
+                    f = FeatureFactory.newCurrencyFeature(featureName, Currency.getInstance(Locale.getDefault()));
+                }
+                break;
+            case CATEGORICAL:
+                if (Arrays.binarySearch(names, feature.getName()) >= 0) {
+                    String category = feature.getValue().asString();
+                    if (!"0".equals(category)) {
+                        category = "0";
+                    } else {
+                        category = "1";
+                    }
+                    f = FeatureFactory.newCategoricalFeature(featureName, category);
+                }
+                break;
+            case BINARY:
+                if (Arrays.binarySearch(names, feature.getName()) >= 0) {
+                    // set an empty buffer
+                    ByteBuffer byteBuffer = ByteBuffer.allocate(0);
+                    f = FeatureFactory.newBinaryFeature(featureName, byteBuffer);
+                }
+                break;
+            case URI:
+                if (Arrays.binarySearch(names, feature.getName()) >= 0) {
+                    // set an empty URI
+                    f = FeatureFactory.newURIFeature(featureName, URI.create(""));
+                }
+                break;
+            case VECTOR:
+                if (Arrays.binarySearch(names, feature.getName()) >= 0) {
+                    // randomly set a non zero value to zero (or decrease it by 1)
+                    double[] values = feature.getValue().asVector();
+                    if (values.length > 0) {
+                        int idx = random.nextInt(values.length - 1);
+                        if (values[idx] != 0) {
+                            values[idx] = 0;
+                        } else {
+                            values[idx]--;
+                        }
+                    }
+                    f = FeatureFactory.newVectorFeature(featureName, values);
+                }
+                break;
+            case NESTED:
+                f = dropFeature((Feature) feature.getValue().getUnderlyingObject(), names);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + type);
@@ -294,6 +410,16 @@ public class DataUtils {
             }
         }
         return h + (x.length - y.length);
+    }
+
+    public static double hammingDistance(String x, String y) {
+        int h = 0;
+        for (int i = 0; i < Math.min(x.length(), y.length()); i++) {
+            if (x.charAt(i) != y.charAt(i)) {
+                h++;
+            }
+        }
+        return h + (x.length() - y.length());
     }
 
     public static double euclideanDistance(double[] x, double[] y) {
@@ -332,5 +458,43 @@ public class DataUtils {
             featureDistributions.add(featureDistribution);
         }
         return new DataDistribution(featureDistributions);
+    }
+
+    public static List<PredictionInput> linearizeInputs(List<PredictionInput> predictionInputs) {
+        List<PredictionInput> newInputs = new LinkedList<>();
+        for (PredictionInput predictionInput : predictionInputs) {
+            List<Feature> originalFeatures = predictionInput.getFeatures();
+            List<Feature> flattenedFeatures = getLinearizedFeatures(originalFeatures);
+            newInputs.add(new PredictionInput(flattenedFeatures));
+        }
+        return newInputs;
+    }
+
+    public static List<Feature> getLinearizedFeatures(List<Feature> originalFeatures) {
+        List<Feature> flattenedFeatures = new LinkedList<>();
+        for (Feature f : originalFeatures) {
+            linearizeFeature(flattenedFeatures, f);
+        }
+        return flattenedFeatures;
+    }
+
+    static void linearizeFeature(List<Feature> flattenedFeatures, Feature f) {
+        if (Type.NESTED.equals(f.getType())) {
+            linearizeFeature(flattenedFeatures, (Feature) f.getValue().getUnderlyingObject());
+        } else if (Type.COMPOSITE.equals(f.getType())) {
+            List<Feature> features = (List<Feature>) f.getValue().getUnderlyingObject();
+            for (Feature feature : features) {
+                linearizeFeature(flattenedFeatures, feature);
+            }
+        } else {
+            if (Type.TEXT.equals(f.getType())) {
+                for (String w : f.getValue().asString().split(" ")) {
+                    Feature outputFeature = FeatureFactory.newTextFeature(w + " (" + f.getName() + ")", w);
+                    flattenedFeatures.add(outputFeature);
+                }
+            } else {
+                flattenedFeatures.add(f);
+            }
+        }
     }
 }

@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
 import com.redhat.developer.model.Feature;
-import com.redhat.developer.model.FeatureFactory;
 import com.redhat.developer.model.FeatureImportance;
 import com.redhat.developer.model.Model;
 import com.redhat.developer.model.Output;
@@ -62,7 +61,8 @@ public class LIMEishExplainer implements LocalExplainer<Saliency> {
         List<FeatureImportance> saliencies = new LinkedList<>();
         PredictionInput originalInput = prediction.getInput();
         List<Feature> inputFeatures = originalInput.getFeatures();
-        List<Feature> linearizedTargetInputFeatures = linearizeInputs(List.of(originalInput)).get(0).getFeatures();
+        PredictionInput targetInput = DataUtils.linearizeInputs(List.of(originalInput)).get(0);
+        List<Feature> linearizedTargetInputFeatures = targetInput.getFeatures();
         List<Output> actualOutputs = prediction.getOutput().getOutputs();
         int noOfInputFeatures = inputFeatures.size();
         int noOfOutputFeatures = linearizedTargetInputFeatures.size();
@@ -118,7 +118,7 @@ public class LIMEishExplainer implements LocalExplainer<Saliency> {
 
             Output originalOutput = prediction.getOutput().getOutputs().get(o);
 
-            List<Pair<double[], Double>> trainingSet = encodeTrainingSet(perturbedInputs, predictedOutputs, originalInput, originalOutput);
+            List<Pair<double[], Double>> trainingSet = encodeTrainingSet(perturbedInputs, predictedOutputs, targetInput, originalOutput);
 
             double[] sampleWeights = getSampleWeights(prediction, noOfOutputFeatures, trainingSet);
 
@@ -144,10 +144,9 @@ public class LIMEishExplainer implements LocalExplainer<Saliency> {
                                                           PredictionInput targetInput, Output originalOutput) {
         List<Pair<double[], Double>> trainingSet = new LinkedList<>();
         List<List<Double>> columnData;
-        List<PredictionInput> flatInputs = linearizeInputs(perturbedInputs);
-        PredictionInput flatOriginInput = linearizeInputs(List.of(targetInput)).get(0);
-        if (!flatInputs.isEmpty() && !predictedOutputs.isEmpty() && !flatOriginInput.getFeatures().isEmpty() && originalOutput != null) {
-            columnData = getColumnData(flatInputs, flatOriginInput);
+        List<PredictionInput> flatInputs = DataUtils.linearizeInputs(perturbedInputs);
+        if (!flatInputs.isEmpty() && !predictedOutputs.isEmpty() && !targetInput.getFeatures().isEmpty() && originalOutput != null) {
+            columnData = getColumnData(flatInputs, targetInput);
 
             int pi = 0;
             for (Output output : predictedOutputs) {
@@ -216,39 +215,6 @@ public class LIMEishExplainer implements LocalExplainer<Saliency> {
             }
         }
         return columnData;
-    }
-
-    private static List<PredictionInput> linearizeInputs(List<PredictionInput> predictionInputs) {
-        List<PredictionInput> newInputs = new LinkedList<>();
-        for (PredictionInput predictionInput : predictionInputs) {
-            List<Feature> originalFeatures = predictionInput.getFeatures();
-            List<Feature> flattenedFeatures = new LinkedList<>();
-            for (Feature f : originalFeatures) {
-                linearizeFeature(flattenedFeatures, f);
-            }
-            newInputs.add(new PredictionInput(flattenedFeatures));
-        }
-        return newInputs;
-    }
-
-    private static void linearizeFeature(List<Feature> flattenedFeatures, Feature f) {
-        if (Type.NESTED.equals(f.getType())) {
-            linearizeFeature(flattenedFeatures, (Feature) f.getValue().getUnderlyingObject());
-        } else if (Type.COMPOSITE.equals(f.getType())) {
-            List<Feature> features = (List<Feature>) f.getValue().getUnderlyingObject();
-            for (Feature feature : features) {
-                linearizeFeature(flattenedFeatures, feature);
-            }
-        } else {
-            if (Type.TEXT.equals(f.getType())) {
-                for (String w : f.getValue().asString().split(" ")) {
-                    Feature outputFeature = FeatureFactory.newTextFeature(w + " (" + f.getName() + ")", w);
-                    flattenedFeatures.add(outputFeature);
-                }
-            } else {
-                flattenedFeatures.add(f);
-            }
-        }
     }
 
     private static void encodeNumbers(List<PredictionInput> predictionInputs, PredictionInput originalInputs, List<List<Double>> columnData, int t) {
