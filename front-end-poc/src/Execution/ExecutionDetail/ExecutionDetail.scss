@@ -1,15 +1,4 @@
 .execution-detail {
   padding-bottom: var(--pf-global--spacer--xl);
   background-color: var(--pf-c-page__main-section--BackgroundColor);
-  position: relative;
-  padding-left: 400px;
-  height: 100%;
-  .execution-summary {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 400px;
-    height: 100%;
-    background: #fff;
-  }
 }

@@ -6,7 +6,6 @@ import OutcomeCards from "../OutcomeCards/OutcomeCards";
 import { RemoteData } from "../../Shared/types";
 import { IOutcome } from "../../Outcome/types";
 import SkeletonCards from "../../Shared/skeletons/SkeletonCards/SkeletonCards";
-import ExecutionSummary from "../ExecutionSummary/ExecutionSummary";
 import "./ExecutionDetail.scss";
 
 type ExecutionDetailProps = {
@@ -22,7 +21,7 @@ const ExecutionDetail = (props: ExecutionDetailProps) => {
   const goToExplanation = useCallback(
     (outcomeId: string) => {
       history.push({
-        pathname: "outcomes-analysis",
+        pathname: "outcomes-details",
         search: `?outcomeId=${outcomeId}`,
       });
     },
@@ -31,7 +30,6 @@ const ExecutionDetail = (props: ExecutionDetailProps) => {
 
   return (
     <section className="execution-detail">
-      <ExecutionSummary execution={execution} />
       <PageSection variant="default">
         <Stack hasGutter>
           <StackItem>

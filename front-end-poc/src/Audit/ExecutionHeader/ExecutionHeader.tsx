@@ -3,74 +3,52 @@ import { Flex, FlexItem, Title, Tooltip } from "@patternfly/react-core";
 import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
 import ExecutionStatus from "../ExecutionStatus/ExecutionStatus";
 import FormattedDate from "../../Shared/components/FormattedDate/FormattedDate";
-import { UserIcon, HashtagIcon } from "@patternfly/react-icons";
 import { IExecution } from "../types";
 import { RemoteData } from "../../Shared/types";
 import "./ExecutionHeader.scss";
 
 type ExecutionHeaderProps = {
   execution: RemoteData<Error, IExecution>;
-  title: string;
 };
 
 const ExecutionHeader = (props: ExecutionHeaderProps) => {
-  const { execution, title } = props;
+  const { execution } = props;
 
   return (
     <section className="execution-header">
       <Flex>
-        <Flex grow={{ default: "grow" }}>
-          <FlexItem>
-            <Title size="4xl" headingLevel="h1">
-              <span>
-                <span>{title}</span>
-              </span>
+        <FlexItem>
+          {execution.status === "LOADING" && (
+            <SkeletonInlineStripe customStyle={{ height: "1.8em", width: 500, verticalAlign: "baseline", margin: 0 }} />
+          )}
+          {execution.status === "SUCCESS" && (
+            <Title size="3xl" headingLevel="h2">
+              <span className="execution-header__uuid">ID# {execution.data.executionId}</span>
             </Title>
-          </FlexItem>
-        </Flex>
-        <Flex>
-          <FlexItem className="execution-header__property">
-            {execution.status === "LOADING" && (
-              <SkeletonInlineStripe customStyle={{ height: "1.5em", verticalAlign: "baseline" }} />
-            )}
-            {execution.status === "SUCCESS" && (
-              <Title size="lg" headingLevel="h4">
-                <Tooltip content="Execution Id" entryDelay={23} exitDelay={23} distance={5} position="bottom">
-                  <span className="execution-header__uuid">
-                    <HashtagIcon className="execution-header__icon" />
-                    {execution.data.executionId}
+          )}
+        </FlexItem>
+        <FlexItem className="execution-header__property">
+          {execution.status === "SUCCESS" && (
+            <Tooltip
+              entryDelay={23}
+              exitDelay={23}
+              distance={5}
+              position="bottom"
+              content={
+                <div>
+                  <span>
+                    Created on <FormattedDate date={execution.data.executionDate} fullDateAndTime={true} />
                   </span>
-                </Tooltip>
-              </Title>
-            )}
-          </FlexItem>
-          <FlexItem className="execution-header__property">
-            {execution.status === "LOADING" && (
-              <SkeletonInlineStripe customStyle={{ height: "1.5em", verticalAlign: "baseline" }} />
-            )}
-            {execution.status === "SUCCESS" && (
-              <Title size="lg" headingLevel="h4">
+                  <br />
+                  <span>Executed by {execution.data.executorName}</span>
+                </div>
+              }>
+              <div>
                 <ExecutionStatus result={execution.data.executionSucceeded} />
-                <span> </span>
-                <FormattedDate date={execution.data.executionDate} preposition={true} />
-              </Title>
-            )}
-          </FlexItem>
-          <FlexItem className="execution-header__property">
-            {execution.status === "LOADING" && (
-              <SkeletonInlineStripe customStyle={{ height: "1.5em", verticalAlign: "baseline" }} />
-            )}
-
-            {execution.status === "SUCCESS" && (
-              <Title size="lg" headingLevel="h4">
-                <span>
-                  <UserIcon className="execution-header__icon" />
-                  Executed by {execution.data.executorName}
-                </span>
-              </Title>
-            )}
-          </FlexItem>
-        </Flex>
+              </div>
+            </Tooltip>
+          )}
+        </FlexItem>
       </Flex>
     </section>
   );
