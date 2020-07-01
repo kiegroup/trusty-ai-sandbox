@@ -71,7 +71,7 @@ const AuditOverview = () => {
     <>
       <PageSection variant={PageSectionVariants.light}>
         <TextContent>
-          <Title size="4xl" headingLevel="h1">
+          <Title size="3xl" headingLevel="h2">
             Audit Investigation
           </Title>
           <Text component="p">Here you can retrieve all the available information about past cases</Text>

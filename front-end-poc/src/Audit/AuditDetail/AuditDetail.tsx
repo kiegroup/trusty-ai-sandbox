@@ -91,7 +91,7 @@ const AuditDetail = () => {
   return (
     <>
       <PageSection variant={PageSectionVariants.light}>
-        <ExecutionHeader execution={execution} title="Execution" />
+        <ExecutionHeader execution={execution} />
 
         {thirdLevelNav.length === 0 && (
           <div className="audit-detail__nav">
