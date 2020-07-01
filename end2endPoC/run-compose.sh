@@ -26,5 +26,5 @@ cd ../../
 
 chmod 644 prometheus/prometheus.yml
 
-sudo /usr/local/bin/docker-compose build && sudo /usr/local/bin/docker-compose up $1
+sudo docker-compose build && sudo docker-compose up $1
 
