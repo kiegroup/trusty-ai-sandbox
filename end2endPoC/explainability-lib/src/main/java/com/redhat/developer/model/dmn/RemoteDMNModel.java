@@ -20,7 +20,6 @@ import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.PredictionOutput;
 import com.redhat.developer.model.Type;
 import com.redhat.developer.model.Value;
-import com.redhat.developer.requests.TypedData;
 import com.redhat.developer.utils.DataUtils;
 import com.redhat.developer.utils.HttpHelper;
 import org.json.JSONObject;

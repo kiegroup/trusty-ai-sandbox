@@ -9,7 +9,7 @@ import com.redhat.developer.model.Prediction;
 import com.redhat.developer.model.Saliency;
 import com.redhat.developer.model.dmn.DMNUtils;
 import com.redhat.developer.model.dmn.RemoteDMNModel;
-import com.redhat.developer.requests.TypedData;
+import com.redhat.developer.model.dmn.TypedData;
 import com.redhat.developer.utils.HttpHelper;
 import com.redhat.developer.xai.lime.LIMEishExplainer;
 

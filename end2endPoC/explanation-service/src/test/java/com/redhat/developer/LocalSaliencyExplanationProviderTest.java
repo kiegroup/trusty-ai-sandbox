@@ -4,12 +4,15 @@ import java.security.SecureRandom;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.redhat.developer.model.DataDistribution;
 import com.redhat.developer.model.Model;
+import com.redhat.developer.model.Output;
 import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.PredictionOutput;
 import com.redhat.developer.model.Saliency;
-import com.redhat.developer.requests.TypedData;
-import com.redhat.developer.xai.ExplanationTestUtils;
+import com.redhat.developer.model.Type;
+import com.redhat.developer.model.Value;
+import com.redhat.developer.model.dmn.TypedData;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +37,7 @@ class LocalSaliencyExplanationProviderTest {
         LocalSaliencyExplanationProvider explanationProvider = new LocalSaliencyExplanationProvider() {
             @Override
             protected Model getModel(List<TypedData> dmnInputs, List<TypedData> dmnOutputs, String modelName) {
-                return ExplanationTestUtils.getTextClassifier();
+                return getRandomModel();
             }
         };
         List<TypedData> inputs = getTypedData(0);
@@ -53,7 +56,7 @@ class LocalSaliencyExplanationProviderTest {
         LocalSaliencyExplanationProvider explanationProvider = new LocalSaliencyExplanationProvider() {
             @Override
             protected Model getModel(List<TypedData> dmnInputs, List<TypedData> dmnOutputs, String modelName) {
-                return ExplanationTestUtils.getTextClassifier();
+                return getRandomModel();
             }
         };
         List<TypedData> inputs = getTypedData(1);
@@ -72,7 +75,7 @@ class LocalSaliencyExplanationProviderTest {
         LocalSaliencyExplanationProvider explanationProvider = new LocalSaliencyExplanationProvider() {
             @Override
             protected Model getModel(List<TypedData> dmnInputs, List<TypedData> dmnOutputs, String modelName) {
-                return ExplanationTestUtils.getTextClassifier();
+                return getRandomModel();
             }
         };
         List<TypedData> inputs = getTypedData(2);
@@ -84,6 +87,34 @@ class LocalSaliencyExplanationProviderTest {
         String name = "dummy";
         Saliency saliency = explanationProvider.explain(inputs, outputs, name);
         assertNotNull(saliency);
+    }
+
+    private Model getRandomModel() {
+        return new Model() {
+            @Override
+            public List<PredictionOutput> predict(List<PredictionInput> inputs) {
+                List<PredictionOutput> predictionOutputs = new LinkedList<>();
+                for (PredictionInput ignored : inputs) {
+                    predictionOutputs.add(new PredictionOutput(List.of(new Output("dummy", Type.BOOLEAN, new Value<>(random.nextBoolean()), 1d))));
+                }
+                return predictionOutputs;
+            }
+
+            @Override
+            public DataDistribution getDataDistribution() {
+                return null;
+            }
+
+            @Override
+            public PredictionInput getInputShape() {
+                return null;
+            }
+
+            @Override
+            public PredictionOutput getOutputShape() {
+                return null;
+            }
+        };
     }
 
     private List<TypedData> getTypedData(int depth) {

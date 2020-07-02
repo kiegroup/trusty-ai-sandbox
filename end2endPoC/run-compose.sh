@@ -1,3 +1,11 @@
+cd explainability-lib/ || exit
+mvn clean install -DskipTests
+rc=$?
+if [ $rc -ne 0 ] ; then
+  echo Could not install explainability library, exit code [$rc]; exit $rc
+fi
+cd ../
+
 cd explanation-service/ || exit
 mvn clean package -DskipTests
 rc=$?

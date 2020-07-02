@@ -11,7 +11,6 @@ import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.PredictionOutput;
 import com.redhat.developer.model.Type;
 import com.redhat.developer.model.Value;
-import com.redhat.developer.requests.TypedData;
 
 /**
  * Utility class to handle DMN types for input and output.

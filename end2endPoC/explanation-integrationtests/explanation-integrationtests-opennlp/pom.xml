@@ -33,7 +33,7 @@
   <dependencies>
     <dependency>
       <groupId>com.redhat.developer</groupId>
-      <artifactId>explanation-service</artifactId>
+      <artifactId>explainability-lib</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
 

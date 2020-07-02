@@ -1,4 +1,4 @@
-package com.redhat.developer.requests;
+package com.redhat.developer.model.dmn;
 
 import java.util.List;
 
