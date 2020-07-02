@@ -26,8 +26,8 @@ import { orderBy } from "lodash";
 import SkeletonTornadoChart from "../../Shared/skeletons/SkeletonTornadoChart/SkeletonTornadoChart";
 import FeaturesScoreTable from "../FeatureScoreTable/FeaturesScoreTable";
 import queryString from "query-string";
-import ExplanationSelector from "../ExplanationSelector/ExplanationSelector";
 import "./ExplanationView.scss";
+import ExplanationSwitch from "../ExplanationSwitch/ExplanationSwitch";
 
 export interface IFeatureScores {
   featureName: string;
@@ -129,16 +129,13 @@ const ExplanationView = () => {
         <div className="container">
           <Stack hasGutter>
             <StackItem>
-              <Title headingLevel="h3" size="2xl">
-                <span>Outcome Result</span>
-                {outcomeId !== null && outcomesList !== null && outcomesList.length > 1 && (
-                  <ExplanationSelector
-                    outcomesList={outcomesList}
-                    onDecisionSelection={switchExplanation}
-                    currentExplanationId={outcomeId}
-                  />
-                )}
-              </Title>
+              {outcomeId !== null && outcomesList !== null && outcomesList.length > 1 && (
+                <ExplanationSwitch
+                  currentExplanationId={outcomeId}
+                  onDecisionSelection={switchExplanation}
+                  outcomesList={outcomesList}
+                />
+              )}
             </StackItem>
             <StackItem>
               {outcomeData === null ? (
