@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An implementation of LIME algorithm (Ribeiro et al., 2018) optimised for tabular data and decision models.
+ * An implementation of LIME algorithm (Ribeiro et al., 2016) optimised for tabular data and decision models.
  * Differences with respect to the original paper implementation:
  * - the linear (interpretable) model is based on a perceptron algorithm instead of Lasso + Ridge regression
  * - perturbing numerical features is done by sampling from a normal distribution centered around the value of the feature value associated with the prediction to be explained
