@@ -1,6 +1,13 @@
 import React from "react";
-import withBreadcrumbs from "react-router-breadcrumbs-hoc";
+import withBreadcrumbs, { BreadcrumbsProps } from "react-router-breadcrumbs-hoc";
 import { Breadcrumb, BreadcrumbItem } from "@patternfly/react-core";
+
+type TAuditParams = { id: string };
+
+const AuditDetailBreadcrumb = (breadcrumb: BreadcrumbsProps<TAuditParams>) => {
+  const { match } = breadcrumb;
+  return <span style={{ textTransform: "uppercase" }}>ID #{match.params.id}</span>;
+};
 
 const routes = [
   { path: "/audit", breadcrumb: "Audit Investigation" },
@@ -9,7 +16,7 @@ const routes = [
   { path: "/audit/:executionType/:id/single-outcome", breadcrumb: "Outcome" },
   { path: "/audit/:executionType/:id/model-lookup", breadcrumb: "Model Lookup" },
   { path: "/audit/:executionType/:id/input-data", breadcrumb: "Input Data" },
-  { path: "/audit/:executionType/:id", breadcrumb: "Execution" },
+  { path: "/audit/:executionType/:id", breadcrumb: AuditDetailBreadcrumb },
 ];
 const excludePaths = ["/", "/audit/:executionType", "/audit/:executionType/:id/outcome-details/"];
 
