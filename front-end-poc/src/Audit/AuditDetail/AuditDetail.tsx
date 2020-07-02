@@ -95,7 +95,7 @@ const AuditDetail = () => {
 
         {thirdLevelNav.length === 0 && (
           <div className="audit-detail__nav">
-            <SkeletonStripes stripesNumber={3} stripesHeight={1.5} stripesWidth={120} isPadded={false} />
+            <SkeletonStripes stripesNumber={4} stripesHeight={1.5} stripesWidth={120} isPadded={false} />
           </div>
         )}
         {thirdLevelNav.length > 0 && (
