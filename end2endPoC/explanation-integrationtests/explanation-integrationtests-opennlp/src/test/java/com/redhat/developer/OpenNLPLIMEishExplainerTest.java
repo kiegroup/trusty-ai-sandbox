@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.redhat.developer.model.DataDistribution;
 import com.redhat.developer.model.Feature;
@@ -19,7 +18,7 @@ import com.redhat.developer.model.Type;
 import com.redhat.developer.model.Value;
 import com.redhat.developer.utils.DataUtils;
 import com.redhat.developer.utils.ExplainabilityUtils;
-import com.redhat.developer.xai.lime.LIMEishExplainer;
+import com.redhat.developer.xai.lime.LimeExplainer;
 import opennlp.tools.langdetect.Language;
 import opennlp.tools.langdetect.LanguageDetector;
 import opennlp.tools.langdetect.LanguageDetectorME;
@@ -52,7 +51,7 @@ public class OpenNLPLIMEishExplainerTest {
                                                                           bestLanguage.getConfidence())));
         Prediction prediction = new Prediction(input, output);
 
-        LIMEishExplainer limEishExplainer = new LIMEishExplainer(100, 2);
+        LimeExplainer limeExplainer = new LimeExplainer(100, 2);
         Model model = new Model() {
             @Override
             public List<PredictionOutput> predict(List<PredictionInput> inputs) {
@@ -89,7 +88,7 @@ public class OpenNLPLIMEishExplainerTest {
                 return null;
             }
         };
-        Saliency saliency = limEishExplainer.explain(prediction, model);
+        Saliency saliency = limeExplainer.explain(prediction, model);
         assertNotNull(saliency);
         double i1 = ExplainabilityUtils.saliencyImpact(model, prediction, saliency, 1);
         assertTrue(i1 > 0);

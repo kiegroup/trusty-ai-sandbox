@@ -11,7 +11,7 @@ import com.redhat.developer.model.dmn.DMNUtils;
 import com.redhat.developer.model.dmn.RemoteDMNModel;
 import com.redhat.developer.model.dmn.TypedData;
 import com.redhat.developer.utils.HttpHelper;
-import com.redhat.developer.xai.lime.LIMEishExplainer;
+import com.redhat.developer.xai.lime.LimeExplainer;
 
 @ApplicationScoped
 public class LocalSaliencyExplanationProvider {
@@ -40,8 +40,8 @@ public class LocalSaliencyExplanationProvider {
     public Saliency explain(List<TypedData> dmnInputs, List<TypedData> dmnOutputs, String modelName) {
         Prediction prediction = DMNUtils.convert(dmnInputs, dmnOutputs);
         Model model = getModel(dmnInputs, dmnOutputs, modelName);
-        LIMEishExplainer limEishExplainer = new LIMEishExplainer(noOfSamples, noOfPerturbations);
-        return limEishExplainer.explain(prediction, model);
+        LimeExplainer limeExplainer = new LimeExplainer(noOfSamples, noOfPerturbations);
+        return limeExplainer.explain(prediction, model);
     }
 
     protected Model getModel(List<TypedData> dmnInputs, List<TypedData> dmnOutputs, String modelName) {

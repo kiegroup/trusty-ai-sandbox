@@ -22,10 +22,10 @@ mvn clean install
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
-[INFO] Running com.redhat.developer.TrafficViolationDmnLIMEishExplainerTest
-[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.04 s - in com.redhat.developer.TrafficViolationDmnLIMEishExplainerTest
-[INFO] Running com.redhat.developer.LoanEligibilityDmnLIMEishExplainerTest
-[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.271 s - in com.redhat.developer.LoanEligibilityDmnLIMEishExplainerTest
+[INFO] Running com.redhat.developer.TrafficViolationDmnLimeExplainerTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.04 s - in com.redhat.developer.TrafficViolationDmnLimeExplainerTest
+[INFO] Running com.redhat.developer.LoanEligibilityDmnLimeExplainerTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.271 s - in com.redhat.developer.LoanEligibilityDmnLimeExplainerTest
 ...
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS

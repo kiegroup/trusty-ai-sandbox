@@ -10,20 +10,13 @@ import java.util.stream.Collectors;
 import com.redhat.developer.model.Feature;
 import com.redhat.developer.model.FeatureFactory;
 import com.redhat.developer.model.Model;
-import com.redhat.developer.model.Output;
 import com.redhat.developer.model.Prediction;
 import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.PredictionOutput;
 import com.redhat.developer.model.Saliency;
-import com.redhat.developer.model.Type;
-import com.redhat.developer.model.Value;
 import com.redhat.developer.model.dmn.DecisionModelWrapper;
-import com.redhat.developer.utils.ExplainabilityUtils;
-import com.redhat.developer.xai.lime.LIMEishExplainer;
+import com.redhat.developer.xai.lime.LimeExplainer;
 import org.junit.jupiter.api.RepeatedTest;
-import org.kie.dmn.api.core.DMNContext;
-import org.kie.dmn.api.core.DMNDecisionResult;
-import org.kie.dmn.api.core.DMNResult;
 import org.kie.dmn.api.core.DMNRuntime;
 import org.kie.kogito.decision.DecisionModel;
 import org.kie.kogito.dmn.DMNKogito;
@@ -33,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class LoanEligibilityDmnLIMEishExplainerTest {
+public class LoanEligibilityDmnLimeExplainerTest {
 
     @RepeatedTest(10)
     public void testLoanEligibilityDMNExplanation() {
@@ -61,8 +54,8 @@ public class LoanEligibilityDmnLIMEishExplainerTest {
         PredictionInput predictionInput = new PredictionInput(features);
         List<PredictionOutput> predictionOutputs = model.predict(List.of(predictionInput));
         Prediction prediction = new Prediction(predictionInput, predictionOutputs.get(0));
-        LIMEishExplainer limEishExplainer = new LIMEishExplainer(100, 1);
-        Saliency saliency = limEishExplainer.explain(prediction, model);
+        LimeExplainer limeExplainer = new LimeExplainer(100, 1);
+        Saliency saliency = limeExplainer.explain(prediction, model);
 
         assertNotNull(saliency);
         List<String> strings = saliency.getTopFeatures(3).stream().map(f -> f.getFeature().getName()).collect(Collectors.toList());

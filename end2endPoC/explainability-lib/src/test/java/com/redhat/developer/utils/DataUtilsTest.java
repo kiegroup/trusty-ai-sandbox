@@ -8,8 +8,6 @@ import java.util.stream.DoubleStream;
 import com.redhat.developer.model.Feature;
 import com.redhat.developer.model.FeatureFactory;
 import com.redhat.developer.model.PredictionInput;
-import com.redhat.developer.model.Type;
-import com.redhat.developer.model.Value;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,8 +18,8 @@ class DataUtilsTest {
 
     @Test
     public void testDataGeneration() {
-        double mean = random.nextDouble();
-        double stdDeviation = random.nextDouble();
+        double mean = 1d / (double) random.nextInt(10);
+        double stdDeviation = 1d / (double) random.nextInt(10);
         int size = random.nextInt(100);
         double[] data = DataUtils.generateData(mean, stdDeviation, size);
         assertEquals(DoubleStream.of(data).average().getAsDouble(), mean, 1e-4);

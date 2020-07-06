@@ -11,23 +11,16 @@ import com.redhat.developer.model.Output;
 import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.Type;
 import com.redhat.developer.model.Value;
-import com.redhat.developer.utils.DataUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class LIMEishExplainerTest {
+class DatasetEncoderTest {
 
     private final static SecureRandom random = new SecureRandom();
-
-    @BeforeAll
-    public static void setUpBefore() {
-        DataUtils.seed(4);
-    }
 
     @Test
     public void testEmptyDatasetEncoding() {
@@ -36,7 +29,8 @@ public class LIMEishExplainerTest {
         List<Feature> features = new LinkedList<>();
         PredictionInput originalInput = new PredictionInput(features);
         Output originalOutput = new Output("foo", Type.NUMBER, new Value<>(1), 1d);
-        Collection<Pair<double[], Double>> trainingSet = LIMEishExplainer.encodeTrainingSet(inputs, outputs, originalInput, originalOutput);
+        DatasetEncoder datasetEncoder = new DatasetEncoder(inputs, outputs, originalInput, originalOutput);
+        Collection<Pair<double[], Double>> trainingSet = datasetEncoder.getEncodedTrainingSet();
         assertNotNull(trainingSet);
         assertTrue(trainingSet.isEmpty());
     }
@@ -61,7 +55,8 @@ public class LIMEishExplainerTest {
         }
         PredictionInput originalInput = new PredictionInput(features);
         Output originalOutput = new Output("o", Type.BOOLEAN, new Value<>(random.nextBoolean()), 1d);
-        Collection<Pair<double[], Double>> trainingSet = LIMEishExplainer.encodeTrainingSet(perturbedInputs, outputs, originalInput, originalOutput);
+        DatasetEncoder datasetEncoder = new DatasetEncoder(perturbedInputs, outputs, originalInput, originalOutput);
+        Collection<Pair<double[], Double>> trainingSet = datasetEncoder.getEncodedTrainingSet();
         assertNotNull(trainingSet);
         assertEquals(10, trainingSet.size());
     }

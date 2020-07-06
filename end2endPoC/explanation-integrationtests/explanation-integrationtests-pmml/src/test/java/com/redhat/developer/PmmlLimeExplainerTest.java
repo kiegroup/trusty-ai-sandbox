@@ -21,9 +21,8 @@ import com.redhat.developer.pmml.LogisticRegressionIrisDataExecutor;
 import com.redhat.developer.pmml.SimpleScorecardCategoricalExecutor;
 import com.redhat.developer.utils.DataUtils;
 import com.redhat.developer.utils.ExplainabilityUtils;
-import com.redhat.developer.xai.lime.LIMEishExplainer;
+import com.redhat.developer.xai.lime.LimeExplainer;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.RepeatedTest;
 import org.kie.api.pmml.PMML4Result;
 import org.kie.pmml.evaluator.api.executor.PMMLRuntime;
@@ -32,7 +31,7 @@ import static com.redhat.developer.pmml.AbstractPMMLTest.getPMMLRuntime;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PmmlLIMEishExplainerTest {
+public class PmmlLimeExplainerTest {
 
     private static PMMLRuntime logisticRegressionIris;
     private static PMMLRuntime categoricalVariableRegression;
@@ -59,7 +58,7 @@ public class PmmlLIMEishExplainerTest {
         PredictionOutput output = new PredictionOutput(List.of(new Output("result", Type.TEXT, new Value<>("virginica"), 1d)));
         Prediction prediction = new Prediction(input, output);
 
-        LIMEishExplainer limEishExplainer = new LIMEishExplainer(100, 2);
+        LimeExplainer limeExplainer = new LimeExplainer(100, 2);
         Model model = new Model() {
             @Override
             public List<PredictionOutput> predict(List<PredictionInput> inputs) {
@@ -92,7 +91,7 @@ public class PmmlLIMEishExplainerTest {
                 return null;
             }
         };
-        Saliency saliency = limEishExplainer.explain(prediction, model);
+        Saliency saliency = limeExplainer.explain(prediction, model);
         assertNotNull(saliency);
         List<String> strings = saliency.getPositiveFeatures(2).stream().map(f -> f.getFeature().getName()).collect(Collectors.toList());
         assertTrue(strings.contains("petalWidth"));
@@ -109,7 +108,7 @@ public class PmmlLIMEishExplainerTest {
         PredictionOutput output = new PredictionOutput(List.of(new Output("result", Type.NUMBER, new Value<>(3.4d), 1d)));
         Prediction prediction = new Prediction(input, output);
 
-        LIMEishExplainer limEishExplainer = new LIMEishExplainer(100, 2);
+        LimeExplainer limeExplainer = new LimeExplainer(100, 2);
         Model model = new Model() {
             @Override
             public List<PredictionOutput> predict(List<PredictionInput> inputs) {
@@ -141,7 +140,7 @@ public class PmmlLIMEishExplainerTest {
                 return null;
             }
         };
-        Saliency saliency = limEishExplainer.explain(prediction, model);
+        Saliency saliency = limeExplainer.explain(prediction, model);
         assertNotNull(saliency);
         List<String> strings = saliency.getPositiveFeatures(1).stream().map(f -> f.getFeature().getName()).collect(Collectors.toList());
         assertTrue(strings.contains("red (mapX)"));
@@ -159,7 +158,7 @@ public class PmmlLIMEishExplainerTest {
         PredictionOutput output = new PredictionOutput(outputs);
         Prediction prediction = new Prediction(input, output);
 
-        LIMEishExplainer limEishExplainer = new LIMEishExplainer(100, 2);
+        LimeExplainer limeExplainer = new LimeExplainer(100, 2);
         Model model = new Model() {
             @Override
             public List<PredictionOutput> predict(List<PredictionInput> inputs) {
@@ -197,7 +196,7 @@ public class PmmlLIMEishExplainerTest {
                 return null;
             }
         };
-        Saliency saliency = limEishExplainer.explain(prediction, model);
+        Saliency saliency = limeExplainer.explain(prediction, model);
         assertNotNull(saliency);
         List<String> strings = saliency.getPositiveFeatures(1).stream().map(f -> f.getFeature().getName()).collect(Collectors.toList());
         assertTrue(strings.contains("classA (input1)"));
@@ -215,7 +214,7 @@ public class PmmlLIMEishExplainerTest {
         PredictionOutput output = new PredictionOutput(outputs);
         Prediction prediction = new Prediction(input, output);
 
-        LIMEishExplainer limEishExplainer = new LIMEishExplainer(100, 2);
+        LimeExplainer limeExplainer = new LimeExplainer(100, 2);
         Model model = new Model() {
             @Override
             public List<PredictionOutput> predict(List<PredictionInput> inputs) {
@@ -253,7 +252,7 @@ public class PmmlLIMEishExplainerTest {
                 return null;
             }
         };
-        Saliency saliency = limEishExplainer.explain(prediction, model);
+        Saliency saliency = limeExplainer.explain(prediction, model);
         assertNotNull(saliency);
         List<String> strings = saliency.getPositiveFeatures(1).stream().map(f -> f.getFeature().getName()).collect(Collectors.toList());
         assertTrue(strings.contains("input1"));

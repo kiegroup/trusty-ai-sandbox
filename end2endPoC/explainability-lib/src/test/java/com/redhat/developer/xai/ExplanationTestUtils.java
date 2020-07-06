@@ -1,8 +1,19 @@
 package com.redhat.developer.xai;
 
+import java.net.URI;
+import java.nio.ByteBuffer;
+import java.security.SecureRandom;
+import java.sql.Date;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.Currency;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import com.redhat.developer.model.DataDistribution;
 import com.redhat.developer.model.Feature;
@@ -14,8 +25,17 @@ import com.redhat.developer.model.PredictionOutput;
 import com.redhat.developer.model.Type;
 import com.redhat.developer.model.Value;
 import com.redhat.developer.utils.DataUtils;
+import org.apache.commons.lang3.RandomStringUtils;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class ExplanationTestUtils {
+
+    private final static SecureRandom random = new SecureRandom();
+
+    static {
+        random.setSeed(4);
+    }
 
     public static Model getFeaturePassModel(int featureIndex) {
         return new Model() {
@@ -216,5 +236,55 @@ public class ExplanationTestUtils {
                 return new PredictionOutput(List.of(new Output("o", Type.NUMBER, new Value<>(Double.NaN), 1d)));
             }
         };
+    }
+
+    public static Feature getRandomFeature() {
+        Feature f;
+        int r = random.nextInt(13);
+        String name = "f-" + random.nextFloat();
+        if (r == 0) {
+            ByteBuffer buffer = ByteBuffer.allocate(random.nextInt(256));
+            f = FeatureFactory.newBinaryFeature(name, buffer);
+        } else if (r == 1) {
+            f = FeatureFactory.newTextFeature(name, randomString());
+        } else if (r == 2) {
+            Map<String, Object> map = new HashMap<>();
+            while (random.nextBoolean()) {
+                map.put("s-" + random.nextInt(), randomString());
+            }
+            f = FeatureFactory.newCompositeFeature(name, map);
+        } else if (r == 3) {
+            f = FeatureFactory.newCategoricalFeature(name, randomString());
+        } else if (r == 4) {
+            f = FeatureFactory.newObjectFeature(name, getRandomFeature());
+        } else if (r == 5) {
+            f = FeatureFactory.newBooleanFeature(name, random.nextBoolean());
+        } else if (r == 6) {
+            f = FeatureFactory.newNumericalFeature(name, random.nextDouble());
+        } else if (r == 7) {
+            f = FeatureFactory.newDateFeature(name, Date.from(Instant.now()));
+        } else if (r == 8) {
+            f = FeatureFactory.newDurationFeature(name, Duration.ofDays(random.nextInt(30)));
+        } else if (r == 9) {
+            f = FeatureFactory.newCurrencyFeature(name, Currency.getInstance(Locale.getDefault()));
+        } else if (r == 10) {
+            f = FeatureFactory.newTimeFeature(name, LocalTime.now());
+        } else if (r == 11) {
+            f = FeatureFactory.newURIFeature(name, URI.create(randomString().replaceAll(" ", "")));
+        } else if (r == 12) {
+            double[] doubles = new double[random.nextInt(10) + 1];
+            for (int i = 0; i < doubles.length; i++) {
+                doubles[i] = random.nextDouble();
+            }
+            f = FeatureFactory.newVectorFeature(name, doubles);
+        } else {
+            fail("unexpected feature type selector");
+            f = null;
+        }
+        return f;
+    }
+
+    public static String randomString() {
+        return RandomStringUtils.random(random.nextInt(5));
     }
 }

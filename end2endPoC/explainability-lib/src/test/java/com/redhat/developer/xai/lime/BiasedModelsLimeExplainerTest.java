@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class BiasedModelsLIMEishExplainerTest {
+public class BiasedModelsLimeExplainerTest {
 
     @BeforeAll
     public static void setUpBefore() {
@@ -41,8 +41,8 @@ public class BiasedModelsLIMEishExplainerTest {
         List<PredictionOutput> outputs = model.predict(List.of(input));
         Prediction prediction = new Prediction(input, outputs.get(0));
 
-        LIMEishExplainer limEishExplainer = new LIMEishExplainer(100, 1);
-        Saliency saliency = limEishExplainer.explain(prediction, model);
+        LimeExplainer limeExplainer = new LimeExplainer(100, 1);
+        Saliency saliency = limeExplainer.explain(prediction, model);
 
         assertNotNull(saliency);
         List<FeatureImportance> topFeatures = saliency.getTopFeatures(3);
@@ -64,8 +64,8 @@ public class BiasedModelsLIMEishExplainerTest {
         PredictionInput input = new PredictionInput(features);
         List<PredictionOutput> outputs = model.predict(List.of(input));
         Prediction prediction = new Prediction(input, outputs.get(0));
-        LIMEishExplainer limEishExplainer = new LIMEishExplainer(1000, 1);
-        Saliency saliency = limEishExplainer.explain(prediction, model);
+        LimeExplainer limeExplainer = new LimeExplainer(1000, 1);
+        Saliency saliency = limeExplainer.explain(prediction, model);
 
         assertNotNull(saliency);
         List<FeatureImportance> perFeatureImportance = saliency.getPerFeatureImportance();
@@ -90,8 +90,8 @@ public class BiasedModelsLIMEishExplainerTest {
         List<PredictionOutput> outputs = model.predict(List.of(input));
         Prediction prediction = new Prediction(input, outputs.get(0));
 
-        LIMEishExplainer limEishExplainer = new LIMEishExplainer(1000, 1);
-        Saliency saliency = limEishExplainer.explain(prediction, model);
+        LimeExplainer limeExplainer = new LimeExplainer(1000, 1);
+        Saliency saliency = limeExplainer.explain(prediction, model);
 
         assertNotNull(saliency);
         List<FeatureImportance> topFeatures = saliency.getTopFeatures(1);
@@ -109,8 +109,8 @@ public class BiasedModelsLIMEishExplainerTest {
         List<PredictionOutput> outputs = model.predict(List.of(input));
         Prediction prediction = new Prediction(input, outputs.get(0));
 
-        LIMEishExplainer limEishExplainer = new LIMEishExplainer(1000, 1);
-        Saliency saliency = limEishExplainer.explain(prediction, model);
+        LimeExplainer limeExplainer = new LimeExplainer(1000, 1);
+        Saliency saliency = limeExplainer.explain(prediction, model);
 
         assertNotNull(saliency);
         List<FeatureImportance> topFeatures = saliency.getPositiveFeatures(1);
@@ -130,8 +130,8 @@ public class BiasedModelsLIMEishExplainerTest {
         PredictionInput input = new PredictionInput(features);
         List<PredictionOutput> outputs = model.predict(List.of(input));
         Prediction prediction = new Prediction(input, outputs.get(0));
-        LIMEishExplainer limEishExplainer = new LIMEishExplainer(100, 1);
-        Saliency saliency = limEishExplainer.explain(prediction, model);
+        LimeExplainer limeExplainer = new LimeExplainer(100, 1);
+        Saliency saliency = limeExplainer.explain(prediction, model);
 
         assertNotNull(saliency);
         List<FeatureImportance> perFeatureImportance = saliency.getTopFeatures(3);
