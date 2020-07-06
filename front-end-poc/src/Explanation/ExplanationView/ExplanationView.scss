@@ -5,8 +5,13 @@
     font-weight: 300;
   }
   &__section {
-    //padding-top: var(--pf-global--spacer--2xl);
-    //padding-bottom: var(--pf-global--spacer--2xl);
+    &--outcome-selector {
+      --pf-c-page__main-section--PaddingTop: 0;
+      --pf-c-page__main-section--PaddingBottom: var(--pf-global--spacer--md);
+      &__divider {
+        margin-bottom: var(--pf-global--spacer--md);
+      }
+    }
   }
   &__input-help {
     fill: var(--pf-global--info-color--100);

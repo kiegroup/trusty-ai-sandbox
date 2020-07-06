@@ -34,7 +34,7 @@ const ExecutionDetail = (props: ExecutionDetailProps) => {
         <Stack hasGutter>
           <StackItem>
             <Title headingLevel="h3" size="2xl">
-              Outcome
+              Outcomes
             </Title>
           </StackItem>
           <StackItem>

@@ -79,7 +79,7 @@ const AuditDetail = () => {
           desc: "Outcome",
         });
       } else {
-        newNav.push({ url: "/overview", desc: "Overview" });
+        newNav.push({ url: "/outcomes", desc: "Outcomes" });
         newNav.push({ url: "/outcomes-details", desc: "Outcomes Details" });
       }
       newNav.push({ url: "/input-data", desc: "Input Data" });
@@ -115,7 +115,7 @@ const AuditDetail = () => {
         <Route path={`${path}/single-outcome`}>
           <ExplanationView />
         </Route>
-        <Route path={`${path}/overview`}>
+        <Route path={`${path}/outcomes`}>
           <ExecutionDetail model={model} execution={execution} outcome={outcome} />
         </Route>
         <Route path={`${path}/outcomes-details`}>
@@ -136,7 +136,7 @@ const AuditDetail = () => {
             />
           )}
           {outcome.status === "SUCCESS" && outcome.data.length > 1 && (
-            <Redirect exact from={path} to={`${location.pathname}/overview`} />
+            <Redirect exact from={path} to={`${location.pathname}/outcomes`} />
           )}
           {outcome.status === "LOADING" && (
             <PageSection>
