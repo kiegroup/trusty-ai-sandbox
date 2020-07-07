@@ -36,17 +36,18 @@ const DatePicker = (props: DatePickerProps) => {
     };
     if (datePicker && datePicker.current) {
       calendar = flatpickr(datePicker.current, {
-        dateFormat: "Y-m-d",
+        allowInput: true,
         altInput: true,
         altFormat: "F j, Y",
+        dateFormat: "Y-m-d",
         defaultDate: value,
         minDate: minDate,
         maxDate: maxDate,
-        onChange,
-        allowInput: true,
         monthSelectorType: "static",
+        onChange,
         prevArrow: leftArrow,
         nextArrow: rightArrow,
+        static: true,
       });
     }
     return () => {
