@@ -20,12 +20,12 @@ import {
 import "./inputDataBrowser.scss";
 import FeatureDistributionBoxPlot from "../FeatureDistributionBoxPlot";
 import FeatureDistributionStackedChart from "../FeatureDistributionStackedChart";
-import SkeletonStripes from "../../Shared/skeletons/SkeletonStripes";
-import SkeletonDataList from "../../Shared/skeletons/SkeletonDataList";
+import SkeletonDataList from "../../Shared/skeletons/SkeletonDataList/SkeletonDataList";
 import { IInputRow, IItemObject, isIItemObjectArray, isIItemObjectMultiArray } from "../types";
 import FormattedValue from "../../Shared/components/FormattedValue/FormattedValue";
 import { v4 as uuid } from "uuid";
 import { OutlinedMehIcon } from "@patternfly/react-icons";
+import SkeletonFlexStripes from "../../Shared/skeletons/SkeletonFlexStripes/SkeletonFlexStripes";
 
 const ItemsSubList = (props: { itemsList: IItemObject[]; itemCategory: string }) => {
   const { itemsList, itemCategory } = props;
@@ -250,7 +250,7 @@ const InputDataBrowser = (props: { inputData: IItemObject[] | null }) => {
     <div className="input-browser">
       {inputData === null && (
         <div className="input-browser__section-list">
-          <SkeletonStripes stripesNumber={6} stripesWidth={100} stripesHeight={1.5} />
+          <SkeletonFlexStripes stripesNumber={6} stripesWidth={"100px"} stripesHeight={"1.5em"} />
         </div>
       )}
       {inputData !== null && inputData.length > 0 && (

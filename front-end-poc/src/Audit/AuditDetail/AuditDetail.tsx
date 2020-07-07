@@ -8,8 +8,8 @@ import { IOutcome } from "../../Outcome/types";
 import ExplanationView from "../../Explanation/ExplanationView/ExplanationView";
 import InputDataView from "../../InputData/InputDataView/InputDataView";
 import ModelLookup from "../../ModelLookup/ModelLookup";
-import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
-import SkeletonStripes from "../../Shared/skeletons/SkeletonStripes";
+import SkeletonStripe from "../../Shared/skeletons/SkeletonStripe/SkeletonStripe";
+import SkeletonFlexStripes from "../../Shared/skeletons/SkeletonFlexStripes/SkeletonFlexStripes";
 import SkeletonCards from "../../Shared/skeletons/SkeletonCards/SkeletonCards";
 import useExecutionInfo from "../../Shared/hooks/useExecutionInfo";
 import ExecutionHeader from "../ExecutionHeader/ExecutionHeader";
@@ -95,7 +95,7 @@ const AuditDetail = () => {
 
         {thirdLevelNav.length === 0 && (
           <div className="audit-detail__nav">
-            <SkeletonStripes stripesNumber={4} stripesHeight={1.5} stripesWidth={120} isPadded={false} />
+            <SkeletonFlexStripes stripesNumber={4} stripesHeight={"1.5em"} stripesWidth={"120px"} isPadded={false} />
           </div>
         )}
         {thirdLevelNav.length > 0 && (
@@ -142,7 +142,7 @@ const AuditDetail = () => {
             <PageSection>
               <Stack hasGutter>
                 <StackItem>
-                  <SkeletonInlineStripe customStyle={{ height: "1.5em" }} />
+                  <SkeletonStripe isInline={true} customStyle={{ height: "1.5em" }} />
                 </StackItem>
                 <StackItem>
                   <SkeletonCards quantity={2} />

@@ -3,9 +3,9 @@ import { useHistory } from "react-router-dom";
 import { PageSection, Stack, StackItem, Title } from "@patternfly/react-core";
 import { IExecution, IExecutionModelResponse } from "../../Audit/types";
 import OutcomeCards from "../OutcomeCards/OutcomeCards";
+import SkeletonCards from "../../Shared/skeletons/SkeletonCards/SkeletonCards";
 import { RemoteData } from "../../Shared/types";
 import { IOutcome } from "../../Outcome/types";
-import SkeletonCards from "../../Shared/skeletons/SkeletonCards/SkeletonCards";
 import "./ExecutionDetail.scss";
 
 type ExecutionDetailProps = {

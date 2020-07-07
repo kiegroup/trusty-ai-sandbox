@@ -1,8 +1,8 @@
 import React from "react";
 import { Gallery, GalleryItem } from "@patternfly/react-core";
-import "./SkeletonCards.scss";
-import SkeletonInlineStripe from "../SkeletonInlineStripe";
 import { v4 as uuid } from "uuid";
+import SkeletonStripe from "../SkeletonStripe/SkeletonStripe";
+import "./SkeletonCards.scss";
 
 type SkeletonCardProps = {
   quantity: number;
@@ -15,12 +15,13 @@ const SkeletonCards = (props: SkeletonCardProps) => {
     cards.push(
       <GalleryItem key={uuid()}>
         <div className="skeleton-cards__card">
-          <SkeletonInlineStripe key={uuid()} customStyle={{ width: 250, height: 25, margin: "20px" }} />
-          <SkeletonInlineStripe key={uuid()} customStyle={{ width: 180, height: 20, margin: "10px 20px" }} />
+          <SkeletonStripe key={uuid()} customStyle={{ width: 250, height: 25, marginBottom: "20px" }} />
+          <SkeletonStripe key={uuid()} customStyle={{ width: 180, height: 20 }} />
         </div>
       </GalleryItem>
     );
   }
+
   return (
     <Gallery className="skeleton-cards" hasGutter>
       {cards}

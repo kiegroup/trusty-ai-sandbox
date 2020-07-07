@@ -1,7 +1,8 @@
 import React from "react";
 import { Grid, GridItem, gridSpans } from "@patternfly/react-core";
+import SkeletonStripe from "../SkeletonStripe/SkeletonStripe";
 
-type ownProps = {
+type SkeletonGridProps = {
   rowsNumber: number;
   colsNumber: number | number[];
 };
@@ -11,7 +12,7 @@ type ownProps = {
  * will be fed to the css grid component. This is intended for cases when an uneven number of columns
  * is needed or when specific columns size are wanted instead of columns with equally divided size
  * */
-const SkeletonGrid = (props: ownProps) => {
+const SkeletonGrid = (props: SkeletonGridProps) => {
   const { rowsNumber, colsNumber } = props;
   let colsCount = 0;
   let colList: number[] = [];
@@ -28,11 +29,10 @@ const SkeletonGrid = (props: ownProps) => {
   const gridRows = [];
   for (let i = 0; i < rowsNumber; i++) {
     for (let j = 0; j < colsCount; j++) {
-      let className = "skeleton__stripe";
-      className += (i + j) % 2 ? " skeleton__stripe--lg" : " skeleton__stripe--md";
+      const size = (i + j) % 2 ? "lg" : "md";
       gridRows.push(
         <GridItem span={colList[j] as gridSpans} key={`skeleton-grid-${j}-${i}`}>
-          <span className={className} />
+          <SkeletonStripe size={size} />
         </GridItem>
       );
     }

@@ -21,7 +21,7 @@ import { IOutcome } from "../../Outcome/types";
 import { getDecisionFeatureScores, getDecisionOutcome, getDecisionOutcomeDetail } from "../../Shared/api/audit.api";
 import OutcomePreview from "../../Outcome/OutcomePreview/OutcomePreview";
 import InputDataBrowser from "../../InputData/InputDataBrowser/InputDataBrowser";
-import SkeletonGrid from "../../Shared/skeletons/SkeletonGrid";
+import SkeletonGrid from "../../Shared/skeletons/SkeletonGrid/SkeletonGrid";
 import FeaturesScoreChart from "../FeaturesScoreChart/FeaturesScoreChart";
 import { orderBy } from "lodash";
 import SkeletonTornadoChart from "../../Shared/skeletons/SkeletonTornadoChart/SkeletonTornadoChart";

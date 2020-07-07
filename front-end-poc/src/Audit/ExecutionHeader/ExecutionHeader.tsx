@@ -1,6 +1,6 @@
 import React from "react";
 import { Flex, FlexItem, Title, Tooltip } from "@patternfly/react-core";
-import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
+import SkeletonStripe from "../../Shared/skeletons/SkeletonStripe/SkeletonStripe";
 import ExecutionStatus from "../ExecutionStatus/ExecutionStatus";
 import FormattedDate from "../../Shared/components/FormattedDate/FormattedDate";
 import { IExecution } from "../types";
@@ -19,7 +19,10 @@ const ExecutionHeader = (props: ExecutionHeaderProps) => {
       <Flex>
         <FlexItem>
           {execution.status === "LOADING" && (
-            <SkeletonInlineStripe customStyle={{ height: "1.8em", width: 500, verticalAlign: "baseline", margin: 0 }} />
+            <SkeletonStripe
+              isInline={true}
+              customStyle={{ height: "1.8em", width: 500, verticalAlign: "baseline", margin: 0 }}
+            />
           )}
           {execution.status === "SUCCESS" && (
             <Title size="3xl" headingLevel="h2">
