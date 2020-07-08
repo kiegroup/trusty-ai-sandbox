@@ -60,6 +60,15 @@ describe("Audit toolbar", () => {
     expect(setPageSize).toBeCalledTimes(1);
     expect(setPageSize).toBeCalledWith(pageSize);
   });
+
+  test("handles data refresh", () => {
+    const onRefresh = jest.fn();
+    const wrapper = renderAuditToolbar("mount", { onRefresh });
+
+    wrapper.props().onRefresh();
+
+    expect(onRefresh).toBeCalledTimes(1);
+  });
 });
 
 const renderAuditToolbar = (method: "shallow" | "mount", props?: object) => {
@@ -74,6 +83,7 @@ const renderAuditToolbar = (method: "shallow" | "mount", props?: object) => {
     pageSize: 10,
     setPage() {},
     setPageSize() {},
+    onRefresh() {},
     ...props,
   };
   if (method === "shallow") {

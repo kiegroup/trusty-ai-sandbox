@@ -9,7 +9,7 @@ import {
   ToolbarItem,
   ToolbarItemVariant,
 } from "@patternfly/react-core";
-import { SearchIcon } from "@patternfly/react-icons";
+import { SearchIcon, SyncIcon } from "@patternfly/react-icons";
 import FromFilter from "../FromFilter/FromFilter";
 import ToFilter from "../ToFilter/ToFilter";
 import PaginationContainer from "../PaginationContainer/PaginationContainer";
@@ -25,6 +25,7 @@ type AuditToolbarProps = {
   page: number;
   setPage: (page: number) => void;
   setPageSize: (pageSize: number) => void;
+  onRefresh: () => void;
 };
 
 const AuditToolbar = (props: AuditToolbarProps) => {
@@ -39,6 +40,7 @@ const AuditToolbar = (props: AuditToolbarProps) => {
     page,
     setPage,
     setPageSize,
+    onRefresh,
   } = props;
 
   const searchField = useRef<HTMLInputElement>(null);
@@ -80,6 +82,13 @@ const AuditToolbar = (props: AuditToolbarProps) => {
         <ToolbarItem variant="label">To</ToolbarItem>
         <ToolbarItem>
           <ToFilter toDate={toDate} onToDateUpdate={setToDate} minDate={fromDate} />
+        </ToolbarItem>
+        <ToolbarItem>
+          <ToolbarItem>
+            <Button variant="plain" title="Refresh" aria-label="Refresh" onClick={() => onRefresh()}>
+              <SyncIcon />
+            </Button>
+          </ToolbarItem>
         </ToolbarItem>
         <ToolbarItem variant={ToolbarItemVariant.pagination}>
           <PaginationContainer

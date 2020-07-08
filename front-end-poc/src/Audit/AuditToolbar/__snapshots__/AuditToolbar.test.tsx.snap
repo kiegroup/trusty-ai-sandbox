@@ -3,11 +3,6 @@
 exports[`Audit toolbar renders 1`] = `
 <Toolbar
   id="audit-list-top-toolbar"
-  style={
-    Object {
-      "marginBottom": "var(--pf-global--spacer--lg)",
-    }
-  }
 >
   <ToolbarContent
     isExpanded={false}
@@ -64,6 +59,22 @@ exports[`Audit toolbar renders 1`] = `
         onToDateUpdate={[Function]}
         toDate="2020-02-01"
       />
+    </Component>
+    <Component>
+      <Component>
+        <Component
+          aria-label="Refresh"
+          onClick={[Function]}
+          title="Refresh"
+          variant="plain"
+        >
+          <SyncIcon
+            color="currentColor"
+            noVerticalAlign={false}
+            size="sm"
+          />
+        </Component>
+      </Component>
     </Component>
     <Component
       variant="pagination"

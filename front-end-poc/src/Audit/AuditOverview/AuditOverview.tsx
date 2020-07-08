@@ -13,21 +13,16 @@ import {
   ToolbarItem,
 } from "@patternfly/react-core";
 import { Link } from "react-router-dom";
-import { getExecutions } from "../../Shared/api/audit.api";
-import { IExecution } from "../types";
 import "./AuditOverview.scss";
 import PaginationContainer from "../PaginationContainer/PaginationContainer";
 import SkeletonStripe from "../../Shared/skeletons/SkeletonStripe/SkeletonStripe";
 import AuditToolbar from "../AuditToolbar/AuditToolbar";
 import ExecutionTable from "../ExecutionTable/ExecutionTable";
-import { RemoteData } from "../../Shared/types";
+import useExecutions from "./useExecutions";
 
 const AuditOverview = () => {
   const oneMonthAgo = new Date();
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-  const [data, setData] = useState<RemoteData<Error, IExecution[]>>({
-    status: "NOT_ASKED",
-  });
   const [searchString, setSearchString] = useState("");
   const [latestSearches, setLatestSearches] = useState<string[] | null>(null);
   const [fromDate, setFromDate] = useState(oneMonthAgo.toISOString().substr(0, 10));
@@ -35,37 +30,23 @@ const AuditOverview = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
+  const [loadExecutions, executions] = useExecutions(searchString, fromDate, toDate, pageSize, pageSize * (page - 1));
 
   useEffect(() => {
-    let didMount = true;
-    setData({ status: "LOADING" });
-    getExecutions(searchString, fromDate, toDate, pageSize, pageSize * (page - 1))
-      .then((response) => {
-        if (didMount) {
-          setData({
-            status: "SUCCESS",
-            data: response.data.headers,
-          });
-          setTotal(response.data.total);
-          // temporary solution: for demo purposes we display the first 3 executions here
-          if (latestSearches === null) {
-            let searches = [];
-            let maxSearches = Math.min(3, response.data.total);
-            for (let i = 0; i < maxSearches; i++) {
-              searches.push(response.data.headers[i].executionId);
-            }
-            setLatestSearches(searches);
-          }
+    if (executions.status === "SUCCESS") {
+      setTotal(executions.data.total);
+      // temporary solution: for demo purposes we display the first 3 executions here
+      if (latestSearches === null) {
+        let searches = [];
+        let maxSearches = Math.min(3, executions.data.total);
+        for (let i = 0; i < maxSearches; i++) {
+          searches.push(executions.data.headers[i].executionId);
         }
-      })
-      .catch((error) => {
-        setData({ status: "FAILURE", error: error });
-      });
-    return () => {
-      didMount = false;
-    };
+        setLatestSearches(searches);
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchString, fromDate, toDate, page, pageSize]);
+  }, [executions]);
 
   return (
     <>
@@ -114,9 +95,10 @@ const AuditOverview = () => {
           page={page}
           setPage={setPage}
           setPageSize={setPageSize}
+          onRefresh={loadExecutions}
         />
 
-        <ExecutionTable data={data} />
+        <ExecutionTable data={executions} />
 
         <Toolbar id="audit-list-bottom-toolbar">
           <ToolbarContent>

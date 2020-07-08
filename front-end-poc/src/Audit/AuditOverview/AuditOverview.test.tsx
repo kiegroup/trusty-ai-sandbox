@@ -2,7 +2,7 @@ import React from "react";
 import { mount, shallow } from "enzyme";
 import AuditOverview from "./AuditOverview";
 import * as api from "../../Shared/api/audit.api";
-import { BrowserRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import { act } from "react-dom/test-utils";
 
 const executions = {
@@ -67,9 +67,9 @@ describe("Audit overview", () => {
 
   test("loads a list of executions from the last month", async () => {
     const wrapper = mount(
-      <BrowserRouter>
+      <MemoryRouter>
         <AuditOverview />
-      </BrowserRouter>
+      </MemoryRouter>
     );
     const oneMonthAgo = new Date();
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
@@ -85,7 +85,7 @@ describe("Audit overview", () => {
     expect(apiMock).toHaveBeenCalledWith("", fromDate, toDate, 10, 0);
     expect(wrapper.find("ExecutionTable").props().data).toStrictEqual({
       status: "SUCCESS",
-      data: executions.data.headers,
+      data: executions.data,
     });
   });
 });

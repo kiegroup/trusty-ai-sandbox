@@ -7,10 +7,10 @@ import ExecutionStatus from "../ExecutionStatus/ExecutionStatus";
 import FormattedDate from "../../Shared/components/FormattedDate/FormattedDate";
 import skeletonRows from "../../Shared/skeletons/skeletonRows";
 import { RemoteData } from "../../Shared/types";
-import { IExecution } from "../types";
+import { IExecution, IExecutions } from "../types";
 
 type ExecutionTableProps = {
-  data: RemoteData<Error, IExecution[]>;
+  data: RemoteData<Error, IExecutions>;
 };
 
 const prepareExecutionTableRows = (rowData: IExecution[]) => {
@@ -78,13 +78,13 @@ const ExecutionTable = (props: ExecutionTableProps) => {
           <TableBody rowKey="decisionKey" />
         </Table>
       )}
-      {data.status === "SUCCESS" && data.data.length > 0 && (
-        <Table cells={columns} rows={prepareExecutionTableRows(data.data)} aria-label="Executions list">
+      {data.status === "SUCCESS" && data.data.headers.length > 0 && (
+        <Table cells={columns} rows={prepareExecutionTableRows(data.data.headers)} aria-label="Executions list">
           <TableHeader />
           <TableBody rowKey="decisionKey" />
         </Table>
       )}
-      {data.status === "SUCCESS" && data.data.length === 0 && (
+      {data.status === "SUCCESS" && data.data.headers.length === 0 && (
         <Table cells={columns} rows={noExecutions(columns.length)} aria-label="Executions list">
           <TableHeader />
           <TableBody rowKey="decisionKey" />

@@ -1,5 +1,10 @@
 import { ExecutionType } from "../Shared/api/audit.api";
 
+export interface IExecutions {
+  headers: IExecution[];
+  total: number;
+}
+
 export interface IExecution {
   executionId: string;
   executionDate: string;

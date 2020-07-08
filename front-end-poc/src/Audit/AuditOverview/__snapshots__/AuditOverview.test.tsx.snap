@@ -7,8 +7,8 @@ exports[`Audit overview renders 1`] = `
   >
     <Component>
       <Component
-        headingLevel="h1"
-        size="4xl"
+        headingLevel="h2"
+        size="3xl"
       >
         Audit Investigation
       </Component>
@@ -40,17 +40,19 @@ exports[`Audit overview renders 1`] = `
         <Component>
           Last Opened:
         </Component>
-        <SkeletonInlineStripe
+        <SkeletonStripe
           customStyle={
             Object {
               "height": "inherit",
             }
           }
+          isInline={true}
         />
       </Component>
     </div>
     <AuditToolbar
-      fromDate="2020-05-11"
+      fromDate="2020-06-08"
+      onRefresh={[Function]}
       page={1}
       pageSize={10}
       setFromDate={[Function]}
@@ -58,7 +60,7 @@ exports[`Audit overview renders 1`] = `
       setPageSize={[Function]}
       setSearchString={[Function]}
       setToDate={[Function]}
-      toDate="2020-06-11"
+      toDate="2020-07-08"
       total={0}
     />
     <ExecutionTable
@@ -70,11 +72,6 @@ exports[`Audit overview renders 1`] = `
     />
     <Toolbar
       id="audit-list-bottom-toolbar"
-      style={
-        Object {
-          "marginTop": "var(--pf-global--spacer--lg)",
-        }
-      }
     >
       <ToolbarContent
         isExpanded={false}
