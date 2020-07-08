@@ -17,7 +17,7 @@ import { getExecutions } from "../../Shared/api/audit.api";
 import { IExecution } from "../types";
 import "./AuditOverview.scss";
 import PaginationContainer from "../PaginationContainer/PaginationContainer";
-import SkeletonInlineStripe from "../../Shared/skeletons/SkeletonInlineStripe";
+import SkeletonStripe from "../../Shared/skeletons/SkeletonStripe/SkeletonStripe";
 import AuditToolbar from "../AuditToolbar/AuditToolbar";
 import ExecutionTable from "../ExecutionTable/ExecutionTable";
 import { RemoteData } from "../../Shared/types";
@@ -81,7 +81,7 @@ const AuditOverview = () => {
         <div style={{ marginBottom: "var(--pf-global--spacer--lg)" }}>
           <List variant={ListVariant.inline}>
             <ListItem>Last Opened:</ListItem>
-            {latestSearches === null && <SkeletonInlineStripe customStyle={{ height: "inherit" }} />}
+            {latestSearches === null && <SkeletonStripe isInline={true} customStyle={{ height: "inherit" }} />}
             {latestSearches && latestSearches.length === 0 && (
               <span>
                 <em>None</em>
@@ -118,7 +118,7 @@ const AuditOverview = () => {
 
         <ExecutionTable data={data} />
 
-        <Toolbar id="audit-list-bottom-toolbar" style={{ marginTop: "var(--pf-global--spacer--lg)" }}>
+        <Toolbar id="audit-list-bottom-toolbar">
           <ToolbarContent>
             <ToolbarItem variant="pagination">
               <PaginationContainer

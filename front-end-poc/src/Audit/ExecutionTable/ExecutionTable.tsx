@@ -4,10 +4,10 @@ import { IRow, Table, TableBody, TableHeader } from "@patternfly/react-table";
 import { Bullseye, EmptyState, EmptyStateBody, EmptyStateIcon, Title } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
 import ExecutionStatus from "../ExecutionStatus/ExecutionStatus";
-import SkeletonRows from "../../Shared/skeletons/SkeletonRows";
 import FormattedDate from "../../Shared/components/FormattedDate/FormattedDate";
-import { IExecution } from "../types";
+import skeletonRows from "../../Shared/skeletons/skeletonRows";
 import { RemoteData } from "../../Shared/types";
+import { IExecution } from "../types";
 
 type ExecutionTableProps = {
   data: RemoteData<Error, IExecution[]>;
@@ -73,7 +73,7 @@ const ExecutionTable = (props: ExecutionTableProps) => {
   return (
     <>
       {(data.status === "LOADING" || data.status === "NOT_ASKED") && (
-        <Table cells={columns} rows={SkeletonRows(columns.length, 8, "decisionKey")} aria-label="Executions list">
+        <Table cells={columns} rows={skeletonRows(columns.length, 8, "decisionKey")} aria-label="Executions list">
           <TableHeader />
           <TableBody rowKey="decisionKey" />
         </Table>

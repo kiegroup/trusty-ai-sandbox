@@ -28,7 +28,6 @@ const ExplanationSwitch = (props: ExplanationSwitchProps) => {
 
   return (
     <div className="explanation-switch">
-      <span id="outcome-selection">Select Outcome</span>
       <Select
         variant={SelectVariant.single}
         aria-label="Select Decision Outcome"
@@ -36,7 +35,6 @@ const ExplanationSwitch = (props: ExplanationSwitchProps) => {
         onSelect={onSelect}
         selections={selected}
         isOpen={isOpen}
-        aria-labelledby="outcome-selection"
         direction={direction}>
         {outcomesList.map((item, index) => (
           <SelectOption key={index} value={item.outcomeId}>

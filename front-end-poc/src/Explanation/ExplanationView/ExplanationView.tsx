@@ -4,6 +4,7 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Divider,
   Grid,
   GridItem,
   Modal,
@@ -20,7 +21,7 @@ import { IOutcome } from "../../Outcome/types";
 import { getDecisionFeatureScores, getDecisionOutcome, getDecisionOutcomeDetail } from "../../Shared/api/audit.api";
 import OutcomePreview from "../../Outcome/OutcomePreview/OutcomePreview";
 import InputDataBrowser from "../../InputData/InputDataBrowser/InputDataBrowser";
-import SkeletonGrid from "../../Shared/skeletons/SkeletonGrid";
+import SkeletonGrid from "../../Shared/skeletons/SkeletonGrid/SkeletonGrid";
 import FeaturesScoreChart from "../FeaturesScoreChart/FeaturesScoreChart";
 import { orderBy } from "lodash";
 import SkeletonTornadoChart from "../../Shared/skeletons/SkeletonTornadoChart/SkeletonTornadoChart";
@@ -125,17 +126,23 @@ const ExplanationView = () => {
 
   return (
     <section className="explanation-view">
+      <PageSection variant="light" className="explanation-view__section--outcome-selector">
+        <Divider className="explanation-view__section--outcome-selector__divider" />
+        {outcomeId !== null && outcomesList !== null && outcomesList.length > 1 && (
+          <ExplanationSwitch
+            currentExplanationId={outcomeId}
+            onDecisionSelection={switchExplanation}
+            outcomesList={outcomesList}
+          />
+        )}
+      </PageSection>
       <PageSection variant="default" className="explanation-view__section">
         <div className="container">
           <Stack hasGutter>
             <StackItem>
-              {outcomeId !== null && outcomesList !== null && outcomesList.length > 1 && (
-                <ExplanationSwitch
-                  currentExplanationId={outcomeId}
-                  onDecisionSelection={switchExplanation}
-                  outcomesList={outcomesList}
-                />
-              )}
+              <Title headingLevel="h3" size="2xl">
+                Outcome Details
+              </Title>
             </StackItem>
             <StackItem>
               {outcomeData === null ? (

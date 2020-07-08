@@ -51,7 +51,7 @@ const AuditToolbar = (props: AuditToolbarProps) => {
     }
   };
   return (
-    <Toolbar id="audit-list-top-toolbar" style={{ marginBottom: "var(--pf-global--spacer--lg)" }}>
+    <Toolbar id="audit-list-top-toolbar">
       <ToolbarContent>
         <ToolbarItem variant="label">Search</ToolbarItem>
         <ToolbarItem>

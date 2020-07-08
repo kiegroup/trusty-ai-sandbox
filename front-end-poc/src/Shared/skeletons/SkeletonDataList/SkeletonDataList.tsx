@@ -1,24 +1,25 @@
 import React from "react";
 import { DataList, DataListCell, DataListItem, DataListItemCells, DataListItemRow } from "@patternfly/react-core";
+import SkeletonStripe from "../SkeletonStripe/SkeletonStripe";
+import "./SkeletonDataList.scss";
 
-type ownProps = {
+type SkeletonDataListProps = {
   rowsNumber: number;
   colsNumber: number;
   hasHeader?: boolean;
 };
 
-const SkeletonDataList = (props: ownProps) => {
+const SkeletonDataList = (props: SkeletonDataListProps) => {
   const { rowsNumber, colsNumber, hasHeader } = props;
 
   let rows = [];
   for (let i = 0; i < rowsNumber; i++) {
     let row = [];
     for (let j = 0; j < colsNumber; j++) {
-      let className = "skeleton__stripe";
-      className += (i + j) % 2 ? " skeleton__stripe--lg" : " skeleton__stripe--md";
+      const size = (i + j) % 2 ? "lg" : "md";
       row.push(
         <DataListCell key={`content-${j}`}>
-          <span className={className} />
+          <SkeletonStripe size={size} />
         </DataListCell>
       );
     }
@@ -35,7 +36,7 @@ const SkeletonDataList = (props: ownProps) => {
         {rows.map((item, index) => {
           let headerClass;
           if (hasHeader && index === 0) {
-            headerClass = "skeleton__header";
+            headerClass = "skeleton-datalist__header";
           }
           return (
             <DataListItemRow className={headerClass} key={item.key}>

@@ -3,7 +3,7 @@ import { getDecisionOutcome } from "../Shared/api/audit.api";
 import { useParams } from "react-router-dom";
 import { IExecutionRouteParams } from "../Audit/types";
 import OutcomePreview from "../Outcome/OutcomePreview/OutcomePreview";
-import SkeletonGrid from "../Shared/skeletons/SkeletonGrid";
+import SkeletonGrid from "../Shared/skeletons/SkeletonGrid/SkeletonGrid";
 
 const OutcomeOverview = () => {
   const { executionId } = useParams<IExecutionRouteParams>();

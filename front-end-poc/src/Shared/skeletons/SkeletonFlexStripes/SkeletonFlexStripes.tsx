@@ -1,29 +1,31 @@
 import React from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
+import SkeletonStripe from "../SkeletonStripe/SkeletonStripe";
+import "./SkeletonFlexStripes.scss";
 
-type ownProps = {
+type SkeletonFlexStripesProps = {
   stripesNumber: number;
-  stripesWidth: number;
-  stripesHeight: number;
+  stripesWidth: string;
+  stripesHeight: string;
   isPadded?: boolean;
 };
 
-const SkeletonStripes = (props: ownProps) => {
+const SkeletonFlexStripes = (props: SkeletonFlexStripesProps) => {
   const { stripesNumber, stripesWidth, stripesHeight, isPadded = true } = props;
   const stripes = [];
   const stripeStyle = {
     width: stripesWidth,
-    height: stripesHeight + "em",
+    height: stripesHeight,
   };
   const className = isPadded ? "skeleton skeleton--padded" : "skeleton";
   for (let i = 0; i < stripesNumber; i++) {
     stripes.push(
       <FlexItem key={`skeleton-${i}`}>
-        <span className="skeleton__stripe" style={stripeStyle} />
+        <SkeletonStripe customStyle={stripeStyle} />
       </FlexItem>
     );
   }
   return <Flex className={className}>{stripes}</Flex>;
 };
 
-export default SkeletonStripes;
+export default SkeletonFlexStripes;

@@ -1,6 +1,6 @@
 import React from "react";
-import "./Skeletons.scss";
 import { IRow } from "@patternfly/react-table";
+import SkeletonStripe from "./SkeletonStripe/SkeletonStripe";
 
 /*
  * Based on a number of rows and columns, this function creates an array specifically intended
@@ -8,19 +8,18 @@ import { IRow } from "@patternfly/react-table";
  * it will produce animated stripes to be displayed while loading the real data
  * */
 
-const SkeletonRows = (colsNumber: number, rowsNumber: number, rowKey?: string) => {
+const skeletonRows = (colsNumber: number, rowsNumber: number, rowKey?: string) => {
   let skeletons = [];
   rowKey = rowKey || "key";
   for (let j = 0; j < rowsNumber; j++) {
     let cells = [];
     for (let i = 0; i < colsNumber; i++) {
-      let className = "skeleton__stripe";
-      className += (i + j) % 2 ? " skeleton__stripe--lg" : " skeleton__stripe--md";
+      const size = (i + j) % 2 ? "lg" : "md";
       cells.push({
-        title: <span className={className} />,
+        title: <SkeletonStripe size={size} />,
       });
     }
-    let skeletonRow: IRow = {
+    const skeletonRow: IRow = {
       cells,
     };
     skeletonRow[rowKey] = `skeleton-${j}`;
@@ -29,4 +28,4 @@ const SkeletonRows = (colsNumber: number, rowsNumber: number, rowKey?: string) =
   return skeletons;
 };
 
-export default SkeletonRows;
+export default skeletonRows;
