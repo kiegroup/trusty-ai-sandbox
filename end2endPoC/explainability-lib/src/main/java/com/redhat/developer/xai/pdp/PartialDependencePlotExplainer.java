@@ -10,29 +10,29 @@ import com.redhat.developer.model.Model;
 import com.redhat.developer.model.Output;
 import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.PredictionOutput;
-import com.redhat.developer.model.TabularData;
+import com.redhat.developer.model.DataSeries;
 import com.redhat.developer.utils.DataUtils;
 import com.redhat.developer.xai.GlobalExplainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Generates the partial dependence tabular data for a given feature.
+ * Generates the partial dependence plot for a given feature.
  * While a strict PD implementation would need the whole training set used to train the model, this implementation seeks
  * to reproduce an approximate version of the training data by means of data distribution information (min, max, mean,
  * stdDev).
  */
-public class PartialDependencePlotExplainer implements GlobalExplainer<Collection<TabularData>> {
+public class PartialDependencePlotExplainer implements GlobalExplainer<Collection<DataSeries>> {
 
     private static final int TABLE_SIZE = 100;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public Collection<TabularData> explain(Model model) {
+    public Collection<DataSeries> explain(Model model) {
         long start = System.currentTimeMillis();
 
-        Collection<TabularData> pdps = new LinkedList<>();
+        Collection<DataSeries> pdps = new LinkedList<>();
         try {
             DataDistribution dataDistribution = model.getDataDistribution();
             int noOfFeatures = model.getInputShape().getFeatures().size();
@@ -72,9 +72,9 @@ public class PartialDependencePlotExplainer implements GlobalExplainer<Collectio
                             marginalImpacts[i] += output.getScore() / (double) TABLE_SIZE;
                         }
                     }
-                    TabularData tabularData = new TabularData(model.getInputShape().getFeatures().get(featureIndex),
-                                                              featureXSvalues, marginalImpacts);
-                    pdps.add(tabularData);
+                    DataSeries dataSeries = new DataSeries(model.getInputShape().getFeatures().get(featureIndex),
+                                                           featureXSvalues, marginalImpacts);
+                    pdps.add(dataSeries);
                 }
             }
         } catch (Exception e) {

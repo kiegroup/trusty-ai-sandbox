@@ -5,7 +5,6 @@ import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.Currency;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -34,10 +33,6 @@ public class FeatureFactory {
         return new Feature(name, Type.BOOLEAN, new Value<>(truthValue));
     }
 
-    public static Feature newDateFeature(String name, Date date) {
-        return new Feature(name, Type.DATE, new Value<>(date));
-    }
-
     public static Feature newCurrencyFeature(String name, Currency currency) {
         return new Feature(name, Type.CURRENCY, new Value<>(currency));
     }
@@ -63,7 +58,7 @@ public class FeatureFactory {
     }
 
     public static Feature newObjectFeature(String name, Object object) {
-        return new Feature(name, Type.NESTED, new Value<>(object));
+        return new Feature(name, Type.UNDEFINED, new Value<>(object));
     }
 
     public static Feature newCompositeFeature(String name, Map<String, Object> map) {
@@ -86,8 +81,6 @@ public class FeatureFactory {
                 feature = newBinaryFeature(featureName, (ByteBuffer) value);
             } else if (value instanceof Currency) {
                 feature = newCurrencyFeature(featureName, (Currency) value);
-            } else if (value instanceof Date) {
-                feature = newDateFeature(featureName, (Date) value);
             } else if (value instanceof Boolean) {
                 feature = newBooleanFeature(featureName, (Boolean) value);
             } else if (value instanceof Number) {

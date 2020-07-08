@@ -65,7 +65,7 @@ public class DecisionModelWrapper implements Model {
                 }
                 map.put(f.getName(), maps);
             } else {
-                if (Type.NESTED.equals(f.getType())) {
+                if (Type.UNDEFINED.equals(f.getType())) {
                     Feature underlyingFeature = (Feature) f.getValue().getUnderlyingObject();
                     map.put(f.getName(), toMap(List.of(underlyingFeature)));
                 } else {

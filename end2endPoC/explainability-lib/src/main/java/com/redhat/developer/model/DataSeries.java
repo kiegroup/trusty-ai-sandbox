@@ -1,12 +1,12 @@
 package com.redhat.developer.model;
 
-public class TabularData {
+public class DataSeries {
 
     private final double[] x;
     private final double[] y;
     private final Feature feature;
 
-    public TabularData(Feature feature, double[] x, double[] y) {
+    public DataSeries(Feature feature, double[] x, double[] y) {
         assert x.length == y.length : "x and y lengths do not match";
         this.feature = feature;
         this.x = x;

@@ -11,7 +11,7 @@ import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.PredictionOutput;
 import com.redhat.developer.model.Saliency;
 import com.redhat.developer.utils.DataUtils;
-import com.redhat.developer.xai.ExplanationTestUtils;
+import com.redhat.developer.xai.TestUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +44,7 @@ public class LimeExplainerTest {
         PredictionOutput output = mock(PredictionOutput.class);
         List<Feature> features = new LinkedList<>();
         for (int i = 0; i < 4; i++) {
-            features.add(ExplanationTestUtils.getRandomFeature());
+            features.add(TestUtils.getRandomFeature());
         }
         PredictionInput input = new PredictionInput(features);
         Prediction prediction = new Prediction(input, output);
@@ -58,10 +58,10 @@ public class LimeExplainerTest {
         LimeExplainer limeExplainer = new LimeExplainer(10, 1);
         List<Feature> features = new LinkedList<>();
         for (int i = 0; i < 4; i++) {
-            features.add(ExplanationTestUtils.getRandomFeature());
+            features.add(TestUtils.getRandomFeature());
         }
         PredictionInput input = new PredictionInput(features);
-        Model model = ExplanationTestUtils.getTextClassifier();
+        Model model = TestUtils.getTextClassifier();
         Prediction prediction = new Prediction(input, model.predict(List.of(input)).get(0));
         Saliency saliency = limeExplainer.explain(prediction, model);
         assertNotNull(saliency);

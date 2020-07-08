@@ -92,7 +92,6 @@ class DatasetEncoder {
                     case BINARY:
                     case TIME:
                     case URI:
-                    case DATE:
                     case DURATION:
                     case VECTOR:
                     case CURRENCY:
@@ -106,7 +105,7 @@ class DatasetEncoder {
                         }
                         columnData.add(featureValues);
                         break;
-                    case NESTED:
+                    case UNDEFINED:
                         break;
                 }
             } else {

@@ -3,7 +3,6 @@ package com.redhat.developer.utils;
 import java.security.SecureRandom;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.DoubleStream;
 
 import com.redhat.developer.model.Feature;
 import com.redhat.developer.model.FeatureFactory;
@@ -19,12 +18,15 @@ class DataUtilsTest {
     @Test
     public void testDataGeneration() {
         double mean = 1d / (double) random.nextInt(10);
-        double stdDeviation = 1d / (double) random.nextInt(10);
+        double stdDeviation = Math.abs(1d / (double) random.nextInt(10));
         int size = random.nextInt(100);
         double[] data = DataUtils.generateData(mean, stdDeviation, size);
-        assertEquals(DoubleStream.of(data).average().getAsDouble(), mean, 1e-4);
-        double stdDev = Math.sqrt(DoubleStream.of(data).map(i -> i - mean).map(i -> i * i).average().getAsDouble());
-        assertEquals(stdDev, stdDeviation, 1e-4);
+        // check the sum of deviations from mean is zero
+        double sum = 0;
+        for (double d : data) {
+            sum += d - mean;
+        }
+        assertEquals(0, sum, 1e-4);
     }
 
     @Test

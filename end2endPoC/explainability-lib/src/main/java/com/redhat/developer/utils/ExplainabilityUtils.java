@@ -2,16 +2,18 @@ package com.redhat.developer.utils;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import com.redhat.developer.model.Feature;
 import com.redhat.developer.model.FeatureImportance;
 import com.redhat.developer.model.Model;
+import com.redhat.developer.model.Output;
 import com.redhat.developer.model.Prediction;
 import com.redhat.developer.model.PredictionInput;
 import com.redhat.developer.model.PredictionOutput;
 import com.redhat.developer.model.Saliency;
+import com.redhat.developer.model.Type;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class ExplainabilityUtils {
 
@@ -34,10 +36,10 @@ public class ExplainabilityUtils {
      * Calculate the impact of dropping the most important features (given by {@link Saliency#getTopFeatures(int)} from the input.
      * Highly important features would have rather high impact.
      *
-     * @param model the model to be explained
+     * @param model      the model to be explained
      * @param prediction a prediction
-     * @param saliency the saliency calculated for the given prediction
-     * @param k the number of features to drop
+     * @param saliency   the saliency calculated for the given prediction
+     * @param k          the number of features to drop
      * @return the saliency impact
      */
     public static double saliencyImpact(Model model, Prediction prediction, Saliency saliency, int k) {
@@ -55,5 +57,36 @@ public class ExplainabilityUtils {
         String modified = predictionOutput.getOutputs().stream().map(o -> o.getValue() + "-" + o.getScore()).collect(Collectors.joining());
         String original = prediction.getOutput().getOutputs().stream().map(o -> o.getValue() + "-" + o.getScore()).collect(Collectors.joining());
         return DataUtils.hammingDistance(original, modified);
+    }
+
+    /**
+     * calculate fidelity of boolean classification outputs using saliency predictor function = sign(sum(saliency.scores))
+     * see papers:
+     * - Guidotti Riccardo, et al. "A survey of methods for explaining black box models." ACM computing surveys (2018).
+     * - Bodria, Francesco, et al. "Explainability Methods for Natural Language Processing: Applications to Sentiment Analysis (Discussion Paper)."
+     *
+     * @param pairs pairs composed by the saliency and the related prediction
+     * @return the fidelity accuracy
+     */
+    public static double classificationFidelity(List<Pair<Saliency, Prediction>> pairs) {
+        double acc = 0;
+        double evals = 0;
+        for (Pair<Saliency, Prediction> pair : pairs) {
+            Saliency saliency = pair.getLeft();
+            Prediction prediction = pair.getRight();
+            for (Output output : prediction.getOutput().getOutputs()) {
+                Type type = output.getType();
+                if (Type.BOOLEAN.equals(type)) {
+                    double predictorOutput = saliency.getPerFeatureImportance().stream().map(FeatureImportance::getScore).mapToDouble(d -> d).sum();
+                    double v = output.getValue().asNumber();
+                    boolean match = (v >= 0 && predictorOutput >= 0) || (v < 0 && predictorOutput < 0);
+                    if (match) {
+                        acc++;
+                    }
+                    evals++;
+                }
+            }
+        }
+        return acc / evals;
     }
 }

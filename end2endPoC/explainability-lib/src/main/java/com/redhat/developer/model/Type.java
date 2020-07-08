@@ -12,8 +12,6 @@ public enum Type {
 
     BOOLEAN("boolean"),
 
-    DATE("date"),
-
     URI("uri"),
 
     TIME("time"),
@@ -22,7 +20,7 @@ public enum Type {
 
     VECTOR("vector"),
 
-    NESTED("undefined"),
+    UNDEFINED("undefined"),
 
     COMPOSITE("composite"),
 

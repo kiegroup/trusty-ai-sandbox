@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.redhat.developer.model.Feature;
 import com.redhat.developer.model.PredictionInput;
-import com.redhat.developer.xai.ExplanationTestUtils;
+import com.redhat.developer.xai.TestUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +28,7 @@ class SampleWeighterTest {
         Collection<Pair<double[], Double>> trainingSet = new LinkedList<>();
         List<Feature> features = new LinkedList<>();
         for (int i = 0; i < 5; i++) {
-            features.add(ExplanationTestUtils.getRandomFeature());
+            features.add(TestUtils.getRandomFeature());
         }
         // create a dataset whose samples values decrease as the dataset grows (starting from 1)
         for (int i = 0; i < 10; i++) {

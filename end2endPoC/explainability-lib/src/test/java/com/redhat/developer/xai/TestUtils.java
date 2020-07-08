@@ -29,7 +29,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class ExplanationTestUtils {
+public class TestUtils {
 
     private final static SecureRandom random = new SecureRandom();
 
@@ -240,7 +240,7 @@ public class ExplanationTestUtils {
 
     public static Feature getRandomFeature() {
         Feature f;
-        int r = random.nextInt(13);
+        int r = random.nextInt(12);
         String name = "f-" + random.nextFloat();
         if (r == 0) {
             ByteBuffer buffer = ByteBuffer.allocate(random.nextInt(256));
@@ -262,16 +262,14 @@ public class ExplanationTestUtils {
         } else if (r == 6) {
             f = FeatureFactory.newNumericalFeature(name, random.nextDouble());
         } else if (r == 7) {
-            f = FeatureFactory.newDateFeature(name, Date.from(Instant.now()));
-        } else if (r == 8) {
             f = FeatureFactory.newDurationFeature(name, Duration.ofDays(random.nextInt(30)));
-        } else if (r == 9) {
+        } else if (r == 8) {
             f = FeatureFactory.newCurrencyFeature(name, Currency.getInstance(Locale.getDefault()));
-        } else if (r == 10) {
+        } else if (r == 9) {
             f = FeatureFactory.newTimeFeature(name, LocalTime.now());
-        } else if (r == 11) {
+        } else if (r == 10) {
             f = FeatureFactory.newURIFeature(name, URI.create(randomString().replaceAll(" ", "")));
-        } else if (r == 12) {
+        } else if (r == 11) {
             double[] doubles = new double[random.nextInt(10) + 1];
             for (int i = 0; i < doubles.length; i++) {
                 doubles[i] = random.nextDouble();

@@ -13,7 +13,7 @@ import com.redhat.developer.model.PredictionOutput;
 import com.redhat.developer.model.Saliency;
 import com.redhat.developer.utils.DataUtils;
 import com.redhat.developer.utils.ExplainabilityUtils;
-import com.redhat.developer.xai.ExplanationTestUtils;
+import com.redhat.developer.xai.TestUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.RepeatedTest;
@@ -37,7 +37,7 @@ public class BiasedModelsLimeExplainerTest {
         features.add(FeatureFactory.newNumericalFeature("f2", 20));
         features.add(FeatureFactory.newNumericalFeature("f3", 0.1));
         PredictionInput input = new PredictionInput(features);
-        Model model = ExplanationTestUtils.getFeaturePassModel(idx);
+        Model model = TestUtils.getFeaturePassModel(idx);
         List<PredictionOutput> outputs = model.predict(List.of(input));
         Prediction prediction = new Prediction(input, outputs.get(0));
 
@@ -60,7 +60,7 @@ public class BiasedModelsLimeExplainerTest {
         features.add(FeatureFactory.newNumericalFeature("f1", 100));
         features.add(FeatureFactory.newNumericalFeature("f2", 20));
         features.add(FeatureFactory.newNumericalFeature("f3", 10));
-        Model model = ExplanationTestUtils.getSumSkipModel(idx);
+        Model model = TestUtils.getSumSkipModel(idx);
         PredictionInput input = new PredictionInput(features);
         List<PredictionOutput> outputs = model.predict(List.of(input));
         Prediction prediction = new Prediction(input, outputs.get(0));
@@ -86,7 +86,7 @@ public class BiasedModelsLimeExplainerTest {
         features.add(FeatureFactory.newNumericalFeature("f2", 2));
         features.add(FeatureFactory.newNumericalFeature("f3", 7));
         PredictionInput input = new PredictionInput(features);
-        Model model = ExplanationTestUtils.getEvenFeatureModel(idx);
+        Model model = TestUtils.getEvenFeatureModel(idx);
         List<PredictionOutput> outputs = model.predict(List.of(input));
         Prediction prediction = new Prediction(input, outputs.get(0));
 
@@ -105,7 +105,7 @@ public class BiasedModelsLimeExplainerTest {
         features.add(FeatureFactory.newTextFeature("f2", "please give me some money"));
         features.add(FeatureFactory.newTextFeature("f3", "dear friend, please reply"));
         PredictionInput input = new PredictionInput(features);
-        Model model = ExplanationTestUtils.getTextClassifier();
+        Model model = TestUtils.getTextClassifier();
         List<PredictionOutput> outputs = model.predict(List.of(input));
         Prediction prediction = new Prediction(input, outputs.get(0));
 
@@ -126,7 +126,7 @@ public class BiasedModelsLimeExplainerTest {
         features.add(FeatureFactory.newNumericalFeature("f1",6));
         features.add(FeatureFactory.newNumericalFeature("f2",3));
         features.add(FeatureFactory.newNumericalFeature("f3",5));
-        Model model = ExplanationTestUtils.getEvenSumModel(idx);
+        Model model = TestUtils.getEvenSumModel(idx);
         PredictionInput input = new PredictionInput(features);
         List<PredictionOutput> outputs = model.predict(List.of(input));
         Prediction prediction = new Prediction(input, outputs.get(0));

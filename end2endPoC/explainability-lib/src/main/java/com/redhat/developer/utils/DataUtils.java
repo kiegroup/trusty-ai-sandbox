@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
-import java.sql.Date;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -229,10 +228,6 @@ public class DataUtils {
                 // flip the boolean value
                 f = FeatureFactory.newBooleanFeature(featureName, !Boolean.getBoolean(feature.getValue().asString()));
                 break;
-            case DATE:
-                // set to initial value of Java date in the current TZ
-                f = FeatureFactory.newDateFeature(featureName, new Date(0));
-                break;
             case TIME:
                 // set to midnight
                 f = FeatureFactory.newTimeFeature(featureName, LocalTime.MIDNIGHT);
@@ -276,7 +271,7 @@ public class DataUtils {
                 }
                 f = FeatureFactory.newVectorFeature(featureName, values);
                 break;
-            case NESTED:
+            case UNDEFINED:
                 // do nothing
                 f = perturbFeature((Feature) feature.getValue().getUnderlyingObject(), noOfSamples);
                 break;
@@ -328,12 +323,6 @@ public class DataUtils {
                 if (Arrays.binarySearch(names, feature.getName()) >= 0) {
                     // flip the boolean value
                     f = FeatureFactory.newBooleanFeature(featureName, !Boolean.getBoolean(feature.getValue().asString()));
-                }
-                break;
-            case DATE:
-                if (Arrays.binarySearch(names, feature.getName()) >= 0) {
-                    // set to initial value of Java date in the current TZ
-                    f = FeatureFactory.newDateFeature(featureName, new Date(0));
                 }
                 break;
             case TIME:
@@ -393,7 +382,7 @@ public class DataUtils {
                     f = FeatureFactory.newVectorFeature(featureName, values);
                 }
                 break;
-            case NESTED:
+            case UNDEFINED:
                 f = dropFeature((Feature) feature.getValue().getUnderlyingObject(), names);
                 break;
             default:
@@ -479,7 +468,7 @@ public class DataUtils {
     }
 
     static void linearizeFeature(List<Feature> flattenedFeatures, Feature f) {
-        if (Type.NESTED.equals(f.getType())) {
+        if (Type.UNDEFINED.equals(f.getType())) {
             linearizeFeature(flattenedFeatures, (Feature) f.getValue().getUnderlyingObject());
         } else if (Type.COMPOSITE.equals(f.getType())) {
             List<Feature> features = (List<Feature>) f.getValue().getUnderlyingObject();
