@@ -92,11 +92,5 @@ public class OpenNLPLIMEishExplainerTest {
         assertNotNull(saliency);
         double i1 = ExplainabilityUtils.saliencyImpact(model, prediction, saliency, 1);
         assertTrue(i1 > 0);
-        double i2 = ExplainabilityUtils.saliencyImpact(model, prediction, saliency, 2);
-        assertTrue(i2 > 0);
-        assertTrue(i2 <= i1 * 1.5);
-        double i3 = ExplainabilityUtils.saliencyImpact(model, prediction, saliency, 3);
-        assertTrue(i3 > 0);
-        assertTrue(i3 <= i2 * 1.5);
     }
 }
