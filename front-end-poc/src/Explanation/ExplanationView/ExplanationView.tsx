@@ -18,17 +18,18 @@ import { HelpIcon } from "@patternfly/react-icons";
 import { useParams, useHistory, useLocation } from "react-router-dom";
 import { IExecutionRouteParams } from "../../Audit/types";
 import { IOutcome } from "../../Outcome/types";
+import queryString from "query-string";
+import { orderBy } from "lodash";
 import { getDecisionFeatureScores, getDecisionOutcome, getDecisionOutcomeDetail } from "../../Shared/api/audit.api";
 import OutcomePreview from "../../Outcome/OutcomePreview/OutcomePreview";
 import InputDataBrowser from "../../InputData/InputDataBrowser/InputDataBrowser";
 import SkeletonGrid from "../../Shared/skeletons/SkeletonGrid/SkeletonGrid";
 import FeaturesScoreChart from "../FeaturesScoreChart/FeaturesScoreChart";
-import { orderBy } from "lodash";
 import SkeletonTornadoChart from "../../Shared/skeletons/SkeletonTornadoChart/SkeletonTornadoChart";
 import FeaturesScoreTable from "../FeatureScoreTable/FeaturesScoreTable";
-import queryString from "query-string";
-import "./ExplanationView.scss";
 import ExplanationSwitch from "../ExplanationSwitch/ExplanationSwitch";
+import SkeletonStripe from "../../Shared/skeletons/SkeletonStripe/SkeletonStripe";
+import "./ExplanationView.scss";
 
 export interface IFeatureScores {
   featureName: string;
@@ -126,16 +127,22 @@ const ExplanationView = () => {
 
   return (
     <section className="explanation-view">
-      <PageSection variant="light" className="explanation-view__section--outcome-selector">
-        <Divider className="explanation-view__section--outcome-selector__divider" />
-        {outcomeId !== null && outcomesList !== null && outcomesList.length > 1 && (
+      {outcomesList == null && (
+        <PageSection variant="light" className="explanation-view__section--outcome-selector">
+          <Divider className="explanation-view__section--outcome-selector__divider" />
+          <SkeletonStripe customStyle={{ width: 400 }} />
+        </PageSection>
+      )}
+      {outcomeId !== null && outcomesList !== null && outcomesList.length > 1 && (
+        <PageSection variant="light" className="explanation-view__section--outcome-selector">
+          <Divider className="explanation-view__section--outcome-selector__divider" />
           <ExplanationSwitch
             currentExplanationId={outcomeId}
             onDecisionSelection={switchExplanation}
             outcomesList={outcomesList}
           />
-        )}
-      </PageSection>
+        </PageSection>
+      )}
       <PageSection variant="default" className="explanation-view__section">
         <div className="container">
           <Stack hasGutter>
@@ -146,7 +153,11 @@ const ExplanationView = () => {
             </StackItem>
             <StackItem>
               {outcomeData === null ? (
-                <SkeletonGrid rowsNumber={4} colsNumber={2} />
+                <Card>
+                  <CardBody>
+                    <SkeletonGrid rowsNumber={2} colsNumber={2} />
+                  </CardBody>
+                </Card>
               ) : (
                 <OutcomePreview outcomeData={[outcomeData]} compact={false} />
               )}

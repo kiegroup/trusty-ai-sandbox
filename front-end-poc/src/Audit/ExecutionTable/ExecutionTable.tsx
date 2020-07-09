@@ -73,7 +73,7 @@ const ExecutionTable = (props: ExecutionTableProps) => {
   return (
     <>
       {(data.status === "LOADING" || data.status === "NOT_ASKED") && (
-        <Table cells={columns} rows={skeletonRows(columns.length, 8, "decisionKey")} aria-label="Executions list">
+        <Table cells={columns} rows={skeletonRows(columns.length, 10, "decisionKey")} aria-label="Executions list">
           <TableHeader />
           <TableBody rowKey="decisionKey" />
         </Table>
