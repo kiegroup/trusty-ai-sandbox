@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.xml.crypto.Data;
+
 import com.redhat.developer.model.Feature;
 import com.redhat.developer.model.FeatureImportance;
 import com.redhat.developer.model.Model;
@@ -54,9 +56,15 @@ public class ExplainabilityUtils {
         PredictionInput predictionInput = new PredictionInput(newFeatures);
         List<PredictionOutput> predictionOutputs = model.predict(List.of(predictionInput));
         PredictionOutput predictionOutput = predictionOutputs.get(0);
-        String modified = predictionOutput.getOutputs().stream().map(o -> o.getValue() + "-" + o.getScore()).collect(Collectors.joining());
-        String original = prediction.getOutput().getOutputs().stream().map(o -> o.getValue() + "-" + o.getScore()).collect(Collectors.joining());
-        return DataUtils.hammingDistance(original, modified);
+        double impact = 0;
+        double size = predictionOutput.getOutputs().size();
+        for (int i = 0; i < size; i++) {
+            Output original = prediction.getOutput().getOutputs().get(i);
+            Output modified = predictionOutput.getOutputs().get(i);
+            impact += DataUtils.euclideanDistance(new double[]{original.getScore()}, new double[]{modified.getScore()});
+            impact += DataUtils.hammingDistance(original.getValue().asString(), modified.getValue().asString());
+        }
+        return impact / size;
     }
 
     /**

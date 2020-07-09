@@ -11,7 +11,11 @@ public class Value<S> {
     }
 
     public String asString() {
-        return String.valueOf(underlyingObject);
+        if (underlyingObject == null) {
+            return "";
+        } else {
+            return String.valueOf(underlyingObject);
+        }
     }
 
     public String asString(ValueEncoder<S, String> encoder) {
@@ -43,7 +47,7 @@ public class Value<S> {
             doubles = (double[]) underlyingObject;
         } catch (ClassCastException cce) {
             if (underlyingObject instanceof String) {
-                int noOfWords = ((String)underlyingObject).split(" ").length;
+                int noOfWords = ((String) underlyingObject).split(" ").length;
                 doubles = new double[noOfWords];
                 Arrays.fill(doubles, 1);
             } else {
