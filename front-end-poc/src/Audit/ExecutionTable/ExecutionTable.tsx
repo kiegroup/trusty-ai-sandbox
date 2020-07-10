@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { IRow, Table, TableBody, TableHeader } from "@patternfly/react-table";
 import { Bullseye, EmptyState, EmptyStateBody, EmptyStateIcon, Title } from "@patternfly/react-core";
-import { SearchIcon } from "@patternfly/react-icons";
+import { SearchIcon, ExclamationCircleIcon } from "@patternfly/react-icons";
 import ExecutionStatus from "../ExecutionStatus/ExecutionStatus";
 import FormattedDate from "../../Shared/components/FormattedDate/FormattedDate";
 import skeletonRows from "../../Shared/skeletons/skeletonRows";
@@ -66,6 +66,31 @@ const noExecutions = (colSpan: number) => {
   ];
 };
 
+const loadingError = (colSpan: number) => {
+  return [
+    {
+      heightAuto: true,
+      decisionKey: "no-results",
+      cells: [
+        {
+          props: { colSpan },
+          title: (
+            <Bullseye>
+              <EmptyState>
+                <EmptyStateIcon icon={ExclamationCircleIcon} color="#C9190B" />
+                <Title headingLevel="h5" size="lg">
+                  Loading Error
+                </Title>
+                <EmptyStateBody>We are unable to load data right now. Try again later.</EmptyStateBody>
+              </EmptyState>
+            </Bullseye>
+          ),
+        },
+      ],
+    },
+  ];
+};
+
 const ExecutionTable = (props: ExecutionTableProps) => {
   const { data } = props;
   const columns = ["ID", "Description", "Executor", "Date", "Execution Status"];
@@ -90,7 +115,12 @@ const ExecutionTable = (props: ExecutionTableProps) => {
           <TableBody rowKey="decisionKey" />
         </Table>
       )}
-      {data.status === "FAILURE" && <span>error</span>}
+      {data.status === "FAILURE" && (
+        <Table cells={columns} rows={loadingError(columns.length)} aria-label="Executions list">
+          <TableHeader />
+          <TableBody rowKey="decisionKey" />
+        </Table>
+      )}
     </>
   );
 };
