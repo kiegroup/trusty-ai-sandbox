@@ -19,18 +19,29 @@ import SkeletonStripe from "../../Shared/skeletons/SkeletonStripe/SkeletonStripe
 import AuditToolbar from "../AuditToolbar/AuditToolbar";
 import ExecutionTable from "../ExecutionTable/ExecutionTable";
 import useExecutions from "./useExecutions";
+import { formatISO, sub } from "date-fns";
 
-const AuditOverview = () => {
-  const oneMonthAgo = new Date();
-  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+type AuditOverviewProps = {
+  dateRangePreset?: {
+    fromDate: string;
+    toDate: string;
+  };
+};
+
+const AuditOverview = (props: AuditOverviewProps) => {
+  const { dateRangePreset } = props;
+  const toPreset = dateRangePreset ? dateRangePreset.toDate : formatISO(new Date(), { representation: "date" });
+  const fromPreset = dateRangePreset
+    ? dateRangePreset.fromDate
+    : formatISO(sub(new Date(), { months: 1 }), { representation: "date" });
   const [searchString, setSearchString] = useState("");
   const [latestSearches, setLatestSearches] = useState<string[] | null>(null);
-  const [fromDate, setFromDate] = useState(oneMonthAgo.toISOString().substr(0, 10));
-  const [toDate, setToDate] = useState(new Date().toISOString().substr(0, 10));
+  const [fromDate, setFromDate] = useState(fromPreset);
+  const [toDate, setToDate] = useState(toPreset);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
-  const [loadExecutions, executions] = useExecutions(searchString, fromDate, toDate, pageSize, pageSize * (page - 1));
+  const { loadExecutions, executions } = useExecutions(searchString, fromDate, toDate, pageSize, pageSize * (page - 1));
 
   useEffect(() => {
     if (executions.status === "SUCCESS") {

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Audit overview renders 1`] = `
+exports[`Audit overview renders correctly 1`] = `
 <Fragment>
   <Component
     variant="light"
@@ -51,8 +51,7 @@ exports[`Audit overview renders 1`] = `
       </Component>
     </div>
     <AuditToolbar
-      fromDate="2020-06-08"
-      onRefresh={[Function]}
+      fromDate="2020-01-01"
       page={1}
       pageSize={10}
       setFromDate={[Function]}
@@ -60,13 +59,28 @@ exports[`Audit overview renders 1`] = `
       setPageSize={[Function]}
       setSearchString={[Function]}
       setToDate={[Function]}
-      toDate="2020-07-08"
+      toDate="2020-02-01"
       total={0}
     />
     <ExecutionTable
       data={
         Object {
-          "status": "NOT_ASKED",
+          "data": Object {
+            "headers": Array [
+              Object {
+                "executedModelName": "LoanEligibility",
+                "executionDate": "2020-06-01T12:33:57+0000",
+                "executionId": "b2b0ed8d-c1e2-46b5-ad4f-3ac54ff4beae",
+                "executionSucceeded": true,
+                "executionType": "DECISION",
+                "executorName": "testUser",
+              },
+            ],
+            "limit": 10,
+            "offset": 0,
+            "total": 1,
+          },
+          "status": "SUCCESS",
         }
       }
     />
