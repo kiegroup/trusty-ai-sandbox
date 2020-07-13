@@ -10,7 +10,7 @@ describe("Audit toolbar", () => {
 
   test("allows free text search", () => {
     const setSearchString = jest.fn();
-    const searchString = "#12345";
+    const searchString = "12345";
     const wrapper = renderAuditToolbar("mount", { setSearchString });
     const searchInput = wrapper.find("input#audit-search-input");
     const searchButton = wrapper.find("button#audit-search");

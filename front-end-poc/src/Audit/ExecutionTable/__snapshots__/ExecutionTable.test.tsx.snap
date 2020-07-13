@@ -1,0 +1,889 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Execution table renders a list of executions 1`] = `
+<Fragment>
+  <Table
+    aria-label="Executions list"
+    borders={true}
+    canSelectAll={true}
+    cells={
+      Array [
+        "ID",
+        "Description",
+        "Executor",
+        "Date",
+        "Execution Status",
+      ]
+    }
+    className=""
+    contentId="expanded-content"
+    dropdownDirection="down"
+    dropdownPosition="right"
+    expandId="expandable-toggle"
+    gridBreakPoint="grid-md"
+    role="grid"
+    rowLabeledBy="simple-node"
+    rows={
+      Array [
+        Object {
+          "cells": Array [
+            Object {
+              "title": <ForwardRef
+                to="/audit/decision/b2b0ed8d-c1e2-46b5-ad4f-3ac54ff4beae"
+              >
+                #B2B0ED8D-C1E2-46B5-AD4F-3AC54FF4BEAE
+              </ForwardRef>,
+            },
+            "LoanEligibility",
+            "testUser",
+            Object {
+              "title": <FormattedDate
+                date="2020-06-01T12:33:57+0000"
+              />,
+            },
+            Object {
+              "title": <ExecutionStatus
+                result={true}
+              />,
+            },
+          ],
+          "decisionKey": "key-b2b0ed8d-c1e2-46b5-ad4f-3ac54ff4beae",
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "title": <ForwardRef
+                to="/audit/decision/b2b0ed8d-c1e2-46b5-ad4f-3hd83kidi4u74"
+              >
+                #B2B0ED8D-C1E2-46B5-AD4F-3HD83KIDI4U74
+              </ForwardRef>,
+            },
+            "LoanEligibility",
+            "testUser",
+            Object {
+              "title": <FormattedDate
+                date="2020-06-01T12:33:57+0000"
+              />,
+            },
+            Object {
+              "title": <ExecutionStatus
+                result={true}
+              />,
+            },
+          ],
+          "decisionKey": "key-b2b0ed8d-c1e2-46b5-ad4f-3hd83kidi4u74",
+        },
+      ]
+    }
+    variant={null}
+  >
+    <Component />
+    <Component
+      rowKey="decisionKey"
+    />
+  </Table>
+</Fragment>
+`;
+
+exports[`Execution table renders a loading error 1`] = `
+<Fragment>
+  <Table
+    aria-label="Executions list"
+    borders={true}
+    canSelectAll={true}
+    cells={
+      Array [
+        "ID",
+        "Description",
+        "Executor",
+        "Date",
+        "Execution Status",
+      ]
+    }
+    className=""
+    contentId="expanded-content"
+    dropdownDirection="down"
+    dropdownPosition="right"
+    expandId="expandable-toggle"
+    gridBreakPoint="grid-md"
+    role="grid"
+    rowLabeledBy="simple-node"
+    rows={
+      Array [
+        Object {
+          "cells": Array [
+            Object {
+              "props": Object {
+                "colSpan": 5,
+              },
+              "title": <Unknown>
+                <Unknown>
+                  <Unknown
+                    color="#C9190B"
+                    icon={[Function]}
+                  />
+                  <Unknown
+                    headingLevel="h5"
+                    size="lg"
+                  >
+                    Loading Error
+                  </Unknown>
+                  <Unknown>
+                    We are unable to load data right now. Try again later.
+                  </Unknown>
+                </Unknown>
+              </Unknown>,
+            },
+          ],
+          "decisionKey": "no-results",
+          "heightAuto": true,
+        },
+      ]
+    }
+    variant={null}
+  >
+    <Component />
+    <Component
+      rowKey="decisionKey"
+    />
+  </Table>
+</Fragment>
+`;
+
+exports[`Execution table renders loading skeletons when the data is loading 1`] = `
+<Fragment>
+  <Table
+    aria-label="Executions list"
+    borders={true}
+    canSelectAll={true}
+    cells={
+      Array [
+        "ID",
+        "Description",
+        "Executor",
+        "Date",
+        "Execution Status",
+      ]
+    }
+    className=""
+    contentId="expanded-content"
+    dropdownDirection="down"
+    dropdownPosition="right"
+    expandId="expandable-toggle"
+    gridBreakPoint="grid-md"
+    role="grid"
+    rowLabeledBy="simple-node"
+    rows={
+      Array [
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-0",
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-1",
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-2",
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-3",
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-4",
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-5",
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-6",
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-7",
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-8",
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-9",
+        },
+      ]
+    }
+    variant={null}
+  >
+    <Component />
+    <Component
+      rowKey="decisionKey"
+    />
+  </Table>
+</Fragment>
+`;
+
+exports[`Execution table renders loading skeletons when the data is not yet fetching 1`] = `
+<Fragment>
+  <Table
+    aria-label="Executions list"
+    borders={true}
+    canSelectAll={true}
+    cells={
+      Array [
+        "ID",
+        "Description",
+        "Executor",
+        "Date",
+        "Execution Status",
+      ]
+    }
+    className=""
+    contentId="expanded-content"
+    dropdownDirection="down"
+    dropdownPosition="right"
+    expandId="expandable-toggle"
+    gridBreakPoint="grid-md"
+    role="grid"
+    rowLabeledBy="simple-node"
+    rows={
+      Array [
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-0",
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-1",
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-2",
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-3",
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-4",
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-5",
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-6",
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-7",
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-8",
+        },
+        Object {
+          "cells": Array [
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="md"
+              />,
+            },
+            Object {
+              "title": <SkeletonStripe
+                size="lg"
+              />,
+            },
+          ],
+          "decisionKey": "skeleton-9",
+        },
+      ]
+    }
+    variant={null}
+  >
+    <Component />
+    <Component
+      rowKey="decisionKey"
+    />
+  </Table>
+</Fragment>
+`;
+
+exports[`Execution table renders no result message if no executions are found 1`] = `
+<Fragment>
+  <Table
+    aria-label="Executions list"
+    borders={true}
+    canSelectAll={true}
+    cells={
+      Array [
+        "ID",
+        "Description",
+        "Executor",
+        "Date",
+        "Execution Status",
+      ]
+    }
+    className=""
+    contentId="expanded-content"
+    dropdownDirection="down"
+    dropdownPosition="right"
+    expandId="expandable-toggle"
+    gridBreakPoint="grid-md"
+    role="grid"
+    rowLabeledBy="simple-node"
+    rows={
+      Array [
+        Object {
+          "cells": Array [
+            Object {
+              "props": Object {
+                "colSpan": 5,
+              },
+              "title": <Unknown>
+                <Unknown>
+                  <Unknown
+                    icon={[Function]}
+                  />
+                  <Unknown
+                    headingLevel="h5"
+                    size="lg"
+                  >
+                    No executions found
+                  </Unknown>
+                  <Unknown>
+                    No results match the filter criteria. Try removing all filters.
+                  </Unknown>
+                </Unknown>
+              </Unknown>,
+            },
+          ],
+          "decisionKey": "no-results",
+          "heightAuto": true,
+        },
+      ]
+    }
+    variant={null}
+  >
+    <Component />
+    <Component
+      rowKey="decisionKey"
+    />
+  </Table>
+</Fragment>
+`;

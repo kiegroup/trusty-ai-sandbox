@@ -32,7 +32,7 @@ const useExecutions = (searchString: string, from: string, to: string, limit: nu
     loadExecutions();
   }, [searchString, from, to, limit, offset, loadExecutions]);
 
-  return [loadExecutions, executions] as const;
+  return { loadExecutions, executions };
 };
 
 export default useExecutions;

@@ -1,14 +1,13 @@
 import React from "react";
 import { mount, shallow } from "enzyme";
 import AuditOverview from "./AuditOverview";
-import * as api from "../../Shared/api/audit.api";
 import { MemoryRouter } from "react-router-dom";
-import { act } from "react-dom/test-utils";
+import useExecutions from "./useExecutions";
 
 const executions = {
   data: {
-    total: 28,
-    limit: 50,
+    total: 1,
+    limit: 10,
     offset: 0,
     headers: [
       {
@@ -19,53 +18,40 @@ const executions = {
         executedModelName: "LoanEligibility",
         executionType: "DECISION",
       },
-      {
-        executionId: "023a0d79-2be6-4ec8-9ef7-99a6796cb319",
-        executionDate: "2020-06-01T12:33:57+0000",
-        executionSucceeded: true,
-        executorName: "testUser",
-        executedModelName: "LoanEligibility",
-        executionType: "DECISION",
-      },
-      {
-        executionId: "3a5d4a4e-7c5a-4ce7-85de-6024fbf1da39",
-        executionDate: "2020-06-01T12:33:56+0000",
-        executionSucceeded: true,
-        executorName: "testUser",
-        executedModelName: "LoanEligibility",
-        executionType: "DECISION",
-      },
-      {
-        executionId: "a4e0b8e8-9a6d-4a8e-ad5a-54e5c654a248",
-        executionDate: "2020-06-01T12:33:23+0000",
-        executionSucceeded: true,
-        executorName: "testUser",
-        executedModelName: "fraud-scoring",
-        executionType: "DECISION",
-      },
-      {
-        executionId: "f08adc80-2c2d-43f4-801c-4f08e10820a0",
-        executionDate: "2020-06-01T12:33:18+0000",
-        executionSucceeded: true,
-        executorName: "testUser",
-        executedModelName: "fraud-scoring",
-        executionType: "DECISION",
-      },
     ],
   },
 };
-const flushPromises = () => new Promise(setImmediate);
-const apiMock = jest.spyOn(api, "getExecutions");
-// @ts-ignore
-apiMock.mockImplementation(() => Promise.resolve(executions));
+jest.mock("./useExecutions", () => {
+  const mockLoadExecutions = jest.fn();
+  const executions = {
+    status: "SUCCESS",
+    data: {
+      total: 1,
+      limit: 10,
+      offset: 0,
+      headers: [
+        {
+          executionId: "b2b0ed8d-c1e2-46b5-ad4f-3ac54ff4beae",
+          executionDate: "2020-06-01T12:33:57+0000",
+          executionSucceeded: true,
+          executorName: "testUser",
+          executedModelName: "LoanEligibility",
+          executionType: "DECISION",
+        },
+      ],
+    },
+  };
+
+  return jest.fn().mockReturnValue({ mockLoadExecutions, executions });
+});
 
 describe("Audit overview", () => {
-  test("renders", () => {
-    const wrapper = shallow(<AuditOverview />);
+  test("renders correctly", () => {
+    const wrapper = shallow(<AuditOverview dateRangePreset={{ fromDate: "2020-01-01", toDate: "2020-02-01" }} />);
     expect(wrapper).toMatchSnapshot();
   });
 
-  test("loads a list of executions from the last month", async () => {
+  test("loads a list of executions from the last month", () => {
     const wrapper = mount(
       <MemoryRouter>
         <AuditOverview />
@@ -76,13 +62,7 @@ describe("Audit overview", () => {
     const fromDate = oneMonthAgo.toISOString().substr(0, 10);
     const toDate = new Date().toISOString().substr(0, 10);
 
-    await act(async () => {
-      await flushPromises();
-      wrapper.update();
-    });
-
-    expect(apiMock).toHaveBeenCalledTimes(1);
-    expect(apiMock).toHaveBeenCalledWith("", fromDate, toDate, 10, 0);
+    expect(useExecutions).toHaveBeenCalledWith("", fromDate, toDate, 10, 0);
     expect(wrapper.find("ExecutionTable").props().data).toStrictEqual({
       status: "SUCCESS",
       data: executions.data,
