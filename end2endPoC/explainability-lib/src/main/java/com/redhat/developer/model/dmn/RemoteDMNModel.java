@@ -88,7 +88,7 @@ public class RemoteDMNModel implements Model {
         for (Feature f : inputShape.getFeatures()) {
             if (Type.NUMBER.equals(f.getType()) || Type.BOOLEAN.equals(f.getType())) {
                 double v = f.getValue().asNumber();
-                double[] doubles = DoubleStream.of(DataUtils.generateData(0, 1, 1000)).map(d -> d * v + v).toArray();
+                double[] doubles = DoubleStream.of(DataUtils.generateData(0, 1, 100)).map(d -> d * v + v).toArray();
                 FeatureDistribution featureDistribution = DataUtils.getFeatureDistribution(doubles);
                 featureDistributions.add(featureDistribution);
             }

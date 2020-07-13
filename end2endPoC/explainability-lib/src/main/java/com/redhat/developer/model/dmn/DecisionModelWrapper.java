@@ -9,6 +9,7 @@ import java.util.stream.DoubleStream;
 import com.redhat.developer.model.DataDistribution;
 import com.redhat.developer.model.Feature;
 import com.redhat.developer.model.FeatureDistribution;
+import com.redhat.developer.model.FeatureFactory;
 import com.redhat.developer.model.Model;
 import com.redhat.developer.model.Output;
 import com.redhat.developer.model.PredictionInput;
@@ -19,6 +20,10 @@ import com.redhat.developer.utils.DataUtils;
 import org.kie.dmn.api.core.DMNContext;
 import org.kie.dmn.api.core.DMNDecisionResult;
 import org.kie.dmn.api.core.DMNResult;
+import org.kie.dmn.api.core.DMNType;
+import org.kie.dmn.api.core.ast.DecisionNode;
+import org.kie.dmn.api.core.ast.InputDataNode;
+import org.kie.dmn.model.api.Decision;
 import org.kie.kogito.decision.DecisionModel;
 
 /**
@@ -37,9 +42,6 @@ public class DecisionModelWrapper implements Model {
         List<PredictionOutput> predictionOutputs = new LinkedList<>();
         for (PredictionInput input : inputs) {
             Map<String, Object> contextVariables = toMap(input.getFeatures());
-            if (contextVariables.containsKey("context")) {
-                contextVariables = (Map<String, Object>) contextVariables.get("context");
-            }
             final DMNContext context = decisionModel.newContext(contextVariables);
             DMNResult dmnResult = decisionModel.evaluateAll(context);
             List<Output> outputs = new LinkedList<>();
@@ -74,6 +76,9 @@ public class DecisionModelWrapper implements Model {
                 }
             }
         }
+        if (map.containsKey("context")) {
+            map = (Map<String, Object>) map.get("context");
+        }
         return map;
     }
 
@@ -94,11 +99,47 @@ public class DecisionModelWrapper implements Model {
 
     @Override
     public PredictionInput getInputShape() {
-        return null;
+        Map<String, Object> context = new HashMap<>();
+        for (InputDataNode input : decisionModel.getDMNModel().getInputs()) {
+            String name = input.getName();
+            DMNType type = input.getType();
+            Object object = getObject(type);
+            context.put(name, object);
+        }
+        return new PredictionInput(List.of(FeatureFactory.newCompositeFeature("context", context)));
+    }
+
+    private Object getObject(DMNType type) {
+        Object object;
+        if (type.isComposite()) {
+            Map<String, Object> map = new HashMap<>();
+            for (Map.Entry<String, DMNType> entry : type.getFields().entrySet()) {
+                map.put(entry.getKey(), getObject(entry.getValue()));
+            }
+            object = map;
+        } else {
+            if (!type.getAllowedValues().isEmpty()) {
+                object = type.getAllowedValues().get(0);
+            } else {
+                object = "";
+            }
+        }
+        return object;
     }
 
     @Override
     public PredictionOutput getOutputShape() {
-        return null;
+        List<Output> outputs = new LinkedList<>();
+        for (DecisionNode node : decisionModel.getDMNModel().getDecisions()) {
+            String name = node.getName();
+            Decision decision = node.getDecision();
+            Type type = Type.TEXT;
+            if ("\"yes\" , \"no\"".equalsIgnoreCase(decision.getAllowedAnswers())) {
+                type = Type.BOOLEAN;
+            }
+            Output output = new Output(name, type, new Value<>(decision.getLabel()), 1d);
+            outputs.add(output);
+        }
+        return new PredictionOutput(outputs);
     }
 }

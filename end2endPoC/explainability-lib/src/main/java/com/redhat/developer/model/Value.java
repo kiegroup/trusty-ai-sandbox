@@ -18,16 +18,12 @@ public class Value<S> {
         }
     }
 
-    public String asString(ValueEncoder<S, String> encoder) {
-        return encoder.encode(underlyingObject);
-    }
-
     public double asNumber() {
-        return underlyingObject instanceof Boolean ? (Boolean) underlyingObject ? 1d : 0d : Double.parseDouble(asString());
-    }
-
-    public double asNumber(ValueEncoder<S, Double> encoder) {
-        return encoder.encode(underlyingObject);
+        if (underlyingObject != null) {
+            return underlyingObject instanceof Boolean ? (Boolean) underlyingObject ? 1d : 0d : Double.parseDouble(asString());
+        } else {
+            return Double.NaN;
+        }
     }
 
     public S getUnderlyingObject() {
@@ -36,9 +32,7 @@ public class Value<S> {
 
     @Override
     public String toString() {
-        return "Value{" +
-                "underlyingObject=" + underlyingObject +
-                '}';
+        return "Value{" + underlyingObject + '}';
     }
 
     public double[] asVector() {
