@@ -16,7 +16,6 @@ import com.redhat.developer.utils.DataUtils;
 import com.redhat.developer.utils.ExplainabilityUtils;
 import com.redhat.developer.xai.TestUtils;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.RepeatedTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
