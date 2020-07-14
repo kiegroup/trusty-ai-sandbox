@@ -2,6 +2,7 @@ package com.redhat.developer.xai.lime;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.redhat.developer.model.Feature;
 import com.redhat.developer.model.FeatureFactory;
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.RepeatedTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -119,7 +121,7 @@ public class BiasedModelsLimeExplainerTest {
         assertTrue(v > 0);
     }
 
-    @Disabled
+    @RepeatedTest(10)
     public void testUnusedFeatureClassification() {
         int idx = 2;
         List<Feature> features = new LinkedList<>();
@@ -134,7 +136,7 @@ public class BiasedModelsLimeExplainerTest {
         Saliency saliency = limeExplainer.explain(prediction, model);
 
         assertNotNull(saliency);
-        List<FeatureImportance> perFeatureImportance = saliency.getTopFeatures(3);
-        assertEquals(features.get(idx).getName(), perFeatureImportance.get(perFeatureImportance.size() - 1).getFeature().getName());
+        List<FeatureImportance> perFeatureImportance = saliency.getNegativeFeatures(3);
+        assertFalse(perFeatureImportance.stream().map(fi -> fi.getFeature().getName()).collect(Collectors.toList()).contains(features.get(idx).getName()));
     }
 }
