@@ -21,7 +21,7 @@ import { IOutcome } from "../../Outcome/types";
 import queryString from "query-string";
 import { orderBy } from "lodash";
 import { getDecisionFeatureScores, getDecisionOutcome, getDecisionOutcomeDetail } from "../../Shared/api/audit.api";
-import OutcomePreview from "../../Outcome/OutcomePreview/OutcomePreview";
+import Outcomes from "../../Execution/Outcomes/Outcomes";
 import InputDataBrowser from "../../InputData/InputDataBrowser/InputDataBrowser";
 import SkeletonGrid from "../../Shared/skeletons/SkeletonGrid/SkeletonGrid";
 import FeaturesScoreChart from "../FeaturesScoreChart/FeaturesScoreChart";
@@ -159,7 +159,7 @@ const ExplanationView = () => {
                   </CardBody>
                 </Card>
               ) : (
-                <OutcomePreview outcomeData={[outcomeData]} compact={false} />
+                <Outcomes outcomes={[outcomeData]} />
               )}
             </StackItem>
           </Stack>

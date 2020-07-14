@@ -8,6 +8,7 @@ import {
   CardHeader,
   Gallery,
   GalleryItem,
+  Label,
   Split,
   SplitItem,
   Title,
@@ -19,46 +20,52 @@ import { IItemObject, isIItemObjectArray, isIItemObjectMultiArray } from "../../
 import "./Outcomes.scss";
 import FormattedValue from "../../Shared/components/FormattedValue/FormattedValue";
 
-type OutcomesProps = {
-  outcomes: IOutcome[];
-  onExplanationClick: (outcomeId: string) => void;
-  listView?: boolean;
-};
+type OutcomesProps =
+  | {
+      outcomes: IOutcome[];
+      listView: true;
+      onExplanationClick: (outcomeId: string) => void;
+    }
+  | { outcomes: IOutcome[]; listView?: false };
 
 const Outcomes = (props: OutcomesProps) => {
-  const { outcomes, onExplanationClick, listView = false } = props;
-
-  if (listView) {
+  if (props.listView) {
     return (
-      <>
-        {outcomes.length && (
+      <section className="outcomes">
+        {props.outcomes.length && (
           <Gallery className="outcome-cards" hasGutter>
-            {outcomes.map((item) => renderCard(item, onExplanationClick))}
+            {props.outcomes.map((item) => renderCard(item, props.onExplanationClick))}
           </Gallery>
         )}
-      </>
+      </section>
     );
   }
 
   return (
-    <>
-      {outcomes.map((item) => {
+    <section className="outcomes">
+      {props.outcomes.map((item) => {
         if (
           item.outcomeResult !== null &&
           item.outcomeResult.components !== null &&
           isIItemObjectMultiArray(item.outcomeResult.components)
         ) {
-          return item.outcomeResult.components.map((subList) => {
-            return (
-              <LightCard>
-                <OutcomeSubList subListItem={subList} />
-              </LightCard>
-            );
-          });
+          return (
+            <Gallery className="outcome-cards" hasGutter key={uuid()}>
+              {item.outcomeResult.components.map((subList) => {
+                return (
+                  <GalleryItem key={uuid()}>
+                    <LightCard className="outcome-cards__card" isHoverable>
+                      <OutcomeSubList subListItem={subList} />
+                    </LightCard>
+                  </GalleryItem>
+                );
+              })}
+            </Gallery>
+          );
         }
-        return <LightCard>{renderOutcome(item.outcomeResult, item.outcomeName, false, false)}</LightCard>;
+        return <LightCard key={uuid()}>{renderOutcome(item.outcomeResult, item.outcomeName, false, false)}</LightCard>;
       })}
-    </>
+    </section>
   );
 };
 
@@ -81,7 +88,7 @@ const renderCard = (outcome: IOutcome, onExplanation: (outcomeId: string) => voi
   ) {
     return outcome.outcomeResult.components.map((item) => (
       <GalleryItem key={uuid()}>
-        <OutcomeCard outcome={outcome} onExplanation={onExplanation}>
+        <OutcomeCard outcome={outcome} onExplanation={onExplanation} titleAsLabel>
           <OutcomeSubList subListItem={item} />
         </OutcomeCard>
       </GalleryItem>
@@ -101,16 +108,21 @@ type OutcomeCardProps = {
   children: React.ReactNode;
   outcome: IOutcome;
   onExplanation: (outcomeId: string) => void;
+  titleAsLabel?: boolean;
 };
 
 const OutcomeCard = (props: OutcomeCardProps) => {
-  const { children, outcome, onExplanation } = props;
+  const { children, outcome, onExplanation, titleAsLabel = false } = props;
   return (
     <Card className="outcome-cards__card" isHoverable>
       <CardHeader>
-        <Title headingLevel="h4" size="xl">
-          {outcome.outcomeName}
-        </Title>
+        {titleAsLabel ? (
+          <Label color="blue">{outcome.outcomeName}</Label>
+        ) : (
+          <Title headingLevel="h4" size="xl">
+            {outcome.outcomeName}
+          </Title>
+        )}
       </CardHeader>
       <CardBody>
         {outcome.evaluationStatus !== undefined && outcome.evaluationStatus !== "SUCCEEDED" && (
@@ -223,12 +235,14 @@ const OutcomeSubList = (props: OutcomeSubListProps) => {
 
 type LightCardProps = {
   children: React.ReactNode;
+  className?: string;
+  isHoverable?: boolean;
 };
 
 const LightCard = (props: LightCardProps) => {
-  const { children } = props;
+  const { children, className = "", isHoverable = false } = props;
   return (
-    <Card key={uuid()}>
+    <Card className={className} isHoverable={isHoverable}>
       <CardBody>{children}</CardBody>
     </Card>
   );

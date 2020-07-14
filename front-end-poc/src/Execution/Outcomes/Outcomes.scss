@@ -1,14 +1,13 @@
-.outcome-cards {
-  grid-auto-rows: 1fr;
-  grid-template-columns: 1fr 1fr 1fr;
-  &__card {
-    height: 100%;
-    min-height: 280px;
-    &--skipped {
-      @extend .outcome-cards__card;
-      background-color: #f3f3f3;
+.outcomes {
+  .outcome-cards {
+    grid-auto-rows: 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    &__card {
+      height: 100%;
+      min-height: 280px;
     }
   }
+
   .outcome {
     margin-bottom: var(--pf-global--spacer--md);
     &__title {
