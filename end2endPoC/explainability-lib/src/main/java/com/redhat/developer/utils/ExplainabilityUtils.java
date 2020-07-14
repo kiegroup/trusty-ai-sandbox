@@ -40,12 +40,10 @@ public class ExplainabilityUtils {
      *
      * @param model      the model to be explained
      * @param prediction a prediction
-     * @param saliency   the saliency calculated for the given prediction
-     * @param k          the number of features to drop
+     * @param topFeatures the list of important features that should be dropped
      * @return the saliency impact
      */
-    public static double saliencyImpact(Model model, Prediction prediction, Saliency saliency, int k) {
-        List<FeatureImportance> topFeatures = saliency.getTopFeatures(k);
+    public static double saliencyImpact(Model model, Prediction prediction, List<FeatureImportance> topFeatures) {
         String[] importantFeatureNames = topFeatures.stream().map(f -> f.getFeature().getName()).toArray(String[]::new);
 
         List<Feature> newFeatures = new LinkedList<>();

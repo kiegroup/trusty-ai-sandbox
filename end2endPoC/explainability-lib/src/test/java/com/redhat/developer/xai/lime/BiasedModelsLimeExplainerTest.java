@@ -50,7 +50,7 @@ public class BiasedModelsLimeExplainerTest {
         assertEquals(topFeatures.get(0).getFeature().getName(), features.get(idx).getName());
         assertTrue(topFeatures.get(1).getScore() < topFeatures.get(0).getScore() * 10);
         assertTrue(topFeatures.get(2).getScore() < topFeatures.get(0).getScore() * 10);
-        double v = ExplainabilityUtils.saliencyImpact(model, prediction, saliency, 1);
+        double v = ExplainabilityUtils.saliencyImpact(model, prediction, saliency.getTopFeatures(1));
         assertTrue(v > 0);
     }
 
@@ -75,7 +75,7 @@ public class BiasedModelsLimeExplainerTest {
         assertTrue(perFeatureImportance.get(0).getScore() > 0);
         assertTrue(perFeatureImportance.get(1).getScore() > 0);
         assertEquals(features.get(idx).getName(), perFeatureImportance.get(2).getFeature().getName());
-        double v = ExplainabilityUtils.saliencyImpact(model, prediction, saliency, 1);
+        double v = ExplainabilityUtils.saliencyImpact(model, prediction, saliency.getTopFeatures(1));
         assertTrue(v > 0);
     }
 
@@ -116,7 +116,7 @@ public class BiasedModelsLimeExplainerTest {
         assertNotNull(saliency);
         List<FeatureImportance> topFeatures = saliency.getPositiveFeatures(1);
         assertEquals("money (f2)", topFeatures.get(0).getFeature().getName());
-        double v = ExplainabilityUtils.saliencyImpact(model, prediction, saliency, 1);
+        double v = ExplainabilityUtils.saliencyImpact(model, prediction, saliency.getTopFeatures(1));
         assertTrue(v > 0);
     }
 
@@ -137,5 +137,7 @@ public class BiasedModelsLimeExplainerTest {
         assertNotNull(saliency);
         List<FeatureImportance> perFeatureImportance = saliency.getNegativeFeatures(3);
         assertFalse(perFeatureImportance.stream().map(fi -> fi.getFeature().getName()).collect(Collectors.toList()).contains(features.get(idx).getName()));
+        double v = ExplainabilityUtils.saliencyImpact(model, prediction, saliency.getNegativeFeatures(2));
+        assertTrue(v > 0);
     }
 }

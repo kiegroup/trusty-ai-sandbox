@@ -90,7 +90,7 @@ public class OpenNLPLIMEishExplainerTest {
         };
         Saliency saliency = limeExplainer.explain(prediction, model);
         assertNotNull(saliency);
-        double i1 = ExplainabilityUtils.saliencyImpact(model, prediction, saliency, 1);
+        double i1 = ExplainabilityUtils.saliencyImpact(model, prediction, saliency.getTopFeatures(1));
         assertTrue(i1 > 0);
     }
 }
