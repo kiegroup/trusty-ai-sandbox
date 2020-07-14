@@ -129,7 +129,7 @@ class DatasetEncoder {
         doubles[i] = originalValue;
         double min = DoubleStream.of(doubles).min().getAsDouble();
         double max = DoubleStream.of(doubles).max().getAsDouble();
-        // feature scaling + kernel based binning
+        // feature scaling + kernel based clustering
         double threshold = DataUtils.gaussianKernel((originalValue - min) / (max - min));
         List<Double> featureValues = DoubleStream.of(doubles).map(d -> (d - min) / (max - min))
                 .map(d -> Double.isNaN(d) ? 1 : d).boxed().map(DataUtils::gaussianKernel)

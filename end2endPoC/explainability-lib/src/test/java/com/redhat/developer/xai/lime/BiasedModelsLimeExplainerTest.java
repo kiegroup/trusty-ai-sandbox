@@ -138,6 +138,6 @@ public class BiasedModelsLimeExplainerTest {
         List<FeatureImportance> perFeatureImportance = saliency.getNegativeFeatures(3);
         assertFalse(perFeatureImportance.stream().map(fi -> fi.getFeature().getName()).collect(Collectors.toList()).contains(features.get(idx).getName()));
         double v = ExplainabilityUtils.saliencyImpact(model, prediction, saliency.getNegativeFeatures(2));
-        assertTrue(v > 0);
+        assertTrue(v >= 0);
     }
 }
