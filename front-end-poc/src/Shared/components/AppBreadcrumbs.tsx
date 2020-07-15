@@ -1,11 +1,16 @@
 import React from "react";
-import withBreadcrumbs, { BreadcrumbsProps } from "react-router-breadcrumbs-hoc";
+import useBreadcrumbs from "use-react-router-breadcrumbs";
 import { Breadcrumb, BreadcrumbItem } from "@patternfly/react-core";
+import { RouteComponentProps } from "react-router-dom";
 
-type TAuditParams = { id: string };
+type executionIdParam = {
+  id: string;
+};
 
-const AuditDetailBreadcrumb = (breadcrumb: BreadcrumbsProps<TAuditParams>) => {
-  const { match } = breadcrumb;
+interface AuditDetailBreadcrumbProps extends RouteComponentProps<executionIdParam> {}
+
+const AuditDetailBreadcrumb = (props: AuditDetailBreadcrumbProps) => {
+  const { match } = props;
   return <span style={{ textTransform: "uppercase" }}>ID #{match.params.id}</span>;
 };
 
@@ -20,7 +25,8 @@ const routes = [
 ];
 const excludePaths = ["/", "/audit/:executionType"];
 
-const BreadcrumbList = withBreadcrumbs(routes, { excludePaths })(({ breadcrumbs }) => {
+const BreadcrumbList = () => {
+  const breadcrumbs = useBreadcrumbs(routes, { excludePaths: excludePaths });
   // hide breadcrumbs if there is 1 or 0 items to display
   // because there's no navigation tree
   if (breadcrumbs.length < 2) {
@@ -37,7 +43,7 @@ const BreadcrumbList = withBreadcrumbs(routes, { excludePaths })(({ breadcrumbs 
       })}
     </Breadcrumb>
   );
-});
+};
 
 const AppBreadcrumbs = <BreadcrumbList />;
 
