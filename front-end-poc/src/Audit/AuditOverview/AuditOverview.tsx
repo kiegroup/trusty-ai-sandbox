@@ -8,15 +8,11 @@ import {
   Text,
   TextContent,
   Title,
-  Toolbar,
-  ToolbarContent,
-  ToolbarItem,
 } from "@patternfly/react-core";
 import { Link } from "react-router-dom";
 import "./AuditOverview.scss";
-import PaginationContainer from "../PaginationContainer/PaginationContainer";
 import SkeletonStripe from "../../Shared/skeletons/SkeletonStripe/SkeletonStripe";
-import AuditToolbar from "../AuditToolbar/AuditToolbar";
+import { AuditToolbarBottom, AuditToolbarTop } from "../AuditToolbar/AuditToolbar";
 import ExecutionTable from "../ExecutionTable/ExecutionTable";
 import useExecutions from "./useExecutions";
 import { formatISO, sub } from "date-fns";
@@ -95,7 +91,7 @@ const AuditOverview = (props: AuditOverviewProps) => {
               })}
           </List>
         </div>
-        <AuditToolbar
+        <AuditToolbarTop
           setSearchString={setSearchString}
           fromDate={fromDate}
           setFromDate={setFromDate}
@@ -111,20 +107,7 @@ const AuditOverview = (props: AuditOverviewProps) => {
 
         <ExecutionTable data={executions} />
 
-        <Toolbar id="audit-list-bottom-toolbar">
-          <ToolbarContent>
-            <ToolbarItem variant="pagination">
-              <PaginationContainer
-                total={total}
-                page={page}
-                pageSize={pageSize}
-                onSetPage={setPage}
-                onSetPageSize={setPageSize}
-                paginationId="audit-list-bottom-pagination"
-              />
-            </ToolbarItem>
-          </ToolbarContent>
-        </Toolbar>
+        <AuditToolbarBottom total={total} pageSize={pageSize} page={page} setPage={setPage} setPageSize={setPageSize} />
       </PageSection>
     </>
   );

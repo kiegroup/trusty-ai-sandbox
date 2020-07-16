@@ -1,8 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Audit toolbar renders 1`] = `
+exports[`Audit bottom toolbar renders correctly 1`] = `
 <Toolbar
-  id="audit-list-top-toolbar"
+  id="audit-overview-bottom-toolbar"
+>
+  <ToolbarContent
+    isExpanded={false}
+    showClearFiltersButton={false}
+  >
+    <Component
+      variant="pagination"
+    >
+      <PaginationContainer
+        onSetPage={[Function]}
+        onSetPageSize={[Function]}
+        page={1}
+        pageSize={10}
+        paginationId="audit-overview-bottom-pagination"
+        total={20}
+      />
+    </Component>
+  </ToolbarContent>
+</Toolbar>
+`;
+
+exports[`Audit top toolbar renders correctly 1`] = `
+<Toolbar
+  id="audit-overview-top-toolbar"
 >
   <ToolbarContent
     isExpanded={false}
@@ -84,7 +108,7 @@ exports[`Audit toolbar renders 1`] = `
         onSetPageSize={[Function]}
         page={1}
         pageSize={10}
-        paginationId="audit-list-top-pagination"
+        paginationId="audit-overview-top-pagination"
         total={20}
       />
     </Component>

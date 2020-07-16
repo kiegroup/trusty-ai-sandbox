@@ -50,7 +50,7 @@ exports[`Audit overview renders correctly 1`] = `
         />
       </Component>
     </div>
-    <AuditToolbar
+    <AuditToolbarTop
       fromDate="2020-01-01"
       page={1}
       pageSize={10}
@@ -84,27 +84,13 @@ exports[`Audit overview renders correctly 1`] = `
         }
       }
     />
-    <Toolbar
-      id="audit-list-bottom-toolbar"
-    >
-      <ToolbarContent
-        isExpanded={false}
-        showClearFiltersButton={false}
-      >
-        <Component
-          variant="pagination"
-        >
-          <PaginationContainer
-            onSetPage={[Function]}
-            onSetPageSize={[Function]}
-            page={1}
-            pageSize={10}
-            paginationId="audit-list-bottom-pagination"
-            total={0}
-          />
-        </Component>
-      </ToolbarContent>
-    </Toolbar>
+    <AuditToolbarBottom
+      page={1}
+      pageSize={10}
+      setPage={[Function]}
+      setPageSize={[Function]}
+      total={0}
+    />
   </Component>
 </Fragment>
 `;

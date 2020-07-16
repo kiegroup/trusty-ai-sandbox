@@ -28,7 +28,7 @@ type AuditToolbarProps = {
   onRefresh: () => void;
 };
 
-const AuditToolbar = (props: AuditToolbarProps) => {
+export const AuditToolbarTop = (props: AuditToolbarProps) => {
   const {
     setSearchString,
     fromDate,
@@ -53,7 +53,7 @@ const AuditToolbar = (props: AuditToolbarProps) => {
     }
   };
   return (
-    <Toolbar id="audit-list-top-toolbar">
+    <Toolbar id="audit-overview-top-toolbar">
       <ToolbarContent>
         <ToolbarItem variant="label">Search</ToolbarItem>
         <ToolbarItem>
@@ -97,7 +97,7 @@ const AuditToolbar = (props: AuditToolbarProps) => {
             pageSize={pageSize}
             onSetPage={setPage}
             onSetPageSize={setPageSize}
-            paginationId="audit-list-top-pagination"
+            paginationId="audit-overview-top-pagination"
           />
         </ToolbarItem>
       </ToolbarContent>
@@ -105,4 +105,30 @@ const AuditToolbar = (props: AuditToolbarProps) => {
   );
 };
 
-export default AuditToolbar;
+type AuditToolbarBottomProps = {
+  total: number;
+  pageSize: number;
+  page: number;
+  setPage: (page: number) => void;
+  setPageSize: (pageSize: number) => void;
+};
+
+export const AuditToolbarBottom = (props: AuditToolbarBottomProps) => {
+  const { total, pageSize, page, setPage, setPageSize } = props;
+  return (
+    <Toolbar id="audit-overview-bottom-toolbar">
+      <ToolbarContent>
+        <ToolbarItem variant="pagination">
+          <PaginationContainer
+            total={total}
+            page={page}
+            pageSize={pageSize}
+            onSetPage={setPage}
+            onSetPageSize={setPageSize}
+            paginationId="audit-overview-bottom-pagination"
+          />
+        </ToolbarItem>
+      </ToolbarContent>
+    </Toolbar>
+  );
+};
