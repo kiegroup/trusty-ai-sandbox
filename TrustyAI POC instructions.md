@@ -7,7 +7,7 @@
 - `docker`
 - `docker-compose`
 - MongoDB for persistence (see [installation guide](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/) if needed)
-- `npm`
+- `yarn`
 
 ## Installation Steps
 ### Common Steps
@@ -26,13 +26,13 @@
 
 ### Frontend
 - Open `front-end-poc`
-- Execute `npm install`
+- Execute `yarn install`
 
 ### Execute the Demo
 - Open `end2endPoC` folder
 - Execute `./run-compose.sh`
 - From another terminal, go to `front-end-poc` folder
-- Execute `npm run start`
+- Execute `yarn run start`
 - Press `CTRL+C` in both terminal to shutdown the demo
 
 ### Service URLs
