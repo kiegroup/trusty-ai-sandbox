@@ -55,7 +55,7 @@
 ## Additional notes
 ### Daily activities
 - Run `setup.sh` once every day because it is a snapshot version of Kogito that lasts one day
-- Optional: Execute again `npm install` to refresh Frontend code
+- Optional: Execute again `yarn install` to refresh Frontend code
 
 ### Clean MongoDB data
 - `mongo admin -u root -p password --host localhost:27017`
