@@ -28,14 +28,14 @@ type DatePickerProps = {
 const DatePicker = (props: DatePickerProps) => {
   const { fromDate, minDate, maxDate, value, onDateUpdate, id, label } = props;
   const datePicker = useRef<HTMLInputElement>(null);
+  const calendar = useRef<flatpickrInstance | null>(null);
 
   useEffect(() => {
-    let calendar: flatpickrInstance;
     const onChange = (selectedDates: Date[], dateStr: string) => {
       onDateUpdate(dateStr);
     };
     if (datePicker && datePicker.current) {
-      calendar = flatpickr(datePicker.current, {
+      calendar.current = flatpickr(datePicker.current, {
         allowInput: true,
         altInput: true,
         altFormat: "F j, Y",
@@ -51,7 +51,7 @@ const DatePicker = (props: DatePickerProps) => {
       });
     }
     return () => {
-      calendar.destroy();
+      calendar.current?.destroy();
     };
   }, [fromDate, maxDate, onDateUpdate, minDate, value, id]);
 
