@@ -45,8 +45,8 @@
 
 ### Sample Data
 - Open `end2endPoC/sample-requests`
-- Execute `./query-dmn-risk.sh` to evaluate risk model
-- Execute `./query-dmn-fraud.sh` to evaluate fraud model
+- Execute `./query-dmn-myMortgage.sh` to evaluate risk model
+- Execute `./query-dmn-fraud-scoring.sh` to evaluate fraud model
 
 ### Dashboards
 - `myMortgage endpoint metrics` is the dashboard for risk model
