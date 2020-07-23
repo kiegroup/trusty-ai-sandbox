@@ -3,6 +3,30 @@ import useBreadcrumbs from "use-react-router-breadcrumbs";
 import { Breadcrumb, BreadcrumbItem } from "@patternfly/react-core";
 import { RouteComponentProps } from "react-router-dom";
 
+const AppBreadcrumbs = () => {
+  const breadcrumbs = useBreadcrumbs(routes, { excludePaths: excludePaths });
+  // hide breadcrumbs if there is 1 or 0 items to display
+  // because there's no navigation tree
+  if (breadcrumbs.length < 2) {
+    return <></>;
+  }
+  return (
+    <Breadcrumb>
+      {breadcrumbs.map(({ match, location, breadcrumb }) => {
+        return (
+          <BreadcrumbItem
+            className="breadcrumb-item"
+            to={`#${match.url}`}
+            key={match.url}
+            isActive={location.pathname === match.url}>
+            {breadcrumb}
+          </BreadcrumbItem>
+        );
+      })}
+    </Breadcrumb>
+  );
+};
+
 type executionIdParam = {
   id: string;
 };
@@ -24,27 +48,5 @@ const routes = [
   { path: "/audit/:executionType/:id", breadcrumb: AuditDetailBreadcrumb },
 ];
 const excludePaths = ["/", "/audit/:executionType"];
-
-const BreadcrumbList = () => {
-  const breadcrumbs = useBreadcrumbs(routes, { excludePaths: excludePaths });
-  // hide breadcrumbs if there is 1 or 0 items to display
-  // because there's no navigation tree
-  if (breadcrumbs.length < 2) {
-    return <></>;
-  }
-  return (
-    <Breadcrumb>
-      {breadcrumbs.map(({ match, location, breadcrumb }) => {
-        return (
-          <BreadcrumbItem to={`#${match.url}`} key={match.url} isActive={location.pathname === match.url}>
-            {breadcrumb}
-          </BreadcrumbItem>
-        );
-      })}
-    </Breadcrumb>
-  );
-};
-
-const AppBreadcrumbs = <BreadcrumbList />;
 
 export default AppBreadcrumbs;
