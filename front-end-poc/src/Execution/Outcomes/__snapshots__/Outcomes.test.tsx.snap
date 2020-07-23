@@ -1,0 +1,330 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Outcomes renders a list of outcomes as cards 1`] = `
+<Outcomes
+  listView={true}
+  onExplanationClick={[MockFunction]}
+  outcomes={
+    Array [
+      Object {
+        "evaluationStatus": "SUCCEEDED",
+        "hasErrors": false,
+        "messages": Array [],
+        "outcomeId": "_12268B68-94A1-4960-B4C8-0B6071AFDE58",
+        "outcomeName": "Mortgage Approval",
+        "outcomeResult": Object {
+          "components": Array [],
+          "name": "Mortgage Approval",
+          "typeRef": "boolean",
+          "value": true,
+        },
+      },
+      Object {
+        "evaluationStatus": "SUCCEEDED",
+        "hasErrors": false,
+        "messages": Array [],
+        "outcomeId": "_9CFF8C35-4EB3-451E-874C-DB27A5A424C0",
+        "outcomeName": "Risk Score",
+        "outcomeResult": Object {
+          "components": Array [],
+          "name": "Risk Score",
+          "typeRef": "number",
+          "value": 21.7031851958099,
+        },
+      },
+    ]
+  }
+>
+  <section
+    className="outcomes"
+  >
+    <Component
+      className="outcome-cards"
+      hasGutter={true}
+    >
+      <div
+        className="pf-l-gallery pf-m-gutter outcome-cards"
+      >
+        <Component
+          key="0"
+        >
+          <div>
+            <OutcomeCard
+              onExplanation={[MockFunction]}
+              outcome={
+                Object {
+                  "evaluationStatus": "SUCCEEDED",
+                  "hasErrors": false,
+                  "messages": Array [],
+                  "outcomeId": "_12268B68-94A1-4960-B4C8-0B6071AFDE58",
+                  "outcomeName": "Mortgage Approval",
+                  "outcomeResult": Object {
+                    "components": Array [],
+                    "name": "Mortgage Approval",
+                    "typeRef": "boolean",
+                    "value": true,
+                  },
+                }
+              }
+            >
+              <Component
+                className="outcome-cards__card"
+                isHoverable={true}
+              >
+                <article
+                  className="pf-c-card pf-m-hoverable outcome-cards__card"
+                >
+                  <Component>
+                    <div
+                      className="pf-c-card__header"
+                    >
+                      <Component
+                        className="outcome-cards__card__title"
+                        headingLevel="h4"
+                        size="xl"
+                      >
+                        <h4
+                          className="pf-c-title pf-m-xl outcome-cards__card__title"
+                        >
+                          Mortgage Approval
+                        </h4>
+                      </Component>
+                    </div>
+                  </Component>
+                  <Component>
+                    <div
+                      className="pf-c-card__body"
+                    >
+                      <div>
+                        <div>
+                          <OutcomeProperty
+                            hidePropertyName={true}
+                            key="Mortgage Approval"
+                            property={
+                              Object {
+                                "components": Array [],
+                                "name": "Mortgage Approval",
+                                "typeRef": "boolean",
+                                "value": true,
+                              }
+                            }
+                          >
+                            <div
+                              className="outcome__property__value--bigger"
+                            >
+                              <FormattedValue
+                                value={true}
+                              >
+                                <span
+                                  className="formatted-value formatted-value--capitalize"
+                                >
+                                  true
+                                </span>
+                              </FormattedValue>
+                            </div>
+                          </OutcomeProperty>
+                        </div>
+                      </div>
+                    </div>
+                  </Component>
+                  <Component>
+                    <div
+                      className="pf-c-card__footer"
+                    >
+                      <Component
+                        className="outcome-cards__card__explanation-link"
+                        isInline={true}
+                        onClick={[Function]}
+                        variant="link"
+                      >
+                        <button
+                          aria-disabled={null}
+                          aria-label={null}
+                          className="pf-c-button pf-m-link pf-m-inline outcome-cards__card__explanation-link"
+                          data-ouia-component-id={null}
+                          data-ouia-component-type="PF4/Button"
+                          data-ouia-safe={true}
+                          disabled={false}
+                          onClick={[Function]}
+                          tabIndex={null}
+                          type="button"
+                        >
+                          View Details 
+                          <LongArrowAltRightIcon
+                            color="currentColor"
+                            noVerticalAlign={false}
+                            size="sm"
+                          >
+                            <svg
+                              aria-hidden={true}
+                              aria-labelledby={null}
+                              fill="currentColor"
+                              height="1em"
+                              role="img"
+                              style={
+                                Object {
+                                  "verticalAlign": "-0.125em",
+                                }
+                              }
+                              viewBox="0 0 448 512"
+                              width="1em"
+                            >
+                              <path
+                                d="M313.941 216H12c-6.627 0-12 5.373-12 12v56c0 6.627 5.373 12 12 12h301.941v46.059c0 21.382 25.851 32.09 40.971 16.971l86.059-86.059c9.373-9.373 9.373-24.569 0-33.941l-86.059-86.059c-15.119-15.119-40.971-4.411-40.971 16.971V216z"
+                                transform=""
+                              />
+                            </svg>
+                          </LongArrowAltRightIcon>
+                        </button>
+                      </Component>
+                    </div>
+                  </Component>
+                </article>
+              </Component>
+            </OutcomeCard>
+          </div>
+        </Component>
+        <Component
+          key="1"
+        >
+          <div>
+            <OutcomeCard
+              onExplanation={[MockFunction]}
+              outcome={
+                Object {
+                  "evaluationStatus": "SUCCEEDED",
+                  "hasErrors": false,
+                  "messages": Array [],
+                  "outcomeId": "_9CFF8C35-4EB3-451E-874C-DB27A5A424C0",
+                  "outcomeName": "Risk Score",
+                  "outcomeResult": Object {
+                    "components": Array [],
+                    "name": "Risk Score",
+                    "typeRef": "number",
+                    "value": 21.7031851958099,
+                  },
+                }
+              }
+            >
+              <Component
+                className="outcome-cards__card"
+                isHoverable={true}
+              >
+                <article
+                  className="pf-c-card pf-m-hoverable outcome-cards__card"
+                >
+                  <Component>
+                    <div
+                      className="pf-c-card__header"
+                    >
+                      <Component
+                        className="outcome-cards__card__title"
+                        headingLevel="h4"
+                        size="xl"
+                      >
+                        <h4
+                          className="pf-c-title pf-m-xl outcome-cards__card__title"
+                        >
+                          Risk Score
+                        </h4>
+                      </Component>
+                    </div>
+                  </Component>
+                  <Component>
+                    <div
+                      className="pf-c-card__body"
+                    >
+                      <div>
+                        <div>
+                          <OutcomeProperty
+                            hidePropertyName={true}
+                            key="Risk Score"
+                            property={
+                              Object {
+                                "components": Array [],
+                                "name": "Risk Score",
+                                "typeRef": "number",
+                                "value": 21.7031851958099,
+                              }
+                            }
+                          >
+                            <div
+                              className="outcome__property__value--bigger"
+                            >
+                              <FormattedValue
+                                value={21.7031851958099}
+                              >
+                                <span
+                                  className="formatted-value"
+                                >
+                                  21.7031851958099
+                                </span>
+                              </FormattedValue>
+                            </div>
+                          </OutcomeProperty>
+                        </div>
+                      </div>
+                    </div>
+                  </Component>
+                  <Component>
+                    <div
+                      className="pf-c-card__footer"
+                    >
+                      <Component
+                        className="outcome-cards__card__explanation-link"
+                        isInline={true}
+                        onClick={[Function]}
+                        variant="link"
+                      >
+                        <button
+                          aria-disabled={null}
+                          aria-label={null}
+                          className="pf-c-button pf-m-link pf-m-inline outcome-cards__card__explanation-link"
+                          data-ouia-component-id={null}
+                          data-ouia-component-type="PF4/Button"
+                          data-ouia-safe={true}
+                          disabled={false}
+                          onClick={[Function]}
+                          tabIndex={null}
+                          type="button"
+                        >
+                          View Details 
+                          <LongArrowAltRightIcon
+                            color="currentColor"
+                            noVerticalAlign={false}
+                            size="sm"
+                          >
+                            <svg
+                              aria-hidden={true}
+                              aria-labelledby={null}
+                              fill="currentColor"
+                              height="1em"
+                              role="img"
+                              style={
+                                Object {
+                                  "verticalAlign": "-0.125em",
+                                }
+                              }
+                              viewBox="0 0 448 512"
+                              width="1em"
+                            >
+                              <path
+                                d="M313.941 216H12c-6.627 0-12 5.373-12 12v56c0 6.627 5.373 12 12 12h301.941v46.059c0 21.382 25.851 32.09 40.971 16.971l86.059-86.059c9.373-9.373 9.373-24.569 0-33.941l-86.059-86.059c-15.119-15.119-40.971-4.411-40.971 16.971V216z"
+                                transform=""
+                              />
+                            </svg>
+                          </LongArrowAltRightIcon>
+                        </button>
+                      </Component>
+                    </div>
+                  </Component>
+                </article>
+              </Component>
+            </OutcomeCard>
+          </div>
+        </Component>
+      </div>
+    </Component>
+  </section>
+</Outcomes>
+`;

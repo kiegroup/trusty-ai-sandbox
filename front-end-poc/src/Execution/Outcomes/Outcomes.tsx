@@ -119,7 +119,7 @@ const OutcomeCard = (props: OutcomeCardProps) => {
         {titleAsLabel ? (
           <Label color="blue">{outcome.outcomeName}</Label>
         ) : (
-          <Title headingLevel="h4" size="xl">
+          <Title className="outcome-cards__card__title" headingLevel="h4" size="xl">
             {outcome.outcomeName}
           </Title>
         )}

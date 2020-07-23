@@ -40,7 +40,7 @@ const ExecutionDetail = (props: ExecutionDetailProps) => {
           <StackItem>
             {outcome.status === "LOADING" && <SkeletonCards quantity={2} />}
             {outcome.status === "SUCCESS" && (
-              <Outcomes outcomes={outcome.data} onExplanationClick={goToExplanation} listView={true} />
+              <Outcomes outcomes={outcome.data} onExplanationClick={goToExplanation} listView />
             )}
           </StackItem>
         </Stack>
