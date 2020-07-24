@@ -37,7 +37,7 @@ const outcome = [
         messages: [],
         outcomeResult: {
           name: "Recommended Loan Products",
-          type: "tProducts",
+          typeRef: "tProducts",
           value: null,
           components: [
             [
@@ -315,7 +315,7 @@ const outcome = [
         messages: [],
         outcomeResult: {
           name: "Client Ratings",
-          type: "tProducts",
+          typeRef: "tProducts",
           value: null,
           components: [
             {

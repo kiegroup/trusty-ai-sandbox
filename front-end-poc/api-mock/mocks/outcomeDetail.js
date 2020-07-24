@@ -493,8 +493,8 @@ const outcomeDetail = [
       },
       {
         name: "Asset Amount",
-        typeRef: "number",
-        value: 70000,
+        typeRef: "string",
+        value: [7000, 10000, 5500],
         components: [],
       },
     ],
