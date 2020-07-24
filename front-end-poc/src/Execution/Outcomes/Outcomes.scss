@@ -27,11 +27,23 @@
       }
     }
   }
+
   .outcome .outcome {
     padding-left: var(--pf-global--spacer--md);
     border-left: 3px solid var(--pf-global--info-color--100);
     .outcome {
       margin-top: var(--pf-global--spacer--md);
     }
+  }
+  .outcome-cards__card--list-view {
+    .pf-c-card__body > .outcome__title {
+      display: none;
+    }
+  }
+  .outcome--struct > .outcome-item > .outcome__title {
+    margin-bottom: var(--pf-global--spacer--sm);
+  }
+  .outcome--struct .outcome--struct > .outcome-item > .outcome__title {
+    margin-top: var(--pf-global--spacer--md);
   }
 }

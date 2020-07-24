@@ -98,7 +98,7 @@ const renderCard = (outcome: IOutcome, onExplanation: (outcomeId: string) => voi
   return (
     <GalleryItem key={uuid()}>
       <OutcomeCard outcome={outcome} onExplanation={onExplanation}>
-        <div>{renderOutcome(outcome.outcomeResult, outcome.outcomeName, true, true)}</div>
+        {renderOutcome(outcome.outcomeResult, outcome.outcomeName, true, true)}
       </OutcomeCard>
     </GalleryItem>
   );
@@ -114,10 +114,12 @@ type OutcomeCardProps = {
 const OutcomeCard = (props: OutcomeCardProps) => {
   const { children, outcome, onExplanation, titleAsLabel = false } = props;
   return (
-    <Card className="outcome-cards__card" isHoverable>
+    <Card className="outcome-cards__card outcome-cards__card--list-view" isHoverable>
       <CardHeader>
         {titleAsLabel ? (
-          <Label color="blue">{outcome.outcomeName}</Label>
+          <Label className="outcome-cards__card__label" color="blue">
+            {outcome.outcomeName}
+          </Label>
         ) : (
           <Title className="outcome-cards__card__title" headingLevel="h4" size="xl">
             {outcome.outcomeName}
@@ -126,11 +128,9 @@ const OutcomeCard = (props: OutcomeCardProps) => {
       </CardHeader>
       <CardBody>
         {outcome.evaluationStatus !== undefined && outcome.evaluationStatus !== "SUCCEEDED" && (
-          <div>
-            <EvaluationStatus status={outcome.evaluationStatus} />
-          </div>
+          <EvaluationStatus status={outcome.evaluationStatus} />
         )}
-        <div>{children}</div>
+        {children}
       </CardBody>
       <CardFooter>
         {outcome.outcomeId && onExplanation && (
@@ -204,9 +204,14 @@ const OutcomeComposed = (props: { outcome: IItemObject; compact: boolean; name: 
     );
   }
   return (
-    <div className="outcome outcome--struct" key={outcome.name}>
-      {renderItems.map((item) => item)}
-    </div>
+    <>
+      <div className="outcome__title outcome__title--struct" key={uuid()}>
+        <span className="outcome__property__name">{outcome.name}</span>
+      </div>
+      <div className="outcome outcome--struct" key={outcome.name}>
+        {renderItems.map((item) => item)}
+      </div>
+    </>
   );
 };
 
