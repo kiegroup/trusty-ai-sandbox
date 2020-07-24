@@ -1,7 +1,7 @@
 export interface IItemObject {
   name: string;
   typeRef: string;
-  value: string | number | null;
+  value: string | number | boolean | object | null;
   components: (IItemObject | IItemObject[])[];
   impact?: boolean | number;
   score?: number;

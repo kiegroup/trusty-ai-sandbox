@@ -29,7 +29,7 @@ const FormattedList = (props: FormattedListProps) => {
 };
 
 type FormattedValueProps = {
-  value: any;
+  value: unknown;
 };
 
 const FormattedValue = (props: FormattedValueProps) => {
