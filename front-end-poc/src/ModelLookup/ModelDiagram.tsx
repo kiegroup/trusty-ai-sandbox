@@ -31,6 +31,7 @@ function makeDMNEditor(model: IExecutionModelResponse,
       file={file}
       router={router}
       channelType={ChannelType.EMBEDDED}
+      envelopeUri={process.env.PUBLIC_URL + '/envelope/envelope.html'}
     />);
 }
 
