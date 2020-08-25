@@ -78,7 +78,7 @@ const getDecisionOutcomeDetail = (executionId: string, outcomeId: string) => {
 
 const getModelDetail = (executionId: string) => {
   const getModelDetailConfig: AxiosRequestConfig = {
-    url: `${DECISIONS_PATH}/${executionId}/model`,
+    url: `${EXECUTIONS_PATH}/${executionId}/model`,
     method: "get",
   };
   return httpClient(getModelDetailConfig);
