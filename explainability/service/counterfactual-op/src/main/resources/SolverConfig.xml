@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver>
+    <solutionClass>com.redhat.developer.counterfactual.solutions.Approval</solutionClass>
+    <entityClass>com.redhat.developer.counterfactual.entities.CreditCardApprovalEntity</entityClass>
+    <scoreDirectorFactory>
+        <constraintProviderClass>com.redhat.developer.counterfactual.constraints.ApprovalContraintsProvider</constraintProviderClass>
+<!--        <easyScoreCalculatorClass>com.redhat.developer.counterfactual.scoring.CreditCardApprovalBendableScoreCalculator</easyScoreCalculatorClass>-->
+<!--        <initializingScoreTrend>FIRST_FIT</initializingScoreTrend>-->
+    </scoreDirectorFactory>
+    <localSearch>
+        <termination>
+            <secondsSpentLimit>30</secondsSpentLimit>
+        </termination>
+        <acceptor>
+            <entityTabuSize>70</entityTabuSize>
+        </acceptor>
+        <forager>
+            <acceptedCountLimit>5000</acceptedCountLimit>
+        </forager>
+    </localSearch>
+</solver>

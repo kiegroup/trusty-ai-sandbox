@@ -1,0 +1,109 @@
+<html>
+<head>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Overpass:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Overpass', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Counterfactual</h1>
+
+<div>
+    <p><b>Age</b>: <span id="age"></span> (<span id="age-original"></span>)</p>
+    <p><b>Income</b>: <span id="income"></span> (<span id="income-original"></span>)</p>
+    <p><b>Children</b>: <span id="children"></span> (<span id="children-original"></span>)</p>
+    <p><b>Employment</b>: <span id="daysEmployed"></span> days (<span id="daysEmployed-original"></span>)</p>
+    <p><b>Realty</b>: <span id="ownRealty"></span> (<span id="ownRealty-original"></span>)</p>
+    <p><b>Phone</b>: <span id="workPhone"></span> (<span id="workPhone-original"></span>)</p>
+    <p><b>Car</b>: <span id="ownCar"></span> (<span id="ownCar-original"></span>)</p>
+</div>
+
+<div>
+    <div id="age-plot" style="width:30%;height:400px;float:left"></div>
+    <div id="income-plot" style="width:30%;height:400px;float:left"></div>
+    <div id="employment-plot" style="width:30%;height:400px;float:left"></div>
+    <div id="age-softscore" style="width:30%;height:400px;float:left"></div>
+</div>
+<script type="text/javascript">
+
+    fetch("/creditcard/metrics.json").then(data => data.json()).then(json => {
+        console.log(json);
+        const counterfactual = json.counterfactual;
+        const metrics = json.metrics;
+        const original = json.original;
+
+        var layout = {
+            "title": "Soft-score",
+            "xaxis": {"type": "log"},
+            "yaxis": {"type": "log"}
+        };
+
+        var trace_approved = {
+            x: metrics.filter(x => x.approved).map(x => x.softScore),
+            name: 'Approved',
+            type: 'histogram'
+
+        };
+        var traced_not_approved = {
+            x: metrics.filter(x => !x.approved).map(x => x.softScore),
+            name: 'Not approved',
+            type: 'histogram'
+        };
+        var data = [trace_approved, traced_not_approved];
+        Plotly.newPlot('age-plot', data);
+
+        trace_approved = {
+            x: metrics.filter(x => x.approved).map(x => x.income),
+            name: 'Approved',
+            type: 'histogram'
+
+        };
+        traced_not_approved = {
+            x: metrics.filter(x => !x.approved).map(x => x.income),
+            name: 'Not approved',
+            type: 'histogram'
+        };
+        data = [trace_approved, traced_not_approved];
+        Plotly.newPlot('income-plot', data);
+
+
+        trace_approved = {
+            x: metrics.filter(x => x.approved).map(x => x.daysEmployed),
+            name: 'Approved',
+            type: 'histogram'
+
+        };
+        traced_not_approved = {
+            x: metrics.filter(x => !x.approved).map(x => x.daysEmployed),
+            name: 'Not approved',
+            type: 'histogram'
+        };
+        data = [trace_approved, traced_not_approved];
+        Plotly.newPlot('employment-plot', data);
+
+        // add counterfactual
+        document.getElementById("age").innerText = Math.floor(counterfactual.age);
+        document.getElementById("income").innerText = counterfactual.income;
+        document.getElementById("children").innerText = counterfactual.children;
+        document.getElementById("daysEmployed").innerText = counterfactual.daysEmployed;
+        document.getElementById("ownCar").innerText = counterfactual.ownCar;
+        document.getElementById("ownRealty").innerText = counterfactual.ownRealty;
+        document.getElementById("workPhone").innerText = counterfactual.workPhone;
+
+        document.getElementById("age-original").innerText = Math.floor(counterfactual.age - original.age);
+        document.getElementById("income-original").innerText = counterfactual.income - original.income;
+        document.getElementById("children-original").innerText = counterfactual.children - original.children;
+        document.getElementById("daysEmployed-original").innerText = counterfactual.daysEmployed - original.daysEmployed;
+        document.getElementById("ownCar-original").innerText = original.ownCar;
+        document.getElementById("ownRealty-original").innerText = original.ownRealty;
+        document.getElementById("workPhone-original").innerText = original.workPhone;
+    });
+
+</script>
+</body>
+</html>
