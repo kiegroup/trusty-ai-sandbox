@@ -17,9 +17,9 @@
 package com.redhat.developer.counterfactual.models;
 
 import com.redhat.developer.counterfactual.entities.CreditCardApprovalEntity;
-import com.redhat.developer.model.PredictionInput;
 import org.dmg.pmml.FieldName;
 import org.jpmml.evaluator.*;
+import org.kie.kogito.explainability.model.PredictionInput;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;

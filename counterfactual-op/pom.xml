@@ -50,9 +50,9 @@
         <scope>runtime</scope>
       </dependency>
       <dependency>
-        <groupId>com.redhat.developer</groupId>
-        <artifactId>explainability-lib</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <groupId>org.kie.kogito</groupId>
+        <artifactId>explainability-core</artifactId>
+        <version>0.14.0</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
@@ -114,8 +114,8 @@
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>com.redhat.developer</groupId>
-      <artifactId>explainability-lib</artifactId>
+      <groupId>org.kie.kogito</groupId>
+      <artifactId>explainability-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
