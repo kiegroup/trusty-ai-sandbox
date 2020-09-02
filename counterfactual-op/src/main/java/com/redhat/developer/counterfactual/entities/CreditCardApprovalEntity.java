@@ -17,8 +17,8 @@
 package com.redhat.developer.counterfactual.entities;
 
 import com.redhat.developer.counterfactual.Measures;
-import com.redhat.developer.model.Feature;
-import com.redhat.developer.model.FeatureFactory;
+import org.kie.kogito.explainability.model.Feature;
+import org.kie.kogito.explainability.model.FeatureFactory;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 
