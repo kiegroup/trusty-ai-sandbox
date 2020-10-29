@@ -1,6 +1,5 @@
-jupyterlab
-pandas
-sklearn
-numpy
-nyoka
-matplotlib
+pandas==1.0.1
+sklearn==0.22.2
+numpy==1.18.5
+nyoka==4.3.0
+matplotlib==3.3.2
