@@ -1,6 +1,7 @@
 package org.kie.kogito.explainability.local.counterfactual;
 
 import org.kie.kogito.explainability.local.counterfactual.entities.BooleanEntity;
+import org.kie.kogito.explainability.local.counterfactual.entities.CategoricalEntity;
 import org.kie.kogito.explainability.local.counterfactual.entities.DoubleEntity;
 import org.kie.kogito.explainability.local.counterfactual.entities.IntegerEntity;
 import org.optaplanner.core.config.localsearch.LocalSearchPhaseConfig;
@@ -23,7 +24,7 @@ public class CounterfactualConfigurationFactory {
     public static SolverConfig createSolverConfig(Long timeLimit, int tabuSize, int acceptedCount) {
         SolverConfig solverConfig = new SolverConfig();
 
-        solverConfig.withEntityClasses(IntegerEntity.class, DoubleEntity.class, BooleanEntity.class);
+        solverConfig.withEntityClasses(IntegerEntity.class, DoubleEntity.class, BooleanEntity.class, CategoricalEntity.class);
         solverConfig.setSolutionClass(CounterfactualSolution.class);
 
         ScoreDirectorFactoryConfig scoreDirectorFactoryConfig = new ScoreDirectorFactoryConfig();

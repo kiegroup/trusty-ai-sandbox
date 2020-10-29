@@ -16,6 +16,7 @@
 package org.kie.kogito.explainability.local.counterfactual;
 
 import org.kie.kogito.explainability.local.LocalExplainer;
+import org.kie.kogito.explainability.local.counterfactual.entities.CategoricalEntity;
 import org.kie.kogito.explainability.local.counterfactual.entities.CounterfactualEntity;
 import org.kie.kogito.explainability.local.counterfactual.entities.CounterfactualEntityFactory;
 import org.kie.kogito.explainability.model.*;
@@ -24,9 +25,7 @@ import org.optaplanner.core.api.solver.SolverManager;
 import org.optaplanner.core.config.solver.SolverConfig;
 import org.optaplanner.core.config.solver.SolverManagerConfig;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -46,8 +45,8 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
     private final DataBoundaries dataBoundaries;
     private final List<Boolean> constraints;
     private final SolverConfig solverConfig;
-
     private final Executor executor;
+    private Map<String, Set<String>> categoriesMap = new HashMap<>();
 
     /**
      * Create a new {@link CounterfactualExplainer} using OptaPlanner as the underlying engine.
@@ -96,6 +95,10 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
         this(dataBoundaries, contraints, goal, CounterfactualConfigurationFactory.createSolverConfig(timeLimit, tabuSize, acceptedCount), ForkJoinPool.commonPool());
     }
 
+    public void setCategoriesMap(Map<String, Set<String>> categoriesMap) {
+        this.categoriesMap = categoriesMap;
+    }
+
     private Executor getExecutor() {
         return this.executor;
     }
@@ -105,10 +108,19 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
 
         for (int i = 0; i < predictionInput.getFeatures().size(); i++) {
             final Feature feature = predictionInput.getFeatures().get(i);
-            final Boolean isConstrained = constraints.get(i);
-            final FeatureBoundary featureDistribution = dataBoundaries.getFeatureBoundaries().get(i);
-            final CounterfactualEntity counterfactualEntity = CounterfactualEntityFactory.from(feature, isConstrained, featureDistribution);
-            entities.add(counterfactualEntity);
+
+            if (feature.getType() == Type.CATEGORICAL) {
+                final Boolean isConstrained = constraints.get(i);
+                final Set<String> categories = this.categoriesMap.get(feature.getName());
+                CounterfactualEntity counterfactualEntity = CategoricalEntity.from(feature, categories, isConstrained);
+                entities.add(counterfactualEntity);
+            } else {
+
+                final Boolean isConstrained = constraints.get(i);
+                final FeatureBoundary featureDistribution = dataBoundaries.getFeatureBoundaries().get(i);
+                final CounterfactualEntity counterfactualEntity = CounterfactualEntityFactory.from(feature, isConstrained, featureDistribution);
+                entities.add(counterfactualEntity);
+            }
         }
         return entities;
     }

@@ -22,7 +22,9 @@ import org.kie.kogito.explainability.model.FeatureBoundary;
 import org.kie.kogito.explainability.model.FeatureFactory;
 
 import java.util.List;
+import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CounterfactualEntityFactoryTest {
@@ -48,8 +50,17 @@ class CounterfactualEntityFactoryTest {
     @Test
     void testBooleanFactory() {
         final Feature feature = FeatureFactory.newBooleanFeature("bool-feature", false);
-        final CounterfactualEntity counterfactualEntity = CounterfactualEntityFactory.from(feature, false, null);
+        final CounterfactualEntity counterfactualEntity = CounterfactualEntityFactory.from(feature, false, FeatureBoundary.EMPTY);
         assertTrue(counterfactualEntity instanceof BooleanEntity);
+    }
+
+    @Test
+    void testCategoricalFactory() {
+        final Feature feature = FeatureFactory.newCategoricalFeature("categorical-feature", "foo");
+        Set<String> categories = Set.of("foo", "bar");
+        final CounterfactualEntity counterfactualEntity = CounterfactualEntityFactory.from(feature, true, categories);
+        assertTrue(counterfactualEntity instanceof CategoricalEntity);
+        assertEquals(categories, ((CategoricalEntity) counterfactualEntity).getValueRange());
     }
 
 }

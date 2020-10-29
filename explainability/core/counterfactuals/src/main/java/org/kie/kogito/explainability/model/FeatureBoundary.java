@@ -23,6 +23,8 @@ public class FeatureBoundary {
     private final double start;
     private final double end;
 
+    public static final FeatureBoundary EMPTY = new FeatureBoundary(0.0, 0.0);
+
     public FeatureBoundary(double start, double end) {
         this.start = start;
         this.end = end;

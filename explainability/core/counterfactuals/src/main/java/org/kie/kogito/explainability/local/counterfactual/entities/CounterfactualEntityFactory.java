@@ -19,7 +19,7 @@ import org.kie.kogito.explainability.model.Feature;
 import org.kie.kogito.explainability.model.FeatureBoundary;
 import org.kie.kogito.explainability.model.Type;
 
-import java.util.List;
+import java.util.Set;
 
 public class CounterfactualEntityFactory {
 
@@ -43,5 +43,10 @@ public class CounterfactualEntityFactory {
         }
         return entity;
     }
+
+    public static CounterfactualEntity from(Feature feature, Boolean isConstrained, Set<String> categories) {
+        return CategoricalEntity.from(feature, categories, isConstrained);
+    }
+
 }
 
