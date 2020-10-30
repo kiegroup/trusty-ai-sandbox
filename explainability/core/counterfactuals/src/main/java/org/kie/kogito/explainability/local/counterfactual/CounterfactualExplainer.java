@@ -24,6 +24,8 @@ import org.optaplanner.core.api.solver.SolverJob;
 import org.optaplanner.core.api.solver.SolverManager;
 import org.optaplanner.core.config.solver.SolverConfig;
 import org.optaplanner.core.config.solver.SolverManagerConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -47,6 +49,10 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
     private final SolverConfig solverConfig;
     private final Executor executor;
     private Map<String, Set<String>> categoriesMap = new HashMap<>();
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(CounterfactualExplainer.class);
+
 
     /**
      * Create a new {@link CounterfactualExplainer} using OptaPlanner as the underlying engine.
@@ -112,6 +118,9 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
             if (feature.getType() == Type.CATEGORICAL) {
                 final Boolean isConstrained = constraints.get(i);
                 final Set<String> categories = this.categoriesMap.get(feature.getName());
+                if (categories==null || categories.isEmpty()) {
+                    logger.warn("Categorical entity {} has no associated categories", feature.getName());
+                }
                 CounterfactualEntity counterfactualEntity = CategoricalEntity.from(feature, categories, isConstrained);
                 entities.add(counterfactualEntity);
             } else {
