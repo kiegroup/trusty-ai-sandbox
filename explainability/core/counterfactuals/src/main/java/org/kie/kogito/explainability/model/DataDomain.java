@@ -19,22 +19,22 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Information about domain boundaries of data used for training a model.
+ * Information about feature domains of data used for training a model.
  */
-public class DataBoundaries {
+public class DataDomain {
 
-    private final List<FeatureBoundary> featureBoundaries;
+    private final List<FeatureDomain> featureDomain;
 
-    public DataBoundaries(List<FeatureBoundary> featureBoundaries) {
-        this.featureBoundaries = Collections.unmodifiableList(featureBoundaries);
+    public DataDomain(List<FeatureDomain> featureDomain) {
+        this.featureDomain = Collections.unmodifiableList(featureDomain);
     }
 
     /**
-     * Get each feature data boundary
+     * Get each feature data domain
      *
-     * @return feature boundaries
+     * @return feature domain
      */
-    public List<FeatureBoundary> getFeatureBoundaries() {
-        return featureBoundaries;
+    public List<FeatureDomain> getFeatureDomain() {
+        return featureDomain;
     }
 }

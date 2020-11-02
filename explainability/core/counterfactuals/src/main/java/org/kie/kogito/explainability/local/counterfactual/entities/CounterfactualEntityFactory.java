@@ -16,10 +16,8 @@
 package org.kie.kogito.explainability.local.counterfactual.entities;
 
 import org.kie.kogito.explainability.model.Feature;
-import org.kie.kogito.explainability.model.FeatureBoundary;
+import org.kie.kogito.explainability.model.FeatureDomain;
 import org.kie.kogito.explainability.model.Type;
-
-import java.util.Set;
 
 public class CounterfactualEntityFactory {
 
@@ -27,25 +25,24 @@ public class CounterfactualEntityFactory {
 
     }
 
-    public static CounterfactualEntity from(Feature feature, Boolean isConstrained, FeatureBoundary featureDistribution) {
+    public static CounterfactualEntity from(Feature feature, Boolean isConstrained, FeatureDomain featureDistribution) {
 
         CounterfactualEntity entity = null;
         if (feature.getType() == Type.NUMBER) {
             if (feature.getValue().getUnderlyingObject() instanceof Double) {
                 entity = DoubleEntity.from(feature, featureDistribution.getStart(), featureDistribution.getEnd(), isConstrained);
             } else if (feature.getValue().getUnderlyingObject() instanceof Integer) {
-                entity = IntegerEntity.from(feature, (int) featureDistribution.getStart(), (int) featureDistribution.getEnd(), isConstrained);
+                entity = IntegerEntity.from(feature, featureDistribution.getStart().intValue(), featureDistribution.getEnd().intValue(), isConstrained);
             }
         } else if (feature.getType() == Type.BOOLEAN) {
             entity = BooleanEntity.from(feature, isConstrained);
-        } else {
+        } else if (feature.getType() == Type.CATEGORICAL) {
+            entity = CategoricalEntity.from(feature, featureDistribution.getCategories(), isConstrained);
+        }
+        else {
             throw new IllegalArgumentException("Unsupported feature type: " + feature.getType());
         }
         return entity;
-    }
-
-    public static CounterfactualEntity from(Feature feature, Boolean isConstrained, Set<String> categories) {
-        return CategoricalEntity.from(feature, categories, isConstrained);
     }
 
 }

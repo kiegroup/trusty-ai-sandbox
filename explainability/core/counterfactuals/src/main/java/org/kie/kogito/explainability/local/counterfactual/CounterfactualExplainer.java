@@ -44,11 +44,10 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
     private static final int DEFAULT_TABU_SIZE = 70;
     private static final int DEFAULT_ACCEPTED_COUNT = 5000;
     private final List<Output> goal;
-    private final DataBoundaries dataBoundaries;
+    private final DataDomain dataDomain;
     private final List<Boolean> constraints;
     private final SolverConfig solverConfig;
     private final Executor executor;
-    private Map<String, Set<String>> categoriesMap = new HashMap<>();
 
     private static final Logger logger =
             LoggerFactory.getLogger(CounterfactualExplainer.class);
@@ -57,21 +56,21 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
     /**
      * Create a new {@link CounterfactualExplainer} using OptaPlanner as the underlying engine.
      *
-     * @param dataBoundaries A {@link DataBoundaries} which specifies the search space boundaries
+     * @param dataDomain A {@link DataDomain} which specifies the search space domain
      * @param contraints     A list specifying by index which features are constrained
      * @param goal           A collection of {@link Output} representing the desired outcome
      * @param solverConfig   An OptaPlanner {@link SolverConfig} configuration
      */
-    public CounterfactualExplainer(DataBoundaries dataBoundaries, List<Boolean> contraints, List<Output> goal, SolverConfig solverConfig, Executor executor) {
+    public CounterfactualExplainer(DataDomain dataDomain, List<Boolean> contraints, List<Output> goal, SolverConfig solverConfig, Executor executor) {
         this.constraints = contraints;
         this.goal = goal;
-        this.dataBoundaries = dataBoundaries;
+        this.dataDomain = dataDomain;
         this.solverConfig = solverConfig;
         this.executor = executor;
     }
 
-    public CounterfactualExplainer(DataBoundaries dataBoundaries, List<Boolean> constraints, List<Output> goal) {
-        this(dataBoundaries,
+    public CounterfactualExplainer(DataDomain dataDomain, List<Boolean> constraints, List<Output> goal) {
+        this(dataDomain,
                 constraints,
                 goal,
                 CounterfactualConfigurationFactory.createSolverConfig(
@@ -85,7 +84,7 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
     /**
      * Create a new {@link CounterfactualExplainer} using OptaPlanner as the underlying engine.
      *
-     * @param dataBoundaries A {@link DataBoundaries} which specifies the search space boundaries
+     * @param dataDomain A {@link DataDomain} which specifies the search space domain
      * @param contraints     A list specifying by index which features are constrained
      * @param goal           A collection of {@link Output} representing the desired outcome
      * @param timeLimit      Computational time spent limit in seconds
@@ -93,16 +92,12 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
      * @param acceptedCount  How many accepted moves should be evaluated during each step
      * @see "Glover, Fred. "Tabu search—part I." ORSA Journal on computing 1, no. 3 (1989): 190-206"
      */
-    public CounterfactualExplainer(DataBoundaries dataBoundaries, List<Boolean> contraints, List<Output> goal, Long timeLimit, int tabuSize, int acceptedCount, Executor executor) {
-        this(dataBoundaries, contraints, goal, CounterfactualConfigurationFactory.createSolverConfig(timeLimit, tabuSize, acceptedCount), executor);
+    public CounterfactualExplainer(DataDomain dataDomain, List<Boolean> contraints, List<Output> goal, Long timeLimit, int tabuSize, int acceptedCount, Executor executor) {
+        this(dataDomain, contraints, goal, CounterfactualConfigurationFactory.createSolverConfig(timeLimit, tabuSize, acceptedCount), executor);
     }
 
-    public CounterfactualExplainer(DataBoundaries dataBoundaries, List<Boolean> contraints, List<Output> goal, Long timeLimit, int tabuSize, int acceptedCount) {
-        this(dataBoundaries, contraints, goal, CounterfactualConfigurationFactory.createSolverConfig(timeLimit, tabuSize, acceptedCount), ForkJoinPool.commonPool());
-    }
-
-    public void setCategoriesMap(Map<String, Set<String>> categoriesMap) {
-        this.categoriesMap = categoriesMap;
+    public CounterfactualExplainer(DataDomain dataDomain, List<Boolean> contraints, List<Output> goal, Long timeLimit, int tabuSize, int acceptedCount) {
+        this(dataDomain, contraints, goal, CounterfactualConfigurationFactory.createSolverConfig(timeLimit, tabuSize, acceptedCount), ForkJoinPool.commonPool());
     }
 
     private Executor getExecutor() {
@@ -114,22 +109,10 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
 
         for (int i = 0; i < predictionInput.getFeatures().size(); i++) {
             final Feature feature = predictionInput.getFeatures().get(i);
-
-            if (feature.getType() == Type.CATEGORICAL) {
                 final Boolean isConstrained = constraints.get(i);
-                final Set<String> categories = this.categoriesMap.get(feature.getName());
-                if (categories==null || categories.isEmpty()) {
-                    logger.warn("Categorical entity {} has no associated categories", feature.getName());
-                }
-                CounterfactualEntity counterfactualEntity = CategoricalEntity.from(feature, categories, isConstrained);
-                entities.add(counterfactualEntity);
-            } else {
-
-                final Boolean isConstrained = constraints.get(i);
-                final FeatureBoundary featureDistribution = dataBoundaries.getFeatureBoundaries().get(i);
+                final FeatureDomain featureDistribution = dataDomain.getFeatureDomain().get(i);
                 final CounterfactualEntity counterfactualEntity = CounterfactualEntityFactory.from(feature, isConstrained, featureDistribution);
                 entities.add(counterfactualEntity);
-            }
         }
         return entities;
     }
