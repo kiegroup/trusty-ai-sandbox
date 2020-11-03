@@ -15,34 +15,26 @@
  */
 package org.kie.kogito.explainability.model;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
- * Information about search space boundaries for features with a theoretically infinite domain.
+ * Information about feature domains of data used for training a model.
  */
+public class DataDomain {
 
-public class FeatureBoundary {
-    private final double start;
-    private final double end;
+    private final List<FeatureDomain> featureDomains;
 
-    public FeatureBoundary(double start, double end) {
-        this.start = start;
-        this.end = end;
+    public DataDomain(List<FeatureDomain> featureDomains) {
+        this.featureDomains = Collections.unmodifiableList(featureDomains);
     }
 
     /**
-     * Get start value for this boundary
+     * Get all feature data domains
      *
-     * @return the start value
+     * @return A list of {@link FeatureDomain}
      */
-    public double getStart() {
-        return start;
-    }
-
-    /**
-     * Get the end value for this boundary
-     *
-     * @return the end value
-     */
-    public double getEnd() {
-        return end;
+    public List<FeatureDomain> getFeatureDomains() {
+        return featureDomains;
     }
 }

@@ -21,12 +21,12 @@ import org.kie.kogito.explainability.TestUtils;
 import org.kie.kogito.explainability.local.counterfactual.entities.CounterfactualEntity;
 import org.kie.kogito.explainability.model.*;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,15 +45,15 @@ class CounterfactualExplainerTest {
 
 
             List<Feature> features = new LinkedList<>();
-            List<FeatureBoundary> featureBoundaries = new LinkedList<>();
+            List<FeatureDomain> featureBoundaries = new LinkedList<>();
             List<Boolean> constraints = new LinkedList<>();
             for (int i = 0; i < 4; i++) {
                 features.add(TestUtils.getMockedNumericFeature(i));
-                featureBoundaries.add(new FeatureBoundary(0.0, 1000.0));
+                featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
                 constraints.add(false);
             }
-            final DataBoundaries dataBoundaries = new DataBoundaries(featureBoundaries);
-            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataBoundaries, constraints, goal, 1L, 70, 5000);
+            final DataDomain dataDomain = new DataDomain(featureBoundaries);
+            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataDomain, constraints, goal, 1L, 70, 5000);
 
             PredictionInput input = new PredictionInput(features);
             PredictionProvider model = TestUtils.getSumSkipModel(0);
@@ -79,23 +79,23 @@ class CounterfactualExplainerTest {
 
 
             List<Feature> features = new LinkedList<>();
-            List<FeatureBoundary> featureBoundaries = new LinkedList<>();
+            List<FeatureDomain> featureBoundaries = new LinkedList<>();
             List<Boolean> constraints = new LinkedList<>();
             features.add(FeatureFactory.newNumericalFeature("f-num1", 100.0));
             constraints.add(false);
-            featureBoundaries.add(new FeatureBoundary(0.0, 1000.0));
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
             features.add(FeatureFactory.newNumericalFeature("f-num2", 150.0));
             constraints.add(false);
-            featureBoundaries.add(new FeatureBoundary(0.0, 1000.0));
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
             features.add(FeatureFactory.newNumericalFeature("f-num3", 1.0));
             constraints.add(false);
-            featureBoundaries.add(new FeatureBoundary(0.0, 1000.0));
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
             features.add(FeatureFactory.newNumericalFeature("f-num4", 2.0));
             constraints.add(false);
-            featureBoundaries.add(new FeatureBoundary(0.0, 1000.0));
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
 
-            final DataBoundaries dataBoundaries = new DataBoundaries(featureBoundaries);
-            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataBoundaries, constraints, goal, 5L, 70, 5000);
+            final DataDomain dataDomain = new DataDomain(featureBoundaries);
+            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataDomain, constraints, goal, 5L, 70, 5000);
 
             final double center = 500.0;
             final double epsilon = 10.0;
@@ -127,26 +127,26 @@ class CounterfactualExplainerTest {
             random.setSeed(seed);
 
             List<Feature> features = new LinkedList<>();
-            List<FeatureBoundary> featureBoundaries = new LinkedList<>();
+            List<FeatureDomain> featureBoundaries = new LinkedList<>();
             List<Boolean> constraints = new LinkedList<>();
             features.add(FeatureFactory.newNumericalFeature("f-num1", 100.0));
             constraints.add(false);
-            featureBoundaries.add(new FeatureBoundary(0.0, 1000.0));
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
             features.add(FeatureFactory.newNumericalFeature("f-num2", 100.0));
             constraints.add(false);
-            featureBoundaries.add(new FeatureBoundary(0.0, 1000.0));
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
             features.add(FeatureFactory.newNumericalFeature("f-num3", 100.0));
             constraints.add(false);
-            featureBoundaries.add(new FeatureBoundary(0.0, 1000.0));
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
             features.add(FeatureFactory.newNumericalFeature("f-num4", 100.0));
             constraints.add(false);
-            featureBoundaries.add(new FeatureBoundary(0.0, 1000.0));
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
 
             // add a constraint
             constraints.set(0, true);
             constraints.set(3, true);
-            final DataBoundaries dataBoundaries = new DataBoundaries(featureBoundaries);
-            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataBoundaries, constraints, goal, 5L, 70, 5000);
+            final DataDomain dataDomain = new DataDomain(featureBoundaries);
+            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataDomain, constraints, goal, 5L, 70, 5000);
 
             final double center = 500.0;
             final double epsilon = 10.0;
@@ -180,11 +180,11 @@ class CounterfactualExplainerTest {
             random.setSeed(seed);
 
             List<Feature> features = new LinkedList<>();
-            List<FeatureBoundary> featureBoundaries = new LinkedList<>();
+            List<FeatureDomain> featureBoundaries = new LinkedList<>();
             List<Boolean> constraints = new LinkedList<>();
             for (int i = 0; i < 4; i++) {
                 features.add(TestUtils.getMockedNumericFeature(i));
-                featureBoundaries.add(new FeatureBoundary(0.0, 1000.0));
+                featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
                 constraints.add(false);
             }
             features.add(FeatureFactory.newBooleanFeature("f-bool", true));
@@ -192,8 +192,8 @@ class CounterfactualExplainerTest {
             constraints.add(false);
             // add a constraint
             constraints.set(2, true);
-            final DataBoundaries dataBoundaries = new DataBoundaries(featureBoundaries);
-            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataBoundaries, constraints, goal, 5L, 70, 5000);
+            final DataDomain dataDomain = new DataDomain(featureBoundaries);
+            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataDomain, constraints, goal, 5L, 70, 5000);
 
             final double center = 500.0;
             final double epsilon = 10.0;
@@ -217,6 +217,80 @@ class CounterfactualExplainerTest {
         }
     }
 
+    @Test
+    void testCounterfactualCategorical() throws ExecutionException, InterruptedException, TimeoutException {
+        Random random = new Random();
 
-    
+        final List<Output> goal = List.of(new Output("result", Type.NUMBER, new Value<>(25.0), 1d));
+        for (int seed = 0; seed < 5; seed++) {
+            random.setSeed(seed);
+
+            List<Feature> features = new LinkedList<>();
+            List<FeatureDomain> featureBoundaries = new LinkedList<>();
+            List<Boolean> constraints = new LinkedList<>();
+            features.add(FeatureFactory.newNumericalFeature("x-1", 5.0));
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 100.0));
+            constraints.add(false);
+            features.add(FeatureFactory.newNumericalFeature("x-2", 40.0));
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 100.0));
+            constraints.add(false);
+            features.add(FeatureFactory.newCategoricalFeature("operand", "*"));
+            featureBoundaries.add(FeatureDomain.categorical("+", "-", "/", "*"));
+            constraints.add(false);
+            final DataDomain dataDomain = new DataDomain(featureBoundaries);
+            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataDomain, constraints, goal, 5L, 70, 5000);
+
+            PredictionInput input = new PredictionInput(features);
+            PredictionProvider model = TestUtils.getSymbolicArithmeticModel();
+            PredictionOutput output = model.predictAsync(List.of(input))
+                    .get(Config.INSTANCE.getAsyncTimeout(), Config.INSTANCE.getAsyncTimeUnit())
+                    .get(0);
+            Prediction prediction = new Prediction(input, output);
+            List<CounterfactualEntity> counterfactualEntities = counterfactualExplainer.explainAsync(prediction, model)
+                    .get(predictionTimeOut, predictionTimeUnit);
+
+            Stream<Feature> counterfactualFeatures = counterfactualEntities
+                    .stream()
+                    .map(CounterfactualEntity::asFeature);
+            String operand = counterfactualFeatures
+                    .filter(feature -> feature.getName().equals("operand"))
+                    .findFirst()
+                    .get()
+                    .getValue()
+                    .asString();
+
+            List<Feature> numericalFeatures = counterfactualEntities
+                    .stream()
+                    .map(CounterfactualEntity::asFeature)
+                    .filter(feature -> !feature.getName().equals("operand"))
+                    .collect(Collectors.toList());
+
+            double result = 0.0;
+            for (Feature feature : numericalFeatures) {
+                switch (operand) {
+                    case "+":
+                        result += feature.getValue().asNumber();
+                        break;
+                    case "-":
+                        result -= feature.getValue().asNumber();
+                        break;
+                    case "*":
+                        result *= feature.getValue().asNumber();
+                        break;
+                    case "/":
+                        result /= feature.getValue().asNumber();
+                        break;
+                }
+
+            }
+
+            for (CounterfactualEntity entity : counterfactualEntities) {
+                System.out.println(entity);
+            }
+
+            final double epsilon = 0.01;
+            assertTrue(result <= 25.0 + epsilon);
+            assertTrue(result >= 25.0 - epsilon);
+        }
+    }
 }

@@ -138,6 +138,45 @@ public class TestUtils {
         });
     }
 
+    public static PredictionProvider getSymbolicArithmeticModel() {
+        return inputs -> supplyAsync(() -> {
+            List<PredictionOutput> predictionOutputs = new LinkedList<>();
+            for (PredictionInput predictionInput : inputs) {
+                List<Feature> features = predictionInput.getFeatures();
+                String operand = "+";
+                double result = 0;
+                for (Feature feature : features) {
+                    if (feature.getName().equals("operand")) {
+                        operand = feature.getValue().asString();
+                    }
+                }
+                for (Feature feature : features) {
+                    if (!feature.getName().equals("operand")) {
+                        switch (operand) {
+                            case "+":
+                                result += feature.getValue().asNumber();
+                                break;
+                            case "-":
+                                result -= feature.getValue().asNumber();
+                                break;
+                            case "*":
+                                result *= feature.getValue().asNumber();
+                                break;
+                            case "/":
+                                result /= feature.getValue().asNumber();
+                                break;
+                        }
+                    }
+                }
+
+                PredictionOutput predictionOutput = new PredictionOutput(
+                        List.of(new Output("result", Type.NUMBER, new Value<>(result), 1d)));
+                predictionOutputs.add(predictionOutput);
+            }
+            return predictionOutputs;
+        });
+    }
+
     public static PredictionProvider getFixedOutputClassifier() {
         return inputs -> supplyAsync(() -> {
             List<PredictionOutput> outputs = new LinkedList<>();

@@ -16,10 +16,8 @@
 package org.kie.kogito.explainability.local.counterfactual.entities;
 
 import org.kie.kogito.explainability.model.Feature;
-import org.kie.kogito.explainability.model.FeatureBoundary;
+import org.kie.kogito.explainability.model.FeatureDomain;
 import org.kie.kogito.explainability.model.Type;
-
-import java.util.List;
 
 public class CounterfactualEntityFactory {
 
@@ -27,21 +25,24 @@ public class CounterfactualEntityFactory {
 
     }
 
-    public static CounterfactualEntity from(Feature feature, Boolean isConstrained, FeatureBoundary featureDistribution) {
+    public static CounterfactualEntity from(Feature feature, Boolean isConstrained, FeatureDomain featureDomain) {
 
         CounterfactualEntity entity = null;
         if (feature.getType() == Type.NUMBER) {
             if (feature.getValue().getUnderlyingObject() instanceof Double) {
-                entity = DoubleEntity.from(feature, featureDistribution.getStart(), featureDistribution.getEnd(), isConstrained);
+                entity = DoubleEntity.from(feature, featureDomain.getStart(), featureDomain.getEnd(), isConstrained);
             } else if (feature.getValue().getUnderlyingObject() instanceof Integer) {
-                entity = IntegerEntity.from(feature, (int) featureDistribution.getStart(), (int) featureDistribution.getEnd(), isConstrained);
+                entity = IntegerEntity.from(feature, featureDomain.getStart().intValue(), featureDomain.getEnd().intValue(), isConstrained);
             }
         } else if (feature.getType() == Type.BOOLEAN) {
             entity = BooleanEntity.from(feature, isConstrained);
+        } else if (feature.getType() == Type.CATEGORICAL) {
+            entity = CategoricalEntity.from(feature, featureDomain.getCategories(), isConstrained);
         } else {
             throw new IllegalArgumentException("Unsupported feature type: " + feature.getType());
         }
         return entity;
     }
+
 }
 
