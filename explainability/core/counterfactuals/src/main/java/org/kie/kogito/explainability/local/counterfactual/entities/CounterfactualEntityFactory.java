@@ -25,21 +25,20 @@ public class CounterfactualEntityFactory {
 
     }
 
-    public static CounterfactualEntity from(Feature feature, Boolean isConstrained, FeatureDomain featureDistribution) {
+    public static CounterfactualEntity from(Feature feature, Boolean isConstrained, FeatureDomain featureDomain) {
 
         CounterfactualEntity entity = null;
         if (feature.getType() == Type.NUMBER) {
             if (feature.getValue().getUnderlyingObject() instanceof Double) {
-                entity = DoubleEntity.from(feature, featureDistribution.getStart(), featureDistribution.getEnd(), isConstrained);
+                entity = DoubleEntity.from(feature, featureDomain.getStart(), featureDomain.getEnd(), isConstrained);
             } else if (feature.getValue().getUnderlyingObject() instanceof Integer) {
-                entity = IntegerEntity.from(feature, featureDistribution.getStart().intValue(), featureDistribution.getEnd().intValue(), isConstrained);
+                entity = IntegerEntity.from(feature, featureDomain.getStart().intValue(), featureDomain.getEnd().intValue(), isConstrained);
             }
         } else if (feature.getType() == Type.BOOLEAN) {
             entity = BooleanEntity.from(feature, isConstrained);
         } else if (feature.getType() == Type.CATEGORICAL) {
-            entity = CategoricalEntity.from(feature, featureDistribution.getCategories(), isConstrained);
-        }
-        else {
+            entity = CategoricalEntity.from(feature, featureDomain.getCategories(), isConstrained);
+        } else {
             throw new IllegalArgumentException("Unsupported feature type: " + feature.getType());
         }
         return entity;

@@ -23,18 +23,18 @@ import java.util.List;
  */
 public class DataDomain {
 
-    private final List<FeatureDomain> featureDomain;
+    private final List<FeatureDomain> featureDomains;
 
-    public DataDomain(List<FeatureDomain> featureDomain) {
-        this.featureDomain = Collections.unmodifiableList(featureDomain);
+    public DataDomain(List<FeatureDomain> featureDomains) {
+        this.featureDomains = Collections.unmodifiableList(featureDomains);
     }
 
     /**
-     * Get each feature data domain
+     * Get all feature data domains
      *
-     * @return feature domain
+     * @return A list of {@link FeatureDomain}
      */
-    public List<FeatureDomain> getFeatureDomain() {
-        return featureDomain;
+    public List<FeatureDomain> getFeatureDomains() {
+        return featureDomains;
     }
 }

@@ -16,7 +16,6 @@
 package org.kie.kogito.explainability.local.counterfactual;
 
 import org.kie.kogito.explainability.local.LocalExplainer;
-import org.kie.kogito.explainability.local.counterfactual.entities.CategoricalEntity;
 import org.kie.kogito.explainability.local.counterfactual.entities.CounterfactualEntity;
 import org.kie.kogito.explainability.local.counterfactual.entities.CounterfactualEntityFactory;
 import org.kie.kogito.explainability.model.*;
@@ -27,7 +26,9 @@ import org.optaplanner.core.config.solver.SolverManagerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -43,23 +44,22 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
     private static final long DEFAULT_TIME_LIMIT = 30;
     private static final int DEFAULT_TABU_SIZE = 70;
     private static final int DEFAULT_ACCEPTED_COUNT = 5000;
+    private static final Logger logger =
+            LoggerFactory.getLogger(CounterfactualExplainer.class);
     private final List<Output> goal;
     private final DataDomain dataDomain;
     private final List<Boolean> constraints;
     private final SolverConfig solverConfig;
     private final Executor executor;
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(CounterfactualExplainer.class);
-
 
     /**
      * Create a new {@link CounterfactualExplainer} using OptaPlanner as the underlying engine.
      *
-     * @param dataDomain A {@link DataDomain} which specifies the search space domain
-     * @param contraints     A list specifying by index which features are constrained
-     * @param goal           A collection of {@link Output} representing the desired outcome
-     * @param solverConfig   An OptaPlanner {@link SolverConfig} configuration
+     * @param dataDomain   A {@link DataDomain} which specifies the search space domain
+     * @param contraints   A list specifying by index which features are constrained
+     * @param goal         A collection of {@link Output} representing the desired outcome
+     * @param solverConfig An OptaPlanner {@link SolverConfig} configuration
      */
     public CounterfactualExplainer(DataDomain dataDomain, List<Boolean> contraints, List<Output> goal, SolverConfig solverConfig, Executor executor) {
         this.constraints = contraints;
@@ -84,12 +84,12 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
     /**
      * Create a new {@link CounterfactualExplainer} using OptaPlanner as the underlying engine.
      *
-     * @param dataDomain A {@link DataDomain} which specifies the search space domain
-     * @param contraints     A list specifying by index which features are constrained
-     * @param goal           A collection of {@link Output} representing the desired outcome
-     * @param timeLimit      Computational time spent limit in seconds
-     * @param tabuSize       Tabu search limit
-     * @param acceptedCount  How many accepted moves should be evaluated during each step
+     * @param dataDomain    A {@link DataDomain} which specifies the search space domain
+     * @param contraints    A list specifying by index which features are constrained
+     * @param goal          A collection of {@link Output} representing the desired outcome
+     * @param timeLimit     Computational time spent limit in seconds
+     * @param tabuSize      Tabu search limit
+     * @param acceptedCount How many accepted moves should be evaluated during each step
      * @see "Glover, Fred. "Tabu search—part I." ORSA Journal on computing 1, no. 3 (1989): 190-206"
      */
     public CounterfactualExplainer(DataDomain dataDomain, List<Boolean> contraints, List<Output> goal, Long timeLimit, int tabuSize, int acceptedCount, Executor executor) {
@@ -109,10 +109,10 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
 
         for (int i = 0; i < predictionInput.getFeatures().size(); i++) {
             final Feature feature = predictionInput.getFeatures().get(i);
-                final Boolean isConstrained = constraints.get(i);
-                final FeatureDomain featureDistribution = dataDomain.getFeatureDomain().get(i);
-                final CounterfactualEntity counterfactualEntity = CounterfactualEntityFactory.from(feature, isConstrained, featureDistribution);
-                entities.add(counterfactualEntity);
+            final Boolean isConstrained = constraints.get(i);
+            final FeatureDomain featureDistribution = dataDomain.getFeatureDomains().get(i);
+            final CounterfactualEntity counterfactualEntity = CounterfactualEntityFactory.from(feature, isConstrained, featureDistribution);
+            entities.add(counterfactualEntity);
         }
         return entities;
     }
