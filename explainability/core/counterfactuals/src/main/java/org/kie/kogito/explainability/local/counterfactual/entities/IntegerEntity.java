@@ -16,6 +16,7 @@
 package org.kie.kogito.explainability.local.counterfactual.entities;
 
 import org.kie.kogito.explainability.model.Feature;
+import org.kie.kogito.explainability.model.FeatureDistribution;
 import org.kie.kogito.explainability.model.FeatureFactory;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.valuerange.ValueRange;
@@ -37,17 +38,23 @@ public class IntegerEntity implements CounterfactualEntity {
     private String featureName;
     private boolean constrained;
     private Integer originalValue;
+    private FeatureDistribution featureDistribution = null;
 
     public IntegerEntity() {
     }
 
     private IntegerEntity(Integer originalValue, String featureName, int minimum, int maximum, boolean constrained) {
+        this(originalValue, featureName, minimum, maximum, null, constrained);
+    }
+
+    private IntegerEntity(Integer originalValue, String featureName, int minimum, int maximum, FeatureDistribution featureDistribution, boolean constrained) {
         this.proposedValue = originalValue;
         this.originalValue = originalValue;
         this.featureName = featureName;
         this.intRangeMinimum = minimum;
         this.intRangeMaximum = maximum;
         this.constrained = constrained;
+        this.featureDistribution = featureDistribution;
     }
 
     /**
@@ -55,22 +62,43 @@ public class IntegerEntity implements CounterfactualEntity {
      * provided {@link Feature} and specifying whether the entity is constrained or not.
      *
      * @param originalFeature Original input {@link Feature}
+     * @param minimum         The start of the domain search space
+     * @param maximum         The end of the domain search space
      * @param constrained     Whether this entity's value should be fixed or not
      */
     public static IntegerEntity from(Feature originalFeature, int minimum, int maximum, boolean constrained) {
-        return new IntegerEntity((int) originalFeature.getValue().asNumber(), originalFeature.getName(), minimum, maximum, constrained);
+        return from(originalFeature, minimum, maximum, null, constrained);
     }
 
+    public static IntegerEntity from(Feature originalFeature, int minimum, int maximum, FeatureDistribution featureDistribution, boolean constrained) {
+        return new IntegerEntity((int) originalFeature.getValue().asNumber(), originalFeature.getName(), minimum, maximum, featureDistribution, constrained);
+    }
 
     /**
      * Creates an unconstrained {@link IntegerEntity}, taking the original input value from the
      * provided {@link Feature}.
      *
      * @param feature feature Original input {@link Feature}
+     * @param minimum The start of the domain search space
+     * @param maximum The end of the domain search space
      */
     public static IntegerEntity from(Feature feature, int minimum, int maximum) {
-        return IntegerEntity.from(feature, minimum, maximum, false);
+        return IntegerEntity.from(feature, minimum, maximum, null, false);
     }
+
+    /**
+     * Creates an unconstrained {@link IntegerEntity}, taking the original input value from the
+     * provided {@link Feature}.
+     *
+     * @param feature             feature Original input {@link Feature}
+     * @param minimum             The start of the domain search space
+     * @param maximum             The end of the domain search space
+     * @param featureDistribution The feature's distribution (as {@link FeatureDistribution}), if available
+     */
+    public static IntegerEntity from(Feature feature, int minimum, int maximum, FeatureDistribution featureDistribution) {
+        return IntegerEntity.from(feature, minimum, maximum, featureDistribution, false);
+    }
+
 
     @ValueRangeProvider(id = "intRange")
     public ValueRange getValueRange() {
@@ -95,12 +123,20 @@ public class IntegerEntity implements CounterfactualEntity {
     /**
      * Calculates the distance between the current planning value and the reference value
      * for this feature.
+     * If the feature distribution is specified, this will return a scaled distance, otherwise
+     * it returns an unscaled distance.
      *
      * @return Numerical distance
      */
     @Override
     public double distance() {
-        return Math.abs(this.proposedValue - originalValue);
+        double distance = Math.abs(this.proposedValue - originalValue);
+        if (featureDistribution != null) {
+            double sd = featureDistribution.getStdDev();
+            return distance / (sd * sd) ;
+        } else {
+            return distance;
+        }
     }
 
     /**

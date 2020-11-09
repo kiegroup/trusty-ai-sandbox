@@ -51,6 +51,7 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
     private final List<Boolean> constraints;
     private final SolverConfig solverConfig;
     private final Executor executor;
+    private DataDistribution dataDistribution = null;
 
 
     /**
@@ -69,8 +70,39 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
         this.executor = executor;
     }
 
+    /**
+     * Create a new {@link CounterfactualExplainer} using OptaPlanner as the underlying engine.
+     *
+     * @param dataDistribution Characteristics of the data distribution as {@link DataDistribution}, if available
+     * @param dataDomain       A {@link DataDomain} which specifies the search space domain
+     * @param contraints       A list specifying by index which features are constrained
+     * @param goal             A collection of {@link Output} representing the desired outcome
+     * @param solverConfig     An OptaPlanner {@link SolverConfig} configuration
+     */
+    public CounterfactualExplainer(DataDistribution dataDistribution, DataDomain dataDomain, List<Boolean> contraints, List<Output> goal, SolverConfig solverConfig, Executor executor) {
+        this.constraints = contraints;
+        this.goal = goal;
+        this.dataDomain = dataDomain;
+        this.solverConfig = solverConfig;
+        this.executor = executor;
+        this.dataDistribution = dataDistribution;
+    }
+
     public CounterfactualExplainer(DataDomain dataDomain, List<Boolean> constraints, List<Output> goal) {
         this(dataDomain,
+                constraints,
+                goal,
+                CounterfactualConfigurationFactory.createSolverConfig(
+                        DEFAULT_TIME_LIMIT,
+                        DEFAULT_TABU_SIZE,
+                        DEFAULT_ACCEPTED_COUNT),
+                ForkJoinPool.commonPool()
+        );
+    }
+
+    public CounterfactualExplainer(DataDistribution dataDistribution, DataDomain dataDomain, List<Boolean> constraints, List<Output> goal) {
+        this(dataDistribution,
+                dataDomain,
                 constraints,
                 goal,
                 CounterfactualConfigurationFactory.createSolverConfig(
@@ -96,6 +128,14 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
         this(dataDomain, contraints, goal, CounterfactualConfigurationFactory.createSolverConfig(timeLimit, tabuSize, acceptedCount), executor);
     }
 
+    public CounterfactualExplainer(DataDistribution dataDistribution, DataDomain dataDomain, List<Boolean> contraints, List<Output> goal, Long timeLimit, int tabuSize, int acceptedCount, Executor executor) {
+        this(dataDistribution, dataDomain, contraints, goal, CounterfactualConfigurationFactory.createSolverConfig(timeLimit, tabuSize, acceptedCount), executor);
+    }
+
+    public CounterfactualExplainer(DataDistribution dataDistribution, DataDomain dataDomain, List<Boolean> contraints, List<Output> goal, Long timeLimit, int tabuSize, int acceptedCount) {
+        this(dataDistribution, dataDomain, contraints, goal, CounterfactualConfigurationFactory.createSolverConfig(timeLimit, tabuSize, acceptedCount), ForkJoinPool.commonPool());
+    }
+
     public CounterfactualExplainer(DataDomain dataDomain, List<Boolean> contraints, List<Output> goal, Long timeLimit, int tabuSize, int acceptedCount) {
         this(dataDomain, contraints, goal, CounterfactualConfigurationFactory.createSolverConfig(timeLimit, tabuSize, acceptedCount), ForkJoinPool.commonPool());
     }
@@ -110,8 +150,13 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
         for (int i = 0; i < predictionInput.getFeatures().size(); i++) {
             final Feature feature = predictionInput.getFeatures().get(i);
             final Boolean isConstrained = constraints.get(i);
-            final FeatureDomain featureDistribution = dataDomain.getFeatureDomains().get(i);
-            final CounterfactualEntity counterfactualEntity = CounterfactualEntityFactory.from(feature, isConstrained, featureDistribution);
+            final FeatureDomain featureDomain = dataDomain.getFeatureDomains().get(i);
+            FeatureDistribution featureDistribution = null;
+            // If a data distribution was specified, use it to instantiate the counterfactual entity
+            if (dataDistribution != null) {
+                featureDistribution = dataDistribution.getFeatureDistributions().get(i);
+            }
+            final CounterfactualEntity counterfactualEntity = CounterfactualEntityFactory.from(feature, isConstrained, featureDomain, featureDistribution);
             entities.add(counterfactualEntity);
         }
         return entities;
