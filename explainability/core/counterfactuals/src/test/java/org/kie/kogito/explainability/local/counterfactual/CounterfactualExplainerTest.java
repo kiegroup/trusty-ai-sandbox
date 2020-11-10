@@ -20,6 +20,7 @@ import org.kie.kogito.explainability.Config;
 import org.kie.kogito.explainability.TestUtils;
 import org.kie.kogito.explainability.local.counterfactual.entities.CounterfactualEntity;
 import org.kie.kogito.explainability.model.*;
+import org.optaplanner.core.config.solver.SolverConfig;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -55,7 +56,13 @@ class CounterfactualExplainerTest {
                 constraints.add(false);
             }
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
-            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataDomain, constraints, goal, 1L, 70, 5000);
+            final SolverConfig solverConfig = CounterfactualConfigurationFactory
+                    .createSolverConfig(1L, 70, 5000);
+            final CounterfactualExplainer counterfactualExplainer =
+                    CounterfactualExplainer
+                            .builder(goal, constraints, dataDomain)
+                            .withSolverConfig(solverConfig)
+                            .build();
 
             PredictionInput input = new PredictionInput(features);
             PredictionProvider model = TestUtils.getSumSkipModel(0);
@@ -97,7 +104,14 @@ class CounterfactualExplainerTest {
             featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
 
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
-            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataDomain, constraints, goal, 5L, 70, 5000);
+
+            final SolverConfig solverConfig = CounterfactualConfigurationFactory
+                    .createSolverConfig(1L, 70, 5000);
+            final CounterfactualExplainer counterfactualExplainer =
+                    CounterfactualExplainer
+                            .builder(goal, constraints, dataDomain)
+                            .withSolverConfig(solverConfig)
+                            .build();
 
             final double center = 500.0;
             final double epsilon = 10.0;
@@ -148,7 +162,14 @@ class CounterfactualExplainerTest {
             constraints.set(0, true);
             constraints.set(3, true);
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
-            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataDomain, constraints, goal, 5L, 70, 5000);
+
+            final SolverConfig solverConfig = CounterfactualConfigurationFactory
+                    .createSolverConfig(5L, 70, 5000);
+            final CounterfactualExplainer counterfactualExplainer =
+                    CounterfactualExplainer
+                            .builder(goal, constraints, dataDomain)
+                            .withSolverConfig(solverConfig)
+                            .build();
 
             final double center = 500.0;
             final double epsilon = 10.0;
@@ -207,7 +228,14 @@ class CounterfactualExplainerTest {
             constraints.set(0, true);
             constraints.set(3, true);
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
-            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataDistribution, dataDomain, constraints, goal, 5L, 70, 5000);
+            final SolverConfig solverConfig = CounterfactualConfigurationFactory
+                    .createSolverConfig(5L, 70, 5000);
+            final CounterfactualExplainer counterfactualExplainer =
+                    CounterfactualExplainer
+                            .builder(goal, constraints, dataDomain)
+                            .withDataDistribution(dataDistribution)
+                            .withSolverConfig(solverConfig)
+                            .build();
 
             final double center = 500.0;
             final double epsilon = 10.0;
@@ -254,7 +282,14 @@ class CounterfactualExplainerTest {
             // add a constraint
             constraints.set(2, true);
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
-            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataDomain, constraints, goal, 5L, 70, 5000);
+
+            final SolverConfig solverConfig = CounterfactualConfigurationFactory
+                    .createSolverConfig(5L, 70, 5000);
+            final CounterfactualExplainer counterfactualExplainer =
+                    CounterfactualExplainer
+                            .builder(goal, constraints, dataDomain)
+                            .withSolverConfig(solverConfig)
+                            .build();
 
             final double center = 500.0;
             final double epsilon = 10.0;
@@ -299,7 +334,14 @@ class CounterfactualExplainerTest {
             featureBoundaries.add(FeatureDomain.categorical("+", "-", "/", "*"));
             constraints.add(false);
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
-            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataDomain, constraints, goal, 5L, 70, 5000);
+
+            final SolverConfig solverConfig = CounterfactualConfigurationFactory
+                    .createSolverConfig(5L, 70, 5000);
+            final CounterfactualExplainer counterfactualExplainer =
+                    CounterfactualExplainer
+                            .builder(goal, constraints, dataDomain)
+                            .withSolverConfig(solverConfig)
+                            .build();
 
             PredictionInput input = new PredictionInput(features);
             PredictionProvider model = TestUtils.getSymbolicArithmeticModel();
