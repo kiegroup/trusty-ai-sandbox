@@ -61,7 +61,7 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
      * @param goal             A collection of {@link Output} representing the desired outcome
      * @param solverConfig     An OptaPlanner {@link SolverConfig} configuration
      */
-    public CounterfactualExplainer(DataDistribution dataDistribution,
+    protected CounterfactualExplainer(DataDistribution dataDistribution,
                                    DataDomain dataDomain,
                                    List<Boolean> contraints,
                                    List<Output> goal,
@@ -126,7 +126,7 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
         }, this.executor);
     }
 
-    protected static class Builder {
+    public static class Builder {
 
 
         private final DataDomain dataDomain;
