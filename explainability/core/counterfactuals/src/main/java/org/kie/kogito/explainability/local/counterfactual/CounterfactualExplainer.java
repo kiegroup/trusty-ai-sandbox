@@ -26,7 +26,6 @@ import org.optaplanner.core.config.solver.SolverManagerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,6 +33,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Provides exemplar (counterfactual) explanations for a predictive model.
@@ -83,24 +84,18 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
     }
 
     private List<CounterfactualEntity> createEntities(PredictionInput predictionInput) {
-        final List<CounterfactualEntity> entities = new ArrayList<>();
-
-        for (int i = 0; i < predictionInput.getFeatures().size(); i++) {
-
-            final Feature feature = predictionInput.getFeatures().get(i);
-            final Boolean isConstrained = constraints.get(i);
-            final FeatureDomain featureDomain = dataDomain.getFeatureDomains().get(i);
-            // If a data distribution was specified, use it to instantiate the counterfactual entity
-            final int featureIndex = i;
-            final FeatureDistribution featureDistribution = Optional
-                    .ofNullable(dataDistribution)
-                    .map(dd -> dd.getFeatureDistributions().get(featureIndex))
-                    .orElse(null);
-            final CounterfactualEntity counterfactualEntity = CounterfactualEntityFactory
-                    .from(feature, isConstrained, featureDomain, featureDistribution);
-            entities.add(counterfactualEntity);
-        }
-        return entities;
+        return IntStream.range(0, predictionInput.getFeatures().size())
+                .mapToObj(featureIndex -> {
+                    final Feature feature = predictionInput.getFeatures().get(featureIndex);
+                    final Boolean isConstrained = constraints.get(featureIndex);
+                    final FeatureDomain featureDomain = dataDomain.getFeatureDomains().get(featureIndex);
+                    final FeatureDistribution featureDistribution = Optional
+                            .ofNullable(dataDistribution)
+                            .map(dd -> dd.getFeatureDistributions().get(featureIndex))
+                            .orElse(null);
+                    return CounterfactualEntityFactory
+                            .from(feature, isConstrained, featureDomain, featureDistribution);
+                }).collect(Collectors.toList());
     }
 
     @Override
@@ -131,13 +126,13 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
         }, this.executor);
     }
 
-    public static class Builder {
+    protected static class Builder {
 
 
-        private DataDistribution dataDistribution = null;
         private final DataDomain dataDomain;
         private final List<Boolean> constraints;
         private final List<Output> goal;
+        private DataDistribution dataDistribution = null;
         private Executor executor = ForkJoinPool.commonPool();
         private SolverConfig solverConfig = null;
 
