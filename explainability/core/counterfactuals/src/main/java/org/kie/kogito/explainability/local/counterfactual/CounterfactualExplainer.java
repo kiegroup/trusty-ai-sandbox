@@ -26,13 +26,15 @@ import org.optaplanner.core.config.solver.SolverManagerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Provides exemplar (counterfactual) explanations for a predictive model.
@@ -41,9 +43,6 @@ import java.util.concurrent.ForkJoinPool;
  */
 public class CounterfactualExplainer implements LocalExplainer<List<CounterfactualEntity>> {
 
-    private static final long DEFAULT_TIME_LIMIT = 30;
-    private static final int DEFAULT_TABU_SIZE = 70;
-    private static final int DEFAULT_ACCEPTED_COUNT = 5000;
     private static final Logger logger =
             LoggerFactory.getLogger(CounterfactualExplainer.class);
     private final List<Output> goal;
@@ -51,53 +50,33 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
     private final List<Boolean> constraints;
     private final SolverConfig solverConfig;
     private final Executor executor;
-
+    private final DataDistribution dataDistribution;
 
     /**
      * Create a new {@link CounterfactualExplainer} using OptaPlanner as the underlying engine.
      *
-     * @param dataDomain   A {@link DataDomain} which specifies the search space domain
-     * @param contraints   A list specifying by index which features are constrained
-     * @param goal         A collection of {@link Output} representing the desired outcome
-     * @param solverConfig An OptaPlanner {@link SolverConfig} configuration
+     * @param dataDistribution Characteristics of the data distribution as {@link DataDistribution}, if available
+     * @param dataDomain       A {@link DataDomain} which specifies the search space domain
+     * @param contraints       A list specifying by index which features are constrained
+     * @param goal             A collection of {@link Output} representing the desired outcome
+     * @param solverConfig     An OptaPlanner {@link SolverConfig} configuration
      */
-    public CounterfactualExplainer(DataDomain dataDomain, List<Boolean> contraints, List<Output> goal, SolverConfig solverConfig, Executor executor) {
+    protected CounterfactualExplainer(DataDistribution dataDistribution,
+                                   DataDomain dataDomain,
+                                   List<Boolean> contraints,
+                                   List<Output> goal,
+                                   SolverConfig solverConfig,
+                                   Executor executor) {
+        this.dataDistribution = dataDistribution;
+        this.dataDomain = dataDomain;
         this.constraints = contraints;
         this.goal = goal;
-        this.dataDomain = dataDomain;
         this.solverConfig = solverConfig;
         this.executor = executor;
     }
 
-    public CounterfactualExplainer(DataDomain dataDomain, List<Boolean> constraints, List<Output> goal) {
-        this(dataDomain,
-                constraints,
-                goal,
-                CounterfactualConfigurationFactory.createSolverConfig(
-                        DEFAULT_TIME_LIMIT,
-                        DEFAULT_TABU_SIZE,
-                        DEFAULT_ACCEPTED_COUNT),
-                ForkJoinPool.commonPool()
-        );
-    }
-
-    /**
-     * Create a new {@link CounterfactualExplainer} using OptaPlanner as the underlying engine.
-     *
-     * @param dataDomain    A {@link DataDomain} which specifies the search space domain
-     * @param contraints    A list specifying by index which features are constrained
-     * @param goal          A collection of {@link Output} representing the desired outcome
-     * @param timeLimit     Computational time spent limit in seconds
-     * @param tabuSize      Tabu search limit
-     * @param acceptedCount How many accepted moves should be evaluated during each step
-     * @see "Glover, Fred. "Tabu search—part I." ORSA Journal on computing 1, no. 3 (1989): 190-206"
-     */
-    public CounterfactualExplainer(DataDomain dataDomain, List<Boolean> contraints, List<Output> goal, Long timeLimit, int tabuSize, int acceptedCount, Executor executor) {
-        this(dataDomain, contraints, goal, CounterfactualConfigurationFactory.createSolverConfig(timeLimit, tabuSize, acceptedCount), executor);
-    }
-
-    public CounterfactualExplainer(DataDomain dataDomain, List<Boolean> contraints, List<Output> goal, Long timeLimit, int tabuSize, int acceptedCount) {
-        this(dataDomain, contraints, goal, CounterfactualConfigurationFactory.createSolverConfig(timeLimit, tabuSize, acceptedCount), ForkJoinPool.commonPool());
+    public static Builder builder(List<Output> goal, List<Boolean> constraints, DataDomain dataDomain) {
+        return new Builder(goal, constraints, dataDomain);
     }
 
     private Executor getExecutor() {
@@ -105,16 +84,18 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
     }
 
     private List<CounterfactualEntity> createEntities(PredictionInput predictionInput) {
-        final List<CounterfactualEntity> entities = new ArrayList<>();
-
-        for (int i = 0; i < predictionInput.getFeatures().size(); i++) {
-            final Feature feature = predictionInput.getFeatures().get(i);
-            final Boolean isConstrained = constraints.get(i);
-            final FeatureDomain featureDistribution = dataDomain.getFeatureDomains().get(i);
-            final CounterfactualEntity counterfactualEntity = CounterfactualEntityFactory.from(feature, isConstrained, featureDistribution);
-            entities.add(counterfactualEntity);
-        }
-        return entities;
+        return IntStream.range(0, predictionInput.getFeatures().size())
+                .mapToObj(featureIndex -> {
+                    final Feature feature = predictionInput.getFeatures().get(featureIndex);
+                    final Boolean isConstrained = constraints.get(featureIndex);
+                    final FeatureDomain featureDomain = dataDomain.getFeatureDomains().get(featureIndex);
+                    final FeatureDistribution featureDistribution = Optional
+                            .ofNullable(dataDistribution)
+                            .map(dd -> dd.getFeatureDistributions().get(featureIndex))
+                            .orElse(null);
+                    return CounterfactualEntityFactory
+                            .from(feature, isConstrained, featureDomain, featureDistribution);
+                }).collect(Collectors.toList());
     }
 
     @Override
@@ -143,5 +124,50 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
                 solverManager.close();
             }
         }, this.executor);
+    }
+
+    public static class Builder {
+
+
+        private final DataDomain dataDomain;
+        private final List<Boolean> constraints;
+        private final List<Output> goal;
+        private DataDistribution dataDistribution = null;
+        private Executor executor = ForkJoinPool.commonPool();
+        private SolverConfig solverConfig = null;
+
+        private Builder(List<Output> goal, List<Boolean> constraints, DataDomain dataDomain) {
+            this.goal = goal;
+            this.constraints = constraints;
+            this.dataDomain = dataDomain;
+        }
+
+        public Builder withDataDistribution(DataDistribution dataDistribution) {
+            this.dataDistribution = dataDistribution;
+            return this;
+        }
+
+        public Builder withExecutor(Executor executor) {
+            this.executor = executor;
+            return this;
+        }
+
+        public Builder withSolverConfig(SolverConfig solverConfig) {
+            this.solverConfig = solverConfig;
+            return this;
+        }
+
+        public CounterfactualExplainer build() {
+            // Create a default solver configuration if none provided
+            if (this.solverConfig == null) {
+                this.solverConfig = CounterfactualConfigurationFactory.createDefaultSolverConfig();
+            }
+            return new CounterfactualExplainer(dataDistribution,
+                    dataDomain,
+                    constraints,
+                    goal,
+                    solverConfig,
+                    executor);
+        }
     }
 }

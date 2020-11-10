@@ -17,8 +17,20 @@ import java.util.List;
 
 public class CounterfactualConfigurationFactory {
 
+    private static final long DEFAULT_TIME_LIMIT = 30;
+    private static final int DEFAULT_TABU_SIZE = 70;
+    private static final int DEFAULT_ACCEPTED_COUNT = 5000;
+
+
     private CounterfactualConfigurationFactory() {
 
+    }
+
+    public static SolverConfig createDefaultSolverConfig() {
+        return CounterfactualConfigurationFactory
+                .createSolverConfig(DEFAULT_TIME_LIMIT,
+                        DEFAULT_TABU_SIZE,
+                        DEFAULT_ACCEPTED_COUNT);
     }
 
     public static SolverConfig createSolverConfig(Long timeLimit, int tabuSize, int acceptedCount) {

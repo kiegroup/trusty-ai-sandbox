@@ -20,8 +20,11 @@ import org.kie.kogito.explainability.Config;
 import org.kie.kogito.explainability.TestUtils;
 import org.kie.kogito.explainability.local.counterfactual.entities.CounterfactualEntity;
 import org.kie.kogito.explainability.model.*;
+import org.optaplanner.core.config.solver.SolverConfig;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -53,7 +56,13 @@ class CounterfactualExplainerTest {
                 constraints.add(false);
             }
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
-            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataDomain, constraints, goal, 1L, 70, 5000);
+            final SolverConfig solverConfig = CounterfactualConfigurationFactory
+                    .createSolverConfig(1L, 70, 5000);
+            final CounterfactualExplainer counterfactualExplainer =
+                    CounterfactualExplainer
+                            .builder(goal, constraints, dataDomain)
+                            .withSolverConfig(solverConfig)
+                            .build();
 
             PredictionInput input = new PredictionInput(features);
             PredictionProvider model = TestUtils.getSumSkipModel(0);
@@ -95,7 +104,14 @@ class CounterfactualExplainerTest {
             featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
 
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
-            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataDomain, constraints, goal, 5L, 70, 5000);
+
+            final SolverConfig solverConfig = CounterfactualConfigurationFactory
+                    .createSolverConfig(1L, 70, 5000);
+            final CounterfactualExplainer counterfactualExplainer =
+                    CounterfactualExplainer
+                            .builder(goal, constraints, dataDomain)
+                            .withSolverConfig(solverConfig)
+                            .build();
 
             final double center = 500.0;
             final double epsilon = 10.0;
@@ -119,7 +135,7 @@ class CounterfactualExplainerTest {
     }
 
     @Test
-    void testCounterfactualConstrainedMatch() throws ExecutionException, InterruptedException, TimeoutException {
+    void testCounterfactualConstrainedMatchUnscaled() throws ExecutionException, InterruptedException, TimeoutException {
         Random random = new Random();
 
         final List<Output> goal = List.of(new Output("inside", Type.BOOLEAN, new Value<>(true), 1d));
@@ -146,7 +162,80 @@ class CounterfactualExplainerTest {
             constraints.set(0, true);
             constraints.set(3, true);
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
-            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataDomain, constraints, goal, 5L, 70, 5000);
+
+            final SolverConfig solverConfig = CounterfactualConfigurationFactory
+                    .createSolverConfig(5L, 70, 5000);
+            final CounterfactualExplainer counterfactualExplainer =
+                    CounterfactualExplainer
+                            .builder(goal, constraints, dataDomain)
+                            .withSolverConfig(solverConfig)
+                            .build();
+
+            final double center = 500.0;
+            final double epsilon = 10.0;
+            PredictionInput input = new PredictionInput(features);
+            PredictionProvider model = TestUtils.getSumThresholdModel(center, epsilon);
+            PredictionOutput output = model.predictAsync(List.of(input))
+                    .get(Config.INSTANCE.getAsyncTimeout(), Config.INSTANCE.getAsyncTimeUnit())
+                    .get(0);
+            Prediction prediction = new Prediction(input, output);
+            List<CounterfactualEntity> counterfactualEntities = counterfactualExplainer.explainAsync(prediction, model)
+                    .get(predictionTimeOut, predictionTimeUnit);
+
+            double totalSum = 0;
+            for (CounterfactualEntity entity : counterfactualEntities) {
+                totalSum += entity.asFeature().getValue().asNumber();
+                System.out.println(entity);
+            }
+            assertFalse(counterfactualEntities.get(0).isChanged());
+            assertFalse(counterfactualEntities.get(3).isChanged());
+            assertTrue(totalSum <= center + epsilon);
+            assertTrue(totalSum >= center - epsilon);
+        }
+    }
+
+    @Test
+    void testCounterfactualConstrainedMatchScaled() throws ExecutionException, InterruptedException, TimeoutException {
+        Random random = new Random();
+
+        final List<Output> goal = List.of(new Output("inside", Type.BOOLEAN, new Value<>(true), 1d));
+        for (int seed = 0; seed < 5; seed++) {
+            random.setSeed(seed);
+
+            List<Feature> features = new LinkedList<>();
+            List<FeatureDomain> featureBoundaries = new LinkedList<>();
+            List<Boolean> constraints = new LinkedList<>();
+            List<FeatureDistribution> featureDistributions = new LinkedList<>();
+            features.add(FeatureFactory.newNumericalFeature("f-num1", 100.0));
+            constraints.add(false);
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
+            featureDistributions.add(new FeatureDistribution(0.0, 1000.0, 500.0, 1.1));
+            features.add(FeatureFactory.newNumericalFeature("f-num2", 100.0));
+            constraints.add(false);
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
+            featureDistributions.add(new FeatureDistribution(0.0, 1000.0, 430.0, 1.7));
+            features.add(FeatureFactory.newNumericalFeature("f-num3", 100.0));
+            constraints.add(false);
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
+            featureDistributions.add(new FeatureDistribution(0.0, 1000.0, 470.0, 2.9));
+            features.add(FeatureFactory.newNumericalFeature("f-num4", 100.0));
+            constraints.add(false);
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
+            featureDistributions.add(new FeatureDistribution(0.0, 1000.0, 2390.0, 0.3));
+
+            DataDistribution dataDistribution = new DataDistribution(featureDistributions);
+            // add a constraint
+            constraints.set(0, true);
+            constraints.set(3, true);
+            final DataDomain dataDomain = new DataDomain(featureBoundaries);
+            final SolverConfig solverConfig = CounterfactualConfigurationFactory
+                    .createSolverConfig(5L, 70, 5000);
+            final CounterfactualExplainer counterfactualExplainer =
+                    CounterfactualExplainer
+                            .builder(goal, constraints, dataDomain)
+                            .withDataDistribution(dataDistribution)
+                            .withSolverConfig(solverConfig)
+                            .build();
 
             final double center = 500.0;
             final double epsilon = 10.0;
@@ -193,7 +282,14 @@ class CounterfactualExplainerTest {
             // add a constraint
             constraints.set(2, true);
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
-            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataDomain, constraints, goal, 5L, 70, 5000);
+
+            final SolverConfig solverConfig = CounterfactualConfigurationFactory
+                    .createSolverConfig(5L, 70, 5000);
+            final CounterfactualExplainer counterfactualExplainer =
+                    CounterfactualExplainer
+                            .builder(goal, constraints, dataDomain)
+                            .withSolverConfig(solverConfig)
+                            .build();
 
             final double center = 500.0;
             final double epsilon = 10.0;
@@ -238,7 +334,14 @@ class CounterfactualExplainerTest {
             featureBoundaries.add(FeatureDomain.categorical("+", "-", "/", "*"));
             constraints.add(false);
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
-            CounterfactualExplainer counterfactualExplainer = new CounterfactualExplainer(dataDomain, constraints, goal, 5L, 70, 5000);
+
+            final SolverConfig solverConfig = CounterfactualConfigurationFactory
+                    .createSolverConfig(5L, 70, 5000);
+            final CounterfactualExplainer counterfactualExplainer =
+                    CounterfactualExplainer
+                            .builder(goal, constraints, dataDomain)
+                            .withSolverConfig(solverConfig)
+                            .build();
 
             PredictionInput input = new PredictionInput(features);
             PredictionProvider model = TestUtils.getSymbolicArithmeticModel();
