@@ -21,46 +21,82 @@ public class CounterfactualConfigurationFactory {
     private static final int DEFAULT_TABU_SIZE = 70;
     private static final int DEFAULT_ACCEPTED_COUNT = 5000;
 
-
     private CounterfactualConfigurationFactory() {
 
     }
 
-    public static SolverConfig createDefaultSolverConfig() {
-        return CounterfactualConfigurationFactory
-                .createSolverConfig(DEFAULT_TIME_LIMIT,
-                        DEFAULT_TABU_SIZE,
-                        DEFAULT_ACCEPTED_COUNT);
+    public static CounterfactualConfigurationFactory.Builder builder() {
+        return new Builder();
     }
 
-    public static SolverConfig createSolverConfig(Long timeLimit, int tabuSize, int acceptedCount) {
-        SolverConfig solverConfig = new SolverConfig();
+    public static class Builder {
 
-        solverConfig.withEntityClasses(IntegerEntity.class, DoubleEntity.class, BooleanEntity.class, CategoricalEntity.class);
-        solverConfig.setSolutionClass(CounterfactualSolution.class);
+        private TerminationConfig terminationConfig = null;
+        private int tabuSize = DEFAULT_TABU_SIZE;
+        private int acceptedCount = DEFAULT_ACCEPTED_COUNT;
 
-        ScoreDirectorFactoryConfig scoreDirectorFactoryConfig = new ScoreDirectorFactoryConfig();
-        scoreDirectorFactoryConfig.setEasyScoreCalculatorClass(CounterFactualScoreCalculator.class);
-        solverConfig.setScoreDirectorFactoryConfig(scoreDirectorFactoryConfig);
+        private Builder() {
 
-        TerminationConfig terminationConfig = new TerminationConfig();
-        terminationConfig.setSecondsSpentLimit(timeLimit);
-        solverConfig.setTerminationConfig(terminationConfig);
+        }
 
-        LocalSearchAcceptorConfig acceptorConfig = new LocalSearchAcceptorConfig();
-        acceptorConfig.setEntityTabuSize(tabuSize);
+        public SolverConfig build() {
+            // create a default termination config if none supplied
+            if (terminationConfig == null) {
+                terminationConfig = new TerminationConfig();
+                terminationConfig.setSecondsSpentLimit(DEFAULT_TIME_LIMIT);
+            }
 
-        LocalSearchForagerConfig localSearchForagerConfig = new LocalSearchForagerConfig();
-        localSearchForagerConfig.setAcceptedCountLimit(acceptedCount);
+            SolverConfig solverConfig = new SolverConfig();
 
-        LocalSearchPhaseConfig localSearchPhaseConfig = new LocalSearchPhaseConfig();
-        localSearchPhaseConfig.setAcceptorConfig(acceptorConfig);
-        localSearchPhaseConfig.setForagerConfig(localSearchForagerConfig);
+            solverConfig.withEntityClasses(IntegerEntity.class, DoubleEntity.class, BooleanEntity.class, CategoricalEntity.class);
+            solverConfig.setSolutionClass(CounterfactualSolution.class);
 
-        List<PhaseConfig> phaseConfigs = new ArrayList<>();
-        phaseConfigs.add(localSearchPhaseConfig);
+            ScoreDirectorFactoryConfig scoreDirectorFactoryConfig = new ScoreDirectorFactoryConfig();
+            scoreDirectorFactoryConfig.setEasyScoreCalculatorClass(CounterFactualScoreCalculator.class);
+            solverConfig.setScoreDirectorFactoryConfig(scoreDirectorFactoryConfig);
 
-        solverConfig.setPhaseConfigList(phaseConfigs);
-        return solverConfig;
+            solverConfig.setTerminationConfig(terminationConfig);
+
+            LocalSearchAcceptorConfig acceptorConfig = new LocalSearchAcceptorConfig();
+            acceptorConfig.setEntityTabuSize(tabuSize);
+
+            LocalSearchForagerConfig localSearchForagerConfig = new LocalSearchForagerConfig();
+            localSearchForagerConfig.setAcceptedCountLimit(acceptedCount);
+
+            LocalSearchPhaseConfig localSearchPhaseConfig = new LocalSearchPhaseConfig();
+            localSearchPhaseConfig.setAcceptorConfig(acceptorConfig);
+            localSearchPhaseConfig.setForagerConfig(localSearchForagerConfig);
+
+            List<PhaseConfig> phaseConfigs = new ArrayList<>();
+            phaseConfigs.add(localSearchPhaseConfig);
+
+            solverConfig.setPhaseConfigList(phaseConfigs);
+            return solverConfig;
+        }
+
+        public Builder withTabuSize(int size) {
+            this.tabuSize = size;
+            return this;
+        }
+
+        public Builder withAcceptedCount(int count) {
+            this.acceptedCount = count;
+            return this;
+        }
+
+        public Builder withTerminationConfig(TerminationConfig terminationConfig) {
+            this.terminationConfig = terminationConfig;
+            return this;
+        }
+
+        public Builder withScoreCalculationCountLimit(long scoreCalculationCountLimit) {
+            if (this.terminationConfig == null) {
+                this.terminationConfig = new TerminationConfig();
+            }
+            this.terminationConfig.setScoreCalculationCountLimit(scoreCalculationCountLimit);
+            return this;
+        }
+
     }
+
 }

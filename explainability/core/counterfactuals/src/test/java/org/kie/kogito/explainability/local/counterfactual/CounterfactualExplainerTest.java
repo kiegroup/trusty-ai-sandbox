@@ -15,12 +15,14 @@
  */
 package org.kie.kogito.explainability.local.counterfactual;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.kie.kogito.explainability.Config;
 import org.kie.kogito.explainability.TestUtils;
 import org.kie.kogito.explainability.local.counterfactual.entities.CounterfactualEntity;
 import org.kie.kogito.explainability.model.*;
 import org.optaplanner.core.config.solver.SolverConfig;
+import org.optaplanner.core.config.solver.termination.TerminationConfig;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -36,7 +38,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class CounterfactualExplainerTest {
 
     final long predictionTimeOut = 10L;
-    final TimeUnit predictionTimeUnit = TimeUnit.SECONDS;
+    final TimeUnit predictionTimeUnit = TimeUnit.MINUTES;
+    final Long steps = 200_000L;
 
     @Test
     void testNonEmptyInput() throws ExecutionException, InterruptedException, TimeoutException {
@@ -56,8 +59,9 @@ class CounterfactualExplainerTest {
                 constraints.add(false);
             }
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
+            // for the purpose of this test, only a few steps are necessary
             final SolverConfig solverConfig = CounterfactualConfigurationFactory
-                    .createSolverConfig(1L, 70, 5000);
+                    .builder().withScoreCalculationCountLimit(10L).build();
             final CounterfactualExplainer counterfactualExplainer =
                     CounterfactualExplainer
                             .builder(goal, constraints, dataDomain)
@@ -105,8 +109,9 @@ class CounterfactualExplainerTest {
 
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
 
+
             final SolverConfig solverConfig = CounterfactualConfigurationFactory
-                    .createSolverConfig(1L, 70, 5000);
+                    .builder().withScoreCalculationCountLimit(steps).build();
             final CounterfactualExplainer counterfactualExplainer =
                     CounterfactualExplainer
                             .builder(goal, constraints, dataDomain)
@@ -164,7 +169,7 @@ class CounterfactualExplainerTest {
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
 
             final SolverConfig solverConfig = CounterfactualConfigurationFactory
-                    .createSolverConfig(5L, 70, 5000);
+                    .builder().withScoreCalculationCountLimit(steps).build();
             final CounterfactualExplainer counterfactualExplainer =
                     CounterfactualExplainer
                             .builder(goal, constraints, dataDomain)
@@ -228,8 +233,9 @@ class CounterfactualExplainerTest {
             constraints.set(0, true);
             constraints.set(3, true);
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
+
             final SolverConfig solverConfig = CounterfactualConfigurationFactory
-                    .createSolverConfig(5L, 70, 5000);
+                    .builder().withScoreCalculationCountLimit(steps).build();
             final CounterfactualExplainer counterfactualExplainer =
                     CounterfactualExplainer
                             .builder(goal, constraints, dataDomain)
@@ -284,7 +290,7 @@ class CounterfactualExplainerTest {
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
 
             final SolverConfig solverConfig = CounterfactualConfigurationFactory
-                    .createSolverConfig(5L, 70, 5000);
+                    .builder().withScoreCalculationCountLimit(steps).build();
             final CounterfactualExplainer counterfactualExplainer =
                     CounterfactualExplainer
                             .builder(goal, constraints, dataDomain)
@@ -336,7 +342,7 @@ class CounterfactualExplainerTest {
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
 
             final SolverConfig solverConfig = CounterfactualConfigurationFactory
-                    .createSolverConfig(5L, 70, 5000);
+                    .builder().withScoreCalculationCountLimit(steps).build();
             final CounterfactualExplainer counterfactualExplainer =
                     CounterfactualExplainer
                             .builder(goal, constraints, dataDomain)

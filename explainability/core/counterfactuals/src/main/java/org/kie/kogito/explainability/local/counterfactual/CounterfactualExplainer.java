@@ -160,7 +160,7 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
         public CounterfactualExplainer build() {
             // Create a default solver configuration if none provided
             if (this.solverConfig == null) {
-                this.solverConfig = CounterfactualConfigurationFactory.createDefaultSolverConfig();
+                this.solverConfig = CounterfactualConfigurationFactory.builder().build();
             }
             return new CounterfactualExplainer(dataDistribution,
                     dataDomain,
