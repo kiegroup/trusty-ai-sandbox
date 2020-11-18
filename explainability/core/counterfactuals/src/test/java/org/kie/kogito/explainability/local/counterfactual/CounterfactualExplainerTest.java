@@ -15,14 +15,13 @@
  */
 package org.kie.kogito.explainability.local.counterfactual;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.kie.kogito.Model;
 import org.kie.kogito.explainability.Config;
 import org.kie.kogito.explainability.TestUtils;
 import org.kie.kogito.explainability.local.counterfactual.entities.CounterfactualEntity;
 import org.kie.kogito.explainability.model.*;
 import org.optaplanner.core.config.solver.SolverConfig;
-import org.optaplanner.core.config.solver.termination.TerminationConfig;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -45,7 +44,7 @@ class CounterfactualExplainerTest {
     void testNonEmptyInput() throws ExecutionException, InterruptedException, TimeoutException {
         Random random = new Random();
 
-        final List<Output> goal = List.of(new Output("class", Type.BOOLEAN, new Value<>(false), 1d));
+        final List<Output> goal = List.of(new Output("class", Type.BOOLEAN, new Value<>(false), 0.0d));
         for (int seed = 0; seed < 5; seed++) {
             random.setSeed(seed);
 
@@ -86,7 +85,7 @@ class CounterfactualExplainerTest {
     @Test
     void testCounterfactualMatch() throws ExecutionException, InterruptedException, TimeoutException {
         Random random = new Random();
-        final List<Output> goal = List.of(new Output("inside", Type.BOOLEAN, new Value<>(true), 1d));
+        final List<Output> goal = List.of(new Output("inside", Type.BOOLEAN, new Value<>(true), 0.0d));
         for (int seed = 0; seed < 5; seed++) {
             random.setSeed(seed);
 
@@ -143,7 +142,7 @@ class CounterfactualExplainerTest {
     void testCounterfactualConstrainedMatchUnscaled() throws ExecutionException, InterruptedException, TimeoutException {
         Random random = new Random();
 
-        final List<Output> goal = List.of(new Output("inside", Type.BOOLEAN, new Value<>(true), 1d));
+        final List<Output> goal = List.of(new Output("inside", Type.BOOLEAN, new Value<>(true), 0.0));
         for (int seed = 0; seed < 5; seed++) {
             random.setSeed(seed);
 
@@ -203,7 +202,7 @@ class CounterfactualExplainerTest {
     void testCounterfactualConstrainedMatchScaled() throws ExecutionException, InterruptedException, TimeoutException {
         Random random = new Random();
 
-        final List<Output> goal = List.of(new Output("inside", Type.BOOLEAN, new Value<>(true), 1d));
+        final List<Output> goal = List.of(new Output("inside", Type.BOOLEAN, new Value<>(true), 0.0d));
         for (int seed = 0; seed < 5; seed++) {
             random.setSeed(seed);
 
@@ -270,7 +269,7 @@ class CounterfactualExplainerTest {
     void testCounterfactualBoolean() throws ExecutionException, InterruptedException, TimeoutException {
         Random random = new Random();
 
-        final List<Output> goal = List.of(new Output("inside", Type.BOOLEAN, new Value<>(true), 1d));
+        final List<Output> goal = List.of(new Output("inside", Type.BOOLEAN, new Value<>(true), 0.0d));
         for (int seed = 0; seed < 5; seed++) {
             random.setSeed(seed);
 
@@ -323,7 +322,7 @@ class CounterfactualExplainerTest {
     void testCounterfactualCategorical() throws ExecutionException, InterruptedException, TimeoutException {
         Random random = new Random();
 
-        final List<Output> goal = List.of(new Output("result", Type.NUMBER, new Value<>(25.0), 1d));
+        final List<Output> goal = List.of(new Output("result", Type.NUMBER, new Value<>(25.0), 0.0d));
         for (int seed = 0; seed < 5; seed++) {
             random.setSeed(seed);
 
@@ -402,4 +401,142 @@ class CounterfactualExplainerTest {
             assertTrue(result >= 25.0 - epsilon);
         }
     }
+
+    @Test
+    void testCounterfactualMatchThreshold() throws ExecutionException, InterruptedException, TimeoutException {
+        Random random = new Random();
+
+        final double scoreThreshold = 0.9;
+
+        final List<Output> goal = List.of(new Output("inside", Type.BOOLEAN, new Value<>(true), scoreThreshold));
+        for (int seed = 0; seed < 5; seed++) {
+            random.setSeed(seed);
+
+            List<Feature> features = new LinkedList<>();
+            List<FeatureDomain> featureBoundaries = new LinkedList<>();
+            List<Boolean> constraints = new LinkedList<>();
+            features.add(FeatureFactory.newNumericalFeature("f-num1", 100.0));
+            constraints.add(false);
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
+            features.add(FeatureFactory.newNumericalFeature("f-num2", 100.0));
+            constraints.add(false);
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
+            features.add(FeatureFactory.newNumericalFeature("f-num3", 100.0));
+            constraints.add(false);
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
+            features.add(FeatureFactory.newNumericalFeature("f-num4", 100.0));
+            constraints.add(false);
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
+
+            final DataDomain dataDomain = new DataDomain(featureBoundaries);
+
+
+            final SolverConfig solverConfig = CounterfactualConfigurationFactory
+                    .builder().withScoreCalculationCountLimit(steps).build();
+            final CounterfactualExplainer counterfactualExplainer =
+                    CounterfactualExplainer
+                            .builder(goal, constraints, dataDomain)
+                            .withSolverConfig(solverConfig)
+                            .build();
+
+            final double center = 500.0;
+            final double epsilon = 10.0;
+            PredictionInput input = new PredictionInput(features);
+            PredictionProvider model = TestUtils.getSumThresholdModel(center, epsilon);
+            PredictionOutput output = model.predictAsync(List.of(input))
+                    .get(Config.INSTANCE.getAsyncTimeout(), Config.INSTANCE.getAsyncTimeUnit())
+                    .get(0);
+            Prediction prediction = new Prediction(input, output);
+            List<CounterfactualEntity> counterfactualEntities = counterfactualExplainer.explainAsync(prediction, model)
+                    .get(predictionTimeOut, predictionTimeUnit);
+
+            double totalSum = 0;
+            for (CounterfactualEntity entity : counterfactualEntities) {
+                totalSum += entity.asFeature().getValue().asNumber();
+                System.out.println(entity);
+            }
+            assertTrue(totalSum <= center + epsilon);
+            assertTrue(totalSum >= center - epsilon);
+
+            final List<Feature> cfFeatures = counterfactualEntities.stream().map(CounterfactualEntity::asFeature).collect(Collectors.toList());
+            final PredictionInput cfInput = new PredictionInput(cfFeatures);
+            final PredictionOutput cfOutput = model.predictAsync(List.of(cfInput))
+                    .get(Config.INSTANCE.getAsyncTimeout(), Config.INSTANCE.getAsyncTimeUnit())
+                    .get(0);
+
+            final double predictionScore = cfOutput.getOutputs().get(0).getScore();
+            System.out.println("Prediction score: " + predictionScore);
+            assertTrue(predictionScore >= scoreThreshold);
+        }
+    }
+
+    @Test
+    void testCounterfactualMatchNoThreshold() throws ExecutionException, InterruptedException, TimeoutException {
+        Random random = new Random();
+
+        final double scoreThreshold = 0.0;
+
+        final List<Output> goal = List.of(new Output("inside", Type.BOOLEAN, new Value<>(true), scoreThreshold));
+        for (int seed = 0; seed < 5; seed++) {
+            random.setSeed(seed);
+
+            List<Feature> features = new LinkedList<>();
+            List<FeatureDomain> featureBoundaries = new LinkedList<>();
+            List<Boolean> constraints = new LinkedList<>();
+            features.add(FeatureFactory.newNumericalFeature("f-num1", 100.0));
+            constraints.add(false);
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
+            features.add(FeatureFactory.newNumericalFeature("f-num2", 100.0));
+            constraints.add(false);
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
+            features.add(FeatureFactory.newNumericalFeature("f-num3", 100.0));
+            constraints.add(false);
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
+            features.add(FeatureFactory.newNumericalFeature("f-num4", 100.0));
+            constraints.add(false);
+            featureBoundaries.add(FeatureDomain.numerical(0.0, 1000.0));
+
+            final DataDomain dataDomain = new DataDomain(featureBoundaries);
+
+
+            final SolverConfig solverConfig = CounterfactualConfigurationFactory
+                    .builder().withScoreCalculationCountLimit(steps).build();
+            final CounterfactualExplainer counterfactualExplainer =
+                    CounterfactualExplainer
+                            .builder(goal, constraints, dataDomain)
+                            .withSolverConfig(solverConfig)
+                            .build();
+
+            final double center = 500.0;
+            final double epsilon = 10.0;
+            PredictionInput input = new PredictionInput(features);
+            PredictionProvider model = TestUtils.getSumThresholdModel(center, epsilon);
+            PredictionOutput output = model.predictAsync(List.of(input))
+                    .get(Config.INSTANCE.getAsyncTimeout(), Config.INSTANCE.getAsyncTimeUnit())
+                    .get(0);
+            Prediction prediction = new Prediction(input, output);
+            List<CounterfactualEntity> counterfactualEntities = counterfactualExplainer.explainAsync(prediction, model)
+                    .get(predictionTimeOut, predictionTimeUnit);
+
+            double totalSum = 0;
+            for (CounterfactualEntity entity : counterfactualEntities) {
+                totalSum += entity.asFeature().getValue().asNumber();
+                System.out.println(entity);
+            }
+            assertTrue(totalSum <= center + epsilon);
+            assertTrue(totalSum >= center - epsilon);
+
+            final List<Feature> cfFeatures = counterfactualEntities.stream().map(CounterfactualEntity::asFeature).collect(Collectors.toList());
+            final PredictionInput cfInput = new PredictionInput(cfFeatures);
+            final PredictionOutput cfOutput = model.predictAsync(List.of(cfInput))
+                    .get(Config.INSTANCE.getAsyncTimeout(), Config.INSTANCE.getAsyncTimeUnit())
+                    .get(0);
+
+            final double predictionScore = cfOutput.getOutputs().get(0).getScore();
+            System.out.println("Prediction score: " + predictionScore);
+            assertTrue(predictionScore < 0.1);
+
+        }
+    }
+
 }

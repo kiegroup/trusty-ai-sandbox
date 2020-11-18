@@ -54,6 +54,12 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
 
     /**
      * Create a new {@link CounterfactualExplainer} using OptaPlanner as the underlying engine.
+     * The data distribution information (if available) will be used to scale the features during the search.
+     * The bounds of the search space must be specified using a {@link DataDomain} and any feature constraints
+     * must be specified using a {@link List} of {@link Boolean}.
+     * The desired outcome is passed using an {@link Output}, where the score of each feature represents the
+     * minimum prediction score for a counterfactual to be considered.
+     * A customizable OptaPlanner solver configuration can be passed using a {@link SolverConfig}.
      *
      * @param dataDistribution Characteristics of the data distribution as {@link DataDistribution}, if available
      * @param dataDomain       A {@link DataDomain} which specifies the search space domain
@@ -135,6 +141,7 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
         private DataDistribution dataDistribution = null;
         private Executor executor = ForkJoinPool.commonPool();
         private SolverConfig solverConfig = null;
+        private double minimumPredictionScore = 0.0;
 
         private Builder(List<Output> goal, List<Boolean> constraints, DataDomain dataDomain) {
             this.goal = goal;
@@ -154,6 +161,11 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
 
         public Builder withSolverConfig(SolverConfig solverConfig) {
             this.solverConfig = solverConfig;
+            return this;
+        }
+
+        public Builder withMinimumPredictionScore(double minimumPredictionScore) {
+            this.minimumPredictionScore = minimumPredictionScore;
             return this;
         }
 
