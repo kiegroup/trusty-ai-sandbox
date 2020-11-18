@@ -89,6 +89,14 @@ public class CounterfactualConfigurationFactory {
             return this;
         }
 
+        public Builder withScoreCalculationCountLimit(long scoreCalculationCountLimit) {
+            if (this.terminationConfig == null) {
+                this.terminationConfig = new TerminationConfig();
+            }
+            this.terminationConfig.setScoreCalculationCountLimit(scoreCalculationCountLimit);
+            return this;
+        }
+
     }
 
 }

@@ -59,11 +59,9 @@ class CounterfactualExplainerTest {
                 constraints.add(false);
             }
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
-            TerminationConfig stepTerminationConfig = new TerminationConfig();
             // for the purpose of this test, only a few steps are necessary
-            stepTerminationConfig.setScoreCalculationCountLimit(10L);
             final SolverConfig solverConfig = CounterfactualConfigurationFactory
-                    .builder().withTerminationConfig(stepTerminationConfig).build();
+                    .builder().withScoreCalculationCountLimit(10L).build();
             final CounterfactualExplainer counterfactualExplainer =
                     CounterfactualExplainer
                             .builder(goal, constraints, dataDomain)
@@ -111,10 +109,9 @@ class CounterfactualExplainerTest {
 
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
 
-            TerminationConfig stepTerminationConfig = new TerminationConfig();
-            stepTerminationConfig.setScoreCalculationCountLimit(steps);
+
             final SolverConfig solverConfig = CounterfactualConfigurationFactory
-                    .builder().withTerminationConfig(stepTerminationConfig).build();
+                    .builder().withScoreCalculationCountLimit(steps).build();
             final CounterfactualExplainer counterfactualExplainer =
                     CounterfactualExplainer
                             .builder(goal, constraints, dataDomain)
@@ -171,10 +168,8 @@ class CounterfactualExplainerTest {
             constraints.set(3, true);
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
 
-            TerminationConfig stepTerminationConfig = new TerminationConfig();
-            stepTerminationConfig.setScoreCalculationCountLimit(steps);
             final SolverConfig solverConfig = CounterfactualConfigurationFactory
-                    .builder().withTerminationConfig(stepTerminationConfig).build();
+                    .builder().withScoreCalculationCountLimit(steps).build();
             final CounterfactualExplainer counterfactualExplainer =
                     CounterfactualExplainer
                             .builder(goal, constraints, dataDomain)
@@ -239,10 +234,8 @@ class CounterfactualExplainerTest {
             constraints.set(3, true);
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
 
-            TerminationConfig stepTerminationConfig = new TerminationConfig();
-            stepTerminationConfig.setScoreCalculationCountLimit(steps);
             final SolverConfig solverConfig = CounterfactualConfigurationFactory
-                    .builder().withTerminationConfig(stepTerminationConfig).build();
+                    .builder().withScoreCalculationCountLimit(steps).build();
             final CounterfactualExplainer counterfactualExplainer =
                     CounterfactualExplainer
                             .builder(goal, constraints, dataDomain)
@@ -296,10 +289,8 @@ class CounterfactualExplainerTest {
             constraints.set(2, true);
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
 
-            TerminationConfig stepTerminationConfig = new TerminationConfig();
-            stepTerminationConfig.setScoreCalculationCountLimit(steps);
             final SolverConfig solverConfig = CounterfactualConfigurationFactory
-                    .builder().withTerminationConfig(stepTerminationConfig).build();
+                    .builder().withScoreCalculationCountLimit(steps).build();
             final CounterfactualExplainer counterfactualExplainer =
                     CounterfactualExplainer
                             .builder(goal, constraints, dataDomain)
@@ -350,10 +341,8 @@ class CounterfactualExplainerTest {
             constraints.add(false);
             final DataDomain dataDomain = new DataDomain(featureBoundaries);
 
-            TerminationConfig stepTerminationConfig = new TerminationConfig();
-            stepTerminationConfig.setScoreCalculationCountLimit(steps);
             final SolverConfig solverConfig = CounterfactualConfigurationFactory
-                    .builder().withTerminationConfig(stepTerminationConfig).build();
+                    .builder().withScoreCalculationCountLimit(steps).build();
             final CounterfactualExplainer counterfactualExplainer =
                     CounterfactualExplainer
                             .builder(goal, constraints, dataDomain)
