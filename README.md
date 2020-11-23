@@ -1,5 +1,5 @@
 # trusty-ai-sandbox
-![Trusty CI](https://github.com/kiegroup/trusty-ai-sandbox/workflows/Trusty%20CI/badge.svg)
+![Trusty CI](https://github.com/kiegroup/trusty-ai-sandbox/workflows/Trusty%20CI/badge.svg) [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/kiegroup/trusty-ai-sandbox/HEAD)
 
 A sandbox repository for the Trusty AI team
 
