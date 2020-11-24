@@ -141,7 +141,6 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
         private DataDistribution dataDistribution = null;
         private Executor executor = ForkJoinPool.commonPool();
         private SolverConfig solverConfig = null;
-        private double minimumPredictionScore = 0.0;
 
         private Builder(List<Output> goal, List<Boolean> constraints, DataDomain dataDomain) {
             this.goal = goal;
@@ -161,11 +160,6 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
 
         public Builder withSolverConfig(SolverConfig solverConfig) {
             this.solverConfig = solverConfig;
-            return this;
-        }
-
-        public Builder withMinimumPredictionScore(double minimumPredictionScore) {
-            this.minimumPredictionScore = minimumPredictionScore;
             return this;
         }
 
