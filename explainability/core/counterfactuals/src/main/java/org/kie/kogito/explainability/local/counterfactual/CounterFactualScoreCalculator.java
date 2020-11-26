@@ -46,31 +46,12 @@ public class CounterFactualScoreCalculator implements EasyScoreCalculator<Counte
     private static final Logger logger =
             LoggerFactory.getLogger(CounterFactualScoreCalculator.class);
 
-    /**
-     * Calculate the prediction's (as a {@link List<PredictionOutput>}) squared distance from the desired outcome (as a {@link List<Output>}).
-     *
-     * @param predictions The list of predictions (containing a single prediction)
-     * @param goal        The desired outcome a list of {@link Output}
-     * @return Numerical distance between prediction and desired outcome
-     */
-    private double predictionDistance(List<PredictionOutput> predictions, List<Output> goal) {
-        final List<Output> outputs = predictions.get(0).getOutputs();
-        double distance = 0.0;
-        if (outputs.size() != predictions.size()) {
-            throw new IllegalArgumentException("Prediction size must be equal to goal size");
-        }
-        for (int i = 0; i < outputs.size(); i++) {
-            final Output output = outputs.get(i);
-            distance += goal.get(i).getValue().asNumber() - output.getValue().asNumber();
-        }
-        return distance * distance;
-    }
-
     @Override
     public BendableBigDecimalScore calculateScore(CounterfactualSolution solution) {
 
         double primaryHardScore = 0;
         int secondaryHardScore = 0;
+        int tertiaryHardScore = 0;
         double primarySoftScore = 0.0;
 
         StringBuilder builder = new StringBuilder();
@@ -97,18 +78,37 @@ public class CounterFactualScoreCalculator implements EasyScoreCalculator<Counte
 
         try {
             List<PredictionOutput> predictions = predictionAsync.get();
-            final double distance = predictionDistance(predictions, solution.getGoal());
-            primaryHardScore -= distance;
-            logger.info("Penalise outcome (output: {})", distance);
+
+            final List<Output> outputs = predictions.get(0).getOutputs();
+            final List<Output> goal = solution.getGoal();
+
+            double distance = 0.0;
+            if (outputs.size() != predictions.size()) {
+                throw new IllegalArgumentException("Prediction size must be equal to goal size");
+            }
+            for (int i = 0; i < outputs.size(); i++) {
+                final Output output = outputs.get(i);
+                final Output goalOutput = goal.get(i);
+                distance += goalOutput.getValue().asNumber() - output.getValue().asNumber();
+                if (output.getScore() < goalOutput.getScore()) {
+                    tertiaryHardScore -= 1;
+                }
+            }
+            primaryHardScore -= distance * distance;
+            logger.debug("Penalise outcome (prediction distance: {})", primaryHardScore);
+            logger.debug("Penalise outcome (constraints changed: {})", secondaryHardScore);
+            logger.debug("Penalise outcome (confidence threshold: {})", tertiaryHardScore);
 
         } catch (InterruptedException | ExecutionException e) {
             logger.error("Impossible to obtain prediction {}", e.getMessage());
         }
 
-        logger.debug("Soft score: {}", -Math.abs(primarySoftScore));
+        logger.debug("Feature distance: {}", -Math.abs(primarySoftScore));
         return BendableBigDecimalScore.of(
                 new BigDecimal[]{
-                        BigDecimal.valueOf(primaryHardScore), BigDecimal.valueOf(secondaryHardScore)
+                        BigDecimal.valueOf(primaryHardScore),
+                        BigDecimal.valueOf(secondaryHardScore),
+                        BigDecimal.valueOf(tertiaryHardScore)
                 },
                 new BigDecimal[]{BigDecimal.valueOf(-Math.abs(primarySoftScore))});
     }

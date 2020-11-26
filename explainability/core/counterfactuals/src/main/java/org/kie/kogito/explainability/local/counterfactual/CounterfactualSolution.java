@@ -56,7 +56,7 @@ public class CounterfactualSolution {
 
     }
 
-    @PlanningScore(bendableHardLevelsSize = 2, bendableSoftLevelsSize = 1)
+    @PlanningScore(bendableHardLevelsSize = 3, bendableSoftLevelsSize = 1)
     public BendableBigDecimalScore getScore() {
         return score;
     }
