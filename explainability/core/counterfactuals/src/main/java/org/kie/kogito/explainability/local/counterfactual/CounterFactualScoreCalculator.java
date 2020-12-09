@@ -46,6 +46,15 @@ public class CounterFactualScoreCalculator implements EasyScoreCalculator<Counte
     private static final Logger logger =
             LoggerFactory.getLogger(CounterFactualScoreCalculator.class);
 
+    /**
+     * Calculates the counterfactual score for each proposed solution.
+     *
+     * This method assumes that each model used as {@link org.kie.kogito.explainability.model.PredictionProvider} is
+     * consistent, in the sense that for repeated operations, the size of the returned collection of
+     * {@link PredictionOutput} is the same, if the size of {@link PredictionInput} doesn't change.
+     * @param solution Proposed solution
+     * @return A {@link BendableBigDecimalScore} with three "hard" levels and one "soft" level
+     */
     @Override
     public BendableBigDecimalScore calculateScore(CounterfactualSolution solution) {
 
@@ -86,7 +95,7 @@ public class CounterFactualScoreCalculator implements EasyScoreCalculator<Counte
             for (PredictionOutput predictionOutput : predictions) {
 
                 final List<Output> outputs = predictionOutput.getOutputs();
-                
+
                 if (outputs.size() != predictions.size()) {
                     throw new IllegalArgumentException("Prediction size must be equal to goal size");
                 }
