@@ -72,32 +72,38 @@ public class CounterFactualScoreCalculator implements EasyScoreCalculator<Counte
 
         PredictionInput predictionInput = new PredictionInput(input);
 
-        List<PredictionInput> inputs = new ArrayList<>();
-        inputs.add(predictionInput);
+        List<PredictionInput> inputs = List.of(predictionInput);
+
         CompletableFuture<List<PredictionOutput>> predictionAsync = solution.getModel().predictAsync(inputs);
+
+        final List<Output> goal = solution.getGoal();
 
         try {
             List<PredictionOutput> predictions = predictionAsync.get();
 
-            final List<Output> outputs = predictions.get(0).getOutputs();
-            final List<Output> goal = solution.getGoal();
-
             double distance = 0.0;
-            if (outputs.size() != predictions.size()) {
-                throw new IllegalArgumentException("Prediction size must be equal to goal size");
-            }
-            for (int i = 0; i < outputs.size(); i++) {
-                final Output output = outputs.get(i);
-                final Output goalOutput = goal.get(i);
-                distance += goalOutput.getValue().asNumber() - output.getValue().asNumber();
-                if (output.getScore() < goalOutput.getScore()) {
-                    tertiaryHardScore -= 1;
+
+            for (PredictionOutput predictionOutput : predictions) {
+
+                final List<Output> outputs = predictionOutput.getOutputs();
+                
+                if (outputs.size() != predictions.size()) {
+                    throw new IllegalArgumentException("Prediction size must be equal to goal size");
                 }
+                for (int i = 0; i < outputs.size(); i++) {
+                    final Output output = outputs.get(i);
+                    final Output goalOutput = goal.get(i);
+                    distance += goalOutput.getValue().asNumber() - output.getValue().asNumber();
+                    if (output.getScore() < goalOutput.getScore()) {
+                        tertiaryHardScore -= 1;
+                    }
+                }
+                primaryHardScore -= distance * distance;
+                logger.debug("Penalise outcome (prediction distance: {})", primaryHardScore);
+                logger.debug("Penalise outcome (constraints changed: {})", secondaryHardScore);
+                logger.debug("Penalise outcome (confidence threshold: {})", tertiaryHardScore);
+
             }
-            primaryHardScore -= distance * distance;
-            logger.debug("Penalise outcome (prediction distance: {})", primaryHardScore);
-            logger.debug("Penalise outcome (constraints changed: {})", secondaryHardScore);
-            logger.debug("Penalise outcome (confidence threshold: {})", tertiaryHardScore);
 
         } catch (InterruptedException | ExecutionException e) {
             logger.error("Impossible to obtain prediction {}", e.getMessage());
