@@ -33,3 +33,4 @@ hs_err_pid*
 #python virtualenvs
 **venv/
 explainability/service/counterfactual-op/local
+explainability/core/counterfactuals/target
