@@ -5,6 +5,11 @@ import org.kie.kogito.explainability.model.PredictionOutput;
 
 import java.util.List;
 
+/**
+ * Represents the result of a counterfactual search.
+ * Entities represent the counterfactual features and the {@link org.kie.kogito.explainability.model.PredictionOutput}
+ * contains the prediction result for the counterfactual, including the prediction score, if available.
+ */
 public class Counterfactual {
 
     public List<CounterfactualEntity> getEntities() {
