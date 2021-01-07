@@ -35,13 +35,14 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Provides exemplar (counterfactual) explanations for a predictive model.
  * This implementation uses the Constraint Solution Problem solver OptaPlanner to search for
  * counterfactuals which minimize a score calculated by {@link CounterFactualScoreCalculator}.
  */
-public class CounterfactualExplainer implements LocalExplainer<List<CounterfactualEntity>> {
+public class CounterfactualExplainer implements LocalExplainer<Counterfactual> {
 
     private static final Logger logger =
             LoggerFactory.getLogger(CounterfactualExplainer.class);
@@ -68,11 +69,11 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
      * @param solverConfig     An OptaPlanner {@link SolverConfig} configuration
      */
     protected CounterfactualExplainer(DataDistribution dataDistribution,
-                                   DataDomain dataDomain,
-                                   List<Boolean> contraints,
-                                   List<Output> goal,
-                                   SolverConfig solverConfig,
-                                   Executor executor) {
+                                      DataDomain dataDomain,
+                                      List<Boolean> contraints,
+                                      List<Output> goal,
+                                      SolverConfig solverConfig,
+                                      Executor executor) {
         this.dataDistribution = dataDistribution;
         this.dataDomain = dataDomain;
         this.constraints = contraints;
@@ -105,13 +106,13 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
     }
 
     @Override
-    public CompletableFuture<List<CounterfactualEntity>> explainAsync(Prediction prediction, PredictionProvider model) {
+    public CompletableFuture<Counterfactual> explainAsync(Prediction prediction, PredictionProvider model) {
 
         final List<CounterfactualEntity> entities = createEntities(prediction.getInput());
 
         final UUID problemId = UUID.randomUUID();
 
-        return CompletableFuture.supplyAsync(() -> {
+        final CompletableFuture<List<CounterfactualEntity>> cfEntities = CompletableFuture.supplyAsync(() -> {
             SolverManager<CounterfactualSolution, UUID> solverManager =
                     SolverManager.create(solverConfig, new SolverManagerConfig());
 
@@ -123,6 +124,7 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
             try {
                 // Wait until the solving ends
                 solution = solverJob.getFinalBestSolution();
+
                 return solution.getEntities();
             } catch (InterruptedException | ExecutionException e) {
                 throw new IllegalStateException("Solving failed: {}", e);
@@ -130,6 +132,13 @@ public class CounterfactualExplainer implements LocalExplainer<List<Counterfactu
                 solverManager.close();
             }
         }, this.executor);
+
+       final CompletableFuture<List<PredictionOutput>> cfOutputs = cfEntities.thenCompose(s -> model.predictAsync(List.of(new PredictionInput(
+               s.stream().map(CounterfactualEntity::asFeature).collect(Collectors.toList())
+       ))));
+
+       return CompletableFuture.allOf(cfOutputs, cfEntities).thenApply(v -> new Counterfactual(cfEntities.join(), cfOutputs.join()));
+
     }
 
     public static class Builder {

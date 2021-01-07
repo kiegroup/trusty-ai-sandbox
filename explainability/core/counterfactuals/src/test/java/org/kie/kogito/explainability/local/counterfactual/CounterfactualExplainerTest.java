@@ -16,7 +16,6 @@
 package org.kie.kogito.explainability.local.counterfactual;
 
 import org.junit.jupiter.api.Test;
-import org.kie.kogito.Model;
 import org.kie.kogito.explainability.Config;
 import org.kie.kogito.explainability.TestUtils;
 import org.kie.kogito.explainability.local.counterfactual.entities.CounterfactualEntity;
@@ -73,12 +72,15 @@ class CounterfactualExplainerTest {
                     .get(predictionTimeOut, predictionTimeUnit)
                     .get(0);
             Prediction prediction = new Prediction(input, output);
-            List<CounterfactualEntity> counterfactualEntities = counterfactualExplainer.explainAsync(prediction, model)
+            final Counterfactual counterfactual = counterfactualExplainer.explainAsync(prediction, model)
                     .get(Config.INSTANCE.getAsyncTimeout(), Config.INSTANCE.getAsyncTimeUnit());
-            for (CounterfactualEntity entity : counterfactualEntities) {
+            for (CounterfactualEntity entity : counterfactual.getEntities()) {
                 System.out.println(entity);
             }
-            assertNotNull(counterfactualEntities);
+
+            System.out.println(counterfactual.getOutput().get(0).getOutputs());
+            assertNotNull(counterfactual);
+            assertNotNull(counterfactual.getEntities());
         }
     }
 
@@ -125,14 +127,17 @@ class CounterfactualExplainerTest {
                     .get(Config.INSTANCE.getAsyncTimeout(), Config.INSTANCE.getAsyncTimeUnit())
                     .get(0);
             Prediction prediction = new Prediction(input, output);
-            List<CounterfactualEntity> counterfactualEntities = counterfactualExplainer.explainAsync(prediction, model)
+            final Counterfactual counterfactual = counterfactualExplainer.explainAsync(prediction, model)
                     .get(predictionTimeOut, predictionTimeUnit);
 
             double totalSum = 0;
-            for (CounterfactualEntity entity : counterfactualEntities) {
+            for (CounterfactualEntity entity : counterfactual.getEntities()) {
                 totalSum += entity.asFeature().getValue().asNumber();
                 System.out.println(entity);
             }
+
+            System.out.println(counterfactual.getOutput().get(0).getOutputs());
+
             assertTrue(totalSum <= center + epsilon);
             assertTrue(totalSum >= center - epsilon);
         }
@@ -184,7 +189,7 @@ class CounterfactualExplainerTest {
                     .get(0);
             Prediction prediction = new Prediction(input, output);
             List<CounterfactualEntity> counterfactualEntities = counterfactualExplainer.explainAsync(prediction, model)
-                    .get(predictionTimeOut, predictionTimeUnit);
+                    .get(predictionTimeOut, predictionTimeUnit).getEntities();
 
             double totalSum = 0;
             for (CounterfactualEntity entity : counterfactualEntities) {
@@ -251,7 +256,7 @@ class CounterfactualExplainerTest {
                     .get(0);
             Prediction prediction = new Prediction(input, output);
             List<CounterfactualEntity> counterfactualEntities = counterfactualExplainer.explainAsync(prediction, model)
-                    .get(predictionTimeOut, predictionTimeUnit);
+                    .get(predictionTimeOut, predictionTimeUnit).getEntities();
 
             double totalSum = 0;
             for (CounterfactualEntity entity : counterfactualEntities) {
@@ -305,7 +310,7 @@ class CounterfactualExplainerTest {
                     .get(0);
             Prediction prediction = new Prediction(input, output);
             List<CounterfactualEntity> counterfactualEntities = counterfactualExplainer.explainAsync(prediction, model)
-                    .get(predictionTimeOut, predictionTimeUnit);
+                    .get(predictionTimeOut, predictionTimeUnit).getEntities();
 
             double totalSum = 0;
             for (CounterfactualEntity entity : counterfactualEntities) {
@@ -355,7 +360,7 @@ class CounterfactualExplainerTest {
                     .get(0);
             Prediction prediction = new Prediction(input, output);
             List<CounterfactualEntity> counterfactualEntities = counterfactualExplainer.explainAsync(prediction, model)
-                    .get(predictionTimeOut, predictionTimeUnit);
+                    .get(predictionTimeOut, predictionTimeUnit).getEntities();
 
             Stream<Feature> counterfactualFeatures = counterfactualEntities
                     .stream()
@@ -448,7 +453,7 @@ class CounterfactualExplainerTest {
                     .get(0);
             Prediction prediction = new Prediction(input, output);
             List<CounterfactualEntity> counterfactualEntities = counterfactualExplainer.explainAsync(prediction, model)
-                    .get(predictionTimeOut, predictionTimeUnit);
+                    .get(predictionTimeOut, predictionTimeUnit).getEntities();
 
             double totalSum = 0;
             for (CounterfactualEntity entity : counterfactualEntities) {
@@ -516,7 +521,7 @@ class CounterfactualExplainerTest {
                     .get(0);
             Prediction prediction = new Prediction(input, output);
             List<CounterfactualEntity> counterfactualEntities = counterfactualExplainer.explainAsync(prediction, model)
-                    .get(predictionTimeOut, predictionTimeUnit);
+                    .get(predictionTimeOut, predictionTimeUnit).getEntities();
 
             double totalSum = 0;
             for (CounterfactualEntity entity : counterfactualEntities) {
