@@ -30,12 +30,9 @@ public class MainApp {
     public static void main(String[] args) {
         IntStream.range(0, 5).forEach(i -> {
             Customer customer = new Customer();
-            System.out.println("Customer items");
-            logger.info("Customer items {}", customer);
-            System.out.println(customer);
+            logger.info("Customer {}", customer);
             String recommendation = getRecommendation(customer);
-            System.out.println("We recommend: ");
-            System.out.println(recommendation);
+            logger.info("We recommend: {}", recommendation);
         });
     }
 }
