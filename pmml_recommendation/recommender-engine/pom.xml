@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.kie</groupId>
-    <artifactId>pmml-recommendation</artifactId>
-    <name>PMML Recommendation</name>
+    <artifactId>recommender-engine</artifactId>
+    <name>PMML Recommendater Engine</name>
     <version>1.0-SNAPSHOT</version>
 
     <properties>

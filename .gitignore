@@ -36,5 +36,5 @@ explainability/service/counterfactual-op/local
 explainability/core/counterfactuals/target
 
 
-/pmml_recommendation/PMMLRecommendation/pmml-recommendation.iml
-/pmml_recommendation/PMMLRecommendation/target/
+/pmml_recommendation/recommender-engine/pmml-recommendation.iml
+/pmml_recommendation/recommender-engine/target/
