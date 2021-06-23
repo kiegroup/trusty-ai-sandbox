@@ -34,3 +34,7 @@ hs_err_pid*
 **venv/
 explainability/service/counterfactual-op/local
 explainability/core/counterfactuals/target
+
+
+/pmml_recommendation/recommender-engine/recommender-engine.iml
+/pmml_recommendation/recommender-engine/target/

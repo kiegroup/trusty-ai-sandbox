@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_4" version="4.4.1">
+    <Header copyright="Copyright (c) 2018 Software AG" description="Default Description">
+        <Application name="Nyoka" version="4.4.0"/>
+        <Timestamp>2021-06-18 13:17:14.135376</Timestamp>
+    </Header>
+    <DataDictionary numberOfFields="30">
+        <DataField name="0" optype="continuous" dataType="double"/>
+        <DataField name="1" optype="continuous" dataType="double"/>
+        <DataField name="2" optype="continuous" dataType="double"/>
+        <DataField name="3" optype="continuous" dataType="double"/>
+        <DataField name="4" optype="continuous" dataType="double"/>
+        <DataField name="5" optype="continuous" dataType="double"/>
+        <DataField name="6" optype="continuous" dataType="double"/>
+        <DataField name="7" optype="continuous" dataType="double"/>
+        <DataField name="8" optype="continuous" dataType="double"/>
+        <DataField name="9" optype="continuous" dataType="double"/>
+        <DataField name="10" optype="continuous" dataType="double"/>
+        <DataField name="11" optype="continuous" dataType="double"/>
+        <DataField name="12" optype="continuous" dataType="double"/>
+        <DataField name="13" optype="continuous" dataType="double"/>
+        <DataField name="14" optype="continuous" dataType="double"/>
+        <DataField name="15" optype="continuous" dataType="double"/>
+        <DataField name="16" optype="continuous" dataType="double"/>
+        <DataField name="17" optype="continuous" dataType="double"/>
+        <DataField name="18" optype="continuous" dataType="double"/>
+        <DataField name="19" optype="continuous" dataType="double"/>
+        <DataField name="20" optype="continuous" dataType="double"/>
+        <DataField name="21" optype="continuous" dataType="double"/>
+        <DataField name="22" optype="continuous" dataType="double"/>
+        <DataField name="23" optype="continuous" dataType="double"/>
+        <DataField name="24" optype="continuous" dataType="double"/>
+        <DataField name="25" optype="continuous" dataType="double"/>
+        <DataField name="26" optype="continuous" dataType="double"/>
+        <DataField name="27" optype="continuous" dataType="double"/>
+        <DataField name="28" optype="continuous" dataType="double"/>
+        <DataField name="29" optype="continuous" dataType="double"/>
+    </DataDictionary>
+    <ClusteringModel modelName="KMeans" functionName="clustering" modelClass="centerBased" numberOfClusters="3">
+        <MiningSchema>
+            <MiningField name="0" usageType="active" optype="continuous"/>
+            <MiningField name="1" usageType="active" optype="continuous"/>
+            <MiningField name="2" usageType="active" optype="continuous"/>
+            <MiningField name="3" usageType="active" optype="continuous"/>
+            <MiningField name="4" usageType="active" optype="continuous"/>
+            <MiningField name="5" usageType="active" optype="continuous"/>
+            <MiningField name="6" usageType="active" optype="continuous"/>
+            <MiningField name="7" usageType="active" optype="continuous"/>
+            <MiningField name="8" usageType="active" optype="continuous"/>
+            <MiningField name="9" usageType="active" optype="continuous"/>
+            <MiningField name="10" usageType="active" optype="continuous"/>
+            <MiningField name="11" usageType="active" optype="continuous"/>
+            <MiningField name="12" usageType="active" optype="continuous"/>
+            <MiningField name="13" usageType="active" optype="continuous"/>
+            <MiningField name="14" usageType="active" optype="continuous"/>
+            <MiningField name="15" usageType="active" optype="continuous"/>
+            <MiningField name="16" usageType="active" optype="continuous"/>
+            <MiningField name="17" usageType="active" optype="continuous"/>
+            <MiningField name="18" usageType="active" optype="continuous"/>
+            <MiningField name="19" usageType="active" optype="continuous"/>
+            <MiningField name="20" usageType="active" optype="continuous"/>
+            <MiningField name="21" usageType="active" optype="continuous"/>
+            <MiningField name="22" usageType="active" optype="continuous"/>
+            <MiningField name="23" usageType="active" optype="continuous"/>
+            <MiningField name="24" usageType="active" optype="continuous"/>
+            <MiningField name="25" usageType="active" optype="continuous"/>
+            <MiningField name="26" usageType="active" optype="continuous"/>
+            <MiningField name="27" usageType="active" optype="continuous"/>
+            <MiningField name="28" usageType="active" optype="continuous"/>
+            <MiningField name="29" usageType="active" optype="continuous"/>
+        </MiningSchema>
+        <Output>
+            <OutputField name="affinity(0)" optype="continuous" dataType="double" feature="entityAffinity" value="0"/>
+            <OutputField name="affinity(1)" optype="continuous" dataType="double" feature="entityAffinity" value="1"/>
+            <OutputField name="affinity(2)" optype="continuous" dataType="double" feature="entityAffinity" value="2"/>
+            <OutputField name="cluster" optype="categorical" dataType="string" feature="predictedValue"/>
+        </Output>
+        <ComparisonMeasure kind="distance">
+            <euclidean/>
+        </ComparisonMeasure>
+        <ClusteringField field="0" fieldWeight="1"/>
+        <ClusteringField field="1" fieldWeight="1"/>
+        <ClusteringField field="2" fieldWeight="1"/>
+        <ClusteringField field="3" fieldWeight="1"/>
+        <ClusteringField field="4" fieldWeight="1"/>
+        <ClusteringField field="5" fieldWeight="1"/>
+        <ClusteringField field="6" fieldWeight="1"/>
+        <ClusteringField field="7" fieldWeight="1"/>
+        <ClusteringField field="8" fieldWeight="1"/>
+        <ClusteringField field="9" fieldWeight="1"/>
+        <ClusteringField field="10" fieldWeight="1"/>
+        <ClusteringField field="11" fieldWeight="1"/>
+        <ClusteringField field="12" fieldWeight="1"/>
+        <ClusteringField field="13" fieldWeight="1"/>
+        <ClusteringField field="14" fieldWeight="1"/>
+        <ClusteringField field="15" fieldWeight="1"/>
+        <ClusteringField field="16" fieldWeight="1"/>
+        <ClusteringField field="17" fieldWeight="1"/>
+        <ClusteringField field="18" fieldWeight="1"/>
+        <ClusteringField field="19" fieldWeight="1"/>
+        <ClusteringField field="20" fieldWeight="1"/>
+        <ClusteringField field="21" fieldWeight="1"/>
+        <ClusteringField field="22" fieldWeight="1"/>
+        <ClusteringField field="23" fieldWeight="1"/>
+        <ClusteringField field="24" fieldWeight="1"/>
+        <ClusteringField field="25" fieldWeight="1"/>
+        <ClusteringField field="26" fieldWeight="1"/>
+        <ClusteringField field="27" fieldWeight="1"/>
+        <ClusteringField field="28" fieldWeight="1"/>
+        <ClusteringField field="29" fieldWeight="1"/>
+        <Cluster id="0" size="217">
+            <Array type="real">0.0829493087557609 0.0875576036866366 0.0875576036866364 0.0875576036866367 0.1244239631336404 0.1152073732718898 0.0737327188940088 0.0506912442396315 0.1290322580645160 0.0829493087557600 0.1013824884792633 0.0967741935483866 0.0829493087557612 0.1013824884792630 0.1290322580645159 0.1198156682027647 0.0921658986175111 0.1198156682027654 0.1105990783410150 0.1013824884792633 0.5852534562211991 0.6036866359446993 0.6543778801843301 0.6451612903225825 0.6497695852534546 0.7004608294930875 0.6451612903225814 0.6497695852534571 0.6774193548387103 0.5760368663594477</Array>
+        </Cluster>
+        <Cluster id="1" size="230">
+            <Array type="real">0.0826086956521744 0.1086956521739136 0.0956521739130438 0.1086956521739135 0.0826086956521734 0.1086956521739135 0.1086956521739131 0.0826086956521741 0.1173913043478260 0.1217391304347824 0.6565217391304354 0.5956521739130438 0.6304347826086966 0.6869565217391317 0.6217391304347815 0.6521739130434792 0.6478260869565216 0.5913043478260874 0.6739130434782621 0.6434782608695662 0.1521739130434790 0.0695652173913038 0.0869565217391294 0.0956521739130446 0.0869565217391294 0.1000000000000011 0.0739130434782612 0.0608695652173915 0.1173913043478267 0.0739130434782614</Array>
+        </Cluster>
+        <Cluster id="2" size="153">
+            <Array type="real">0.7124183006535948 0.6078431372549031 0.6732026143790846 0.6078431372549029 0.7058823529411762 0.5816993464052277 0.6666666666666663 0.6013071895424839 0.7124183006535953 0.6274509803921574 0.0980392156862751 0.0980392156862741 0.1045751633986931 0.0588235294117647 0.0980392156862748 0.1045751633986926 0.0784313725490199 0.0653594771241835 0.1241830065359485 0.0980392156862743 0.1111111111111114 0.0980392156862748 0.0915032679738565 0.0588235294117648 0.0980392156862748 0.0653594771241834 0.0849673202614371 0.0980392156862739 0.0915032679738567 0.1176470588235295</Array>
+        </Cluster>
+    </ClusteringModel>
+</PMML>
