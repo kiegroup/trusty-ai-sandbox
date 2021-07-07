@@ -10,7 +10,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <org.kie.version>7.56.0-SNAPSHOT</org.kie.version>
+        <org.kie.version>7.56.0.Final</org.kie.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
