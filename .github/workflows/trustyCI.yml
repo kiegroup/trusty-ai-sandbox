@@ -42,7 +42,7 @@ jobs:
         ./python-trustyai/deps.sh
     - name: Python lint
       run: |
-        pylint $(find . -type f -name "*.py")
+        pylint --ignore-imports=yes $(find . -type f -name "*.py")
     - name: Python test
       run: |
         pytest
