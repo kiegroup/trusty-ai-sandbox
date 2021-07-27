@@ -1,4 +1,4 @@
-# pylint: disable=import-error, wrong-import-position, wrong-import-order, duplicate-code
+# pylint: disable=import-error, wrong-import-position, wrong-import-order, unused-import
 """LIME explainer test suite"""
 import sys
 import os
@@ -7,19 +7,8 @@ import pytest
 myPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, myPath + "/../")
 
+import common
 import trustyai
-
-trustyai.init(
-    path=[
-        "./dep/org/kie/kogito/explainability-core/1.8.0.Final/*",
-        "./dep/org/slf4j/slf4j-api/1.7.30/slf4j-api-1.7.30.jar",
-        "./dep/org/apache/commons/commons-lang3/3.12.0/commons-lang3-3.12.0.jar",
-        "./dep/org/optaplanner/optaplanner-core/8.8.0.Final/optaplanner-core-8.8.0.Final.jar",
-        "./dep/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar",
-        "./dep/org/kie/kie-api/7.55.0.Final/kie-api-7.55.0.Final.jar",
-        "./dep/io/micrometer/micrometer-core/1.6.6/micrometer-core-1.6.6.jar",
-    ]
-)
 
 DEFAULT_NO_OF_PERTURBATIONS = 1
 
