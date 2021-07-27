@@ -34,6 +34,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r ./binder/requirements.txt
         pip install -r ./binder/requirements-dev.txt
+        pip install -r ./python-trustyai/requirements.txt
+        pip install -r ./python-trustyai/requirements-dev.txt
+    - name: Setup python-trustyai dependencies
+      run: |
+        chmod +x ./python-trustyai/deps.sh
+        ./python-trustyai/deps.sh
     - name: Python lint
       run: |
         pylint $(find . -type f -name "*.py")
