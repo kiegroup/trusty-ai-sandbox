@@ -36,8 +36,8 @@ explainability/service/counterfactual-op/local
 explainability/core/counterfactuals/target
 
 
-/pmml_recommendation/recommender-engine/recommender-engine.iml
-/pmml_recommendation/recommender-engine/target/
+**/*.iml
+**/target/
 .pytest_cache
 dep/
 __pycache__
