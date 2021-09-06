@@ -9,7 +9,7 @@ spec:
   #- name: MY_CUSTOM_ENV
   #  value: "my value"
   gitSource:
-    contextDir: kogito-pmml-recommender
+    contextDir: pmml_recommendation/kogito-pmml-recommender
     uri: 'https://github.com/kiegroup/trusty-ai-sandbox'
   # set your maven nexus repository to speed up the build time
   #mavenMirrorURL:
