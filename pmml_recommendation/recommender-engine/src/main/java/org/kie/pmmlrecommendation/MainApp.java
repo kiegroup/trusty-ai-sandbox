@@ -19,20 +19,21 @@ import org.kie.pmmlrecommendation.dto.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.stream.IntStream;
+import java.util.List;
 
 import static org.kie.pmmlrecommendation.business.Recommender.getRecommendation;
+import static org.kie.pmmlrecommendation.utils.DataSourceUtils.getAllCustomers;
 
 public class MainApp {
 
     private static final Logger logger = LoggerFactory.getLogger(MainApp.class);
 
     public static void main(String[] args) {
-        IntStream.range(0, 5).forEach(i -> {
-            Customer customer = new Customer();
-            logger.info("Customer {}", customer);
+        List<Customer> customers = getAllCustomers();
+        customers.forEach(customer -> {
+            logger.info("For customer {}", customer);
             String recommendation = getRecommendation(customer);
-            logger.info("We recommend: {}", recommendation);
+            logger.info("we recommend: {}", recommendation);
         });
     }
 }

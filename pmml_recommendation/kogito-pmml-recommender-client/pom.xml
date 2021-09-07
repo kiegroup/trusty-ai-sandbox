@@ -12,6 +12,8 @@
     <properties>
         <com.fasterxml.jackson.version>2.12.4</com.fasterxml.jackson.version>
         <org.kie.version>7.58.0.Final</org.kie.version>
+        <org.slf4j.version>1.7.25</org.slf4j.version>
+        <log4j.version>1.2.17</log4j.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
@@ -31,17 +33,17 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.25</version>
+            <version>${org.slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.25</version>
+            <version>${org.slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
+            <version>${log4j.version}</version>
         </dependency>
     </dependencies>
 

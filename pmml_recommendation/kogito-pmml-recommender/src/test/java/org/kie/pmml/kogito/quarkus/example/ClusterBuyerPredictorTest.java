@@ -16,13 +16,16 @@
 package org.kie.pmml.kogito.quarkus.example;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.http.ContentType;
+import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Map;
 
-import static org.kie.pmml.kogito.quarkus.example.CommonTestUtils.testDescriptive;
-import static org.kie.pmml.kogito.quarkus.example.CommonTestUtils.testResult;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
 class ClusterBuyerPredictorTest {
@@ -46,13 +49,42 @@ class ClusterBuyerPredictorTest {
 
     @Test
     void testEvaluateClusterBuyerPredictorResult() {
-        testResult(INPUT_DATA, BASE_PATH, TARGET, "0");
+        given()
+                .contentType(ContentType.JSON)
+                .body(INPUT_DATA)
+                .when()
+                .post(BASE_PATH)
+                .then()
+                .statusCode(200)
+                .body(TARGET, is("0"));
     }
 
     @Test
     void testEvaluateClusterBuyerPredictorDescriptive() {
         final Map<String, Object> expectedResultMap = Collections.singletonMap(TARGET, "0");
-        testDescriptive(INPUT_DATA, BASE_PATH, TARGET, expectedResultMap);
+        String path = BASE_PATH + "/descriptive";
+        Object resultVariables = given()
+                .contentType(ContentType.JSON)
+                .body(INPUT_DATA)
+                .when()
+                .post(path)
+                .then()
+                .statusCode(200)
+                .body("correlationId", is(new IsNull()))
+                .body("segmentationId", is(new IsNull()))
+                .body("segmentId", is(new IsNull()))
+                .body("segmentIndex", is(0)) // as JSON is not schema aware, here we assert the RAW string
+                .body("resultCode", is("OK"))
+                .body("resultObjectName", is(TARGET))
+                .extract()
+                .path("resultVariables");
+        assertNotNull(resultVariables);
+        assertTrue(resultVariables instanceof Map);
+        Map<String, Object> mappedResultVariables = (Map) resultVariables;
+        expectedResultMap.forEach((key, value) -> {
+            assertTrue(mappedResultVariables.containsKey(key));
+            assertEquals(value, mappedResultVariables.get(key));
+        });
     }
 
 }

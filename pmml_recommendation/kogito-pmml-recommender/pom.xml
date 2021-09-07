@@ -3,7 +3,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
 
-
   <groupId>org.kie</groupId>
   <artifactId>kogito-pmml-recommender</artifactId>
   <version>1.0</version>
@@ -29,19 +28,7 @@
       </dependency>
       <dependency>
         <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-quarkus-bom</artifactId>
-        <version>${kogito.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
         <artifactId>kogito-quarkus-predictions</artifactId>
-        <version>${kogito.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-pmml</artifactId>
         <version>${kogito.version}</version>
       </dependency>
     </dependencies>
@@ -63,15 +50,9 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy-jackson</artifactId>
     </dependency>
-    <!-- TEMP -->
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-smallrye-openapi</artifactId>
-    </dependency>
-    <!-- PMML -->
-    <dependency>
-      <groupId>org.kie.kogito</groupId>
-      <artifactId>kogito-pmml</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -113,4 +94,22 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>native</id>
+      <properties>
+        <failsafe.include>**/Native*IT.java</failsafe.include>
+        <failsafe.exclude></failsafe.exclude>
+        <quarkus.package.type>native</quarkus.package.type>
+        <!-- Native building needs a fixed port for tests -->
+        <tests.quarkus.http.port>8080</tests.quarkus.http.port>
+      </properties>
+      <activation>
+        <property>
+          <name>native</name>
+        </property>
+      </activation>
+    </profile>
+  </profiles>
 </project>
