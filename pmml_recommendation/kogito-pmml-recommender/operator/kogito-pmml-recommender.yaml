@@ -1,0 +1,20 @@
+apiVersion: app.kiegroup.org/v1beta1
+kind: KogitoBuild
+metadata:
+  name: kogito-pmml-recommender
+spec:
+  type: RemoteSource
+  #env:
+  # env can be used to set variables during build
+  #- name: MY_CUSTOM_ENV
+  #  value: "my value"
+  gitSource:
+    contextDir: pmml_recommendation/kogito-pmml-recommender
+    uri: 'https://github.com/kiegroup/trusty-ai-sandbox'
+  # set your maven nexus repository to speed up the build time
+  #mavenMirrorURL:
+---
+apiVersion: app.kiegroup.org/v1beta1
+kind: KogitoRuntime
+metadata:
+  name: kogito-pmml-recommender

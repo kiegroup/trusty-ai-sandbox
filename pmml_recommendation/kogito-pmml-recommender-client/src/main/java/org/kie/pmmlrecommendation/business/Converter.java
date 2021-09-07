@@ -13,27 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kie.pmmlrecommendation;
+package org.kie.pmmlrecommendation.business;
 
 import org.kie.pmmlrecommendation.dto.Customer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.kie.pmmlrecommendation.enums.ItemType;
 
 import java.util.List;
 
-import static org.kie.pmmlrecommendation.business.Recommender.getRecommendation;
-import static org.kie.pmmlrecommendation.utils.DataSourceUtils.getAllCustomers;
+public class Converter {
 
-public class MainApp {
+    private Converter() {
+    }
 
-    private static final Logger logger = LoggerFactory.getLogger(MainApp.class);
-
-    public static void main(String[] args) {
-        List<Customer> customers = getAllCustomers();
-        customers.forEach(customer -> {
-            logger.info("For customer {}", customer);
-            String recommendation = getRecommendation(customer);
-            logger.info("we recommend: {}", recommendation);
+    public static int[] getBuyedItemsIndexes(final Customer customer) {
+        int[] toReturn = new int[30];
+        final List<String> buyedItems = customer.getBuyedItems();
+        buyedItems.forEach(buyedItem -> {
+            String[] parts = buyedItem.split("-");
+            String clusterName = parts[0];
+            int itemId = Integer.parseInt(parts[1]);
+            ItemType itemType = ItemType.byClusterName(clusterName);
+            itemId += (itemType.getArrayPosition() * 10);
+            toReturn[itemId] = 1;
         });
+        return toReturn;
     }
 }
